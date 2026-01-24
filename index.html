@@ -1,89 +1,72 @@
-<!DOCTYPE html><!DOCTYPE html><!DOCTYPE html><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>BOX1V1 | Street Football Hub</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+  <title>BOX1V1 | Win the Street</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,700;0,900;1,900&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #000; --card-bg: #080808; --accent: #39FF14;
-      --text: #fff; --text-dim: #555; --border: #111;
+      --bg: #000; --card-bg: #0a0a0a; --accent: #39FF14;
+      --text: #fff; --text-dim: #666; --border: #1a1a1a;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
 
-    /* Nav */
-    nav { position: fixed; top: 0; width: 100%; background: rgba(0,0,0,0.9); backdrop-filter: blur(20px); z-index: 1000; border-bottom: 1px solid var(--border); }
-    .nav-container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; padding: 1.2rem 1.5rem; align-items: center; }
-    .logo { font-weight: 900; font-size: 1.4rem; color: var(--accent); cursor: pointer; letter-spacing: -1px; }
-    .nav-links { display: flex; gap: 2rem; }
-    .nav-links a { color: var(--text-dim); text-decoration: none; font-size: 0.8rem; font-weight: 700; transition: 0.3s; cursor: pointer; }
-    .nav-links a.active, .nav-links a:hover { color: var(--text); }
+    /* Apple-style Nav */
+    nav { position: fixed; top: 0; width: 100%; background: rgba(0,0,0,0.7); backdrop-filter: saturate(180%) blur(20px); z-index: 1000; border-bottom: 1px solid var(--border); }
+    .nav-container { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; padding: 1rem 2rem; align-items: center; }
+    .logo { font-weight: 900; font-size: 1.2rem; color: #fff; text-decoration: none; letter-spacing: -1px; cursor: pointer; }
+    .nav-links { display: flex; gap: 2.5rem; }
+    .nav-links a { color: var(--text-dim); text-decoration: none; font-size: 0.75rem; font-weight: 600; transition: 0.4s; letter-spacing: 0.5px; cursor: pointer; }
+    .nav-links a.active, .nav-links a:hover { color: var(--accent); }
 
-    .container { max-width: 1200px; margin: 120px auto 0; padding: 0 1.5rem 6rem; }
-    section { display: none; animation: fadeIn 0.6s ease; }
-    section.active { display: block; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .container { max-width: 1400px; margin: 120px auto 0; padding: 0 2rem; }
+    section { display: none; }
+    section.active { display: block; animation: reveal 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+    @keyframes reveal { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
 
-    h1 { font-size: clamp(3.5rem, 12vw, 6rem); font-weight: 900; letter-spacing: -4px; margin-bottom: 3rem; line-height: 0.85; text-transform: uppercase; }
+    /* Nike-style Typography with Parallax */
+    .hero-label { color: var(--accent); font-weight: 900; font-size: 0.8rem; letter-spacing: 4px; margin-bottom: 1rem; display: block; }
+    h1 { font-size: clamp(4rem, 15vw, 9rem); font-weight: 900; line-height: 0.8; letter-spacing: -6px; margin-bottom: 4rem; text-transform: uppercase; font-style: italic; will-change: transform; }
 
-    /* Cards */
-    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 2.5rem; }
-    .card {
-      background: var(--card-bg); border-radius: 30px; padding: 3rem; border: 1px solid var(--border);
-      position: relative; cursor: pointer; transition: 0.4s cubic-bezier(0.2, 1, 0.3, 1); overflow: hidden;
-    }
-    .card:hover { transform: translateY(-10px); border-color: var(--accent); }
-    .card::before {
-      content: ''; position: absolute; inset: 0;
-      background: radial-gradient(circle at var(--mx) var(--my), rgba(57, 255, 20, 0.15), transparent 70%);
-      opacity: 0; transition: opacity 0.3s; pointer-events: none;
-    }
-    .card:hover::before { opacity: 1; }
-    .card-ovr { font-size: 4rem; font-weight: 900; color: var(--accent); line-height: 1; margin-bottom: 0.5rem; }
-    .card-name { font-size: 1.6rem; font-weight: 700; text-transform: uppercase; }
+    /* Bento Grid */
+    .bento { display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: 300px; gap: 1.5rem; margin-bottom: 4rem; }
+    .bento-item { background: var(--card-bg); border-radius: 32px; border: 1px solid var(--border); padding: 2.5rem; position: relative; overflow: hidden; transition: 0.5s cubic-bezier(0.2, 1, 0.3, 1); }
+    .bento-item:hover { border-color: #333; transform: translateY(-5px); }
+    
+    .big { grid-column: span 2; grid-row: span 2; background: linear-gradient(135deg, #111 0%, #000 100%); }
+    .tall { grid-row: span 2; }
+    .wide { grid-column: span 2; }
 
-    /* Connect Section */
-    .social-stack { display: flex; flex-direction: column; gap: 1rem; max-width: 500px; }
-    .social-btn { 
-      padding: 1.5rem 2rem; border-radius: 20px; border: 1px solid var(--border); 
-      color: var(--text); text-decoration: none; font-weight: 800; font-size: 1.2rem;
-      display: flex; justify-content: space-between; align-items: center; transition: 0.3s;
-    }
-    .social-btn:hover { background: #fff; color: #000; transform: translateX(10px); }
-    .social-btn span { font-size: 0.7rem; opacity: 0.5; text-transform: uppercase; letter-spacing: 2px; }
+    .ovr-large { font-size: 6rem; font-weight: 900; color: var(--accent); letter-spacing: -4px; line-height: 1; }
+    .card-label { font-size: 0.7rem; font-weight: 800; color: var(--text-dim); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 0.5rem; display: block; }
+
+    /* Connect Rows */
+    .link-row { border-top: 1px solid var(--border); padding: 2.5rem 0; display: flex; justify-content: space-between; align-items: center; text-decoration: none; color: #fff; transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+    .link-row:hover { color: var(--accent); padding-left: 1.5rem; background: rgba(255,255,255,0.02); }
+    .link-row h2 { font-size: clamp(2rem, 5vw, 4rem); font-weight: 900; text-transform: uppercase; font-style: italic; }
+    .link-row span { font-weight: 900; font-size: 1.5rem; }
 
     /* Profile Overlay */
-    .overlay { position: fixed; inset: 0; background: #000; z-index: 2000; display: none; padding: 10vh 5vw; overflow-y: auto; }
-    .close-btn { position: fixed; top: 40px; right: 40px; font-weight: 900; color: var(--accent); cursor: pointer; z-index: 2100; }
-    .profile-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; max-width: 1000px; margin: 0 auto; }
-    .p-photo { width: 100%; aspect-ratio: 1; background: #050505; border-radius: 40px; border: 1px solid #111; display: flex; align-items: center; justify-content: center; font-size: 8rem; }
-    .form-dots { display: flex; gap: 8px; margin-top: 1rem; }
-    .dot { width: 12px; height: 12px; border-radius: 50%; background: #222; }
-    .dot.win { background: var(--accent); }
+    .overlay { position: fixed; inset: 0; background: #000; z-index: 2000; display: none; padding: 5vw; animation: fadeIn 0.3s ease; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .close-btn { position: fixed; top: 40px; right: 40px; font-weight: 900; color: var(--accent); cursor: pointer; letter-spacing: 2px; font-size: 0.8rem; z-index: 2100; }
 
-    footer { text-align: center; padding: 8rem 0 4rem; color: #111; font-weight: 900; font-size: 0.7rem; letter-spacing: 15px; }
+    footer { padding: 10rem 0 4rem; text-align: left; opacity: 0.1; font-weight: 900; font-size: 8vw; line-height: 0.8; letter-spacing: -5px; pointer-events: none; text-transform: uppercase; white-space: nowrap; }
   </style>
 </head>
 <body>
 
   <div class="overlay" id="p-overlay">
-    <div class="close-btn" onclick="closeProfile()">CLOSE_X</div>
-    <div class="profile-grid">
-        <div class="p-photo">👤</div>
-        <div>
-            <h2 id="p-name" style="font-size: 5rem; font-weight: 900; line-height: 0.8; color: var(--accent);">NAME</h2>
-            <div style="margin-top: 2rem;">
-                <p style="color: var(--text-dim); font-size: 0.7rem; letter-spacing: 2px;">RECENT FORM</p>
-                <div class="form-dots">
-                    <div class="dot win"></div><div class="dot win"></div><div class="dot win"></div><div class="dot"></div><div class="dot win"></div>
-                </div>
-            </div>
-            <div style="display: flex; gap: 4rem; margin-top: 3rem;">
-                <div><span style="font-size: 0.7rem; color: var(--text-dim);">OVR</span><br><span id="p-ovr" style="font-size: 4rem; font-weight: 900;">92</span></div>
-                <div><span style="font-size: 0.7rem; color: var(--text-dim);">TIER</span><br><span style="font-size: 2rem; font-weight: 900;">GOLD</span></div>
+    <div class="close-btn" onclick="closeProfile()">CLOSE // 001</div>
+    <div style="max-width: 1200px; margin: 0 auto;">
+        <h2 id="p-name" style="font-size: 12vw; font-weight: 900; letter-spacing: -8px; line-height: 0.8; text-transform: uppercase; font-style: italic;">NAME</h2>
+        <div style="display: flex; gap: 5rem; margin-top: 4rem; flex-wrap: wrap;">
+            <div><span class="card-label">CURRENT RATING</span><span id="p-ovr" style="font-size: 8rem; font-weight: 900; color: var(--accent); line-height: 1;">92</span></div>
+            <div style="max-width: 500px; padding-top: 2rem; color: var(--text-dim); font-size: 1.2rem; line-height: 1.4; font-weight: 600;">
+                Элитный игрок лиги BOX1V1. Анализ техники: высокий уровень контроля мяча и завершения. Требуется подтверждение статуса в следующем туре.
             </div>
         </div>
     </div>
@@ -94,8 +77,7 @@
       <div class="logo" onclick="showSection('home')">BOX1V1</div>
       <div class="nav-links">
         <a onclick="showSection('home')" id="btn-home" class="active">HOME</a>
-        <a onclick="showSection('ranking')" id="btn-ranking">RANKING</a>
-        <a onclick="showSection('bracket')" id="btn-bracket">BRACKET</a>
+        <a onclick="showSection('ranking')" id="btn-ranking">PLAYERS</a>
         <a onclick="showSection('connect')" id="btn-connect">CONNECT</a>
       </div>
     </div>
@@ -104,41 +86,53 @@
   <div class="container">
     
     <section id="home" class="active">
-        <p style="color: var(--accent); font-weight: 800; letter-spacing: 3px; margin-bottom: 1rem;">ELAGINO PARK 2026</p>
-        <h1>STREET<br>FOOTBALL.</h1>
-        <div class="grid" id="home-grid"></div>
+        <span class="hero-label">ELAGINO PARK HUB</span>
+        <h1 id="parallax-h1">UNBEATABLE<br>STREETS.</h1>
+        
+        <div class="bento">
+            <div class="bento-item big" style="cursor:pointer" onclick="openProfile('Kuznetsov', 92)">
+                <span class="card-label">LEADERBOARD TOP</span>
+                <div class="ovr-large">92</div>
+                <div style="font-size: 2.5rem; font-weight: 900; margin-top: 1rem; font-style: italic;">KUZNETSOV</div>
+                <div style="margin-top: 2rem;"><span style="background:var(--accent); color:#000; padding:4px 12px; border-radius:4px; font-weight:900; font-size:0.7rem;">RANK #1</span></div>
+            </div>
+            <div class="bento-item tall" style="background: #fff; color: #000;">
+                <span class="card-label" style="color: rgba(0,0,0,0.4);">ADMISSION</span>
+                <div style="font-size: 3rem; font-weight: 900; line-height: 0.85; margin-top: 2rem; font-style: italic;">JOIN THE<br>CIRCLE.</div>
+                <p style="margin-top: 2rem; font-weight: 700; font-size: 0.9rem; line-height: 1.2;">Стань частью закрытого комьюнити 1v1.</p>
+            </div>
+            <div class="bento-item wide">
+                <span class="card-label">NEXT EVENT</span>
+                <div style="font-size: 1.8rem; font-weight: 900; margin-top: 1rem; font-style: italic;">TOUR 01: ELAGINO</div>
+                <p style="color: var(--text-dim); margin-top: 0.5rem; font-weight: 700;">COMING SOON / 2026</p>
+            </div>
+            <div class="bento-item">
+                <span class="card-label">WINNER OVR</span>
+                <div style="font-size: 3.5rem; font-weight: 900;">88+</div>
+            </div>
+            <div class="bento-item">
+                <span class="card-label">COMMUNITY</span>
+                <div style="font-size: 3.5rem; font-weight: 900; color: var(--accent);">PRO</div>
+            </div>
+        </div>
     </section>
 
     <section id="ranking">
-        <h1>LEADERBOARD</h1>
-        <div class="grid" id="ranking-grid"></div>
-    </section>
-
-    <section id="bracket">
-        <h1>TOURNAMENT</h1>
-        <div style="border-left: 2px solid var(--border); padding-left: 2rem; margin-top: 3rem;">
-            <div style="margin-bottom: 3rem;">
-                <p style="font-size: 0.7rem; color: var(--text-dim); margin-bottom: 0.5rem;">NEXT MATCH</p>
-                <h3 style="font-size: 2.5rem; font-weight: 900;">KUZNETSOV vs VOLKOV</h3>
-            </div>
-            <div style="opacity: 0.3;">
-                <p style="font-size: 0.7rem; color: var(--text-dim); margin-bottom: 0.5rem;">UPCOMING</p>
-                <h3 style="font-size: 2.5rem; font-weight: 900;">TBD vs TBD</h3>
-            </div>
-        </div>
+        <h1>THE ROSTER</h1>
+        <div class="grid" id="ranking-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem;"></div>
     </section>
 
     <section id="connect">
-        <h1>JOIN THE<br>LEAGUE.</h1>
-        <p style="color: var(--text-dim); margin-bottom: 3rem; max-width: 500px;">Хочешь попасть в рейтинг или забить матч? Пиши нам в любое время.</p>
-        <div class="social-stack">
-            <a href="https://t.me/streetbox1v1" target="_blank" class="social-btn">TELEGRAM <span>Direct</span></a>
-            <a href="https://instagram.com/box.1v1" target="_blank" class="social-btn">INSTAGRAM <span>Media</span></a>
-            <a href="https://tiktok.com/@box1v1" target="_blank" class="social-btn">TIKTOK <span>Highlights</span></a>
+        <span class="hero-label">DIRECT CONTACT</span>
+        <h1>LET'S TALK.</h1>
+        <div style="margin-top: 4rem;">
+            <a href="https://t.me/streetbox1v1" target="_blank" class="link-row"><h2>TELEGRAM</h2> <span>DIRECT ↗</span></a>
+            <a href="https://instagram.com/box.1v1" target="_blank" class="link-row"><h2>INSTAGRAM</h2> <span>MEDIA ↗</span></a>
+            <a href="https://tiktok.com/@box1v1" target="_blank" class="link-row"><h2>TIKTOK</h2> <span>WATCH ↗</span></a>
         </div>
     </section>
 
-    <footer>BOX1V1 // ELAGINO PARK // 2026</footer>
+    <footer>BOX1V1 ELITE STREET FOOTBALL 2026</footer>
   </div>
 
   <script>
@@ -149,29 +143,27 @@
     ];
 
     function render() {
-      const grids = [document.getElementById('ranking-grid'), document.getElementById('home-grid')];
+      const grid = document.getElementById('ranking-grid');
       players.forEach((p, i) => {
-        const html = `
-          <div class="card" onclick="openProfile('${p.n}', ${p.r})">
-            <div class="card-ovr">${p.r}</div>
-            <div class="card-name">${p.n}</div>
-            <div style="margin-top: 1rem; display: flex; gap: 10px;">
-                <span style="font-size: 0.6rem; color: var(--text-dim); border: 1px solid #111; padding: 4px 8px; border-radius: 4px;">RANK #${i+1}</span>
-            </div>
+        grid.innerHTML += `
+          <div class="bento-item" style="height: auto; cursor: pointer;" onclick="openProfile('${p.n}', ${p.r})">
+            <span class="card-label">ATHLETE // 00${i+1}</span>
+            <div style="font-size: 4rem; font-weight: 900; color: var(--accent); letter-spacing:-2px;">${p.r}</div>
+            <div style="font-size: 1.5rem; font-weight: 900; margin-top: 1rem; font-style: italic; text-transform: uppercase;">${p.n}</div>
           </div>
         `;
-        if (grids[0]) grids[0].innerHTML += html;
-        if (i < 2 && grids[1]) grids[1].innerHTML += html;
-      });
-
-      document.querySelectorAll('.card').forEach(card => {
-        card.addEventListener('mousemove', e => {
-          const rect = card.getBoundingClientRect();
-          card.style.setProperty('--mx', `${e.clientX - rect.left}px`);
-          card.style.setProperty('--my', `${e.clientY - rect.top}px`);
-        });
       });
     }
+
+    // Parallax Effect
+    window.addEventListener('scroll', () => {
+      const h1 = document.getElementById('parallax-h1');
+      if(h1) {
+        let value = window.scrollY;
+        h1.style.transform = `translateY(${value * 0.2}px)`;
+        h1.style.opacity = 1 - (value / 600);
+      }
+    });
 
     function openProfile(n, r) {
       document.getElementById('p-name').innerText = n;
