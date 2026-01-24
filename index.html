@@ -74,7 +74,9 @@
       opacity: 0; 
       transform: translateY(15px); 
       transition: all 0.6s var(--cubic);
+      cursor: pointer;
     }
+    #stats-body tr:hover { background: #111; }
     section#stats.active #stats-body tr { opacity: 1; transform: translateY(0); }
 
     /* Bento */
@@ -219,7 +221,7 @@
   <script>
     const players = {
       'ZUPAROV': { role: 'Основатель' },
-      'ALISA': { role: 'Core Team' },
+      'SMAGINA': { role: '143' },
       'KUSCH': { role: 'Игрок' },
       'DIDUR': { role: 'Игрок' },
       'BIBIKOV': { role: 'Игрок' }
@@ -264,9 +266,9 @@
       openModal('playerModal');
     }
 
-    // ЛОГИКА ТАЙМЕРА
+    // ЛОГИКА ТАЙМЕРА — УСТАНОВЛЕНО НА 1 МАРТА 2026
     function updateTimer() {
-      const targetDate = new Date("Feb 1, 2026 00:00:00").getTime();
+      const targetDate = new Date("Mar 1, 2026 00:00:00").getTime();
       const now = new Date().getTime();
       const diff = targetDate - now;
 
@@ -275,10 +277,13 @@
         document.getElementById('hours').innerText = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
         document.getElementById('mins').innerText = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
         document.getElementById('secs').innerText = Math.floor((diff % (1000 * 60)) / 1000);
+      } else {
+        document.getElementById('timer').style.display = 'none';
       }
     }
 
     function init() {
+      // Состав
       document.getElementById('roster-grid').innerHTML = Object.keys(players).map(name => `
         <div class="bento-item reveal" onclick="openPlayerModal('${name}')">
           <span style="font-size:10px; font-weight:900; color:var(--accent)">OVR 0</span>
@@ -287,6 +292,7 @@
         </div>
       `).join('');
 
+      // Рейтинг
       document.getElementById('stats-body').innerHTML = Object.keys(players).map((name, i) => `
         <tr onclick="openPlayerModal('${name}')" style="border-bottom: 1px solid var(--border); transition-delay: ${i * 0.1}s">
           <td style="padding:25px; color:var(--text-dim); font-weight:700">#0${i+1}</td>
