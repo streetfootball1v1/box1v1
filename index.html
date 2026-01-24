@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>BOX1V1 | League Management</title>
+  <title>BOX1V1 | Pro Management</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,700;0,900;1,900&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -13,217 +13,243 @@
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; outline: none; }
-    body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; overflow-x: hidden; }
+    body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; }
 
-    /* Admin Panel Style */
-    #admin-bar { background: var(--accent); color: #000; padding: 0.5rem; font-size: 0.6rem; font-weight: 900; text-align: center; cursor: pointer; text-transform: uppercase; }
+    /* Admin */
+    #admin-bar { background: var(--accent); color: #000; padding: 8px; font-size: 10px; font-weight: 900; text-align: center; cursor: pointer; text-transform: uppercase; position: sticky; top: 0; z-index: 2000; }
     #admin-panel { display: none; background: #111; padding: 2rem; border-bottom: 2px solid var(--accent); }
-    .admin-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; max-width: 1200px; margin: 0 auto; }
-    select, input { background: #000; border: 1px solid var(--border); color: #fff; padding: 0.8rem; border-radius: 8px; font-family: inherit; }
 
-    nav { position: fixed; top: 25px; width: 100%; z-index: 1000; background: rgba(0,0,0,0.8); backdrop-filter: blur(15px); border-bottom: 1px solid var(--border); }
-    .nav-container { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; padding: 1rem 2rem; align-items: center; }
-    .nav-links a { color: var(--text-dim); text-decoration: none; font-size: 0.7rem; font-weight: 900; margin-left: 2rem; cursor: pointer; transition: 0.2s; }
+    nav { position: sticky; top: 31px; width: 100%; z-index: 1000; background: rgba(0,0,0,0.8); backdrop-filter: blur(15px); border-bottom: 1px solid var(--border); }
+    .nav-container { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; padding: 1rem 2rem; }
+    .nav-links a { color: var(--text-dim); text-decoration: none; font-size: 11px; font-weight: 900; margin-left: 2rem; cursor: pointer; }
     .nav-links a.active { color: var(--accent); }
 
-    .container { max-width: 1200px; margin: 150px auto 0; padding: 0 2rem; }
+    .container { max-width: 1200px; margin: 40px auto; padding: 0 2rem; min-height: 70vh; }
     section { display: none; opacity: 0; transition: 0.3s; }
     section.active { display: block; opacity: 1; }
 
-    /* Filters */
-    .filters { display: flex; gap: 0.5rem; margin-bottom: 2rem; flex-wrap: wrap; }
-    .f-btn { background: #111; border: 1px solid var(--border); color: var(--text-dim); padding: 0.6rem 1.2rem; border-radius: 50px; font-size: 0.7rem; font-weight: 800; cursor: pointer; transition: 0.2s; }
-    .f-btn:hover, .f-btn.active { border-color: var(--accent); color: #fff; }
+    /* Comparison Table */
+    .compare-grid { display: grid; grid-template-columns: 1fr 120px 1fr; gap: 2rem; margin-top: 2rem; }
+    .comp-card { background: #0d0d0d; padding: 2rem; border-radius: 20px; border: 1px solid var(--border); text-align: center; }
+    .comp-stat-row { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
+    .comp-val { font-size: 2rem; font-weight: 900; }
+    .better { color: var(--accent); }
 
-    /* Table & Badges */
+    /* Tables */
     .league-table { width: 100%; border-collapse: collapse; }
-    .league-table td { padding: 1.2rem; border-bottom: 1px solid var(--border); cursor: pointer; }
-    .badge { font-size: 0.55rem; padding: 2px 6px; border-radius: 4px; font-weight: 900; margin-left: 8px; text-transform: uppercase; border: 1px solid currentColor; }
-    .b-wall { color: #50b7f5; }
-    .b-vet { color: #f5a623; }
-    .streak-fire { color: #ff4500; margin-left: 5px; font-style: normal; }
+    .league-table td { padding: 1.2rem; border-bottom: 1px solid var(--border); cursor: pointer; font-size: 0.9rem; }
+    
+    /* Micro-Graph */
+    .mini-graph { display: flex; align-items: flex-end; gap: 4px; height: 40px; margin-top: 10px; }
+    .graph-bar { width: 12px; background: var(--accent); border-radius: 2px; transition: 0.5s; }
 
-    /* Match History Row */
-    .match-card { display: flex; justify-content: space-between; align-items: center; background: #0d0d0d; padding: 1.5rem; border-radius: 15px; margin-bottom: 0.5rem; border: 1px solid var(--border); }
-    .score-chip { background: #1a1a1a; padding: 0.5rem 1rem; border-radius: 8px; font-weight: 900; color: var(--accent); min-width: 70px; text-align: center; }
+    .f-btn { background: #111; border: 1px solid var(--border); color: #666; padding: 10px 20px; border-radius: 50px; font-size: 11px; font-weight: 800; cursor: pointer; }
+    .f-btn.active { border-color: var(--accent); color: #fff; }
 
-    /* Overlay */
-    .overlay { position: fixed; inset: 0; background: #000; z-index: 2000; display: none; padding: 2rem; overflow-y: auto; }
-    .overlay.open { display: block; }
+    .overlay { position: fixed; inset: 0; background: #000; z-index: 3000; display: none; padding: 2rem; overflow-y: auto; }
     .close { position: fixed; top: 2rem; right: 2rem; color: var(--accent); font-weight: 900; cursor: pointer; }
-
-    footer { padding: 4rem; text-align: center; color: var(--text-dim); font-size: 0.7rem; letter-spacing: 2px; }
   </style>
 </head>
 <body>
 
-  <div id="admin-bar" onclick="toggleAdmin()">Staff Access: Record Match Results</div>
+  <div id="admin-bar" onclick="toggleAdmin()">Staff Panel: Submit Match</div>
   <div id="admin-panel">
-    <div class="admin-grid">
-        <select id="p1-select"></select>
-        <input type="number" id="p1-score" placeholder="Score P1">
-        <span style="align-self: center; text-align: center; font-weight: 900;">VS</span>
-        <input type="number" id="p2-score" placeholder="Score P2">
-        <select id="p2-select"></select>
-        <button class="f-btn active" onclick="submitMatch()">Submit Result</button>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; max-width: 1000px; margin: 0 auto;">
+        <select id="adm-p1"></select>
+        <input type="number" id="adm-s1" placeholder="Score 1">
+        <input type="number" id="adm-s2" placeholder="Score 2">
+        <select id="adm-p2"></select>
+        <button class="f-btn active" onclick="processMatch()">Save Result</button>
     </div>
   </div>
 
   <nav>
     <div class="nav-container">
-      <div style="font-weight: 900; font-style: italic; font-size: 1.2rem;">BOX1V1</div>
+      <div style="font-weight: 900; font-style: italic;">BOX1V1</div>
       <div class="nav-links">
-        <a onclick="showSection('home')" id="btn-home" class="active">LEADERBOARD</a>
-        <a onclick="showSection('matches')" id="btn-matches">MATCHES</a>
+        <a onclick="showSection('home')" id="btn-home" class="active">RANKING</a>
+        <a onclick="showSection('compare')" id="btn-compare">COMPARE</a>
+        <a onclick="showSection('matches')" id="btn-matches">HISTORY</a>
       </div>
     </div>
   </nav>
 
   <div class="container">
     <section id="home" class="active">
-        <div class="filters">
-            <button class="f-btn active" onclick="filterRank('all', this)">ALL</button>
-            <button class="f-btn" onclick="filterRank('gold', this)">GOLD (85+)</button>
-            <button class="f-btn" onclick="filterRank('silver', this)">SILVER (70+)</button>
-            <button class="f-btn" onclick="filterRank('bronze', this)">BRONZE (<70)</button>
-            <input type="text" id="search" placeholder="FIND ATHLETE..." oninput="searchPlayer()" style="margin-left: auto; height: 35px; padding: 0 1rem; font-size: 0.7rem;">
+        <div style="display: flex; gap: 10px; margin-bottom: 2rem;">
+            <button class="f-btn active" onclick="renderTable('all')">ALL</button>
+            <button class="f-btn" onclick="renderTable('gold')">GOLD</button>
+            <input type="text" id="search" oninput="search()" placeholder="Search..." style="background: #111; border: 1px solid var(--border); color:#fff; padding:0 15px; border-radius:50px; margin-left:auto;">
         </div>
-        <table class="league-table">
-            <tbody id="leaderboard-body"></tbody>
-        </table>
+        <table class="league-table"><tbody id="table-body"></tbody></table>
+    </section>
+
+    <section id="compare">
+        <h1>VERSUS.</h1>
+        <div style="display: flex; gap: 1rem; margin-bottom: 2rem;">
+            <select id="comp-sel-1" onchange="runCompare()"></select>
+            <select id="comp-sel-2" onchange="runCompare()"></select>
+        </div>
+        <div class="compare-grid" id="compare-results">
+            </div>
     </section>
 
     <section id="matches">
-        <h2 class="label" style="margin-bottom: 2rem;">GLOBAL MATCH FEED</h2>
-        <div id="matches-feed"></div>
+        <h1>LAST BATTLES.</h1>
+        <div id="matches-list"></div>
     </section>
   </div>
 
-  <div class="overlay" id="p-overlay">
+  <div class="overlay" id="overlay">
     <div class="close" onclick="closeProfile()">[ CLOSE ]</div>
-    <div id="p-content" style="max-width: 800px; margin: 10vh auto;"></div>
+    <div id="ov-content"></div>
   </div>
 
   <script>
-    // Инициализация 100 игроков (для примера, можно 500)
-    let players = [];
-    const names = ['Kuznetsov', 'Volkov', 'Ivanov', 'Petrov', 'Smirnov', 'Mironov', 'Popov', 'Zuparov', 'Sidorov', 'Dmitriev'];
-    for(let i=0; i<100; i++) {
-        const rating = Math.floor(Math.random() * 50 + 45);
-        players.push({
-            id: i,
-            n: i < 10 ? names[i] : `PLAYER_${i+1}`,
-            r: rating,
-            w: Math.floor(rating/10), d: 2, l: 5,
-            h: ['W','W','W','L','W'], // Последние 5
-            goals: Math.floor(Math.random()*50)
+    // --- DATABASE LOGIC ---
+    let players = JSON.parse(localStorage.getItem('b1v1_players')) || [];
+    let matches = JSON.parse(localStorage.getItem('b1v1_matches')) || [];
+
+    if(players.length === 0) {
+        const names = ['Kuznetsov', 'Volkov', 'Ivanov', 'Petrov', 'Smirnov', 'Mironov', 'Popov', 'Zuparov', 'Sidorov', 'Dmitriev'];
+        players = names.map((n, i) => ({
+            id: i, n, r: 80 - i, w: 10, d: 2, l: 3,
+            history: [75, 77, 76, 78, 80], // История OVR для графика
+            form: ['W','W','L','W','W']
+        }));
+        save();
+    }
+
+    function save() {
+        localStorage.setItem('b1v1_players', JSON.stringify(players));
+        localStorage.setItem('b1v1_matches', JSON.stringify(matches));
+    }
+
+    // --- UI LOGIC ---
+    window.onload = () => {
+        players.sort((a,b) => b.r - a.r);
+        renderTable('all');
+        updateSelectors();
+    };
+
+    function renderTable(filter) {
+        const body = document.getElementById('table-body');
+        let data = players;
+        if(filter === 'gold') data = players.filter(p => p.r >= 80);
+        
+        body.innerHTML = data.map((p, i) => `
+            <tr onclick="openProfile(${p.id})">
+                <td style="width:40px; font-weight:900;">#${i+1}</td>
+                <td style="font-weight:800;">${p.n.toUpperCase()}</td>
+                <td style="color:var(--text-dim); font-size:10px;">WR: ${((p.w/(p.w+p.l+p.d))*100).toFixed(0)}%</td>
+                <td style="text-align:right; font-weight:900; color:${getRankColor(p.r)}">${p.r}</td>
+            </tr>
+        `).join('');
+    }
+
+    function updateSelectors() {
+        const opts = players.map(p => `<option value="${p.id}">${p.n}</option>`).join('');
+        ['adm-p1', 'adm-p2', 'comp-sel-1', 'comp-sel-2'].forEach(id => {
+            document.getElementById(id).innerHTML = opts;
         });
     }
 
-    let matches = [
-        {p1: 'Kuznetsov', p2: 'Volkov', s1: 10, s2: 8, date: 'JAN 24'}
-    ];
+    function processMatch() {
+        const p1 = players.find(x => x.id == document.getElementById('adm-p1').value);
+        const p2 = players.find(x => x.id == document.getElementById('adm-p2').value);
+        const s1 = parseInt(document.getElementById('adm-s1').value);
+        const s2 = parseInt(document.getElementById('adm-s2').value);
 
-    window.onload = () => {
-        updateAll();
-        populateAdminSelectors();
-    };
+        if(p1.id === p2.id) return alert("Select different players");
 
-    function updateAll() {
-        players.sort((a,b) => b.r - a.r);
-        renderLeaderboard(players);
+        if(s1 > s2) { p1.r += 2; p1.w++; p2.r -= 1; p2.l++; p1.form.unshift('W'); p2.form.unshift('L'); }
+        else if(s2 > s1) { p2.r += 2; p2.w++; p1.r -= 1; p1.l++; p2.form.unshift('W'); p1.form.unshift('L'); }
+        else { p1.d++; p2.d++; p1.form.unshift('D'); p2.form.unshift('D'); }
+
+        p1.history.push(p1.r); p2.history.push(p2.r);
+        p1.history = p1.history.slice(-5); p2.history = p2.history.slice(-5);
+        p1.form = p1.form.slice(0,5); p2.form = p2.form.slice(0,5);
+
+        matches.unshift({n1: p1.n, n2: p2.n, s1, s2});
+        save();
+        location.reload(); // Перезагрузка для обновления всех данных
     }
 
-    function renderLeaderboard(data) {
-        const body = document.getElementById('leaderboard-body');
-        body.innerHTML = data.map((p, i) => {
-            const isHot = p.h.slice(0,3).every(x => x === 'W');
-            const badges = [];
-            if(p.r >= 90) badges.push('<span class="badge b-vet">ELITE</span>');
-            if(p.l < 3) badges.push('<span class="badge b-wall">WALL</span>');
+    function runCompare() {
+        const p1 = players.find(x => x.id == document.getElementById('comp-sel-1').value);
+        const p2 = players.find(x => x.id == document.getElementById('comp-sel-2').value);
+        
+        const wr1 = (p1.w/(p1.w+p1.l+p1.d)*100).toFixed(0);
+        const wr2 = (p2.w/(p2.w+p2.l+p2.d)*100).toFixed(0);
+
+        document.getElementById('compare-results').innerHTML = `
+            <div class="comp-card">
+                <div style="font-size:3rem; font-weight:900;">${p1.r}</div>
+                <div class="label">${p1.n}</div>
+                <div class="comp-stat-row">
+                    <div class="comp-val ${wr1 > wr2 ? 'better' : ''}">${wr1}%</div>
+                    <div class="label">WINRATE</div>
+                </div>
+            </div>
+            <div style="align-self:center; text-align:center; font-weight:900; color:var(--text-dim);">VS</div>
+            <div class="comp-card">
+                <div style="font-size:3rem; font-weight:900;">${p2.r}</div>
+                <div class="label">${p2.n}</div>
+                <div class="comp-stat-row">
+                    <div class="comp-val ${wr2 > wr1 ? 'better' : ''}">${wr2}%</div>
+                    <div class="label">WINRATE</div>
+                </div>
+            </div>
+        `;
+    }
+
+    function openProfile(id) {
+        const p = players.find(x => x.id === id);
+        const maxH = Math.max(...p.history);
+        const minH = Math.min(...p.history);
+
+        document.getElementById('ov-content').innerHTML = `
+            <h1 style="font-size: 5rem;">${p.n.toUpperCase()}</h1>
+            <div style="font-size: 10rem; font-weight:900; color:${getRankColor(p.r)}">${p.r}</div>
             
-            return `
-                <tr onclick="openProfile(${p.id})">
-                    <td style="width: 50px; font-weight: 900; font-style: italic;">#${i+1}</td>
-                    <td style="font-weight: 800; font-style: italic;">
-                        ${p.n.toUpperCase()} ${isHot ? '<span class="streak-fire">🔥</span>' : ''}
-                        ${badges.join('')}
-                    </td>
-                    <td style="color: var(--text-dim); font-size: 0.7rem;">${p.w}W - ${p.d}D - ${p.l}L</td>
-                    <td style="text-align: right; font-weight: 900; color: ${getRankColor(p.r)}">${p.r}</td>
-                </tr>
-            `;
-        }).join('');
-    }
+            <div style="margin-top: 2rem;">
+                <span class="label">Rating Trend (Last 5 Games)</span>
+                <div class="mini-graph">
+                    ${p.history.map(h => {
+                        const height = ((h - minH + 5) / (maxH - minH + 10)) * 40;
+                        return `<div class="graph-bar" style="height:${height}px" title="OVR: ${h}"></div>`
+                    }).join('')}
+                </div>
+            </div>
 
-    function filterRank(rank, btn) {
-        document.querySelectorAll('.f-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        let filtered = players;
-        if(rank === 'gold') filtered = players.filter(p => p.r >= 85);
-        if(rank === 'silver') filtered = players.filter(p => p.r >= 70 && p.r < 85);
-        if(rank === 'bronze') filtered = players.filter(p => p.r < 70);
-        renderLeaderboard(filtered);
-    }
-
-    function searchPlayer() {
-        const val = document.getElementById('search').value.toLowerCase();
-        const filtered = players.filter(p => p.n.toLowerCase().includes(val));
-        renderLeaderboard(filtered);
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top:3rem;">
+                <div style="background:#111; padding:2rem; border-radius:15px;">
+                    <span class="label">Total Wins</span>
+                    <div style="font-size:3rem; font-weight:900;">${p.w}</div>
+                </div>
+                <div style="background:#111; padding:2rem; border-radius:15px;">
+                    <span class="label">Current Form</span>
+                    <div style="display:flex; gap:5px; margin-top:10px;">
+                        ${p.form.map(f => `<div style="width:15px; height:15px; background:${f==='W'?'var(--accent)':f==='L'?'#f33':'#555'}"></div>`).join('')}
+                    </div>
+                </div>
+            </div>
+        `;
+        document.getElementById('overlay').style.display = 'block';
     }
 
     function getRankColor(r) {
-        if(r >= 85) return 'var(--rank-gold)';
+        if(r >= 80) return 'var(--rank-gold)';
         if(r >= 70) return 'var(--rank-silver)';
         return 'var(--rank-bronze)';
     }
 
-    /* ADMIN LOGIC */
     function toggleAdmin() {
-        const p = document.getElementById('admin-panel');
-        p.style.display = p.style.display === 'block' ? 'none' : 'block';
+        const el = document.getElementById('admin-panel');
+        el.style.display = el.style.display === 'block' ? 'none' : 'block';
     }
 
-    function populateAdminSelectors() {
-        const s1 = document.getElementById('p1-select');
-        const s2 = document.getElementById('p2-select');
-        const opts = players.map(p => `<option value="${p.id}">${p.n}</option>`).join('');
-        s1.innerHTML = opts; s2.innerHTML = opts;
-    }
-
-    function submitMatch() {
-        const id1 = parseInt(document.getElementById('p1-select').value);
-        const id2 = parseInt(document.getElementById('p2-select').value);
-        const s1 = parseInt(document.getElementById('p1-score').value);
-        const s2 = parseInt(document.getElementById('p2-score').value);
-
-        if(isNaN(s1) || isNaN(s2)) return alert("Enter score!");
-
-        const p1 = players.find(x => x.id === id1);
-        const p2 = players.find(x => x.id === id2);
-
-        // Обновление OVR (Простая логика: победитель +2, проигравший -1)
-        if(s1 > s2) { p1.r += 2; p1.w++; p1.h.unshift('W'); p2.r -= 1; p2.l++; p2.h.unshift('L'); }
-        else if(s1 < s2) { p2.r += 2; p2.w++; p2.h.unshift('W'); p1.r -= 1; p1.l++; p1.h.unshift('L'); }
-        else { p1.d++; p1.h.unshift('D'); p2.d++; p2.h.unshift('D'); }
-
-        p1.h = p1.h.slice(0,5); p2.h = p2.h.slice(0,5);
-
-        matches.unshift({p1: p1.n, p2: p2.n, s1, s2, date: 'JUST NOW'});
-        renderMatches();
-        updateAll();
-        toggleAdmin();
-    }
-
-    function renderMatches() {
-        document.getElementById('matches-feed').innerHTML = matches.map(m => `
-            <div class="match-card">
-                <span class="m-player">${m.p1.toUpperCase()}</span>
-                <div class="score-chip">${m.s1} : ${m.s2}</div>
-                <span class="m-player" style="text-align: right;">${m.p2.toUpperCase()}</span>
-            </div>
-        `).join('');
-    }
+    function closeProfile() { document.getElementById('overlay').style.display = 'none'; }
 
     function showSection(id) {
         document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
@@ -233,36 +259,14 @@
         if(id === 'matches') renderMatches();
     }
 
-    function openProfile(id) {
-        const p = players.find(x => x.id === id);
-        document.getElementById('p-content').innerHTML = `
-            <div style="text-transform: uppercase;">
-                <span class="label">ATHLETE PROFILE</span>
-                <h2 style="font-size: 4rem; font-style: italic; font-weight: 900;">${p.n}</h2>
-                <div style="font-size: 10rem; font-weight: 900; color: ${getRankColor(p.r)}">${p.r}</div>
-                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 2rem;">
-                    <div class="match-card" style="flex-direction: column; align-items: flex-start;">
-                        <span class="label">WINRATE</span>
-                        <span style="font-size: 2rem; font-weight: 900; color: var(--accent);">${((p.w/(p.w+p.d+p.l))*100).toFixed(0)}%</span>
-                    </div>
-                    <div class="match-card" style="flex-column; grid-column: span 2;">
-                        <div>
-                            <span class="label">FORM (LAST 5)</span>
-                            <div style="display: flex; gap: 5px; margin-top: 5px;">
-                                ${p.h.map(r => `<div style="width:20px; height:20px; background:${r==='W'?'var(--accent)':r==='L'?'#ff3131':'#555'}; border-radius:3px;"></div>`).join('')}
-                            </div>
-                        </div>
-                    </div>
-                </div>
+    function renderMatches() {
+        document.getElementById('matches-list').innerHTML = matches.map(m => `
+            <div style="display:flex; justify-content:space-between; padding:1.5rem; background:#0d0d0d; border:1px solid var(--border); border-radius:15px; margin-bottom:10px;">
+                <span>${m.n1}</span>
+                <span style="font-weight:900; color:var(--accent);">${m.s1} : ${m.s2}</span>
+                <span>${m.n2}</span>
             </div>
-        `;
-        document.getElementById('p-overlay').style.display = 'block';
-        setTimeout(() => document.getElementById('p-overlay').classList.add('open'), 10);
-    }
-
-    function closeProfile() {
-        document.getElementById('p-overlay').classList.remove('open');
-        setTimeout(() => document.getElementById('p-overlay').style.display = 'none', 300);
+        `).join('');
     }
   </script>
 </body>
