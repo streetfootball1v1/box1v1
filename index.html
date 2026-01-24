@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>BOX1V1 | Street Football Elite</title>
+  <title>BOX1V1 | Global Elite</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,700;0,900;1,900&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -11,79 +11,52 @@
       --text: #fff; --text-dim: #666; --border: #1a1a1a;
       --cubic: cubic-bezier(0.2, 1, 0.2, 1);
       --rank-gold: #FFD700; --rank-silver: #C0C0C0; --rank-bronze: #CD7F32;
-      --win: #39FF14; --loss: #ff3131; --draw: #888;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
 
-    #preloader { position: fixed; inset: 0; background: #000; z-index: 5000; display: flex; align-items: center; justify-content: center; transition: opacity 0.4s var(--cubic); }
+    /* Поиск */
+    .search-box { width: 100%; max-width: 400px; background: #111; border: 1px solid var(--border); padding: 1rem; border-radius: 12px; color: #fff; margin-bottom: 2rem; font-family: inherit; }
+    .search-box:focus { border-color: var(--accent); outline: none; }
 
     nav { position: fixed; top: 0; width: 100%; z-index: 1000; background: rgba(0,0,0,0.9); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); }
     .nav-container { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; padding: 1rem 2rem; align-items: center; }
-    .nav-logo { height: 32px; cursor: pointer; }
     .nav-links { display: flex; gap: 2rem; }
-    .nav-links a { color: var(--text-dim); text-decoration: none; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; transition: 0.2s; cursor: pointer; }
-    .nav-links a.active, .nav-links a:hover { color: var(--accent); }
+    .nav-links a { color: var(--text-dim); text-decoration: none; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; cursor: pointer; }
+    .nav-links a.active { color: var(--accent); }
 
-    .container { max-width: 1200px; margin: 120px auto 0; padding: 0 2rem; min-height: 80vh; }
-    section { display: none; opacity: 0; transform: translateY(5px); transition: 0.3s var(--cubic); }
-    section.active { display: block; opacity: 1; transform: translateY(0); }
+    .container { max-width: 1200px; margin: 120px auto 0; padding: 0 2rem; }
+    section { display: none; opacity: 0; transition: 0.3s var(--cubic); }
+    section.active { display: block; opacity: 1; }
 
-    h1 { font-size: clamp(3rem, 10vw, 7rem); font-weight: 900; line-height: 0.85; letter-spacing: -3px; margin-bottom: 3rem; text-transform: uppercase; font-style: italic; }
+    h1 { font-size: clamp(2.5rem, 8vw, 6rem); font-weight: 900; font-style: italic; text-transform: uppercase; margin-bottom: 2rem; line-height: 0.9; }
 
-    .bento { display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: 220px; gap: 1rem; margin-bottom: 5rem; }
-    .card { background: var(--card-bg); border-radius: 20px; padding: 2rem; display: flex; flex-direction: column; justify-content: space-between; transition: 0.25s var(--cubic); cursor: pointer; border: 1px solid var(--border); position: relative; overflow: hidden; }
-    .card:hover { transform: translateY(-6px); border-color: rgba(255,255,255,0.2); background: #111; }
-    
-    .c-main { grid-column: span 2; grid-row: span 2; }
-    .c-white { background: #fff; color: #000; border: none; }
-    .c-wide { grid-column: span 2; }
+    /* Таблица рейтинга */
+    .league-table { width: 100%; border-collapse: collapse; margin-bottom: 5rem; }
+    .league-table th { text-align: left; padding: 1rem; color: var(--text-dim); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 2px; border-bottom: 1px solid var(--border); }
+    .league-table td { padding: 1.2rem 1rem; border-bottom: 1px solid var(--border); transition: 0.2s; cursor: pointer; }
+    .league-table tr:hover td { background: #080808; color: var(--accent); }
+    .t-rank { font-weight: 900; font-style: italic; width: 50px; }
+    .t-ovr { font-weight: 900; }
 
-    .ovr { font-size: 8rem; font-weight: 900; line-height: 0.8; letter-spacing: -6px; transition: 0.25s ease; color: var(--ovr-color, var(--accent)); }
-    .rank-gold { --ovr-color: var(--rank-gold); }
-    .rank-silver { --ovr-color: var(--rank-silver); }
-    .rank-bronze { --ovr-color: var(--rank-bronze); }
-    .card:hover .ovr { filter: drop-shadow(0 0 15px var(--ovr-color, var(--accent))); transform: scale(1.05); }
+    /* Таблица матчей */
+    .match-row { display: grid; grid-template-columns: 1fr 80px 1fr; align-items: center; padding: 1.5rem; background: #0d0d0d; border-radius: 15px; margin-bottom: 0.5rem; text-align: center; border: 1px solid var(--border); }
+    .m-score { background: #1a1a1a; padding: 0.5rem; border-radius: 8px; font-weight: 900; color: var(--accent); }
+    .m-player { font-weight: 800; text-transform: uppercase; font-style: italic; }
 
-    .label { font-size: 0.65rem; font-weight: 900; color: var(--text-dim); letter-spacing: 2px; text-transform: uppercase; }
-    .p-name { font-size: 2.8rem; font-weight: 900; font-style: italic; text-transform: uppercase; line-height: 0.9; }
-
-    /* Profile Overlay */
+    /* Оверлей */
     .overlay { position: fixed; inset: 0; background: #000; z-index: 2000; display: none; opacity: 0; transition: 0.3s; padding: 2rem; overflow-y: auto; }
     .overlay.open { display: block; opacity: 1; }
-    .close { position: fixed; top: 2rem; right: 2rem; color: var(--accent); font-weight: 900; cursor: pointer; z-index: 2100; text-transform: uppercase; font-size: 0.8rem; }
-
-    .stats-container { max-width: 1000px; margin: 8vh auto; }
-    .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-top: 3rem; border-top: 1px solid var(--border); padding-top: 2rem; }
-    .stat-item { display: flex; flex-direction: column; }
-    .stat-val { font-size: 4rem; font-weight: 900; color: #fff; }
-    .stat-lab { font-size: 0.7rem; font-weight: 900; color: var(--text-dim); text-transform: uppercase; letter-spacing: 2px; }
-    
-    .winrate-box { grid-column: span 2; background: #111; padding: 2rem; border-radius: 15px; display: flex; align-items: center; gap: 2rem; }
-    .wr-val { font-size: 5rem; font-weight: 900; color: var(--accent); font-style: italic; }
-
-    /* История матчей */
-    .history-box { grid-column: span 1; background: #111; padding: 2rem; border-radius: 15px; display: flex; flex-direction: column; justify-content: center; }
-    .match-history { display: flex; gap: 0.5rem; margin-top: 10px; }
-    .m-res { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 4px; font-weight: 900; font-size: 0.75rem; color: #000; }
-    .res-w { background: var(--win); }
-    .res-l { background: var(--loss); }
-    .res-d { background: var(--draw); }
+    .close { position: fixed; top: 2rem; right: 2rem; color: var(--accent); font-weight: 900; cursor: pointer; }
 
     @media (max-width: 768px) {
-      .bento { grid-template-columns: 1fr; grid-auto-rows: auto; }
-      .c-main, .c-wide { grid-column: span 1; min-height: 300px; }
-      .stats-grid { grid-template-columns: 1fr; }
-      .winrate-box, .history-box { grid-column: span 1; }
+      .match-row { grid-template-columns: 1fr; gap: 10px; }
+      .league-table th:nth-child(3), .league-table td:nth-child(3) { display: none; }
     }
   </style>
 </head>
 <body>
-
-  <div id="preloader">
-    <svg viewBox="0 0 400 100" width="160" height="40"><text x="0" y="80" fill="#FFFFFF" font-family="Inter" font-weight="900" font-size="80" letter-spacing="12">BOX<tspan fill="#39FF14">1</tspan>V1</text></svg>
-  </div>
 
   <nav>
     <div class="nav-container">
@@ -92,168 +65,156 @@
       </div>
       <div class="nav-links">
         <a onclick="showSection('home')" id="btn-home" class="active">HOME</a>
-        <a onclick="showSection('ranking')" id="btn-ranking">PLAYERS</a>
-        <a onclick="showSection('connect')" id="btn-connect">CONNECT</a>
+        <a onclick="showSection('ranking')" id="btn-ranking">ROSTER</a>
+        <a onclick="showSection('matches')" id="btn-matches">MATCHES</a>
       </div>
     </div>
   </nav>
 
   <div class="container">
+    
     <section id="home" class="active">
-        <span class="label" style="color:var(--accent)">ELAGINO SEASON 2026</span>
-        <h1>STREET<br>STANDARD.</h1>
-        <div class="bento">
-            <div id="leader-card-container"></div>
-            <div class="card c-white" onclick="showSection('connect')">
-                <div style="font-size: 2rem; font-weight: 900; font-style: italic; text-transform: uppercase;">JOIN THE<br>CAGE.</div>
-                <p style="font-size: 0.7rem; font-weight: 800;">APPLY FOR TRIAL →</p>
-            </div>
-            <div class="card" onclick="showSection('ranking')">
-                <span class="label">DATABASE</span>
-                <div style="font-size: 1.4rem; font-weight: 900; font-style: italic;">ALL PLAYERS</div>
-            </div>
-            <div class="card c-wide" onclick="window.open('https://instagram.com/box.1v1')">
-                <span class="label">MEDIA</span>
-                <div style="font-size: 2rem; font-weight: 900; font-style: italic; color: var(--accent);">INSTAGRAM ↗</div>
-                <p style="font-size: 0.75rem; color: var(--text-dim);">WATCH HIGHLIGHTS</p>
-            </div>
-        </div>
+        <h1>TOP ELITE.</h1>
+        <div id="top-three" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; margin-bottom: 3rem;"></div>
+        
+        <h2 class="label" style="margin-bottom: 1rem;">RECENT DUELS</h2>
+        <div id="recent-matches-home"></div>
     </section>
 
     <section id="ranking">
-        <h1>THE ROSTER</h1>
-        <div id="ranking-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; margin-bottom: 4rem;"></div>
+        <h1>GLOBAL<br>RANKING.</h1>
+        <input type="text" class="search-box" id="playerSearch" placeholder="SEARCH ATHLETE..." oninput="filterPlayers()">
+        <table class="league-table">
+            <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>Athlete</th>
+                    <th>Record (W/D/L)</th>
+                    <th>OVR</th>
+                </tr>
+            </thead>
+            <tbody id="full-ranking-body"></tbody>
+        </table>
     </section>
 
-    <section id="connect">
-        <h1>CONNECT.</h1>
-        <div style="margin-top: 2rem;">
-            <a href="https://t.me/streetbox1v1" target="_blank" class="social-row"><h2>TELEGRAM</h2> <span>↗</span></a>
-            <a href="https://instagram.com/box.1v1" target="_blank" class="social-row"><h2>INSTAGRAM</h2> <span>↗</span></a>
-            <a href="https://tiktok.com/@box1v1" target="_blank" class="social-row"><h2>TIKTOK</h2> <span>↗</span></a>
-        </div>
+    <section id="matches">
+        <h1>MATCH HISTORY.</h1>
+        <div id="all-matches-list"></div>
     </section>
 
-    <footer>BOX1V1 // 1V1 STREET FOOTBALL // 2026</footer>
   </div>
 
   <div class="overlay" id="p-overlay">
     <div class="close" onclick="closeProfile()">[ CLOSE ]</div>
-    <div class="stats-container">
-        <h2 id="p-name" style="font-size: clamp(3rem, 10vw, 8rem); font-weight: 900; font-style: italic; text-transform: uppercase; line-height: 0.8;">NAME</h2>
-        <div id="p-ovr" class="ovr" style="font-size: 15rem; margin-top: -10px;">92</div>
-        
-        <div class="stats-grid">
-            <div class="stat-item"><span class="stat-lab">Wins</span><span class="stat-val" id="p-w">0</span></div>
-            <div class="stat-item"><span class="stat-lab">Draws</span><span class="stat-val" id="p-d">0</span></div>
-            <div class="stat-item"><span class="stat-lab">Losses</span><span class="stat-val" id="p-l" style="color:var(--loss)">0</span></div>
-            
-            <div class="winrate-box">
-                <span class="stat-lab">Total Win Rate</span>
-                <div class="wr-val" id="p-wr">0%</div>
-            </div>
-
-            <div class="history-box">
-                <span class="stat-lab">Last 5 matches</span>
-                <div class="match-history" id="p-history"></div>
-            </div>
-        </div>
-    </div>
+    <div id="profile-content" style="max-width: 800px; margin: 10vh auto;"></div>
   </div>
 
   <script>
-    const players = [
-        {n: 'Kuznetsov', r: 92, w: 45, d: 5, l: 3, h: ['W','W','W','D','W']}, 
-        {n: 'Volkov', r: 90, w: 38, d: 8, l: 6, h: ['W','L','W','W','D']}, 
-        {n: 'Ivanov', r: 89, w: 35, d: 10, l: 4, h: ['D','W','W','L','W']}, 
-        {n: 'Smirnov', r: 81, w: 22, d: 5, l: 15, h: ['L','L','W','D','L']},
-        {n: 'Petrov', r: 78, w: 18, d: 12, l: 14, h: ['W','D','L','L','W']}, 
-        {n: 'Mironov', r: 71, w: 12, d: 4, l: 18, h: ['L','W','L','L','D']},
-        {n: 'Popov', r: 64, w: 8, d: 2, l: 22, h: ['L','L','L','W','L']}, 
-        {n: 'Zuparov', r: 62, w: 5, d: 6, l: 15, h: ['D','L','L','D','L']}, 
-        {n: 'Sidorov', r: 55, w: 2, d: 1, l: 25, h: ['L','L','L','L','L']}, 
-        {n: 'Dmitriev', r: 51, w: 1, d: 0, l: 30, h: ['L','L','L','L','L']}
-    ];
-
-    function getRankClass(rating) {
-        if (rating >= 85) return 'rank-gold';
-        if (rating >= 70) return 'rank-silver';
-        return 'rank-bronze';
+    // Генерация 500 игроков для теста
+    const players = [];
+    const firstNames = ['Kuznetsov', 'Volkov', 'Ivanov', 'Petrov', 'Smirnov', 'Mironov', 'Popov', 'Zuparov', 'Sidorov', 'Dmitriev'];
+    
+    for(let i = 0; i < 500; i++) {
+        const r = Math.floor(Math.random() * (95 - 40) + 40);
+        players.push({
+            id: i,
+            n: i < 10 ? firstNames[i] : `ATHLETE_${i+1}`, // Имена только первым 10
+            r: r,
+            w: Math.floor(r/2), d: Math.floor(Math.random()*10), l: Math.floor(Math.random()*20),
+            h: ['W','L','W','W','W']
+        });
     }
+
+    const globalMatches = [
+        {p1: 'Kuznetsov', p2: 'Volkov', s1: 5, s2: 3},
+        {p1: 'Ivanov', p2: 'Petrov', s1: 2, s2: 2},
+        {p1: 'Smirnov', p2: 'Mironov', s1: 0, s2: 4}
+    ];
 
     window.onload = () => {
         players.sort((a, b) => b.r - a.r);
-        setTimeout(() => {
-            document.getElementById('preloader').style.opacity = '0';
-            setTimeout(() => document.getElementById('preloader').style.display = 'none', 400);
-        }, 400);
-        renderHomeLeader();
-        renderPlayers();
+        renderTopThree();
+        renderTable(players);
+        renderMatches();
     };
 
-    function renderHomeLeader() {
-        const leader = players[0];
-        document.getElementById('leader-card-container').innerHTML = `
-            <div class="card c-main ${getRankClass(leader.r)}" onclick="openProfile('${leader.n}')">
-                <div><span class="label">LEADERBOARD #01</span><div class="ovr">${leader.r}</div></div>
-                <div class="p-name">${leader.n}</div>
+    function renderTopThree() {
+        const container = document.getElementById('top-three');
+        players.slice(0, 3).forEach((p, i) => {
+            container.innerHTML += `
+                <div class="card" style="background:#111; padding: 2rem; border-radius: 20px; border: 1px solid var(--border);" onclick="openProfileById(${p.id})">
+                    <span class="label">RANK #0${i+1}</span>
+                    <div style="font-size: 5rem; font-weight: 900; color: ${getRankColor(p.r)};">${p.r}</div>
+                    <div class="p-name" style="font-size: 1.5rem;">${p.n}</div>
+                </div>
+            `;
+        });
+    }
+
+    function renderTable(data) {
+        const body = document.getElementById('full-ranking-body');
+        body.innerHTML = data.map((p, i) => `
+            <tr onclick="openProfileById(${p.id})">
+                <td class="t-rank">#${i+1}</td>
+                <td class="m-player">${p.n}</td>
+                <td style="color: var(--text-dim)">${p.w}W / ${p.d}D / ${p.l}L</td>
+                <td class="t-ovr" style="color: ${getRankColor(p.r)}">${p.r}</td>
+            </tr>
+        `).join('');
+    }
+
+    function renderMatches() {
+        const html = globalMatches.map(m => `
+            <div class="match-row">
+                <span class="m-player">${m.p1}</span>
+                <span class="m-score">${m.s1} : ${m.s2}</span>
+                <span class="m-player">${m.p2}</span>
+            </div>
+        `).join('');
+        document.getElementById('recent-matches-home').innerHTML = html;
+        document.getElementById('all-matches-list').innerHTML = html;
+    }
+
+    function filterPlayers() {
+        const val = document.getElementById('playerSearch').value.toLowerCase();
+        const filtered = players.filter(p => p.n.toLowerCase().includes(val));
+        renderTable(filtered);
+    }
+
+    function getRankColor(r) {
+        if(r >= 85) return 'var(--rank-gold)';
+        if(r >= 70) return 'var(--rank-silver)';
+        return 'var(--rank-bronze)';
+    }
+
+    function openProfileById(id) {
+        const p = players.find(x => x.id === id);
+        const wr = ((p.w / (p.w + p.d + p.l)) * 100).toFixed(0);
+        document.getElementById('profile-content').innerHTML = `
+            <h2 style="font-size: 5rem; font-style: italic; font-weight: 900;">${p.n}</h2>
+            <div style="font-size: 10rem; font-weight: 900; color: ${getRankColor(p.r)}">${p.r}</div>
+            <div style="display: flex; gap: 2rem; margin-top: 2rem;">
+                <div><span class="label">Wins</span><div style="font-size: 2rem; font-weight:900;">${p.w}</div></div>
+                <div><span class="label">Winrate</span><div style="font-size: 2rem; font-weight:900; color:var(--accent);">${wr}%</div></div>
             </div>
         `;
-    }
-
-    function renderPlayers() {
-      const grid = document.getElementById('ranking-grid');
-      grid.innerHTML = '';
-      players.forEach((p, i) => {
-        grid.innerHTML += `
-          <div class="card ${getRankClass(p.r)}" style="min-height: 200px;" onclick="openProfile('${p.n}')">
-            <span class="label">ATHLETE // 0${i+1}</span>
-            <div class="ovr" style="font-size: 4rem; line-height:1;">${p.r}</div>
-            <div style="font-size: 1.5rem; font-weight: 900; font-style: italic; text-transform: uppercase;">${p.n}</div>
-          </div>
-        `;
-      });
-    }
-
-    function openProfile(name) {
-      const p = players.find(x => x.n === name);
-      const wr = ((p.w / (p.w + p.d + p.l)) * 100).toFixed(0);
-      
-      document.getElementById('p-name').innerText = p.n;
-      document.getElementById('p-ovr').innerText = p.r;
-      document.getElementById('p-ovr').className = 'ovr ' + getRankClass(p.r);
-      document.getElementById('p-w').innerText = p.w;
-      document.getElementById('p-d').innerText = p.d;
-      document.getElementById('p-l').innerText = p.l;
-      document.getElementById('p-wr').innerText = wr + '%';
-      
-      // Рендер истории
-      const histCont = document.getElementById('p-history');
-      histCont.innerHTML = '';
-      p.h.forEach(res => {
-          const type = res === 'W' ? 'res-w' : res === 'L' ? 'res-l' : 'res-d';
-          histCont.innerHTML += `<div class="m-res ${type}">${res}</div>`;
-      });
-      
-      const over = document.getElementById('p-overlay');
-      over.style.display = 'block';
-      setTimeout(() => over.classList.add('open'), 10);
-      document.body.style.overflow = 'hidden';
+        const over = document.getElementById('p-overlay');
+        over.style.display = 'block';
+        setTimeout(() => over.classList.add('open'), 10);
     }
 
     function closeProfile() {
-      const over = document.getElementById('p-overlay');
-      over.classList.remove('open');
-      setTimeout(() => { over.style.display = 'none'; document.body.style.overflow = 'auto'; }, 300);
+        const over = document.getElementById('p-overlay');
+        over.classList.remove('open');
+        setTimeout(() => over.style.display = 'none', 300);
     }
 
     function showSection(id) {
-      document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
-      document.getElementById(id).classList.add('active');
-      document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
-      const btn = document.getElementById('btn-' + id);
-      if(btn) btn.classList.add('active');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+        document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+        document.getElementById('btn-' + id).classList.add('active');
+        window.scrollTo(0,0);
     }
   </script>
 </body>
