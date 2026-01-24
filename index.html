@@ -3,91 +3,92 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>BOX1V1 | Win the Street</title>
+  <title>BOX1V1 | Street Football Elite</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,700;0,900;1,900&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #000; --card-bg: #111; --accent: #39FF14;
-      --text: #fff; --text-dim: #888; --border: #222;
+      --bg: #000; --card-bg: #0a0a0a; --accent: #39FF14;
+      --text: #fff; --text-dim: #666; --border: #1a1a1a;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { 
-      background: var(--bg); color: var(--text); 
-      font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; 
-    }
+    body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
 
-    /* Навигация как в Apple Store */
+    /* Preloader */
+    #preloader {
+      position: fixed; inset: 0; background: #000; z-index: 5000;
+      display: flex; align-items: center; justify-content: center;
+      transition: 0.6s ease;
+    }
+    .loader-img { width: 100px; height: auto; filter: drop-shadow(0 0 15px var(--accent)); }
+
+    /* Nav */
     nav { 
       position: fixed; top: 0; width: 100%; z-index: 1000; 
-      background: rgba(0,0,0,0.8); backdrop-filter: blur(20px);
-      border-bottom: 1px solid var(--border);
+      background: rgba(0,0,0,0.8); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border);
     }
     .nav-container { 
-      max-width: 1200px; margin: 0 auto; display: flex; 
-      justify-content: space-between; padding: 1.2rem 1.5rem; align-items: center; 
+      max-width: 1300px; margin: 0 auto; display: flex; 
+      justify-content: space-between; padding: 0.8rem 1.5rem; align-items: center; 
     }
-    .logo { font-weight: 900; font-size: 1.2rem; font-style: italic; letter-spacing: -1px; cursor: pointer; }
-    .nav-links { display: flex; gap: 2.5rem; }
+    .nav-logo { height: 35px; cursor: pointer; }
+    .nav-links { display: flex; gap: 2rem; }
     .nav-links a { 
       color: var(--text-dim); text-decoration: none; font-size: 0.75rem; 
-      font-weight: 700; text-transform: uppercase; transition: 0.3s; cursor: pointer;
+      font-weight: 800; text-transform: uppercase; transition: 0.3s; cursor: pointer;
     }
-    .nav-links a.active, .nav-links a:hover { color: #fff; }
+    .nav-links a.active, .nav-links a:hover { color: var(--accent); }
 
-    .container { max-width: 1100px; margin: 120px auto 0; padding: 0 1.5rem; }
+    .container { max-width: 1200px; margin: 100px auto 0; padding: 0 1.5rem; }
     section { display: none; }
-    section.active { display: block; animation: fadeIn 0.4s ease; }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    section.active { display: block; animation: slideIn 0.5s ease; }
+    @keyframes slideIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
 
-    /* Nike Typography */
+    /* Typography */
+    .hero-tag { color: var(--accent); font-weight: 900; font-size: 0.75rem; letter-spacing: 4px; text-transform: uppercase; }
     h1 { 
-      font-size: clamp(4rem, 12vw, 8rem); font-weight: 900; line-height: 0.8; 
-      letter-spacing: -4px; margin-bottom: 3.5rem; text-transform: uppercase; font-style: italic; 
+      font-size: clamp(3rem, 12vw, 8rem); font-weight: 900; line-height: 0.8; 
+      letter-spacing: -4px; margin: 1rem 0 3.5rem; text-transform: uppercase; font-style: italic; 
     }
 
-    /* Bento Grid - Пропорции Apple */
-    .bento { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-bottom: 4rem; }
+    /* Bento Grid - Football Aesthetic */
+    .bento { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 4rem; }
     .card { 
-      background: var(--card-bg); border-radius: 28px; padding: 2.5rem; 
+      background: var(--card-bg); border-radius: 20px; padding: 1.5rem; 
       display: flex; flex-direction: column; justify-content: space-between;
-      transition: 0.4s cubic-bezier(0.2, 1, 0.3, 1); cursor: pointer;
-      min-height: 280px; border: 1px solid transparent;
+      transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; min-height: 220px; border: 1px solid var(--border);
     }
-    .card:hover { transform: scale(0.985); background: #161616; border-color: #333; }
+    .card:hover { border-color: var(--accent); transform: translateY(-5px); background: #111; }
     
-    .card.main { grid-column: span 2; background: linear-gradient(135deg, #111, #050505); }
-    .card.white { background: #fff; color: #000; }
-    .card.small { min-height: 180px; }
+    .card.leader { grid-column: span 2; grid-row: span 2; background: linear-gradient(135deg, #111 0%, #000 100%); min-height: 460px; }
+    .card.cta { background: var(--accent); color: #000; border: none; }
+    .card.wide { grid-column: span 2; min-height: 220px; }
 
-    .ovr { font-size: 7rem; font-weight: 900; color: var(--accent); line-height: 0.8; letter-spacing: -5px; }
-    .label { font-size: 0.7rem; font-weight: 800; color: var(--text-dim); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 1rem; display: block; }
-    .name { font-size: 2.5rem; font-weight: 900; font-style: italic; text-transform: uppercase; }
+    .ovr-big { font-size: 10rem; font-weight: 900; color: var(--accent); line-height: 0.8; letter-spacing: -8px; margin: 1rem 0; }
+    .card-label { font-size: 0.6rem; font-weight: 900; color: var(--text-dim); letter-spacing: 2px; text-transform: uppercase; }
+    .player-name { font-size: 3rem; font-weight: 900; font-style: italic; text-transform: uppercase; line-height: 0.9; }
 
-    /* Links */
-    .social-link { 
+    /* Connect Section */
+    .social-row { 
       display: flex; justify-content: space-between; align-items: center; 
       padding: 2.5rem 0; border-top: 1px solid var(--border); 
       text-decoration: none; color: #fff; transition: 0.3s;
     }
-    .social-link:hover { opacity: 0.5; padding-left: 1rem; }
-    .social-link h2 { font-size: 3rem; font-weight: 900; font-style: italic; }
+    .social-row:hover { background: rgba(57, 255, 20, 0.03); padding-left: 1.5rem; color: var(--accent); }
+    .social-row h2 { font-size: 3rem; font-weight: 900; font-style: italic; text-transform: uppercase; }
 
-    /* Overlay */
-    .overlay { 
-      position: fixed; inset: 0; background: #000; z-index: 2000; 
-      display: none; padding: 4rem 2rem; 
-    }
-    .close { position: absolute; top: 2rem; right: 2rem; font-weight: 900; color: var(--accent); cursor: pointer; }
-
-    footer { padding: 4rem 0; color: var(--text-dim); font-size: 0.7rem; font-weight: 700; border-top: 1px solid var(--border); }
+    footer { padding: 4rem 0; color: var(--text-dim); font-size: 0.7rem; font-weight: 800; border-top: 1px solid var(--border); text-align: center; text-transform: uppercase; letter-spacing: 2px; }
   </style>
 </head>
 <body>
 
+  <div id="preloader">
+    <img src="https://i.ibb.co/qF0L38r2/Airbrush-IMAGE-ENHANCER-1769086394964-1769086394964.jpg" class="loader-img" alt="logo">
+  </div>
+
   <nav>
     <div class="nav-container">
-      <div class="logo" onclick="showSection('home')">BOX1V1</div>
+      <img src="https://i.ibb.co/qF0L38r2/Airbrush-IMAGE-ENHANCER-1769086394964-1769086394964.jpg" class="nav-logo" alt="logo" onclick="showSection('home')">
       <div class="nav-links">
         <a onclick="showSection('home')" id="btn-home" class="active">HOME</a>
         <a onclick="showSection('ranking')" id="btn-ranking">PLAYERS</a>
@@ -99,59 +100,63 @@
   <div class="container">
     
     <section id="home" class="active">
-        <span class="label" style="color:var(--accent)">SEASON 2026 // ELAGINO</span>
-        <h1>STREET<br>STANDARD.</h1>
+        <span class="hero-tag">Street Football Society</span>
+        <h1>WIN THE<br>STREETS.</h1>
         
         <div class="bento">
-            <div class="card main" onclick="openProfile('Kuznetsov', 92)">
+            <div class="card leader" onclick="openProfile('Kuznetsov', 92)">
                 <div>
-                    <span class="label">LEADERBOARD #1</span>
-                    <div class="ovr">92</div>
+                    <span class="card-label">Top Scorer // OVR</span>
+                    <div class="ovr-big">92</div>
                 </div>
-                <div class="name">KUZNETSOV</div>
+                <div>
+                    <div class="player-name">KUZNETSOV</div>
+                    <div style="margin-top: 1rem;"><span style="background:var(--accent); color:#000; padding:4px 12px; border-radius:4px; font-weight:900; font-size:0.7rem;">ELITE RANK #1</span></div>
+                </div>
             </div>
 
-            <div class="card white" onclick="showSection('connect')">
-                <span class="label" style="color:rgba(0,0,0,0.4)">MEMBERSHIP</span>
-                <div style="font-size: 2.2rem; font-weight: 900; line-height: 0.9; font-style: italic; text-transform: uppercase;">JOIN THE<br>ELITE.</div>
-                <p style="margin-top: 2rem; font-weight: 800; font-size: 0.8rem;">APPLY NOW →</p>
+            <div class="card cta" onclick="showSection('connect')">
+                <span class="card-label" style="color:rgba(0,0,0,0.5)">Admission</span>
+                <div style="font-size: 2.2rem; font-weight: 900; line-height: 0.9; font-style: italic; text-transform: uppercase;">JOIN THE<br>CAGE.</div>
+                <p style="margin-top: 2rem; font-weight: 800; font-size: 0.75rem;">BECOME A LEGEND →</p>
             </div>
 
-            <div class="card small" style="grid-column: span 2;" onclick="showSection('ranking')">
-                <span class="label">DATABASE</span>
-                <div class="name" style="font-size: 1.5rem;">VIEW FULL RANKING</div>
+            <div class="card" onclick="showSection('ranking')">
+                <span class="card-label">Database</span>
+                <div style="font-size: 1.5rem; font-weight: 900; font-style: italic; margin-top: 1rem;">PLAYER<br>ROSTER</div>
             </div>
 
-            <div class="card small" onclick="window.open('https://instagram.com/box.1v1','_blank')">
-                <span class="label">INSTA</span>
-                <div class="name" style="font-size: 1.5rem; color: var(--accent);">MEDIA</div>
+            <div class="card wide" onclick="window.open('https://instagram.com/box.1v1','_blank')">
+                <span class="card-label">Latest Highlights</span>
+                <div style="font-size: 1.8rem; font-weight: 900; font-style: italic; color: var(--accent); margin-top: 1rem;">FOLLOW ON INSTAGRAM ↗</div>
+                <p style="color:var(--text-dim); font-size:0.8rem; font-weight:700; margin-top:0.5rem;">WATCH NEW 1V1 DUELS</p>
             </div>
         </div>
     </section>
 
     <section id="ranking">
         <h1>THE ROSTER</h1>
-        <div id="ranking-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem;"></div>
+        <div id="ranking-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem;"></div>
     </section>
 
     <section id="connect">
         <h1>CONNECT.</h1>
         <div style="margin-top: 2rem;">
-            <a href="https://t.me/streetbox1v1" target="_blank" class="social-link"><h2>TELEGRAM</h2> <span>↗</span></a>
-            <a href="https://instagram.com/box.1v1" target="_blank" class="social-link"><h2>INSTAGRAM</h2> <span>↗</span></a>
-            <a href="https://tiktok.com/@box1v1" target="_blank" class="social-link"><h2>TIKTOK</h2> <span>↗</span></a>
+            <a href="https://t.me/streetbox1v1" target="_blank" class="social-row"><h2>TELEGRAM</h2> <span>↗</span></a>
+            <a href="https://instagram.com/box.1v1" target="_blank" class="social-row"><h2>INSTAGRAM</h2> <span>↗</span></a>
+            <a href="https://tiktok.com/@box1v1" target="_blank" class="social-row"><h2>TIKTOK</h2> <span>↗</span></a>
         </div>
     </section>
 
     <footer>
-        BOX1V1 // UNBEATABLE STREETS // EST. 2026
+        BOX1V1 // 1V1 STREET FOOTBALL // 2026
     </footer>
   </div>
 
-  <div class="overlay" id="p-overlay">
-    <div class="close" onclick="closeProfile()">CLOSE_X</div>
-    <div style="max-width: 900px; margin: 0 auto;">
-        <h2 id="p-name" style="font-size: 12vw; font-weight: 900; font-style: italic; text-transform: uppercase;">NAME</h2>
+  <div class="overlay" id="p-overlay" style="position:fixed; inset:0; background:#000; z-index:2000; display:none; padding:4rem 2rem;">
+    <div onclick="closeProfile()" style="position:absolute; top:2rem; right:2rem; font-weight:900; color:var(--accent); cursor:pointer;">CLOSE_X</div>
+    <div style="max-width: 1000px; margin: 0 auto;">
+        <h2 id="p-name" style="font-size: 15vw; font-weight: 900; font-style: italic; text-transform: uppercase; line-height: 0.8;">NAME</h2>
         <div id="p-ovr" style="font-size: 10rem; font-weight: 900; color: var(--accent); line-height: 0.8;">92</div>
     </div>
   </div>
@@ -163,14 +168,22 @@
         {n: 'Popov', r: 64}, {n: 'Zuparov', r: 62}, {n: 'Sidorov', r: 55}, {n: 'Dmitriev', r: 51}
     ];
 
+    window.onload = () => {
+        setTimeout(() => {
+            document.getElementById('preloader').style.opacity = '0';
+            setTimeout(() => document.getElementById('preloader').style.display = 'none', 600);
+        }, 1200);
+        renderPlayers();
+    };
+
     function renderPlayers() {
       const grid = document.getElementById('ranking-grid');
       grid.innerHTML = '';
       players.forEach((p, i) => {
         grid.innerHTML += `
           <div class="card" style="min-height: 200px" onclick="openProfile('${p.n}', ${p.r})">
-            <span class="label">ATHLETE // 0${i+1}</span>
-            <div style="font-size: 3.5rem; font-weight: 900; color: var(--accent); line-height:1;">${p.r}</div>
+            <span class="card-label">ATHLETE // 0${i+1}</span>
+            <div style="font-size: 4rem; font-weight: 900; color: var(--accent); line-height:1;">${p.r}</div>
             <div style="font-size: 1.5rem; font-weight: 900; font-style: italic; text-transform: uppercase;">${p.n}</div>
           </div>
         `;
@@ -196,8 +209,6 @@
       document.getElementById('p-overlay').style.display = 'none';
       document.body.style.overflow = 'auto';
     }
-
-    renderPlayers();
   </script>
 </body>
 </html>
