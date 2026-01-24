@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>BOX1V1 | Street Football Hub</title>
+  <title>BOX1V1 | Street Football Elite</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,700;0,900;1,900&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #000; --card-bg: #0d0d0d; --accent: #2E7D32; /* Твой зеленый из SVG */
-      --text: #fff; --text-dim: #555; --border: #1a1a1a;
+      --bg: #000; --card-bg: #0d0d0d; --accent: #39FF14; /* Тот самый неоновый зеленый */
+      --text: #fff; --text-dim: #666; --border: #1a1a1a;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -18,35 +18,35 @@
     #preloader {
       position: fixed; inset: 0; background: #000; z-index: 5000;
       display: flex; align-items: center; justify-content: center;
-      transition: 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: 0.6s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     /* Nav */
     nav { 
       position: fixed; top: 0; width: 100%; z-index: 1000; 
-      background: rgba(0,0,0,0.8); backdrop-filter: saturate(180%) blur(20px); border-bottom: 1px solid var(--border);
+      background: rgba(0,0,0,0.8); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border);
     }
     .nav-container { 
       max-width: 1400px; margin: 0 auto; display: flex; 
       justify-content: space-between; padding: 1rem 2rem; align-items: center; 
     }
-    .nav-logo { height: 35px; cursor: pointer; display: flex; align-items: center; }
+    .nav-logo { height: 32px; cursor: pointer; display: flex; align-items: center; }
     .nav-links { display: flex; gap: 2.5rem; }
     .nav-links a { 
       color: var(--text-dim); text-decoration: none; font-size: 0.75rem; 
-      font-weight: 800; text-transform: uppercase; transition: 0.3s; cursor: pointer; letter-spacing: 1px;
+      font-weight: 800; text-transform: uppercase; transition: 0.3s; cursor: pointer;
     }
-    .nav-links a.active, .nav-links a:hover { color: #fff; }
+    .nav-links a.active, .nav-links a:hover { color: var(--accent); }
 
     .container { max-width: 1200px; margin: 120px auto 0; padding: 0 2rem; }
     section { display: none; }
-    section.active { display: block; animation: reveal 0.6s ease; }
+    section.active { display: block; animation: reveal 0.5s ease-out; }
     @keyframes reveal { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
     /* Typography */
-    .label { color: var(--accent); font-weight: 900; font-size: 0.75rem; letter-spacing: 3px; text-transform: uppercase; }
+    .hero-label { color: var(--accent); font-weight: 900; font-size: 0.7rem; letter-spacing: 4px; text-transform: uppercase; }
     h1 { 
-      font-size: clamp(3rem, 12vw, 8rem); font-weight: 900; line-height: 0.8; 
+      font-size: clamp(3.5rem, 12vw, 8rem); font-weight: 900; line-height: 0.8; 
       letter-spacing: -4px; margin: 1rem 0 4rem; text-transform: uppercase; font-style: italic; 
     }
 
@@ -55,31 +55,32 @@
     .card { 
       background: var(--card-bg); border-radius: 24px; padding: 2rem; 
       display: flex; flex-direction: column; justify-content: space-between;
-      transition: 0.4s cubic-bezier(0.2, 1, 0.3, 1); cursor: pointer; border: 1px solid var(--border);
+      transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1); cursor: pointer; border: 1px solid var(--border);
     }
-    .card:hover { transform: scale(0.98); border-color: #333; background: #111; }
+    .card:hover { transform: translateY(-5px); border-color: var(--accent); background: #111; }
     
-    .c-leader { grid-column: span 2; grid-row: span 2; }
+    .c-main { grid-column: span 2; grid-row: span 2; }
     .c-white { background: #fff; color: #000; border: none; }
     .c-wide { grid-column: span 2; }
 
-    .ovr { font-size: clamp(6rem, 15vw, 10rem); font-weight: 900; color: var(--accent); line-height: 0.8; letter-spacing: -6px; margin: 1.5rem 0; }
+    .ovr { font-size: clamp(7rem, 15vw, 10rem); font-weight: 900; color: var(--accent); line-height: 0.8; letter-spacing: -6px; margin: 1.5rem 0; }
+    .card-label { font-size: 0.6rem; font-weight: 900; color: var(--text-dim); letter-spacing: 2px; text-transform: uppercase; }
     .p-name { font-size: 3rem; font-weight: 900; font-style: italic; text-transform: uppercase; line-height: 0.9; }
 
-    /* Connect Section */
-    .link-row { 
+    /* Connect Rows */
+    .social-row { 
       display: flex; justify-content: space-between; align-items: center; 
       padding: 2.5rem 0; border-top: 1px solid var(--border); 
       text-decoration: none; color: #fff; transition: 0.3s;
     }
-    .link-row:hover { padding-left: 1.5rem; color: var(--accent); }
-    .link-row h2 { font-size: 3.5rem; font-weight: 900; font-style: italic; text-transform: uppercase; }
+    .social-row:hover { color: var(--accent); padding-left: 1rem; }
+    .social-row h2 { font-size: 3.5rem; font-weight: 900; font-style: italic; text-transform: uppercase; }
 
-    footer { padding: 4rem 0; color: var(--text-dim); font-size: 0.7rem; font-weight: 800; border-top: 1px solid var(--border); text-align: center; }
+    footer { padding: 4rem 0; color: var(--text-dim); font-size: 0.7rem; font-weight: 800; border-top: 1px solid var(--border); text-align: center; letter-spacing: 2px; }
 
     /* Overlay */
     .overlay { position: fixed; inset: 0; background: #000; z-index: 2000; display: none; padding: 5vw; }
-    .close { position: absolute; top: 2rem; right: 2rem; font-weight: 900; color: var(--accent); cursor: pointer; }
+    .close { position: absolute; top: 2rem; right: 2rem; font-weight: 900; color: var(--accent); cursor: pointer; text-transform: uppercase; }
   </style>
 </head>
 <body>
@@ -87,7 +88,7 @@
   <div id="preloader">
     <svg viewBox="0 0 400 100" width="160" height="40">
         <text x="0" y="80" fill="#FFFFFF" font-family="Inter" font-weight="900" font-size="80" letter-spacing="12">
-          BOX<tspan fill="#2E7D32">1</tspan>V1
+          BOX<tspan fill="#39FF14">1</tspan>V1
         </text>
     </svg>
   </div>
@@ -97,7 +98,7 @@
       <div class="nav-logo" onclick="showSection('home')">
         <svg viewBox="0 0 400 100" width="120" height="30">
             <text x="0" y="80" fill="#FFFFFF" font-family="Inter" font-weight="900" font-size="80" letter-spacing="12">
-              BOX<tspan fill="#2E7D32">1</tspan>V1
+              BOX<tspan fill="#39FF14">1</tspan>V1
             </text>
         </svg>
       </div>
@@ -112,36 +113,36 @@
   <div class="container">
     
     <section id="home" class="active">
-        <span class="label">ELAGINO HUB // 2026</span>
+        <span class="hero-label">STREET FOOTBALL LEAGUE // 2026</span>
         <h1>UNBEATABLE<br>STREETS.</h1>
         
         <div class="bento">
-            <div class="card c-leader" onclick="openProfile('Kuznetsov', 92)">
+            <div class="card c-main" onclick="openProfile('Kuznetsov', 92)">
                 <div>
-                    <span style="font-size:0.6rem; font-weight:900; color:var(--text-dim); letter-spacing:2px">SEASON LEADER</span>
+                    <span class="card-label">CURRENT LEADER</span>
                     <div class="ovr">92</div>
                 </div>
                 <div>
                     <div class="p-name">KUZNETSOV</div>
-                    <div style="margin-top: 1rem;"><span style="background:var(--accent); color:#fff; padding:4px 12px; border-radius:4px; font-weight:900; font-size:0.7rem;">ELITE #1</span></div>
+                    <div style="margin-top: 1rem;"><span style="background:var(--accent); color:#000; padding:4px 12px; border-radius:4px; font-weight:900; font-size:0.7rem;">ELITE RANK #1</span></div>
                 </div>
             </div>
 
             <div class="card c-white" onclick="showSection('connect')">
-                <span style="font-size:0.6rem; font-weight:900; color:rgba(0,0,0,0.4); letter-spacing:2px">ADMISSION</span>
+                <span class="card-label" style="color:rgba(0,0,0,0.4)">MEMBERSHIP</span>
                 <div style="font-size: 2.2rem; font-weight: 900; line-height: 0.9; font-style: italic; text-transform: uppercase;">JOIN THE<br>CAGE.</div>
-                <p style="margin-top: 2rem; font-weight: 800; font-size: 0.75rem;">START YOUR CAREER →</p>
+                <p style="margin-top: 2rem; font-weight: 800; font-size: 0.75rem;">APPLY FOR TRIAL →</p>
             </div>
 
             <div class="card" onclick="showSection('ranking')">
-                <span style="font-size:0.6rem; font-weight:900; color:var(--text-dim); letter-spacing:2px">ROSTER</span>
-                <div style="font-size: 1.5rem; font-weight: 900; font-style: italic; margin-top: 1rem;">DATABASE</div>
+                <span class="card-label">DATABASE</span>
+                <div style="font-size: 1.5rem; font-weight: 900; font-style: italic; margin-top: 1rem;">PLAYER<br>ROSTER</div>
             </div>
 
             <div class="card c-wide" onclick="window.open('https://instagram.com/box.1v1','_blank')">
-                <span style="font-size:0.6rem; font-weight:900; color:var(--text-dim); letter-spacing:2px">MEDIA</span>
+                <span class="card-label">COMMUNITY</span>
                 <div style="font-size: 2rem; font-weight: 900; font-style: italic; color: var(--accent);">INSTAGRAM ↗</div>
-                <p style="color:var(--text-dim); font-size:0.8rem; font-weight:700;">DAILY DUELS & HIGHLIGHTS</p>
+                <p style="color:var(--text-dim); font-size:0.8rem; font-weight:700;">WATCH 1V1 DUELS</p>
             </div>
         </div>
     </section>
@@ -154,19 +155,19 @@
     <section id="connect">
         <h1>CONNECT.</h1>
         <div style="margin-top: 2rem;">
-            <a href="https://t.me/streetbox1v1" target="_blank" class="link-row"><h2>TELEGRAM</h2> <span>JOIN CHANNEL ↗</span></a>
-            <a href="https://instagram.com/box.1v1" target="_blank" class="link-row"><h2>INSTAGRAM</h2> <span>FOLLOW ↗</span></a>
-            <a href="https://tiktok.com/@box1v1" target="_blank" class="link-row"><h2>TIKTOK</h2> <span>WATCH LIVE ↗</span></a>
+            <a href="https://t.me/streetbox1v1" target="_blank" class="social-row"><h2>TELEGRAM</h2> <span>↗</span></a>
+            <a href="https://instagram.com/box.1v1" target="_blank" class="social-row"><h2>INSTAGRAM</h2> <span>↗</span></a>
+            <a href="https://tiktok.com/@box1v1" target="_blank" class="social-row"><h2>TIKTOK</h2> <span>↗</span></a>
         </div>
     </section>
 
-    <footer>BOX1V1 // ELITE STREET FOOTBALL // 2026</footer>
+    <footer>BOX1V1 // UNBEATABLE STREETS // 2026</footer>
   </div>
 
   <div class="overlay" id="p-overlay">
-    <div class="close" onclick="closeProfile()">CLOSE [X]</div>
+    <div class="close" onclick="closeProfile()">BACK_TO_HUB [X]</div>
     <div style="max-width: 1000px; margin: 0 auto;">
-        <h2 id="p-name" style="font-size: 10vw; font-weight: 900; font-style: italic; text-transform: uppercase;">NAME</h2>
+        <h2 id="p-name" style="font-size: 10vw; font-weight: 900; font-style: italic; text-transform: uppercase; line-height: 0.8;">NAME</h2>
         <div id="p-ovr" style="font-size: 10rem; font-weight: 900; color: var(--accent);">92</div>
     </div>
   </div>
@@ -181,8 +182,8 @@
     window.onload = () => {
         setTimeout(() => {
             document.getElementById('preloader').style.opacity = '0';
-            setTimeout(() => document.getElementById('preloader').style.display = 'none', 800);
-        }, 1000);
+            setTimeout(() => document.getElementById('preloader').style.display = 'none', 600);
+        }, 800);
         renderPlayers();
     };
 
@@ -191,7 +192,7 @@
       players.forEach((p, i) => {
         grid.innerHTML += `
           <div class="card" style="min-height: 200px" onclick="openProfile('${p.n}', ${p.r})">
-            <span style="font-size:0.6rem; font-weight:900; color:var(--text-dim); letter-spacing:2px">PLAYER // 0${i+1}</span>
+            <span class="card-label">ATHLETE // 0${i+1}</span>
             <div style="font-size: 4rem; font-weight: 900; color: var(--accent); line-height:1;">${p.r}</div>
             <div style="font-size: 1.5rem; font-weight: 900; font-style: italic; text-transform: uppercase;">${p.n}</div>
           </div>
