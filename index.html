@@ -3,638 +3,382 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>BOX1V1 | Официальная Уличная Лига</title>
+    <title>BOX1V1 // Street Football Excellence</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=JetBrains+Mono:wght@500;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800;900&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
 
     <style>
         /* ========================================
-           1. CSS VARIABLES & CORE SETUP
+           1. ПЕРЕМЕННЫЕ И ОСНОВА (APPLE DESIGN SYSTEM)
            ========================================
         */
         :root {
-            --bg-black: #000000;
-            --bg-dark: #080808;
-            --bg-card: #0c0c0c;
             --accent: #39FF14;
-            --accent-muted: rgba(57, 255, 20, 0.2);
-            --text-main: #ffffff;
-            --text-dim: #707070;
-            --border-color: #1a1a1a;
-            --error: #ff3b3b;
+            --bg: #000000;
+            --card-bg: rgba(28, 28, 30, 0.7);
+            --card-border: rgba(255, 255, 255, 0.1);
+            --text-primary: #ffffff;
+            --text-secondary: #86868b;
+            --glass: blur(20px) saturate(180%);
+            --easing: cubic-bezier(0.4, 0, 0.2, 1);
             --tg-blue: #24A1DE;
-            --inst-grad: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
-            --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            --inst-color: #E4405F;
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            outline: none;
-            -webkit-tap-highlight-color: transparent;
+            -webkit-font-smoothing: antialiased;
         }
 
-        ::selection { background: var(--accent); color: #000; }
-
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: var(--bg-black); }
-        ::-webkit-scrollbar-thumb { background: #222; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+        html { scroll-behavior: smooth; }
 
         body {
-            background-color: var(--bg-black);
-            color: var(--text-main);
+            background-color: var(--bg);
+            color: var(--text-primary);
             font-family: 'Inter', -apple-system, sans-serif;
             overflow-x: hidden;
-            line-height: 1.6;
+            line-height: 1.5;
         }
 
         /* ========================================
-           2. ANIMATIONS & BACKGROUNDS
+           2. ГЛОБАЛЬНЫЕ ЭФФЕКТЫ
            ========================================
         */
-        .grain-overlay {
+        .noise {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3e%3cfilter id='n'%3e%3ctfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3e%3c/filter%3e%3crect width='100%25' height='100%25' filter='url(%23n)'/%3e%3c/svg%3e");
-            opacity: 0.04; pointer-events: none; z-index: 9999;
+            opacity: 0.02; pointer-events: none; z-index: 9999;
         }
 
-        .grid-system {
-            position: fixed; inset: 0;
-            background-image: linear-gradient(var(--border-color) 1px, transparent 1px), 
-                              linear-gradient(90deg, var(--border-color) 1px, transparent 1px);
-            background-size: 60px 60px;
-            z-index: -1;
-            mask-image: radial-gradient(circle at 50% 50%, black, transparent 90%);
-        }
-
-        @keyframes scanline {
-            0% { transform: translateY(-100%); }
-            100% { transform: translateY(100%); }
-        }
-
-        .scanline {
-            position: fixed; top: 0; left: 0; width: 100%; height: 10px;
-            background: linear-gradient(to bottom, transparent, rgba(57, 255, 20, 0.05), transparent);
-            z-index: 10000; pointer-events: none;
-            animation: scanline 8s linear infinite;
+        .gradient-sphere {
+            position: fixed; width: 600px; height: 600px;
+            background: radial-gradient(circle, rgba(57, 255, 20, 0.08) 0%, transparent 70%);
+            top: -200px; right: -200px; z-index: -1;
         }
 
         /* ========================================
-           3. PRELOADER
-           ========================================
-        */
-        #preloader {
-            position: fixed; inset: 0; background: #000; z-index: 10000;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            transition: opacity 0.8s ease;
-        }
-        .loader-content { text-align: center; }
-        .loader-bar {
-            width: 200px; height: 2px; background: #111; margin-top: 20px;
-            position: relative; overflow: hidden;
-        }
-        .loader-progress {
-            position: absolute; left: 0; top: 0; height: 100%;
-            background: var(--accent); width: 0%; transition: width 0.4s ease;
-        }
-        .loader-text { font-family: 'JetBrains Mono'; font-size: 10px; color: var(--accent); margin-top: 10px; text-transform: uppercase; }
-
-        /* ========================================
-           4. NAVIGATION
+           3. НАВИГАЦИЯ (APPLE STYLE)
            ========================================
         */
         nav {
             position: fixed; top: 0; width: 100%; z-index: 1000;
-            background: rgba(0,0,0,0.8); backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--border-color);
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: var(--glass);
+            -webkit-backdrop-filter: var(--glass);
+            border-bottom: 0.5px solid var(--card-border);
         }
-        .nav-container {
-            max-width: 1400px; margin: 0 auto; padding: 0 40px;
-            display: flex; justify-content: space-between; align-items: center; height: 80px;
+
+        .nav-content {
+            max-width: 1100px; margin: 0 auto; height: 52px;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0 20px;
         }
-        .logo-wrap { display: flex; align-items: center; cursor: pointer; transition: var(--transition); }
-        .logo-wrap:hover { transform: scale(1.05); }
-        .logo-text { font-size: 28px; font-weight: 900; letter-spacing: -1px; font-style: italic; }
-        
-        .nav-menu { display: flex; gap: 30px; }
-        .nav-item {
-            color: var(--text-dim); text-decoration: none; font-size: 11px; font-weight: 800;
-            text-transform: uppercase; letter-spacing: 2px; transition: var(--transition);
-            position: relative; padding-bottom: 5px;
+
+        .nav-logo {
+            font-family: 'Orbitron'; font-size: 18px; font-weight: 900;
+            letter-spacing: 1px; color: #fff; text-decoration: none;
+            transition: opacity 0.3s;
         }
-        .nav-item::after {
-            content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 1px;
-            background: var(--accent); transition: var(--transition);
+
+        .nav-logo:hover { opacity: 0.7; }
+
+        .nav-links { display: flex; gap: 30px; }
+        .nav-links a {
+            color: var(--text-secondary); text-decoration: none;
+            font-size: 12px; font-weight: 400; transition: color 0.3s;
         }
-        .nav-item:hover { color: var(--text-main); }
-        .nav-item:hover::after { width: 100%; }
-        .nav-item.active { color: var(--accent); }
+        .nav-links a:hover { color: #fff; }
+        .nav-links a.active { color: var(--accent); }
 
         /* ========================================
-           5. HERO SECTION
+           4. ГЛАВНЫЙ ЭКРАН (HERO)
            ========================================
         */
         .hero {
-            min-height: 100vh; display: flex; flex-direction: column; 
-            justify-content: center; align-items: center; padding: 120px 20px; text-align: center;
+            height: 100vh; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; text-align: center;
+            padding: 0 20px;
         }
-        .hero-tag {
-            font-family: 'JetBrains Mono'; color: var(--accent); font-size: 14px;
-            background: var(--accent-muted); padding: 8px 16px; border-radius: 100px;
-            margin-bottom: 30px; letter-spacing: 2px;
-        }
-        .hero h1 {
-            font-size: clamp(4rem, 15vw, 10rem); font-weight: 900; line-height: 0.8;
-            font-style: italic; text-transform: uppercase; margin-bottom: 40px;
-            background: linear-gradient(to bottom, #fff 50%, #333);
+
+        .hero-title {
+            font-size: clamp(3.5rem, 10vw, 8rem);
+            font-weight: 800; letter-spacing: -0.05em;
+            line-height: 0.95; margin-bottom: 24px;
+            background: linear-gradient(180deg, #fff 0%, #888 100%);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
-        .hero-desc {
-            max-width: 600px; color: var(--text-dim); font-size: 18px; margin-bottom: 50px;
+
+        .hero-subtitle {
+            font-size: clamp(1.2rem, 3vw, 1.8rem);
+            color: var(--text-secondary); max-width: 600px;
+            margin-bottom: 40px; font-weight: 400;
         }
 
-        .timer-grid {
-            display: flex; gap: 30px; background: var(--bg-card); padding: 40px;
-            border-radius: 40px; border: 1px solid var(--border-color);
+        .cta-group { display: flex; gap: 15px; }
+
+        .btn {
+            padding: 14px 28px; border-radius: 40px; font-size: 14px;
+            font-weight: 600; text-decoration: none; transition: all 0.4s var(--easing);
         }
-        .timer-box { text-align: center; min-width: 90px; }
-        .timer-val { font-family: 'JetBrains Mono'; font-size: 48px; font-weight: 800; display: block; color: var(--accent); }
-        .timer-lab { font-size: 10px; text-transform: uppercase; letter-spacing: 2px; color: var(--text-dim); }
+
+        .btn-primary { background: #fff; color: #000; }
+        .btn-primary:hover { background: var(--accent); transform: scale(1.02); }
+
+        .btn-secondary { background: rgba(255,255,255,0.1); color: #fff; border: 1px solid var(--card-border); }
+        .btn-secondary:hover { background: rgba(255,255,255,0.15); }
 
         /* ========================================
-           6. BENTO GRID
+           5. БЕНТО-СЕТКА (КОНТЕНТ)
            ========================================
         */
-        .container { max-width: 1400px; margin: 0 auto; padding: 0 40px; }
-        .bento-layout {
-            display: grid; grid-template-columns: repeat(4, 1fr); 
-            grid-auto-rows: 280px; gap: 24px; margin: 100px 0;
+        .section { padding: 120px 0; max-width: 1100px; margin: 0 auto; }
+
+        .bento-grid {
+            display: grid; grid-template-columns: repeat(12, 1fr);
+            grid-auto-rows: 240px; gap: 20px; padding: 0 20px;
         }
-        .bento-card {
-            background: var(--bg-card); border: 1px solid var(--border-color);
-            border-radius: 40px; padding: 40px; position: relative; overflow: hidden;
-            display: flex; flex-direction: column; transition: var(--transition);
-            cursor: pointer; text-decoration: none; color: inherit;
+
+        .bento-item {
+            background: var(--card-bg); border: 1px solid var(--card-border);
+            border-radius: 30px; padding: 40px; position: relative;
+            overflow: hidden; transition: transform 0.6s var(--easing);
         }
-        .bento-card:hover {
-            transform: translateY(-10px); border-color: var(--accent);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
-        }
-        .span-2 { grid-column: span 2; }
+        
+        .bento-item:hover { transform: scale(0.99); }
+
+        .col-8 { grid-column: span 8; }
+        .col-4 { grid-column: span 4; }
         .row-2 { grid-row: span 2; }
 
-        .card-icon { width: 40px; height: 40px; background: #111; border-radius: 12px; margin-bottom: 20px; display: flex; align-items: center; justify-content: center; }
-        .card-title { font-size: 32px; font-weight: 900; font-style: italic; text-transform: uppercase; line-height: 1; margin-bottom: 15px; }
+        .bento-title { font-size: 32px; font-weight: 700; margin-bottom: 10px; }
+        .bento-desc { color: var(--text-secondary); font-size: 16px; max-width: 300px; }
 
-        /* Social variants */
-        .social-tg { border-color: var(--tg-blue) !important; background: rgba(36, 161, 222, 0.05); }
-        .social-tg .card-title { color: var(--tg-blue); }
-        .social-inst { border-color: #dc2743 !important; background: rgba(220, 39, 67, 0.05); }
-        .social-inst .card-title { background: var(--inst-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        /* Иконки соцсетей */
+        .social-link {
+            position: absolute; bottom: 40px; right: 40px;
+            width: 50px; height: 50px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            background: rgba(255,255,255,0.1); transition: 0.3s;
+        }
 
-        /* ========================================
-           7. OVR SYSTEM EXPLAINER
-           ========================================
-        */
-        .ovr-section { background: var(--bg-dark); padding: 120px 0; border-radius: 80px; margin: 100px 0; }
-        .section-header { margin-bottom: 80px; }
-        .section-num { font-family: 'JetBrains Mono'; color: var(--accent); font-size: 14px; display: block; margin-bottom: 10px; }
-        .section-title { font-size: 64px; font-weight: 900; font-style: italic; text-transform: uppercase; line-height: 0.9; }
-
-        .ovr-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; margin-top: 60px; }
-        .ovr-item { padding: 40px; background: var(--bg-black); border-radius: 32px; border: 1px solid var(--border-color); }
-        .ovr-name { font-weight: 900; font-size: 20px; margin-bottom: 15px; text-transform: uppercase; display: block; color: var(--accent); }
-        .ovr-desc { color: var(--text-dim); font-size: 15px; }
+        .tg-style { color: var(--tg-blue); border: 1px solid var(--tg-blue); }
+        .inst-style { 
+            background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%,#d6249f 60%,#285AEB 90%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
 
         /* ========================================
-           8. RANKING TABLE
+           6. ТАБЛИЦА ИГРОКОВ (UI/UX)
            ========================================
         */
-        .stats-wrap { margin: 120px 0; }
-        .custom-table { width: 100%; border-collapse: collapse; background: var(--bg-card); border-radius: 40px; overflow: hidden; }
-        .custom-table th { padding: 30px; text-align: left; color: var(--text-dim); font-size: 12px; text-transform: uppercase; letter-spacing: 2px; border-bottom: 1px solid var(--border-color); }
-        .custom-table td { padding: 30px; border-bottom: 1px solid var(--border-color); transition: var(--transition); }
-        .custom-table tr:last-child td { border-bottom: none; }
-        .custom-table tr:hover td { background: rgba(255,255,255,0.02); }
+        .table-wrap {
+            margin-top: 40px; background: var(--card-bg);
+            border-radius: 30px; border: 1px solid var(--card-border);
+            overflow: hidden;
+        }
+
+        table { width: 100%; border-collapse: collapse; }
+        th { 
+            text-align: left; padding: 20px 30px; font-size: 11px;
+            color: var(--text-secondary); text-transform: uppercase;
+            border-bottom: 0.5px solid var(--card-border);
+        }
+        td { padding: 25px 30px; border-bottom: 0.5px solid var(--card-border); }
         
-        .rank-id { font-family: 'JetBrains Mono'; opacity: 0.3; }
-        .player-info { display: flex; align-items: center; gap: 15px; }
-        .player-avatar { width: 40px; height: 40px; background: #222; border-radius: 50%; font-weight: 900; display: flex; align-items: center; justify-content: center; font-size: 12px; }
-        .ovr-badge { background: var(--accent); color: #000; padding: 6px 12px; border-radius: 8px; font-weight: 900; font-family: 'JetBrains Mono'; }
+        .player-row { cursor: pointer; transition: background 0.3s; }
+        .player-row:hover { background: rgba(255,255,255,0.03); }
+
+        .ovr-pill {
+            background: var(--accent); color: #000; padding: 4px 10px;
+            border-radius: 6px; font-weight: 800; font-family: 'Orbitron';
+        }
 
         /* ========================================
-           9. FAQ ACCORDION
-           ========================================
-        */
-        .faq-wrap { max-width: 800px; margin: 120px auto; }
-        .faq-item { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 20px; margin-bottom: 15px; overflow: hidden; }
-        .faq-trigger { width: 100%; padding: 25px; background: none; border: none; color: #fff; text-align: left; font-weight: 800; font-size: 18px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
-        .faq-content { padding: 0 25px 25px; color: var(--text-dim); display: none; }
-        .faq-item.active .faq-content { display: block; }
-        .faq-item.active { border-color: var(--accent); }
-
-        /* ========================================
-           10. FOOTER
-           ========================================
-        */
-        footer { padding: 100px 0 60px; border-top: 1px solid var(--border-color); background: var(--bg-dark); }
-        .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 80px; }
-        .footer-logo { font-size: 40px; font-weight: 900; font-style: italic; margin-bottom: 20px; }
-        .footer-links h4 { font-size: 12px; text-transform: uppercase; color: var(--text-dim); margin-bottom: 25px; letter-spacing: 2px; }
-        .footer-links ul { list-style: none; }
-        .footer-links li { margin-bottom: 15px; }
-        .footer-links a { color: #fff; text-decoration: none; font-weight: 600; opacity: 0.6; transition: 0.3s; }
-        .footer-links a:hover { opacity: 1; color: var(--accent); }
-        
-        .legal { margin-top: 80px; display: flex; justify-content: space-between; border-top: 1px solid #111; padding-top: 40px; font-size: 12px; color: var(--text-dim); }
-
-        /* ========================================
-           11. MODALS & UI
+           7. МОДАЛЬНЫЕ ОКНА (APPLE ANIMATION)
            ========================================
         */
         .modal-overlay {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.95);
-            backdrop-filter: blur(20px); z-index: 2000; display: none;
-            align-items: center; justify-content: center; padding: 20px;
+            position: fixed; inset: 0; background: rgba(0,0,0,0.8);
+            z-index: 2000; display: none; align-items: center; justify-content: center;
+            backdrop-filter: blur(10px); opacity: 0; transition: opacity 0.4s;
         }
-        .modal-overlay.active { display: flex; }
-        .modal-card {
-            background: #080808; border: 1px solid var(--border-color);
-            border-radius: 40px; padding: 60px; max-width: 600px; width: 100%;
-            position: relative; animation: modalIn 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        @keyframes modalIn { from { opacity: 0; transform: translateY(50px); } to { opacity: 1; transform: translateY(0); } }
-        
-        .close-btn { position: absolute; top: 30px; right: 30px; cursor: pointer; font-size: 24px; color: var(--text-dim); }
 
-        .skill-row { margin-bottom: 20px; }
-        .skill-header { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
-        .skill-bar { height: 4px; background: #1a1a1a; border-radius: 2px; overflow: hidden; }
-        .skill-fill { height: 100%; background: var(--accent); width: 0%; transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1); }
+        .modal-overlay.active { display: flex; opacity: 1; }
 
-        /* Mobile Adjustments */
-        @media (max-width: 1000px) {
-            .bento-layout { grid-template-columns: repeat(2, 1fr); }
-            .ovr-grid { grid-template-columns: 1fr; }
-            .footer-grid { grid-template-columns: 1fr; }
+        .modal-container {
+            background: #1c1c1e; width: 90%; max-width: 500px;
+            border-radius: 40px; padding: 50px; position: relative;
+            transform: scale(0.9); transition: transform 0.4s var(--easing);
+            border: 1px solid var(--card-border);
         }
-        @media (max-width: 600px) {
-            .bento-layout { grid-template-columns: 1fr; }
-            .span-2 { grid-column: span 1; }
-            .timer-grid { flex-wrap: wrap; justify-content: center; }
-            .nav-menu { display: none; }
-            .hero h1 { font-size: 4rem; }
+
+        .modal-overlay.active .modal-container { transform: scale(1); }
+
+        .close-modal {
+            position: absolute; top: 30px; right: 30px;
+            background: rgba(255,255,255,0.1); border: none;
+            color: #fff; width: 32px; height: 32px; border-radius: 50%;
+            cursor: pointer; font-size: 14px;
         }
+
+        /* ========================================
+           8. АДАПТИВНОСТЬ
+           ========================================
+        */
+        @media (max-width: 850px) {
+            .col-8, .col-4 { grid-column: span 12; }
+            .nav-links { display: none; }
+            .hero-title { font-size: 4rem; }
+            .bento-grid { grid-auto-rows: min-content; }
+        }
+
     </style>
 </head>
 <body>
 
-    <div class="grain-overlay"></div>
-    <div class="grid-system"></div>
-    <div class="scanline"></div>
-
-    <div id="preloader">
-        <div class="loader-content">
-            <svg viewBox="0 0 400 100" width="160"><text x="0" y="80" fill="#fff" font-family="Inter" font-weight="900" font-size="80">BOX<tspan fill="#39FF14">1</tspan>V1</text></svg>
-            <div class="loader-bar"><div class="loader-progress" id="lp"></div></div>
-            <div class="loader-text" id="lt">Initializing protocols...</div>
-        </div>
-    </div>
+    <div class="noise"></div>
+    <div class="gradient-sphere"></div>
 
     <nav>
-        <div class="nav-container">
-            <div class="logo-wrap" onclick="switchTab('home')">
-                <div class="logo-text">BOX<span style="color:var(--accent)">1</span>V1</div>
+        <div class="nav-content">
+            <a href="#" class="nav-logo">BOX1V1</a>
+            <div class="nav-links">
+                <a href="#home" class="active">Обзор</a>
+                <a href="#players">Игроки</a>
+                <a href="#rules">Регламент</a>
+                <a href="#support">Поддержка</a>
             </div>
-            <div class="nav-menu">
-                <a href="#" class="nav-item active" onclick="switchTab('home')" id="nav-home">Лента</a>
-                <a href="#" class="nav-item" onclick="switchTab('players')" id="nav-players">Игроки</a>
-                <a href="#" class="nav-item" onclick="switchTab('ovr')" id="nav-ovr">Система OVR</a>
-                <a href="#" class="nav-item" onclick="switchTab('faq')" id="nav-faq">FAQ</a>
-            </div>
-            <div class="nav-action">
-                <button onclick="openModal('applyModal')" style="background:var(--accent); color:#000; border:none; padding: 12px 24px; border-radius: 12px; font-weight: 900; font-size: 11px; text-transform: uppercase; cursor:pointer;">Регистрация</button>
-            </div>
+            <a href="javascript:void(0)" onclick="openModal('applyModal')" class="btn btn-primary" style="padding: 8px 16px; font-size: 12px;">Подать заявку</a>
         </div>
     </nav>
 
-    <main class="container">
+    <main>
         
-        <section id="home" class="tab-content active">
-            <div class="hero">
-                <div class="hero-tag">// STREET EXCELLENCE LEAGUE</div>
-                <h1>CAGE<br>WARRIORS.</h1>
-                <p class="hero-desc">Первая независимая футбольная лига 1 на 1 в Москве. Бетон, 20 секунд на атаку и твой личный OVR. Докажи, что ты лучший в клетке.</p>
+        <section class="hero" id="home">
+            <h1 class="hero-title">Мастерство<br>вне шаблонов.</h1>
+            <p class="hero-subtitle">Первая в Москве уличная лига 1 на 1. Прояви характер в клетке и стань легендой района.</p>
+            <div class="cta-group">
+                <a href="#players" class="btn btn-primary">Посмотреть рейтинг</a>
+                <a href="#rules" class="btn btn-secondary">Изучить правила</a>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="bento-grid">
                 
-                <div class="timer-grid">
-                    <div class="timer-box"><span class="timer-val" id="d">00</span><span class="timer-lab">Days</span></div>
-                    <div class="timer-box"><span class="timer-val" id="h">00</span><span class="timer-lab">Hours</span></div>
-                    <div class="timer-box"><span class="timer-val" id="m">00</span><span class="timer-lab">Mins</span></div>
-                </div>
-            </div>
-
-            <div class="bento-layout">
-                <div class="bento-card span-2 row-2" onclick="openModal('rulesModal')" style="background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&q=80&w=1000'); background-size: cover;">
-                    <span style="color:var(--accent); font-family: 'JetBrains Mono'; font-size: 12px;">[ PROTOCOL_01 ]</span>
-                    <h2 class="card-title" style="font-size: 5rem; margin-top: 20px;">ЗАКОНЫ<br>КЛЕТКИ.</h2>
-                    <p style="max-width: 400px; opacity: 0.8;">Узнай всё о формате 1 на 1, системе Panna и роли независимого вратаря.</p>
-                    <div style="margin-top: auto; font-weight: 900; color: var(--accent);">ЧИТАТЬ ПРАВИЛА →</div>
+                <div class="bento-item col-8 row-2" style="background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('https://images.unsplash.com/photo-1510566337590-2fc1f21d0faa?auto=format&fit=crop&q=80&w=1000'); background-size: cover;">
+                    <h2 class="bento-title">Сезон 01:<br>Набор открыт</h2>
+                    <p class="bento-desc">Мы ищем 32 лучших игрока Москвы для участия в первом официальном гран-при.</p>
                 </div>
 
-                <div class="bento-card row-2" onclick="openPlayerModal('ZUPAROV')">
-                    <div class="card-icon">⚡️</div>
-                    <span style="font-size: 10px; color: var(--text-dim);">#FOUNDER_PROFILE</span>
-                    <h3 class="card-title" style="font-size: 40px; margin-top: 20px;">ZUPAROV</h3>
-                    <div style="font-size: 4rem; font-weight: 900; color: var(--accent); margin-top: 10px;">75</div>
-                    <p style="margin-top: auto; font-size: 11px; opacity: 0.5;">НАЖМИ ДЛЯ ПРОСМОТРА СТАТИСТИКИ</p>
+                <div class="bento-item col-4" onclick="window.open('https://t.me/streetbox1v1', '_blank')">
+                    <h3 style="font-size: 18px; color: var(--tg-blue);">Telegram</h3>
+                    <h2 class="bento-title">Комьюнити</h2>
+                    <div class="social-link tg-style">↗</div>
                 </div>
 
-                <a href="https://t.me/streetbox1v1" target="_blank" class="bento-card social-tg">
-                    <h3 class="card-title">TELEGRAM</h3>
-                    <p style="opacity: 0.6;">Комьюнити, анонсы матчей и закрытые обсуждения.</p>
-                </a>
+                <div class="bento-item col-4" onclick="window.open('https://instagram.com/box.1v1', '_blank')">
+                    <h3 style="font-size: 18px; color: #ff3366;">Instagram</h3>
+                    <h2 class="bento-title">Хайлайты</h2>
+                    <div class="social-link inst-style">↗</div>
+                </div>
 
-                <a href="https://instagram.com/box.1v1" target="_blank" class="bento-card social-inst">
-                    <h3 class="card-title">INSTAGRAM</h3>
-                    <p style="opacity: 0.6;">Лучшие хайлайты, панны и атмосфера лиги.</p>
-                </a>
-            </div>
-        </section>
+                <div class="bento-item col-12" id="players">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+                        <div>
+                            <h2 class="bento-title">Рейтинг Лиги</h2>
+                            <p class="bento-desc">Топ-игроки по версии системы OVR 2.0</p>
+                        </div>
+                        <a href="#" style="color: var(--accent); text-decoration: none; font-size: 14px;">Весь список</a>
+                    </div>
 
-        <section id="players" class="tab-content" style="display:none; padding-top: 120px;">
-            <div class="section-header">
-                <span class="section-num">01 / RANKING SYSTEM</span>
-                <h2 class="section-title">ТАБЛИЦА<br>ЛИДЕРОВ.</h2>
-            </div>
-
-            <div class="stats-wrap">
-                <table class="custom-table">
-                    <thead>
-                        <tr>
-                            <th>RANK</th>
-                            <th>PLAYER</th>
-                            <th>MATCHES</th>
-                            <th>W/L</th>
-                            <th style="text-align: right;">OVR</th>
-                        </tr>
-                    </thead>
-                    <tbody id="ranking-body">
-                        </tbody>
-                </table>
-            </div>
-        </section>
-
-        <section id="ovr" class="tab-content" style="display:none; padding-top: 120px;">
-            <div class="section-header">
-                <span class="section-num">02 / MATHEMATICS</span>
-                <h2 class="section-title">КАК ЭТО<br>РАБОТАЕТ.</h2>
-            </div>
-            
-            <div class="ovr-section">
-                <div class="container">
-                    <div class="ovr-grid">
-                        <div class="ovr-item">
-                            <span class="ovr-name">Дриблинг</span>
-                            <p class="ovr-desc">Способность контролировать мяч в узком пространстве и эффективность финтов в ситуации 1 на 1.</p>
-                        </div>
-                        <div class="ovr-item">
-                            <span class="ovr-name">Скорость</span>
-                            <p class="ovr-desc">Резкость стартового рывка и скорость передвижения по клетке без мяча и с ним.</p>
-                        </div>
-                        <div class="ovr-item">
-                            <span class="ovr-name">Удар</span>
-                            <p class="ovr-desc">Точность и сила завершения. Способность забивать в маленькие ворота под давлением.</p>
-                        </div>
-                        <div class="ovr-item">
-                            <span class="ovr-name">Физика</span>
-                            <p class="ovr-desc">Выносливость и умение играть корпусом. Важно для удержания мяча и борьбы.</p>
-                        </div>
-                        <div class="ovr-item">
-                            <span class="ovr-name">Panna Skill</span>
-                            <p class="ovr-desc">Скрытый параметр, влияющий на бонусные очки при пробросе мяча между ног сопернику.</p>
-                        </div>
-                        <div class="ovr-item">
-                            <span class="ovr-name">Реакция</span>
-                            <p class="ovr-desc">Скорость принятия решения при переходе из защиты в атаку (лимит 20 секунд).</p>
-                        </div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Ранг</th>
+                                    <th>Игрок</th>
+                                    <th>Матчи</th>
+                                    <th>Победы</th>
+                                    <th style="text-align: right;">OVR</th>
+                                </tr>
+                            </thead>
+                            <tbody id="playerTableBody">
+                                </tbody>
+                        </table>
                     </div>
                 </div>
-            </div>
-        </section>
 
-        <section id="faq" class="tab-content" style="display:none; padding-top: 120px;">
-            <div class="section-header">
-                <span class="section-num">03 / SUPPORT</span>
-                <h2 class="section-title">ВОПРОСЫ И<br>ОТВЕТЫ.</h2>
-            </div>
-
-            <div class="faq-wrap">
-                <div class="faq-item">
-                    <button class="faq-trigger" onclick="toggleFaq(this)">Что такое BOX1V1? <span>+</span></button>
-                    <div class="faq-content">Это медийная уличная футбольная лига в формате 1 на 1, где каждый игрок имеет свой уникальный рейтинг и карточку.</div>
-                </div>
-                <div class="faq-item">
-                    <button class="faq-trigger" onclick="toggleFaq(this)">Кто такой независимый вратарь? <span>+</span></button>
-                    <div class="faq-content">Это вратарь, который не принадлежит ни к одной из сторон. Он играет против обоих игроков, создавая дополнительную сложность для атаки.</div>
-                </div>
-                <div class="faq-item">
-                    <button class="faq-trigger" onclick="toggleFaq(this)">Сколько стоит участие? <span>+</span></button>
-                    <div class="faq-content">На этапе запуска (Сезон 0) участие для первых 20 отобранных игроков бесплатное.</div>
-                </div>
-                <div class="faq-item">
-                    <button class="faq-trigger" onclick="toggleFaq(this)">Как считается OVR? <span>+</span></button>
-                    <div class="faq-content">OVR — это среднее арифметическое твоих ключевых навыков, которые оцениваются скаутами лиги во время официальных матчей.</div>
-                </div>
             </div>
         </section>
 
     </main>
 
-    <footer>
-        <div class="container">
-            <div class="footer-grid">
-                <div class="footer-brand">
-                    <div class="footer-logo">BOX<span style="color:var(--accent)">1</span>V1</div>
-                    <p style="color:var(--text-dim); max-width: 300px;">Будущее уличного футбола Москвы. Мы не просто играем — мы создаем культуру.</p>
-                </div>
-                <div class="footer-links">
-                    <h4>ПРОЕКТ</h4>
-                    <ul>
-                        <li><a href="#" onclick="switchTab('home')">Главная</a></li>
-                        <li><a href="#" onclick="switchTab('players')">Рейтинг</a></li>
-                        <li><a href="#" onclick="switchTab('ovr')">Правила</a></li>
-                    </ul>
-                </div>
-                <div class="footer-links">
-                    <h4>СОЦСЕТИ</h4>
-                    <ul>
-                        <li><a href="https://t.me/streetbox1v1">Telegram</a></li>
-                        <li><a href="https://instagram.com/box.1v1">Instagram</a></li>
-                        <li><a href="#">TikTok</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="legal">
-                <span>© 2025 BOX1V1 LEAGUE. ALL RIGHTS RESERVED.</span>
-                <span>DESIGNED BY ZUPAROV LAB.</span>
-            </div>
-        </div>
-    </footer>
-
-    <div class="modal-overlay" id="playerModal">
-        <div class="modal-card">
-            <div class="close-btn" onclick="closeModal('playerModal')">✕</div>
-            <span id="m-role" style="font-family:'JetBrains Mono'; color:var(--accent); font-size: 12px;">#FOUNDER</span>
-            <h2 id="m-name" style="font-size: 4rem; font-weight: 900; font-style: italic; line-height: 1; margin-bottom: 20px;">NAME</h2>
-            <div style="font-size: 4rem; font-weight: 900; margin-bottom: 40px;">OVR <span id="m-ovr" style="color:var(--accent)">00</span></div>
-            
-            <div id="m-stats-area">
-                </div>
-        </div>
-    </div>
-
-    <div class="modal-overlay" id="rulesModal">
-        <div class="modal-card">
-            <div class="close-btn" onclick="closeModal('rulesModal')">✕</div>
-            <h2 style="font-size: 3rem; font-weight: 900; font-style: italic; margin-bottom: 30px;">THE LAWS</h2>
-            <div style="display: grid; gap: 20px; color: var(--text-dim);">
-                <p>1. <b>Матч:</b> 1 на 1 + 1 независимый вратарь.</p>
-                <p>2. <b>Цель:</b> Игра до 2-х голов. Без лимита по времени на матч.</p>
-                <p>3. <b>Атака:</b> Игроку дается 20 секунд на завершение атаки. Если время вышло — мяч переходит сопернику.</p>
-                <p>4. <b>Панна:</b> Проброс между ног с последующим сохранением владения = Мгновенная победа.</p>
-                <p>5. <b>Фолы:</b> Любой грубый контакт — пенальти с центра поля в пустые ворота.</p>
-            </div>
-        </div>
-    </div>
-
     <div class="modal-overlay" id="applyModal">
-        <div class="modal-card">
-            <div class="close-btn" onclick="closeModal('applyModal')">✕</div>
-            <h2 style="font-size: 3rem; font-weight: 900; font-style: italic; margin-bottom: 20px;">ВСТУПИТЬ</h2>
-            <p style="margin-bottom: 30px; color: var(--text-dim);">Чтобы попасть в Сезон 0, напиши нам в Telegram с пометкой <b>#WANTTOBOX</b>. Прикрепи короткое видео своей игры.</p>
-            <a href="https://t.me/streetbox1v1" target="_blank" style="display: block; background: var(--accent); color: #000; text-align: center; padding: 25px; border-radius: 20px; text-decoration: none; font-weight: 900;">ПЕРЕЙТИ В TELEGRAM</a>
+        <div class="modal-container">
+            <button class="close-modal" onclick="closeModal('applyModal')">✕</button>
+            <h2 style="font-size: 32px; font-weight: 800; margin-bottom: 16px;">Подать заявку</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 32px;">Мы отбираем участников на основе их навыков. Пришлите ссылку на ваше видео или Instagram в наш Telegram.</p>
+            
+            <a href="https://t.me/streetbox1v1" target="_blank" class="btn btn-primary" style="display: block; text-align: center; padding: 20px;">Перейти в Telegram</a>
+            
+            <div style="margin-top: 30px; padding-top: 30px; border-top: 1px solid var(--card-border);">
+                <p style="font-size: 12px; color: var(--text-secondary);">Нажимая кнопку, вы соглашаетесь с регламентом BOX1V1 Season 01.</p>
+            </div>
         </div>
     </div>
 
     <script>
-        // 1. Data Structure
-        const players = {
-            'ZUPAROV': { ovr: 75, role: 'Founder', matches: 0, win: 0, loss: 0, stats: { drib: 72, speed: 85, shot: 70, phys: 80 } },
-            'KUSCH': { ovr: 78, role: 'Top Rank', matches: 12, win: 10, loss: 2, stats: { drib: 82, speed: 75, shot: 84, phys: 68 } },
-            'DIDUR': { ovr: 72, role: 'Technician', matches: 8, win: 5, loss: 3, stats: { drib: 88, speed: 70, shot: 65, phys: 60 } },
-            'BIBIKOV': { ovr: 70, role: 'Striker', matches: 15, win: 7, loss: 8, stats: { drib: 65, speed: 72, shot: 88, phys: 78 } },
-            'VARYUSHCHENKOV': { ovr: 68, role: 'Rookie', matches: 4, win: 1, loss: 3, stats: { drib: 76, speed: 80, shot: 68, phys: 65 } }
-        };
+        // Данные игроков
+        const players = [
+            { rank: '01', name: 'ZUPAROV', matches: 24, wins: 18, ovr: 75 },
+            { rank: '02', name: 'KUSCH', matches: 20, wins: 16, ovr: 78 },
+            { rank: '03', name: 'DIDUR', matches: 18, wins: 12, ovr: 72 },
+            { rank: '04', name: 'BIBIKOV', matches: 15, wins: 9, ovr: 70 }
+        ];
 
-        // 2. Preloader Logic
-        window.addEventListener('load', () => {
-            const steps = ['Loading core assets...', 'Configuring OVR engine...', 'Synchronizing street data...', 'Ready.'];
-            let p = 0;
-            const interval = setInterval(() => {
-                p += Math.floor(Math.random() * 20);
-                if(p >= 100) {
-                    p = 100;
-                    document.getElementById('lt').innerText = steps[3];
-                    document.getElementById('lp').style.width = '100%';
-                    clearInterval(interval);
-                    setTimeout(() => {
-                        document.getElementById('preloader').style.opacity = '0';
-                        setTimeout(() => document.getElementById('preloader').style.display = 'none', 800);
-                    }, 500);
-                } else {
-                    document.getElementById('lp').style.width = p + '%';
-                    document.getElementById('lt').innerText = steps[Math.floor(p/30)] || steps[2];
-                }
-            }, 150);
-        });
+        // Инициализация таблицы
+        const tableBody = document.getElementById('playerTableBody');
+        tableBody.innerHTML = players.map(p => `
+            <tr class="player-row">
+                <td style="color: var(--text-secondary); font-family: 'Orbitron'; font-size: 12px;">#${p.rank}</td>
+                <td style="font-weight: 700;">${p.name}</td>
+                <td>${p.matches}</td>
+                <td>${p.wins}</td>
+                <td style="text-align: right;"><span class="ovr-pill">${p.ovr}</span></td>
+            </tr>
+        `).join('');
 
-        // 3. Tab System
-        function switchTab(tabId) {
-            document.querySelectorAll('.tab-content').forEach(s => s.style.display = 'none');
-            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-            
-            document.getElementById(tabId).style.display = 'block';
-            document.getElementById('nav-' + tabId).classList.add('active');
-            window.scrollTo({top: 0, behavior: 'smooth'});
-        }
-
-        // 4. Modal System
+        // Управление модалками
         function openModal(id) {
-            document.getElementById(id).style.display = 'flex';
-            setTimeout(() => document.getElementById(id).classList.add('active'), 10);
+            const modal = document.getElementById(id);
+            modal.style.display = 'flex';
+            setTimeout(() => modal.classList.add('active'), 10);
+            document.body.style.overflow = 'hidden';
         }
 
         function closeModal(id) {
-            document.getElementById(id).classList.remove('active');
-            setTimeout(() => document.getElementById(id).style.display = 'none', 500);
-        }
-
-        function openPlayerModal(name) {
-            const p = players[name];
-            document.getElementById('m-name').innerText = name;
-            document.getElementById('m-role').innerText = '#' + p.role.toUpperCase();
-            document.getElementById('m-ovr').innerText = p.ovr;
-            
-            const statsHtml = Object.entries(p.stats).map(([key, val]) => `
-                <div class="skill-row">
-                    <div class="skill-header"><span>${key}</span><span>${val}</span></div>
-                    <div class="skill-bar"><div class="skill-fill" id="fill-${key}"></div></div>
-                </div>
-            `).join('');
-            
-            document.getElementById('m-stats-area').innerHTML = statsHtml;
-            openModal('playerModal');
-            
+            const modal = document.getElementById(id);
+            modal.classList.remove('active');
             setTimeout(() => {
-                Object.entries(p.stats).forEach(([key, val]) => {
-                    document.getElementById(`fill-${key}`).style.width = val + '%';
-                });
-            }, 200);
+                modal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }, 400);
         }
 
-        // 5. Timer Logic
-        const deadline = new Date("March 1, 2026 00:00:00").getTime();
-        function updateTimer() {
-            const now = new Date().getTime();
-            const t = deadline - now;
-            if (t > 0) {
-                document.getElementById('d').innerText = Math.floor(t / 86400000).toString().padStart(2, '0');
-                document.getElementById('h').innerText = Math.floor((t % 86400000) / 3600000).toString().padStart(2, '0');
-                document.getElementById('m').innerText = Math.floor((t % 3600000) / 60000).toString().padStart(2, '0');
-            }
-        }
-        setInterval(updateTimer, 1000); updateTimer();
-
-        // 6. Init Tables
-        function initTables() {
-            const sorted = Object.entries(players).sort((a,b) => b[1].ovr - a[1].ovr);
-            document.getElementById('ranking-body').innerHTML = sorted.map(([name, data], i) => `
-                <tr onclick="openPlayerModal('${name}')">
-                    <td class="rank-id">#0${i+1}</td>
-                    <td>
-                        <div class="player-info">
-                            <div class="player-avatar">${name[0]}</div>
-                            <span class="player-name"><b>${name}</b></span>
-                        </div>
-                    </td>
-                    <td>${data.matches}</td>
-                    <td>${data.win}W / ${data.loss}L</td>
-                    <td style="text-align: right;"><span class="ovr-badge">${data.ovr}</span></td>
-                </tr>
-            `).join('');
-        }
-        
-        function toggleFaq(btn) {
-            btn.parentElement.classList.toggle('active');
-            btn.querySelector('span').innerText = btn.parentElement.classList.contains('active') ? '−' : '+';
-        }
-
-        initTables();
+        // Плавный скролл навигации
+        document.querySelectorAll('nav a').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                if(this.hash !== "") {
+                    e.preventDefault();
+                    document.querySelector(this.hash).scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
     </script>
 </body>
 </html>
