@@ -2,166 +2,220 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<title>BOX1V1 — Player Profile</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BOX1V1</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
 
 <style>
-:root{
-  --bg:#000;
-  --panel:#0b0b0b;
-  --accent:#39ff14;
-  --muted:#6b6b6b;
+:root {
+  --bg: #000;
+  --card: #0d0d0d;
+  --text: #fff;
+  --muted: #666;
+  --accent: #39FF14;
+  --danger: #ff3131;
 }
 
-*{margin:0;padding:0;box-sizing:border-box}
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
-body{
-  background:var(--bg);
-  color:#fff;
-  font-family:'Inter',sans-serif;
-  -webkit-font-smoothing:antialiased;
-  overflow-x:hidden;
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: Inter, sans-serif;
+  overflow-x: hidden;
 }
 
-/* ===== HERO ===== */
-.hero{
-  position:relative;
-  height:100vh;
-  display:flex;
-  align-items:flex-end;
-  padding:2rem;
-  background:
-    linear-gradient(180deg,rgba(0,0,0,.15),#000),
-    url("https://images.unsplash.com/photo-1521412644187-c49fa049e84d?auto=format&fit=crop&w=1600&q=80");
-  background-size:cover;
-  background-position:center;
+/* NOISE */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: url("https://grainy-gradients.vercel.app/noise.svg");
+  opacity: .07;
+  pointer-events: none;
+  z-index: 999;
 }
 
-.hero::before{
-  content:'';
-  position:absolute;
-  inset:0;
-  background:
-    radial-gradient(circle at 30% 20%, rgba(57,255,20,.18), transparent 55%),
-    linear-gradient(180deg, transparent, #000 85%);
+/* HERO */
+.hero {
+  min-height: 100vh;
+  padding: 8vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  animation: heroPulse 6s ease-in-out infinite;
 }
 
-.hero-content{
-  position:relative;
-  z-index:2;
-  animation:heroIn 1.2s cubic-bezier(.2,1,.2,1) forwards;
+@keyframes heroPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.01); }
+  100% { transform: scale(1); }
 }
 
-@keyframes heroIn{
-  from{opacity:0;transform:translateY(40px)}
-  to{opacity:1;transform:translateY(0)}
+.hero h1 {
+  font-size: clamp(4rem, 12vw, 9rem);
+  font-weight: 900;
+  letter-spacing: -0.05em;
+  line-height: .85;
 }
 
-.player-name{
-  font-size:clamp(2.6rem,8vw,4rem);
-  font-weight:900;
-  letter-spacing:-.05em;
-  text-transform:uppercase;
+.hero h1 span {
+  color: var(--accent);
 }
 
-.player-tag{
-  margin-top:.4rem;
-  font-size:.65rem;
-  letter-spacing:3px;
-  text-transform:uppercase;
-  color:var(--muted);
+.hero p {
+  margin-top: 2rem;
+  max-width: 420px;
+  color: var(--muted);
+  font-size: 1.1rem;
 }
 
-/* ===== STATS STRIP ===== */
-.stats-strip{
-  display:flex;
-  justify-content:space-around;
-  background:var(--panel);
-  padding:1.4rem 0;
-  border-top:1px solid rgba(255,255,255,.05);
-  border-bottom:1px solid rgba(255,255,255,.05);
+/* SECTION */
+section {
+  padding: 8vw;
 }
 
-.stat{
-  text-align:center;
-  animation:statIn .8s ease forwards;
+/* DIVIDER */
+.divider {
+  height: 1px;
+  background: #111;
+  margin: 6rem 0;
 }
 
-.stat span{
-  display:block;
-  font-size:1.9rem;
-  font-weight:900;
+/* PLAYERS */
+.players {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 2rem;
 }
 
-.stat small{
-  font-size:.6rem;
-  letter-spacing:2px;
-  text-transform:uppercase;
-  color:var(--muted);
+/* CARD */
+.card {
+  background: var(--card);
+  border-radius: 18px;
+  padding: 2rem;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: .4s cubic-bezier(.2,1,.2,1);
 }
 
-@keyframes statIn{
-  from{opacity:0;transform:translateY(10px)}
-  to{opacity:1;transform:translateY(0)}
+.card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, transparent, rgba(57,255,20,.15), transparent);
+  opacity: 0;
+  transition: .4s;
 }
 
-/* ===== SECTION ===== */
-.section{
-  padding:2.5rem 1.5rem;
+.card:hover {
+  transform: translateY(-12px) scale(1.03);
 }
 
-.section-title{
-  font-size:.7rem;
-  letter-spacing:3px;
-  text-transform:uppercase;
-  color:var(--muted);
-  margin-bottom:1.2rem;
+.card:hover::after {
+  opacity: 1;
 }
 
-/* ===== MATCH LIST ===== */
-.match{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:1rem 1.2rem;
-  margin-bottom:.9rem;
-  background:linear-gradient(90deg,#0d0d0d,#060606);
-  border-radius:14px;
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.04);
-  animation:matchIn .6s ease forwards;
+.ovr {
+  font-size: 5rem;
+  font-weight: 900;
+  color: var(--accent);
 }
 
-@keyframes matchIn{
-  from{opacity:0;transform:translateX(-10px)}
-  to{opacity:1;transform:translateX(0)}
+.name {
+  margin-top: 1rem;
+  font-size: 1.6rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  font-style: italic;
 }
 
-.match.win{border-left:3px solid var(--accent)}
-.match.loss{border-left:3px solid #444}
-
-.match span{
-  font-weight:600;
-  letter-spacing:.04em;
+/* PROFILE OVERLAY */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: #000;
+  z-index: 2000;
+  display: none;
+  animation: fadeIn .4s ease forwards;
 }
 
-/* ===== FOOTER PULSE ===== */
-.footer-pulse{
-  height:3px;
-  width:100%;
-  background:linear-gradient(
-    90deg,
-    transparent,
-    var(--accent),
-    transparent
-  );
-  animation:pulse 2.5s infinite;
+@keyframes fadeIn {
+  from { opacity: 0 }
+  to { opacity: 1 }
 }
 
-@keyframes pulse{
-  0%,100%{opacity:.35}
-  50%{opacity:1}
+.profile {
+  padding: 8vw;
+}
+
+.profile h2 {
+  font-size: clamp(4rem, 10vw, 8rem);
+  font-weight: 900;
+  font-style: italic;
+}
+
+.profile .big-ovr {
+  font-size: clamp(8rem, 20vw, 16rem);
+  color: var(--accent);
+  font-weight: 900;
+  margin-top: -1rem;
+  animation: ovrPop .6s ease;
+}
+
+@keyframes ovrPop {
+  from { transform: scale(.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.stats {
+  margin-top: 4rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px,1fr));
+  gap: 2rem;
+}
+
+.stat {
+  background: #111;
+  padding: 1.5rem;
+  border-radius: 14px;
+}
+
+.stat span {
+  font-size: .7rem;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+.stat strong {
+  display: block;
+  font-size: 2.5rem;
+  font-weight: 900;
+}
+
+.close {
+  position: fixed;
+  top: 2rem;
+  right: 2rem;
+  color: var(--accent);
+  cursor: pointer;
+  font-weight: 900;
+  z-index: 3000;
+}
+
+/* FOOTER */
+footer {
+  padding: 4rem 8vw;
+  font-size: .7rem;
+  letter-spacing: 2px;
+  color: var(--muted);
+}
+
+/* MOBILE */
+@media(max-width:768px) {
+  .hero { padding: 10vw 6vw; }
 }
 </style>
 </head>
@@ -169,51 +223,68 @@ body{
 <body>
 
 <!-- HERO -->
-<section class="hero">
-  <div class="hero-content">
-    <div class="player-name">ZUPAROV</div>
-    <div class="player-tag">BOX1V1 • STREET FOOTBALL</div>
-  </div>
-</section>
-
-<!-- STATS -->
-<div class="stats-strip">
-  <div class="stat">
-    <span>14</span>
-    <small>Matches</small>
-  </div>
-  <div class="stat">
-    <span>9</span>
-    <small>Wins</small>
-  </div>
-  <div class="stat">
-    <span>#18</span>
-    <small>Rank</small>
-  </div>
+<div class="hero">
+  <h1>BOX<span>1</span>V1</h1>
+  <p>Уличный футбол. Один на один.  
+  Движение. Давление. Характер.</p>
 </div>
 
-<!-- MATCHES -->
-<section class="section">
-  <div class="section-title">Recent Duels</div>
+<div class="divider"></div>
 
-  <div class="match win">
-    <span>VS PLAYER 07</span>
-    <span>2 : 1</span>
-  </div>
-
-  <div class="match loss">
-    <span>VS PLAYER 19</span>
-    <span>1 : 2</span>
-  </div>
-
-  <div class="match win">
-    <span>VS PLAYER 04</span>
-    <span>2 : 0</span>
-  </div>
-
+<!-- PLAYERS -->
+<section>
+  <div class="players" id="players"></div>
 </section>
 
-<div class="footer-pulse"></div>
+<footer>
+BOX1V1 — STREET FOOTBALL PROJECT
+</footer>
+
+<!-- PROFILE -->
+<div class="overlay" id="overlay">
+  <div class="close" onclick="closeProfile()">[ CLOSE ]</div>
+  <div class="profile" id="profile"></div>
+</div>
+
+<script>
+const players = [
+  {name:'ZUPAROV', ovr:72, w:5, d:6, l:15},
+  {name:'VOLKOV', ovr:90, w:38, d:8, l:6},
+  {name:'IVANOV', ovr:88, w:35, d:10, l:4},
+];
+
+const grid = document.getElementById('players');
+
+players.forEach(p=>{
+  const el = document.createElement('div');
+  el.className = 'card';
+  el.innerHTML = `
+    <div class="ovr">${p.ovr}</div>
+    <div class="name">${p.name}</div>
+  `;
+  el.onclick = ()=>openProfile(p);
+  grid.appendChild(el);
+});
+
+function openProfile(p){
+  document.getElementById('overlay').style.display='block';
+  document.body.style.overflow='hidden';
+  document.getElementById('profile').innerHTML=`
+    <h2>${p.name}</h2>
+    <div class="big-ovr">${p.ovr}</div>
+    <div class="stats">
+      <div class="stat"><span>Wins</span><strong>${p.w}</strong></div>
+      <div class="stat"><span>Draws</span><strong>${p.d}</strong></div>
+      <div class="stat"><span>Losses</span><strong style="color:var(--danger)">${p.l}</strong></div>
+    </div>
+  `;
+}
+
+function closeProfile(){
+  document.getElementById('overlay').style.display='none';
+  document.body.style.overflow='auto';
+}
+</script>
 
 </body>
 </html>
