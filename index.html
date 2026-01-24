@@ -3,17 +3,34 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>BOX1V1 | Street Elite</title>
+  <title>BOX1V1 | Street Football Elite</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,700;0,900;1,900&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg: #000; --card-bg: #0d0d0d; --accent: #39FF14;
       --text: #fff; --text-dim: #666; --border: #1a1a1a;
       --cubic: cubic-bezier(0.2, 1, 0.2, 1);
+      --insta: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
     body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; overflow-x: hidden; }
+
+    /* Эффект переливания букв (Shimmer) */
+    .shimmer {
+      background: linear-gradient(90deg, #fff 0%, #666 50%, #fff 100%);
+      background-size: 200% auto;
+      color: #fff;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      transition: 0.5s;
+    }
+    .card:hover .shimmer {
+      animation: shine 1.5s linear infinite;
+    }
+    @keyframes shine {
+      to { background-position: 200% center; }
+    }
 
     /* Glass Navigation */
     nav { position: fixed; top: 0; width: 100%; z-index: 1000; background: rgba(0,0,0,0.8); backdrop-filter: saturate(180%) blur(20px); border-bottom: 1px solid var(--border); }
@@ -35,32 +52,38 @@
       background: var(--card-bg); border-radius: 30px; padding: 2rem; 
       display: flex; flex-direction: column; justify-content: space-between; 
       border: 1px solid var(--border); transition: 0.5s var(--cubic); 
-      position: relative; overflow: hidden; cursor: pointer;
+      position: relative; overflow: hidden; cursor: pointer; text-decoration: none; color: inherit;
     }
-    .card:hover { transform: scale(1.02); background: #111; border-color: #333; }
+    .card:hover { transform: scale(1.02) translateY(-5px); background: #111; border-color: #333; }
+    
     .c-main { grid-column: span 2; grid-row: span 2; }
     .c-wide { grid-column: span 2; }
     .c-accent { background: var(--accent); color: #000; border: none; }
-    .c-social { background: #111; display: flex; align-items: center; justify-content: center; }
+    
+    /* Та самая плашка Instagram */
+    .c-instagram { 
+      background: #000; 
+      border: 1px solid #222;
+      position: relative;
+    }
+    .insta-text {
+      font-size: 2.2rem; font-weight: 900; font-style: italic;
+      background: var(--insta);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
 
     /* Standings Table */
     .table-container { background: var(--card-bg); border-radius: 32px; border: 1px solid var(--border); padding: 2rem; overflow-x: auto; }
     table { width: 100%; border-collapse: collapse; min-width: 600px; }
     th { text-align: left; padding: 1rem; color: var(--text-dim); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 2px; border-bottom: 1px solid var(--border); }
-    td { padding: 1.5rem 1rem; border-bottom: 1px solid var(--border); font-weight: 700; transition: 0.3s; }
-    tr:last-child td { border: none; }
-    tr:hover td { background: rgba(255,255,255,0.03); }
+    td { padding: 1.5rem 1rem; border-bottom: 1px solid var(--border); font-weight: 700; }
     
-    .rank-cell { color: var(--text-dim); font-style: italic; font-size: 1.2rem; width: 60px; }
-    .name-cell { font-size: 1.2rem; text-transform: uppercase; }
-    .ovr-badge { background: var(--accent); color: #000; padding: 4px 10px; border-radius: 8px; font-size: 0.9rem; font-weight: 900; }
-    .form-dots { display: flex; gap: 6px; }
-    .dot { width: 8px; height: 8px; border-radius: 50%; }
-    .w { background: var(--accent); } .l { background: #ff3131; } .d { background: #555; }
+    .ovr-badge { background: var(--accent); color: #000; padding: 4px 10px; border-radius: 8px; font-weight: 900; }
 
-    /* Utils */
     .ovr { font-size: 8rem; font-weight: 900; line-height: 0.7; letter-spacing: -6px; color: var(--accent); transition: 0.5s; }
     .label { font-size: 0.65rem; font-weight: 800; color: var(--text-dim); text-transform: uppercase; letter-spacing: 2px; }
+
     #toast {
         position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px);
         background: #fff; color: #000; padding: 12px 24px; border-radius: 20px; font-weight: 700; z-index: 5000; transition: 0.5s var(--cubic);
@@ -92,28 +115,21 @@
   <div class="container">
     <section id="home" class="active">
         <span class="label" style="color:var(--accent); margin-bottom: 1rem; display: block;">Elite Street League // 2026</span>
-        <h1>STREET<br>STANDARD.</h1>
+        <h1 class="shimmer">STREET<br>STANDARD.</h1>
         <div class="bento" id="home-bento"></div>
     </section>
 
     <section id="roster">
-        <h1>THE ROSTER</h1>
+        <h1 class="shimmer">THE ROSTER</h1>
         <div class="bento" id="full-roster"></div>
     </section>
 
     <section id="tables">
-        <h1>STANDINGS</h1>
+        <h1 class="shimmer">STANDINGS</h1>
         <div class="table-container">
             <table>
                 <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Athlete</th>
-                        <th>OVR</th>
-                        <th>W - D - L</th>
-                        <th>Winrate</th>
-                        <th>Form</th>
-                    </tr>
+                    <tr><th>#</th><th>Athlete</th><th>OVR</th><th>W-D-L</th><th>Winrate</th></tr>
                 </thead>
                 <tbody id="table-body"></tbody>
             </table>
@@ -125,11 +141,10 @@
 
   <script>
     const players = [
-        {id: 0, n: 'Kuznetsov', r: 92, w: 45, d: 5, l: 3, f: ['w','w','w','d','w']},
-        {id: 1, n: 'Volkov', r: 90, w: 38, d: 8, l: 6, f: ['w','l','w','w','d']},
-        {id: 2, n: 'Ivanov', r: 89, w: 35, d: 10, l: 4, f: ['d','w','w','l','w']},
-        {id: 3, n: 'Smirnov', r: 82, w: 22, d: 5, l: 15, f: ['l','l','w','d','l']},
-        {id: 4, n: 'Petrov', r: 78, w: 18, d: 12, l: 14, f: ['w','d','l','l','w']}
+        {id: 0, n: 'Kuznetsov', r: 92, w: 45, d: 5, l: 3},
+        {id: 1, n: 'Volkov', r: 90, w: 38, d: 8, l: 6},
+        {id: 2, n: 'Ivanov', r: 89, w: 35, d: 10, l: 4},
+        {id: 3, n: 'Smirnov', r: 82, w: 22, d: 5, l: 15}
     ];
 
     function init() {
@@ -139,7 +154,7 @@
         renderTable();
     }
 
-    function notify(msg = "Coming soon") {
+    function notify(msg) {
         const toast = document.getElementById('toast');
         toast.innerText = msg;
         toast.classList.add('show');
@@ -150,51 +165,52 @@
         const top = players[0];
         document.getElementById('home-bento').innerHTML = `
             <div class="card c-main" onclick="showSection('tables')">
-                <div><span class="label">Current Leader</span><div class="ovr">${top.r}</div></div>
-                <div style="font-size: 2.5rem; font-weight: 900; font-style: italic; text-transform: uppercase;">${top.n}</div>
+                <div><span class="label">Current Leader</span><div class="ovr shimmer">${top.r}</div></div>
+                <div class="p-name shimmer">${top.n}</div>
             </div>
-            <a href="https://t.me/streetbox1v1" target="_blank" class="card c-social" style="text-decoration:none">
+
+            <a href="https://t.me/streetbox1v1" target="_blank" class="card">
                 <span class="label">Community</span>
-                <div style="font-size: 1.8rem; font-weight: 900; font-style: italic; color: #229ED9;">TELEGRAM</div>
+                <div style="font-size: 1.8rem; font-weight: 900; font-style: italic; color: #229ED9;">TELEGRAM ↗</div>
             </a>
+
             <div class="card c-accent" onclick="showSection('roster')">
                 <div style="font-size: 1.5rem; font-weight: 900; font-style: italic;">FULL ROSTER</div>
                 <span style="font-weight:900">VIEW ALL →</span>
             </div>
-            <div class="card c-wide" onclick="showSection('tables')">
-                <span class="label">League Overview</span>
-                <div style="font-size: 2rem; font-weight: 900; font-style: italic; color:var(--accent)">LEAGUE STANDINGS ↗</div>
+
+            <a href="https://instagram.com/box.1v1" target="_blank" class="card c-wide c-instagram">
+                <span class="label">Watch Highlights</span>
+                <div class="insta-text">INSTAGRAM ↗</div>
+                <p style="font-size: 0.7rem; color: var(--text-dim); font-weight: 800; letter-spacing: 1px;">@BOX.1V1</p>
+            </a>
+            
+            <div class="card" onclick="notify('Trials are closed for now')">
+                <span class="label">Join the cage</span>
+                <div style="font-size: 1.2rem; font-weight: 900; font-style: italic;">APPLY FOR TRIAL</div>
             </div>
         `;
     }
 
     function renderRoster() {
         document.getElementById('full-roster').innerHTML = players.map((p, i) => `
-            <div class="card" onclick="notify('${p.n} Profile coming soon')">
-                <div><span class="label">OVR // 0${i+1}</span><div class="ovr" style="font-size:4rem">${p.r}</div></div>
+            <div class="card" onclick="notify('Profile loading...')">
+                <div><span class="label">Athlete // 0${i+1}</span><div class="ovr shimmer" style="font-size:4rem">${p.r}</div></div>
                 <div style="font-size: 1.5rem; font-weight: 900; font-style: italic; text-transform: uppercase;">${p.n}</div>
             </div>
         `).join('');
     }
 
     function renderTable() {
-        document.getElementById('table-body').innerHTML = players.map((p, i) => {
-            const wr = ((p.w / (p.w + p.d + p.l)) * 100).toFixed(0);
-            return `
-                <tr>
-                    <td class="rank-cell">#0${i+1}</td>
-                    <td class="name-cell">${p.n}</td>
-                    <td><span class="ovr-badge">${p.r}</span></td>
-                    <td style="color:var(--text-dim)">${p.w} - ${p.d} - ${p.l}</td>
-                    <td>${wr}%</td>
-                    <td>
-                        <div class="form-dots">
-                            ${p.f.map(res => `<div class="dot ${res}"></div>`).join('')}
-                        </div>
-                    </td>
-                </tr>
-            `;
-        }).join('');
+        document.getElementById('table-body').innerHTML = players.map((p, i) => `
+            <tr>
+                <td style="color:var(--text-dim)">#0${i+1}</td>
+                <td style="text-transform:uppercase; font-size:1.1rem;">${p.n}</td>
+                <td><span class="ovr-badge">${p.r}</span></td>
+                <td style="color:var(--text-dim)">${p.w}-${p.d}-${p.l}</td>
+                <td>${((p.w/(p.w+p.d+p.l))*100).toFixed(0)}%</td>
+            </tr>
+        `).join('');
     }
 
     function showSection(id) {
