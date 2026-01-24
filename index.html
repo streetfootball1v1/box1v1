@@ -3,343 +3,216 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>BOX1V1</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <title>BOX1V1 | Street Football League</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #000;
-      --text: #fff;
-      --accent: #2E7D32;
-      --text-light: #aaa;
-      --border: #222;
+      --bg: #050505;
+      --card-bg: #111111;
+      --accent: #39FF14; /* Тот самый сочный зеленый */
+      --text: #ffffff;
+      --text-dim: #888;
+      --gold: #FFD700;
+      --silver: #C0C0C0;
+      --bronze: #CD7F32;
     }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       background: var(--bg);
       color: var(--text);
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      line-height: 1.5;
-      padding: 0;
+      font-family: 'Inter', sans-serif;
       overflow-x: hidden;
     }
 
-    .container {
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 2.5rem 1.5rem;
-    }
-
-    header {
-      text-align: center;
-      margin-bottom: 3rem;
-      padding-top: 1rem;
-    }
-
-    h1 {
-      font-weight: 700;
-      font-size: clamp(2.2rem, 6vw, 3.2rem);
-      letter-spacing: -0.02em;
-      margin-bottom: 0.5rem;
-    }
-
-    .subtitle {
-      font-weight: 400;
-      font-size: 1.1rem;
-      opacity: 0.7;
-      max-width: 500px;
-      margin: 0 auto;
-    }
-
-    section {
-      margin-bottom: 3.5rem;
-    }
-
-    h2 {
-      font-weight: 600;
-      font-size: 1.4rem;
-      margin-bottom: 1.5rem;
-      letter-spacing: -0.01em;
-      position: relative;
-      display: inline-block;
-    }
-
-    h2::after {
-      content: '';
-      position: absolute;
-      bottom: -8px;
-      left: 0;
-      width: 32px;
-      height: 2px;
-      background: var(--accent);
-    }
-
-    p {
-      font-size: 1.05rem;
-      opacity: 0.9;
-      margin-bottom: 1rem;
-      line-height: 1.6;
-    }
-
-    ul {
-      padding-left: 1.2rem;
-      margin-bottom: 1.5rem;
-    }
-
-    li {
-      margin-bottom: 0.6rem;
-      font-size: 1.05rem;
-      opacity: 0.9;
-    }
-
-    /* Рейтинг */
-    .ranking-table {
+    /* Apple-style Navigation */
+    nav {
+      position: fixed;
+      top: 0;
       width: 100%;
-      border-collapse: collapse;
-      margin-top: 1rem;
+      background: rgba(0,0,0,0.8);
+      backdrop-filter: blur(20px);
+      z-index: 1000;
+      border-bottom: 1px solid #222;
     }
-
-    .ranking-table td {
-      padding: 0.9rem 0;
-      border-bottom: 1px solid var(--border);
-      font-size: 1.15rem;
-      font-weight: 500;
-    }
-
-    .ovr {
-      color: var(--accent);
-      width: 60px;
-      text-align: right;
-    }
-
-    .tier {
-      width: 100px;
-      text-align: right;
-      font-size: 0.95rem;
-      opacity: 0.7;
-      font-weight: 400;
-    }
-
-    /* Фото с коробки */
-    .hero-image {
-      width: 100%;
-      height: auto;
-      border-radius: 8px;
-      margin: 1.5rem 0;
-      object-fit: cover;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-    }
-
-    .image-caption {
-      font-size: 0.9rem;
-      opacity: 0.7;
-      text-align: center;
-      margin-top: 0.5rem;
-      letter-spacing: 0.02em;
-    }
-
-    /* Игрок недели */
-    .player-of-week {
-      background: rgba(0,0,0,0.3);
-      border-radius: 12px;
-      padding: 1.5rem;
-      margin: 1.5rem 0;
-      border-left: 4px solid var(--accent);
-    }
-
-    .player-header {
+    .nav-container {
+      max-width: 1000px;
+      margin: 0 auto;
       display: flex;
+      justify-content: space-between;
       align-items: center;
-      gap: 1rem;
-      margin-bottom: 1rem;
+      padding: 1rem 1.5rem;
     }
+    .logo { font-weight: 800; font-size: 1.2rem; letter-spacing: 1px; color: var(--accent); }
+    .nav-links { display: flex; gap: 1.5rem; }
+    .nav-links a { 
+      color: var(--text-dim); 
+      text-decoration: none; 
+      font-size: 0.9rem; 
+      transition: 0.3s; 
+      cursor: pointer;
+    }
+    .nav-links a.active { color: var(--text); font-weight: 600; }
 
-    .player-avatar {
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      background: #333;
+    .container { max-width: 1000px; margin: 80px auto 0; padding: 2rem 1.5rem; }
+
+    /* Sections Control */
+    section { display: none; animation: fadeIn 0.5s ease-in-out; }
+    section.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    h1 { font-size: 3rem; font-weight: 800; margin-bottom: 1rem; letter-spacing: -2px; }
+    .hero-text { color: var(--text-dim); font-size: 1.2rem; margin-bottom: 3rem; max-width: 600px; }
+
+    /* Cards Grid */
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; }
+
+    /* FIFA Style Card */
+    .card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 1.5rem;
+      position: relative;
+      border: 1px solid #222;
+      transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      overflow: hidden;
+    }
+    .card:hover { transform: scale(1.05); border-color: var(--accent); box-shadow: 0 0 30px rgba(57, 255, 20, 0.1); }
+    
+    .card-ovr { font-size: 2.5rem; font-weight: 800; color: var(--accent); margin-bottom: 0.5rem; }
+    .card-name { font-size: 1.5rem; font-weight: 700; text-transform: uppercase; margin-bottom: 1rem; }
+    
+    .card-stats { display: flex; gap: 0.8rem; border-top: 1px solid #222; padding-top: 1rem; margin-bottom: 1rem; }
+    .stat-item { text-align: center; }
+    .stat-val { display: block; font-weight: 700; font-size: 1.1rem; }
+    .stat-label { font-size: 0.6rem; color: var(--text-dim); text-transform: uppercase; }
+
+    .tier-badge {
+      display: inline-block;
+      padding: 0.3rem 0.8rem;
+      border-radius: 4px;
+      font-size: 0.7rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+    }
+    .tier-gold { background: var(--gold); color: #000; }
+    .tier-silver { background: var(--silver); color: #000; }
+    .tier-bronze { background: var(--bronze); color: #000; }
+
+    /* Upcoming / Soon */
+    .soon-box {
+      border: 2px dashed #222;
+      border-radius: 16px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.2rem;
+      height: 300px;
+      color: var(--text-dim);
       font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 2px;
     }
 
-    .player-name {
-      font-size: 1.25rem;
-      font-weight: 600;
+    /* Rules Table */
+    .rules-list { list-style: none; }
+    .rules-list li { 
+      padding: 1.5rem; 
+      border-bottom: 1px solid #222; 
+      display: flex; 
+      gap: 1rem;
     }
+    .rules-list span { color: var(--accent); font-weight: 800; }
 
-    .player-stats {
-      display: flex;
-      gap: 1.5rem;
-      font-size: 0.95rem;
-      opacity: 0.8;
-    }
-
-    .stat {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .stat-value {
-      font-size: 1.2rem;
-      color: var(--accent);
-      font-weight: 600;
-    }
-
-    .stat-label {
-      font-size: 0.8rem;
-      opacity: 0.6;
-    }
-
-    .player-quote {
-      font-style: italic;
-      font-size: 1.05rem;
-      margin-top: 1rem;
-      padding-left: 1rem;
-      border-left: 2px solid var(--accent);
-      opacity: 0.9;
-    }
-
-    /* Новости */
-    .news-item {
-      margin-bottom: 1.8rem;
-      padding-bottom: 1.8rem;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .news-item:last-child {
-      border-bottom: none;
-      margin-bottom: 0;
-      padding-bottom: 0;
-    }
-
-    .news-date {
-      font-size: 0.85rem;
-      opacity: 0.6;
-      margin-bottom: 0.4rem;
-      letter-spacing: 0.02em;
-    }
-
-    .news-title {
-      font-size: 1.25rem;
-      font-weight: 600;
-      margin-bottom: 0.5rem;
-      letter-spacing: -0.01em;
-    }
-
-    footer {
-      margin-top: 4rem;
-      font-size: 0.9rem;
-      opacity: 0.5;
-      text-align: center;
-      padding-bottom: 2rem;
-    }
-
-    @media (max-width: 600px) {
-      .ranking-table td {
-        font-size: 1.05rem;
-        padding: 0.7rem 0;
-      }
-      .ovr, .tier {
-        font-size: 1rem;
-      }
-      .player-header {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      .player-avatar {
-        width: 50px;
-        height: 50px;
-        font-size: 1rem;
-      }
-    }
+    footer { text-align: center; padding: 4rem 0; color: var(--text-dim); font-size: 0.8rem; }
   </style>
 </head>
 <body>
 
+  <nav>
+    <div class="nav-container">
+      <div class="logo">BOX1V1</div>
+      <div class="nav-links">
+        <a onclick="showSection('home')" id="link-home" class="active">ГЛАВНАЯ</a>
+        <a onclick="showSection('ranking')" id="link-ranking">РЕЙТИНГ</a>
+        <a onclick="showSection('rules')" id="link-rules">ПРАВИЛА</a>
+      </div>
+    </div>
+  </nav>
+
   <div class="container">
 
-    <header>
-      <h1>BOX1V1</h1>
-      <p class="subtitle">Уличная лига 1v1. Скоро.</p>
-    </header>
-
-    <!-- Фото с коробки -->
-    <section>
-      <img src="<a href="https://ibb.co/M58yxHCJ"><img src="https://i.ibb.co/qF0L38r2/Airbrush-IMAGE-ENHANCER-1769086394964-1769086394964.jpg" alt="Airbrush-IMAGE-ENHANCER-1769086394964-1769086394964" border="0"></a>" alt="Коробка Elagino Park" class="hero-image">
-      <p class="image-caption">Фото с первого матча. Мяч летит, взгляд — как у чемпиона. Elagino Park, 24.01.2026.</p>
-    </section>
-
-    <section>
-      <h2>Как это работает</h2>
-      <p>• У каждого игрока есть цифровая карточка<br>
-         • OVR растёт за голы, дриблинг, защиту<br>
-         • Ранги: BRONZE → SILVER → GOLD</p>
-    </section>
-
-    <!-- Игрок недели -->
-    <section>
-      <h2>Игрок недели</h2>
-      <div class="player-of-week">
-        <div class="player-header">
-          <div class="player-avatar">K</div>
-          <div>
-            <div class="player-name">Kirillov</div>
-            <div class="player-stats">
-              <div class="stat"><span class="stat-value">89</span><span class="stat-label">OVR</span></div>
-              <div class="stat"><span class="stat-value">GOLD</span><span class="stat-label">RANK</span></div>
-            </div>
-          </div>
-        </div>
-        <p class="player-quote">«Я не играю ради победы. Я играю ради того, чтобы каждый мой удар был лучше предыдущего.»</p>
-      </div>
-    </section>
-
-    <section>
-      <h2>Рейтинг игроков</h2>
-      <table class="ranking-table">
-        <tr><td>ZUPAROV</td><td class="ovr">62</td><td class="tier">BRONZE</td></tr>
-        <tr><td>KIRILLOV</td><td class="ovr">89</td><td class="tier">GOLD</td></tr>
-        <tr><td>PETROV</td><td class="ovr">74</td><td class="tier">SILVER</td></tr>
-      </table>
-    </section>
-
-    <section>
-      <h2>Новости</h2>
+    <section id="home" class="active">
+      <h1>Street Football<br>Reinvented.</h1>
+      <p class="hero-text">Лига, где твоя статистика превращается в реальный статус. Здесь нет команд, есть только ты и твой оппонент. 1 на 1. Докажи, что ты GOLD.</p>
       
-      <div class="news-item">
-        <div class="news-date">24 января 2026</div>
-        <div class="news-title">Первые матчи в Elagino Park</div>
-        <p>Состоялись первые официальные матчи BOX1V1. Zuparov одержал победу над Petrov’ым со счётом 3:1.</p>
+      <div class="grid">
+        <div class="card">
+          <div class="card-ovr">92</div>
+          <div class="card-name">ZUZNETSOV</div>
+          <div class="card-stats">
+            <div class="stat-item"><span class="stat-val">65</span><span class="stat-label">SPD</span></div>
+            <div class="stat-item"><span class="stat-val">88</span><span class="stat-label">SHT</span></div>
+            <div class="stat-item"><span class="stat-val">68</span><span class="stat-label">DRI</span></div>
+            <div class="stat-item"><span class="stat-val">60</span><span class="stat-label">DEF</span></div>
+          </div>
+          <div class="tier-badge tier-gold">TIER: GOLD</div>
+        </div>
+        <div class="soon-box">СЛЕДУЮЩИЙ МАТЧ: СКОРО</div>
       </div>
-
-      <div class="news-item">
-        <div class="news-date">20 января 2026</div>
-        <div class="news-title">Запуск рейтинговой системы</div>
-        <p>Сегодня стартует публичный рейтинг. Все матчи теперь влияют на твой OVR.</p>
-      </div>
-
     </section>
 
-    <section>
-      <h2>Правила</h2>
-      <p>(заполнишь позже)</p>
+    <section id="ranking">
+      <h1>Лидеры Коробки</h1>
+      <p class="hero-text">Обновление после каждого игрового дня. Твои победы поднимают тебя в топ.</p>
+      <div class="grid" id="ranking-list">
+        <div class="card">
+            <div class="card-ovr">85</div>
+            <div class="card-name">KUZNETSOV</div>
+            <div class="tier-badge tier-silver">TIER: SILVER</div>
+        </div>
+        <div class="card">
+            <div class="card-ovr">62</div>
+            <div class="card-name">ZUPAROV</div>
+            <div class="tier-badge tier-bronze">TIER: BRONZE</div>
+        </div>
+        <div class="soon-box">МЕСТО ВАКАНТНО</div>
+      </div>
+    </section>
+
+    <section id="rules">
+      <h1>The Law of Box.</h1>
+      <ul class="rules-list">
+        <li><span>01.</span> Формат матча — 5 минут или до 5 забитых мячей.</li>
+        <li><span>02.</span> Чистое время на последней минуте каждого тайма.</li>
+        <li><span>03.</span> Проброс между ног (Panna) дает +1 OVR вне зависимости от счета.</li>
+        <li><span>04.</span> Победа в основное время: +3 к рейтингу.</li>
+        <li><span>05.</span> Уважение к оппоненту — основа лиги.</li>
+      </ul>
     </section>
 
     <footer>
-      © BOX1V1 • Elagino Park • 2026
+      © 2026 BOX1V1 • ELAGINO PARK • СТАНЬ ЛЕГЕНДОЙ
     </footer>
-
   </div>
 
+  <script>
+    function showSection(sectionId) {
+      // Скрываем все секции
+      document.querySelectorAll('section').forEach(section => {
+        section.classList.remove('active');
+      });
+      // Показываем нужную
+      document.getElementById(sectionId).classList.add('active');
+      
+      // Обновляем ссылки в меню
+      document.querySelectorAll('.nav-links a').forEach(link => {
+        link.classList.remove('active');
+      });
+      document.getElementById('link-' + sectionId).classList.add('active');
+
+      // Скролл вверх при переключении
+      window.scrollTo(0, 0);
+    }
+  </script>
 </body>
 </html>
-
