@@ -1,290 +1,227 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BOX1V1</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>BOX1V1 | Street Football</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,700;0,900;1,900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #000; --card-bg: #0d0d0d; --accent: #39FF14;
+      --text: #fff; --text-dim: #666; --border: #1a1a1a;
+      --cubic: cubic-bezier(0.4, 0, 0.2, 1);
+      --rank-gold: #FFD700;
+    }
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+    body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; overflow-x: hidden; }
 
-<style>
-:root {
-  --bg: #000;
-  --card: #0d0d0d;
-  --text: #fff;
-  --muted: #666;
-  --accent: #39FF14;
-  --danger: #ff3131;
-}
+    /* Навигация в стиле Apple */
+    nav { position: fixed; top: 0; width: 100%; z-index: 1000; background: rgba(0,0,0,0.7); backdrop-filter: saturate(180%) blur(20px); border-bottom: 1px solid var(--border); }
+    .nav-container { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; padding: 1.2rem 2rem; align-items: center; }
+    .nav-links { display: flex; gap: 2.5rem; }
+    .nav-links a { color: var(--text-dim); text-decoration: none; font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s var(--cubic); cursor: pointer; }
+    .nav-links a.active, .nav-links a:hover { color: var(--text); }
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
+    .container { max-width: 1200px; margin: 140px auto 0; padding: 0 2rem; }
+    
+    /* Анимации появления секций */
+    section { display: none; opacity: 0; transform: scale(0.98); transition: 0.6s var(--cubic); }
+    section.active { display: block; opacity: 1; transform: scale(1); }
 
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: Inter, sans-serif;
-  overflow-x: hidden;
-}
+    h1 { font-size: clamp(3.5rem, 12vw, 8rem); font-weight: 900; line-height: 0.8; letter-spacing: -4px; text-transform: uppercase; font-style: italic; margin-bottom: 4rem; }
 
-/* NOISE */
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  background: url("https://grainy-gradients.vercel.app/noise.svg");
-  opacity: .07;
-  pointer-events: none;
-  z-index: 999;
-}
+    /* Bento Grid */
+    .bento { display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: 240px; gap: 1.5rem; }
+    .card { 
+        background: var(--card-bg); border-radius: 28px; padding: 2.5rem; 
+        display: flex; flex-direction: column; justify-content: space-between; 
+        border: 1px solid var(--border); transition: 0.5s var(--cubic); 
+        cursor: pointer; position: relative; overflow: hidden; 
+    }
+    .card:hover { transform: scale(1.02); background: #111; border-color: #333; }
+    .c-main { grid-column: span 2; grid-row: span 2; }
+    .c-wide { grid-column: span 2; }
+    
+    .ovr { font-size: 8rem; font-weight: 900; line-height: 0.7; letter-spacing: -6px; color: var(--accent); transition: 0.5s var(--cubic); }
+    .card:hover .ovr { transform: translateX(5px); filter: drop-shadow(0 0 20px var(--accent)); }
+    .p-name { font-size: 3rem; font-weight: 900; font-style: italic; text-transform: uppercase; line-height: 0.9; }
 
-/* HERO */
-.hero {
-  min-height: 100vh;
-  padding: 8vw;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  animation: heroPulse 6s ease-in-out infinite;
-}
+    /* Overlay / Modal */
+    .overlay { 
+        position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 2000; 
+        display: none; opacity: 0; transition: 0.4s var(--cubic); backdrop-filter: blur(15px);
+        padding: 4rem 2rem;
+    }
+    .overlay.open { display: block; opacity: 1; }
+    .close { position: fixed; top: 2.5rem; right: 2.5rem; color: var(--text-dim); font-weight: 900; cursor: pointer; font-size: 0.8rem; transition: 0.3s; }
+    .close:hover { color: var(--text); }
 
-@keyframes heroPulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.01); }
-  100% { transform: scale(1); }
-}
+    /* Сравнение игроков */
+    .compare-wrap { display: flex; align-items: center; justify-content: center; gap: 4rem; height: 100%; }
+    .comp-player { text-align: center; width: 300px; }
+    .comp-vs { font-size: 2rem; font-weight: 900; font-style: italic; color: var(--text-dim); }
 
-.hero h1 {
-  font-size: clamp(4rem, 12vw, 9rem);
-  font-weight: 900;
-  letter-spacing: -0.05em;
-  line-height: .85;
-}
+    /* Формы ввода (Админка) */
+    .admin-trigger { position: fixed; bottom: 2rem; right: 2rem; width: 50px; height: 50px; background: #111; border: 1px solid var(--border); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 3000; transition: 0.3s; }
+    .admin-trigger:hover { border-color: var(--accent); transform: rotate(90deg); }
 
-.hero h1 span {
-  color: var(--accent);
-}
+    select, input { background: #111; border: 1px solid var(--border); color: #fff; padding: 1.2rem; border-radius: 16px; width: 100%; font-family: inherit; font-weight: 700; margin-bottom: 1rem; appearance: none; }
 
-.hero p {
-  margin-top: 2rem;
-  max-width: 420px;
-  color: var(--muted);
-  font-size: 1.1rem;
-}
-
-/* SECTION */
-section {
-  padding: 8vw;
-}
-
-/* DIVIDER */
-.divider {
-  height: 1px;
-  background: #111;
-  margin: 6rem 0;
-}
-
-/* PLAYERS */
-.players {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 2rem;
-}
-
-/* CARD */
-.card {
-  background: var(--card);
-  border-radius: 18px;
-  padding: 2rem;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-  transition: .4s cubic-bezier(.2,1,.2,1);
-}
-
-.card::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(120deg, transparent, rgba(57,255,20,.15), transparent);
-  opacity: 0;
-  transition: .4s;
-}
-
-.card:hover {
-  transform: translateY(-12px) scale(1.03);
-}
-
-.card:hover::after {
-  opacity: 1;
-}
-
-.ovr {
-  font-size: 5rem;
-  font-weight: 900;
-  color: var(--accent);
-}
-
-.name {
-  margin-top: 1rem;
-  font-size: 1.6rem;
-  font-weight: 900;
-  text-transform: uppercase;
-  font-style: italic;
-}
-
-/* PROFILE OVERLAY */
-.overlay {
-  position: fixed;
-  inset: 0;
-  background: #000;
-  z-index: 2000;
-  display: none;
-  animation: fadeIn .4s ease forwards;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0 }
-  to { opacity: 1 }
-}
-
-.profile {
-  padding: 8vw;
-}
-
-.profile h2 {
-  font-size: clamp(4rem, 10vw, 8rem);
-  font-weight: 900;
-  font-style: italic;
-}
-
-.profile .big-ovr {
-  font-size: clamp(8rem, 20vw, 16rem);
-  color: var(--accent);
-  font-weight: 900;
-  margin-top: -1rem;
-  animation: ovrPop .6s ease;
-}
-
-@keyframes ovrPop {
-  from { transform: scale(.8); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
-}
-
-.stats {
-  margin-top: 4rem;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px,1fr));
-  gap: 2rem;
-}
-
-.stat {
-  background: #111;
-  padding: 1.5rem;
-  border-radius: 14px;
-}
-
-.stat span {
-  font-size: .7rem;
-  color: var(--muted);
-  text-transform: uppercase;
-}
-
-.stat strong {
-  display: block;
-  font-size: 2.5rem;
-  font-weight: 900;
-}
-
-.close {
-  position: fixed;
-  top: 2rem;
-  right: 2rem;
-  color: var(--accent);
-  cursor: pointer;
-  font-weight: 900;
-  z-index: 3000;
-}
-
-/* FOOTER */
-footer {
-  padding: 4rem 8vw;
-  font-size: .7rem;
-  letter-spacing: 2px;
-  color: var(--muted);
-}
-
-/* MOBILE */
-@media(max-width:768px) {
-  .hero { padding: 10vw 6vw; }
-}
-</style>
+    @media (max-width: 768px) {
+      .bento { grid-template-columns: 1fr; grid-auto-rows: auto; }
+      .c-main, .c-wide { grid-column: span 1; min-height: 320px; }
+      .compare-wrap { flex-direction: column; gap: 2rem; }
+    }
+  </style>
 </head>
-
 <body>
 
-<!-- HERO -->
-<div class="hero">
-  <h1>BOX<span>1</span>V1</h1>
-  <p>Уличный футбол. Один на один.  
-  Движение. Давление. Характер.</p>
-</div>
-
-<div class="divider"></div>
-
-<!-- PLAYERS -->
-<section>
-  <div class="players" id="players"></div>
-</section>
-
-<footer>
-BOX1V1 — STREET FOOTBALL PROJECT
-</footer>
-
-<!-- PROFILE -->
-<div class="overlay" id="overlay">
-  <div class="close" onclick="closeProfile()">[ CLOSE ]</div>
-  <div class="profile" id="profile"></div>
-</div>
-
-<script>
-const players = [
-  {name:'ZUPAROV', ovr:72, w:5, d:6, l:15},
-  {name:'VOLKOV', ovr:90, w:38, d:8, l:6},
-  {name:'IVANOV', ovr:88, w:35, d:10, l:4},
-];
-
-const grid = document.getElementById('players');
-
-players.forEach(p=>{
-  const el = document.createElement('div');
-  el.className = 'card';
-  el.innerHTML = `
-    <div class="ovr">${p.ovr}</div>
-    <div class="name">${p.name}</div>
-  `;
-  el.onclick = ()=>openProfile(p);
-  grid.appendChild(el);
-});
-
-function openProfile(p){
-  document.getElementById('overlay').style.display='block';
-  document.body.style.overflow='hidden';
-  document.getElementById('profile').innerHTML=`
-    <h2>${p.name}</h2>
-    <div class="big-ovr">${p.ovr}</div>
-    <div class="stats">
-      <div class="stat"><span>Wins</span><strong>${p.w}</strong></div>
-      <div class="stat"><span>Draws</span><strong>${p.d}</strong></div>
-      <div class="stat"><span>Losses</span><strong style="color:var(--danger)">${p.l}</strong></div>
+  <nav>
+    <div class="nav-container">
+      <div class="nav-logo" onclick="showSection('home')">
+        <svg viewBox="0 0 400 100" width="90" height="22"><text x="0" y="80" fill="#fff" font-family="Inter" font-weight="900" font-size="80" letter-spacing="10">BOX<tspan fill="#39FF14">1</tspan>V1</text></svg>
+      </div>
+      <div class="nav-links">
+        <a onclick="showSection('home')" id="btn-home" class="active">Home</a>
+        <a onclick="showSection('roster')" id="btn-roster">Roster</a>
+        <a onclick="toggleOverlay('compare-ov')">Compare</a>
+      </div>
     </div>
-  `;
-}
+  </nav>
 
-function closeProfile(){
-  document.getElementById('overlay').style.display='none';
-  document.body.style.overflow='auto';
-}
-</script>
+  <div class="container">
+    <section id="home" class="active">
+        <h1 id="hero-text">STREET<br>ELITE.</h1>
+        <div class="bento" id="home-bento">
+            </div>
+    </section>
 
+    <section id="roster">
+        <h1>THE ROSTER</h1>
+        <div class="bento" id="full-roster">
+            </div>
+    </section>
+  </div>
+
+  <div class="overlay" id="compare-ov">
+    <div class="close" onclick="toggleOverlay('compare-ov')">CLOSE</div>
+    <div class="compare-wrap">
+        <div class="comp-player">
+            <select id="comp-1" onchange="runCompare()"></select>
+            <div id="comp-res-1"></div>
+        </div>
+        <div class="comp-vs">VS</div>
+        <div class="comp-player">
+            <select id="comp-2" onchange="runCompare()"></select>
+            <div id="comp-res-2"></div>
+        </div>
+    </div>
+  </div>
+
+  <div class="admin-trigger" onclick="toggleOverlay('admin-ov')">+</div>
+  <div class="overlay" id="admin-ov">
+    <div class="close" onclick="toggleOverlay('admin-ov')">CLOSE</div>
+    <div style="max-width: 400px; margin: 0 auto; text-align: center;">
+        <h2 style="font-size: 3rem; font-style: italic; margin-bottom: 2rem;">RECORD MATCH</h2>
+        <select id="adm-p1"></select>
+        <input type="number" id="adm-s1" placeholder="SCORE P1">
+        <select id="adm-p2"></select>
+        <input type="number" id="adm-s2" placeholder="SCORE P2">
+        <button onclick="saveMatch()" style="background: var(--accent); border: none; padding: 1.5rem; width: 100%; border-radius: 18px; font-weight: 900; cursor: pointer;">SUBMIT RESULT</button>
+    </div>
+  </div>
+
+  <script>
+    // База данных в LocalStorage
+    let players = JSON.parse(localStorage.getItem('box1v1_pro')) || [
+        {id: 0, n: 'Kuznetsov', r: 92, w: 45, d: 5, l: 3},
+        {id: 1, n: 'Volkov', r: 90, w: 38, d: 8, l: 6},
+        {id: 2, n: 'Ivanov', r: 89, w: 35, d: 10, l: 4},
+        {id: 3, n: 'Smirnov', r: 82, w: 20, d: 2, l: 12}
+    ];
+
+    function init() {
+        players.sort((a,b) => b.r - a.r);
+        renderHome();
+        renderRoster();
+        updateSelectors();
+    }
+
+    function renderHome() {
+        const top = players[0];
+        const second = players[1];
+        document.getElementById('home-bento').innerHTML = `
+            <div class="card c-main" onclick="openProfile(${top.id})">
+                <div><span style="font-size:0.7rem; font-weight:800; color:var(--text-dim)">#01 ATHLETE</span><div class="ovr">${top.r}</div></div>
+                <div class="p-name">${top.n}</div>
+            </div>
+            <div class="card c-wide" onclick="showSection('roster')">
+                <div class="p-name" style="font-size:2rem">VIEW ENTIRE<br>LEAGUE</div>
+                <span style="color:var(--accent)">→</span>
+            </div>
+            <div class="card" onclick="openProfile(${second.id})">
+                <div class="ovr" style="font-size:4rem">${second.r}</div>
+                <div class="p-name" style="font-size:1.5rem">${second.n}</div>
+            </div>
+        `;
+    }
+
+    function renderRoster() {
+        document.getElementById('full-roster').innerHTML = players.map((p, i) => `
+            <div class="card" onclick="openProfile(${p.id})">
+                <div class="ovr" style="font-size:4rem">${p.r}</div>
+                <div class="p-name" style="font-size:1.5rem">${p.n}</div>
+            </div>
+        `).join('');
+    }
+
+    function updateSelectors() {
+        const options = players.map(p => `<option value="${p.id}">${p.n}</option>`).join('');
+        ['comp-1', 'comp-2', 'adm-p1', 'adm-p2'].forEach(id => document.getElementById(id).innerHTML = options);
+    }
+
+    function showSection(id) {
+        document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+        document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        document.getElementById('btn-' + id).classList.add('active');
+        window.scrollTo({top: 0, behavior: 'smooth'});
+    }
+
+    function toggleOverlay(id) {
+        const ov = document.getElementById(id);
+        if(ov.classList.contains('open')) {
+            ov.classList.remove('open');
+            setTimeout(() => ov.style.display = 'none', 400);
+        } else {
+            ov.style.display = 'block';
+            setTimeout(() => ov.classList.add('open'), 10);
+        }
+    }
+
+    function runCompare() {
+        const p1 = players.find(x => x.id == document.getElementById('comp-1').value);
+        const p2 = players.find(x => x.id == document.getElementById('comp-2').value);
+        
+        document.getElementById('comp-res-1').innerHTML = `<div class="ovr">${p1.r}</div><div class="p-name">${p1.n}</div>`;
+        document.getElementById('comp-res-2').innerHTML = `<div class="ovr">${p2.r}</div><div class="p-name">${p2.n}</div>`;
+    }
+
+    function saveMatch() {
+        const p1 = players.find(x => x.id == document.getElementById('adm-p1').value);
+        const p2 = players.find(x => x.id == document.getElementById('adm-p2').value);
+        const s1 = parseInt(document.getElementById('adm-s1').value);
+        const s2 = parseInt(document.getElementById('adm-s2').value);
+
+        if(s1 > s2) { p1.r += 2; p2.r -= 1; }
+        else if(s2 > s1) { p2.r += 2; p1.r -= 1; }
+        
+        localStorage.setItem('box1v1_pro', JSON.stringify(players));
+        location.reload();
+    }
+
+    init();
+  </script>
 </body>
 </html>
