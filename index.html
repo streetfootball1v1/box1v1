@@ -3,158 +3,229 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>BOX1V1 | Pro Management</title>
+  <title>BOX1V1 | Street Football Elite</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,700;0,900;1,900&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg: #000; --card-bg: #0d0d0d; --accent: #39FF14;
       --text: #fff; --text-dim: #666; --border: #1a1a1a;
+      --cubic: cubic-bezier(0.2, 1, 0.2, 1);
       --rank-gold: #FFD700; --rank-silver: #C0C0C0; --rank-bronze: #CD7F32;
     }
 
-    * { margin: 0; padding: 0; box-sizing: border-box; outline: none; }
-    body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
 
-    /* Admin */
-    #admin-bar { background: var(--accent); color: #000; padding: 8px; font-size: 10px; font-weight: 900; text-align: center; cursor: pointer; text-transform: uppercase; position: sticky; top: 0; z-index: 2000; }
-    #admin-panel { display: none; background: #111; padding: 2rem; border-bottom: 2px solid var(--accent); }
+    /* UI Elements */
+    #preloader { position: fixed; inset: 0; background: #000; z-index: 5000; display: flex; align-items: center; justify-content: center; }
+    nav { position: fixed; top: 0; width: 100%; z-index: 1000; background: rgba(0,0,0,0.9); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); }
+    .nav-container { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; padding: 1.2rem 2rem; align-items: center; }
+    .nav-links { display: flex; gap: 2rem; }
+    .nav-links a { color: var(--text-dim); text-decoration: none; font-size: 0.7rem; font-weight: 900; text-transform: uppercase; cursor: pointer; transition: 0.2s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--accent); }
 
-    nav { position: sticky; top: 31px; width: 100%; z-index: 1000; background: rgba(0,0,0,0.8); backdrop-filter: blur(15px); border-bottom: 1px solid var(--border); }
-    .nav-container { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; padding: 1rem 2rem; }
-    .nav-links a { color: var(--text-dim); text-decoration: none; font-size: 11px; font-weight: 900; margin-left: 2rem; cursor: pointer; }
-    .nav-links a.active { color: var(--accent); }
+    .container { max-width: 1200px; margin: 120px auto 0; padding: 0 2rem; }
+    section { display: none; }
+    section.active { display: block; animation: fadeIn 0.4s var(--cubic); }
 
-    .container { max-width: 1200px; margin: 40px auto; padding: 0 2rem; min-height: 70vh; }
-    section { display: none; opacity: 0; transition: 0.3s; }
-    section.active { display: block; opacity: 1; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-    /* Comparison Table */
-    .compare-grid { display: grid; grid-template-columns: 1fr 120px 1fr; gap: 2rem; margin-top: 2rem; }
-    .comp-card { background: #0d0d0d; padding: 2rem; border-radius: 20px; border: 1px solid var(--border); text-align: center; }
-    .comp-stat-row { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
-    .comp-val { font-size: 2rem; font-weight: 900; }
-    .better { color: var(--accent); }
+    /* Typography */
+    h1 { font-size: clamp(3rem, 12vw, 8rem); font-weight: 900; line-height: 0.8; letter-spacing: -4px; text-transform: uppercase; font-style: italic; margin-bottom: 3rem; }
+    .label { font-size: 0.65rem; font-weight: 900; color: var(--text-dim); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 0.5rem; display: block; }
 
-    /* Tables */
-    .league-table { width: 100%; border-collapse: collapse; }
-    .league-table td { padding: 1.2rem; border-bottom: 1px solid var(--border); cursor: pointer; font-size: 0.9rem; }
+    /* Bento Grid */
+    .bento { display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: 240px; gap: 1rem; margin-bottom: 5rem; }
+    .card { background: var(--card-bg); border-radius: 24px; padding: 2rem; display: flex; flex-direction: column; justify-content: space-between; border: 1px solid var(--border); transition: 0.3s var(--cubic); cursor: pointer; position: relative; overflow: hidden; }
+    .card:hover { transform: translateY(-8px); border-color: #333; background: #111; }
+    .c-main { grid-column: span 2; grid-row: span 2; }
+    .c-wide { grid-column: span 2; }
+    .c-accent { background: var(--accent); color: #000; border: none; }
+
+    /* Stats */
+    .ovr { font-size: 8rem; font-weight: 900; line-height: 0.75; letter-spacing: -6px; }
+    .p-name { font-size: 2.5rem; font-weight: 900; font-style: italic; text-transform: uppercase; line-height: 0.9; }
     
-    /* Micro-Graph */
-    .mini-graph { display: flex; align-items: flex-end; gap: 4px; height: 40px; margin-top: 10px; }
-    .graph-bar { width: 12px; background: var(--accent); border-radius: 2px; transition: 0.5s; }
+    /* Search & Filter - Minimalist */
+    .search-bar { background: transparent; border: none; border-bottom: 2px solid var(--border); color: #fff; font-size: 2rem; font-weight: 900; font-style: italic; width: 100%; margin-bottom: 3rem; padding: 1rem 0; text-transform: uppercase; }
+    .search-bar:focus { border-color: var(--accent); outline: none; }
 
-    .f-btn { background: #111; border: 1px solid var(--border); color: #666; padding: 10px 20px; border-radius: 50px; font-size: 11px; font-weight: 800; cursor: pointer; }
-    .f-btn.active { border-color: var(--accent); color: #fff; }
+    /* Profile Overlay */
+    .overlay { position: fixed; inset: 0; background: #000; z-index: 2000; display: none; padding: 5vw; overflow-y: auto; }
+    .overlay.open { display: block; }
+    .close { position: fixed; top: 2rem; right: 2rem; color: var(--accent); font-weight: 900; cursor: pointer; font-size: 0.8rem; letter-spacing: 2px; }
 
-    .overlay { position: fixed; inset: 0; background: #000; z-index: 3000; display: none; padding: 2rem; overflow-y: auto; }
-    .close { position: fixed; top: 2rem; right: 2rem; color: var(--accent); font-weight: 900; cursor: pointer; }
+    /* History Dots */
+    .history-dots { display: flex; gap: 6px; margin-top: 10px; }
+    .dot { width: 12px; height: 12px; border-radius: 2px; }
+    .dot-w { background: var(--accent); }
+    .dot-l { background: #ff3131; }
+    .dot-d { background: #444; }
+
+    /* Admin Panel - Floating */
+    #admin-toggle { position: fixed; bottom: 2rem; left: 2rem; width: 40px; height: 40px; background: #111; border: 1px solid var(--border); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 4000; font-size: 10px; font-weight: 900; }
+    #admin-panel { position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 4001; display: none; align-items: center; justify-content: center; padding: 2rem; }
+    .admin-box { background: #111; padding: 3rem; border-radius: 30px; border: 1px solid var(--accent); max-width: 500px; width: 100%; }
+    .admin-box select, .admin-box input { width: 100%; background: #000; border: 1px solid var(--border); color: #fff; padding: 1rem; margin-bottom: 1rem; border-radius: 12px; font-weight: 800; }
+
+    @media (max-width: 768px) {
+      .bento { grid-template-columns: 1fr; grid-auto-rows: auto; }
+      .c-main, .c-wide { grid-column: span 1; min-height: 320px; }
+      .ovr { font-size: 6rem; }
+    }
   </style>
 </head>
 <body>
 
-  <div id="admin-bar" onclick="toggleAdmin()">Staff Panel: Submit Match</div>
-  <div id="admin-panel">
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; max-width: 1000px; margin: 0 auto;">
-        <select id="adm-p1"></select>
-        <input type="number" id="adm-s1" placeholder="Score 1">
-        <input type="number" id="adm-s2" placeholder="Score 2">
-        <select id="adm-p2"></select>
-        <button class="f-btn active" onclick="processMatch()">Save Result</button>
-    </div>
+  <div id="preloader">
+    <svg viewBox="0 0 400 100" width="160" height="40"><text x="0" y="80" fill="#FFFFFF" font-family="Inter" font-weight="900" font-size="80" letter-spacing="12">BOX<tspan fill="#39FF14">1</tspan>V1</text></svg>
   </div>
 
   <nav>
     <div class="nav-container">
-      <div style="font-weight: 900; font-style: italic;">BOX1V1</div>
+      <div class="nav-logo" onclick="showSection('home')">
+        <svg viewBox="0 0 400 100" width="80" height="20"><text x="0" y="80" fill="#FFFFFF" font-family="Inter" font-weight="900" font-size="80" letter-spacing="12">BOX<tspan fill="#39FF14">1</tspan>V1</text></svg>
+      </div>
       <div class="nav-links">
-        <a onclick="showSection('home')" id="btn-home" class="active">RANKING</a>
-        <a onclick="showSection('compare')" id="btn-compare">COMPARE</a>
-        <a onclick="showSection('matches')" id="btn-matches">HISTORY</a>
+        <a onclick="showSection('home')" id="btn-home" class="active">HOME</a>
+        <a onclick="showSection('ranking')" id="btn-ranking">ROSTER</a>
+        <a onclick="openCompare()">COMPARE</a>
       </div>
     </div>
   </nav>
 
   <div class="container">
     <section id="home" class="active">
-        <div style="display: flex; gap: 10px; margin-bottom: 2rem;">
-            <button class="f-btn active" onclick="renderTable('all')">ALL</button>
-            <button class="f-btn" onclick="renderTable('gold')">GOLD</button>
-            <input type="text" id="search" oninput="search()" placeholder="Search..." style="background: #111; border: 1px solid var(--border); color:#fff; padding:0 15px; border-radius:50px; margin-left:auto;">
-        </div>
-        <table class="league-table"><tbody id="table-body"></tbody></table>
-    </section>
-
-    <section id="compare">
-        <h1>VERSUS.</h1>
-        <div style="display: flex; gap: 1rem; margin-bottom: 2rem;">
-            <select id="comp-sel-1" onchange="runCompare()"></select>
-            <select id="comp-sel-2" onchange="runCompare()"></select>
-        </div>
-        <div class="compare-grid" id="compare-results">
+        <span class="label" style="color:var(--accent)">ELAGINO SEASON 2026</span>
+        <h1>STREET<br>STANDARD.</h1>
+        <div class="bento">
+            <div id="main-leader-slot" class="c-main"></div>
+            <div class="card c-accent" onclick="showSection('ranking')">
+                <div style="font-size: 2.2rem; font-weight: 900; font-style: italic; line-height: 0.9;">VIEW ALL<br>ATHLETES</div>
+                <div style="font-size: 0.8rem; font-weight: 900;">[ → ]</div>
             </div>
+            <div class="card" onclick="window.open('https://t.me/streetbox1v1')">
+                <span class="label">COMMUNITY</span>
+                <div style="font-size: 1.2rem; font-weight: 900; font-style: italic;">TELEGRAM ↗</div>
+            </div>
+            <div id="second-leader-slot" class="c-wide"></div>
+        </div>
     </section>
 
-    <section id="matches">
-        <h1>LAST BATTLES.</h1>
-        <div id="matches-list"></div>
+    <section id="ranking">
+        <input type="text" class="search-bar" id="playerSearch" placeholder="SEARCH ATHLETE..." oninput="filterRoster()">
+        <div id="roster-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; padding-bottom: 5rem;"></div>
     </section>
   </div>
 
-  <div class="overlay" id="overlay">
-    <div class="close" onclick="closeProfile()">[ CLOSE ]</div>
-    <div id="ov-content"></div>
+  <div class="overlay" id="profile-overlay">
+    <div class="close" onclick="closeOverlay('profile-overlay')">[ CLOSE ]</div>
+    <div id="profile-content"></div>
+  </div>
+
+  <div id="admin-toggle" onclick="toggleAdmin()">+</div>
+  <div id="admin-panel">
+    <div class="admin-box">
+        <h2 style="margin-bottom: 2rem; font-style: italic;">RECORD MATCH</h2>
+        <select id="adm-p1"></select>
+        <input type="number" id="adm-s1" placeholder="SCORE P1">
+        <div style="text-align: center; font-weight: 900; margin: 10px 0;">VS</div>
+        <input type="number" id="adm-s2" placeholder="SCORE P2">
+        <select id="adm-p2"></select>
+        <button class="card c-accent" style="width: 100%; border-radius: 12px; font-weight: 900;" onclick="submitMatch()">SAVE RESULT</button>
+        <div style="text-align: center; margin-top: 1.5rem; cursor: pointer; color: var(--text-dim); font-size: 0.7rem;" onclick="toggleAdmin()">CANCEL</div>
+    </div>
   </div>
 
   <script>
-    // --- DATABASE LOGIC ---
-    let players = JSON.parse(localStorage.getItem('b1v1_players')) || [];
-    let matches = JSON.parse(localStorage.getItem('b1v1_matches')) || [];
+    // --- DATABASE ---
+    let players = JSON.parse(localStorage.getItem('box1v1_db')) || [
+        {id: 0, n: 'Kuznetsov', r: 92, w: 45, d: 5, l: 3, h: ['W','W','W','D','W']},
+        {id: 1, n: 'Volkov', r: 90, w: 38, d: 8, l: 6, h: ['W','L','W','W','D']},
+        {id: 2, n: 'Ivanov', r: 89, w: 35, d: 10, l: 4, h: ['D','W','W','L','W']},
+        {id: 3, n: 'Smirnov', r: 81, w: 22, d: 5, l: 15, h: ['L','L','W','D','L']}
+    ];
 
-    if(players.length === 0) {
-        const names = ['Kuznetsov', 'Volkov', 'Ivanov', 'Petrov', 'Smirnov', 'Mironov', 'Popov', 'Zuparov', 'Sidorov', 'Dmitriev'];
-        players = names.map((n, i) => ({
-            id: i, n, r: 80 - i, w: 10, d: 2, l: 3,
-            history: [75, 77, 76, 78, 80], // История OVR для графика
-            form: ['W','W','L','W','W']
-        }));
-        save();
-    }
+    function save() { localStorage.setItem('box1v1_db', JSON.stringify(players)); }
 
-    function save() {
-        localStorage.setItem('b1v1_players', JSON.stringify(players));
-        localStorage.setItem('b1v1_matches', JSON.stringify(matches));
-    }
-
-    // --- UI LOGIC ---
     window.onload = () => {
         players.sort((a,b) => b.r - a.r);
-        renderTable('all');
-        updateSelectors();
+        renderHome();
+        renderRoster(players);
+        populateSelectors();
+        setTimeout(() => { document.getElementById('preloader').style.display = 'none'; }, 600);
     };
 
-    function renderTable(filter) {
-        const body = document.getElementById('table-body');
-        let data = players;
-        if(filter === 'gold') data = players.filter(p => p.r >= 80);
-        
-        body.innerHTML = data.map((p, i) => `
-            <tr onclick="openProfile(${p.id})">
-                <td style="width:40px; font-weight:900;">#${i+1}</td>
-                <td style="font-weight:800;">${p.n.toUpperCase()}</td>
-                <td style="color:var(--text-dim); font-size:10px;">WR: ${((p.w/(p.w+p.l+p.d))*100).toFixed(0)}%</td>
-                <td style="text-align:right; font-weight:900; color:${getRankColor(p.r)}">${p.r}</td>
-            </tr>
+    function renderHome() {
+        const top = players[0];
+        const second = players[1];
+        document.getElementById('main-leader-slot').innerHTML = `
+            <div class="card c-main" onclick="openProfile(${top.id})">
+                <div><span class="label">CURRENT NO.1</span><div class="ovr" style="color:${getRankColor(top.r)}">${top.r}</div></div>
+                <div class="p-name">${top.n}</div>
+            </div>
+        `;
+        if(second) {
+            document.getElementById('second-leader-slot').innerHTML = `
+                <div class="card c-wide" onclick="openProfile(${second.id})">
+                    <div style="display:flex; justify-content:space-between; align-items:flex-end;">
+                        <div><span class="label">RANK #02</span><div class="p-name">${second.n}</div></div>
+                        <div class="ovr" style="font-size: 5rem; color:${getRankColor(second.r)}">${second.r}</div>
+                    </div>
+                </div>
+            `;
+        }
+    }
+
+    function renderRoster(data) {
+        const grid = document.getElementById('roster-grid');
+        grid.innerHTML = data.map((p, i) => `
+            <div class="card" onclick="openProfile(${p.id})">
+                <span class="label">ATHLETE // ${String(i+1).padStart(2,'0')}</span>
+                <div class="ovr" style="font-size: 4rem; color:${getRankColor(p.r)}">${p.r}</div>
+                <div style="font-size: 1.5rem; font-weight: 900; font-style: italic; text-transform: uppercase;">${p.n}</div>
+            </div>
         `).join('');
     }
 
-    function updateSelectors() {
-        const opts = players.map(p => `<option value="${p.id}">${p.n}</option>`).join('');
-        ['adm-p1', 'adm-p2', 'comp-sel-1', 'comp-sel-2'].forEach(id => {
-            document.getElementById(id).innerHTML = opts;
-        });
+    function openProfile(id) {
+        const p = players.find(x => x.id === id);
+        const wr = ((p.w / (p.w+p.d+p.l)) * 100).toFixed(0);
+        document.getElementById('profile-content').innerHTML = `
+            <span class="label" style="color:var(--accent)">PLAYER PROFILE</span>
+            <h2 class="p-name" style="font-size: clamp(4rem, 15vw, 10rem);">${p.n}</h2>
+            <div class="ovr" style="font-size: clamp(8rem, 25vw, 15rem); margin-top: -20px; color:${getRankColor(p.r)}">${p.r}</div>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; margin-top: 4rem; border-top: 1px solid var(--border); padding-top: 2rem;">
+                <div><span class="label">WIN RATE</span><div style="font-size: 4rem; font-weight: 900; font-style: italic; color:var(--accent)">${wr}%</div></div>
+                <div><span class="label">FORM</span>
+                    <div class="history-dots">${p.h.map(res => `<div class="dot dot-${res.toLowerCase()}"></div>`).join('')}</div>
+                </div>
+                <div><span class="label">RECORD</span><div style="font-size: 2rem; font-weight: 900;">${p.w}W - ${p.d}D - ${p.l}L</div></div>
+            </div>
+        `;
+        document.getElementById('profile-overlay').classList.add('open');
+        document.body.style.overflow = 'hidden';
     }
 
-    function processMatch() {
+    function getRankColor(r) {
+        if(r >= 85) return 'var(--rank-gold)';
+        if(r >= 70) return 'var(--rank-silver)';
+        return 'var(--rank-bronze)';
+    }
+
+    function toggleAdmin() {
+        const el = document.getElementById('admin-panel');
+        el.style.display = el.style.display === 'flex' ? 'none' : 'flex';
+    }
+
+    function populateSelectors() {
+        const opts = players.map(p => `<option value="${p.id}">${p.n}</option>`).join('');
+        document.getElementById('adm-p1').innerHTML = opts;
+        document.getElementById('adm-p2').innerHTML = opts;
+    }
+
+    function submitMatch() {
         const p1 = players.find(x => x.id == document.getElementById('adm-p1').value);
         const p2 = players.find(x => x.id == document.getElementById('adm-p2').value);
         const s1 = parseInt(document.getElementById('adm-s1').value);
@@ -162,111 +233,31 @@
 
         if(p1.id === p2.id) return alert("Select different players");
 
-        if(s1 > s2) { p1.r += 2; p1.w++; p2.r -= 1; p2.l++; p1.form.unshift('W'); p2.form.unshift('L'); }
-        else if(s2 > s1) { p2.r += 2; p2.w++; p1.r -= 1; p1.l++; p2.form.unshift('W'); p1.form.unshift('L'); }
-        else { p1.d++; p2.d++; p1.form.unshift('D'); p2.form.unshift('D'); }
+        if(s1 > s2) { p1.r += 2; p1.w++; p1.h.unshift('W'); p2.r -= 1; p2.l++; p2.h.unshift('L'); }
+        else if(s2 > s1) { p2.r += 2; p2.w++; p2.h.unshift('W'); p1.r -= 1; p1.l++; p1.h.unshift('L'); }
+        else { p1.d++; p1.h.unshift('D'); p2.d++; p2.h.unshift('D'); }
 
-        p1.history.push(p1.r); p2.history.push(p2.r);
-        p1.history = p1.history.slice(-5); p2.history = p2.history.slice(-5);
-        p1.form = p1.form.slice(0,5); p2.form = p2.form.slice(0,5);
-
-        matches.unshift({n1: p1.n, n2: p2.n, s1, s2});
+        p1.h = p1.h.slice(0,5); p2.h = p2.h.slice(0,5);
         save();
-        location.reload(); // Перезагрузка для обновления всех данных
+        location.reload();
     }
 
-    function runCompare() {
-        const p1 = players.find(x => x.id == document.getElementById('comp-sel-1').value);
-        const p2 = players.find(x => x.id == document.getElementById('comp-sel-2').value);
-        
-        const wr1 = (p1.w/(p1.w+p1.l+p1.d)*100).toFixed(0);
-        const wr2 = (p2.w/(p2.w+p2.l+p2.d)*100).toFixed(0);
-
-        document.getElementById('compare-results').innerHTML = `
-            <div class="comp-card">
-                <div style="font-size:3rem; font-weight:900;">${p1.r}</div>
-                <div class="label">${p1.n}</div>
-                <div class="comp-stat-row">
-                    <div class="comp-val ${wr1 > wr2 ? 'better' : ''}">${wr1}%</div>
-                    <div class="label">WINRATE</div>
-                </div>
-            </div>
-            <div style="align-self:center; text-align:center; font-weight:900; color:var(--text-dim);">VS</div>
-            <div class="comp-card">
-                <div style="font-size:3rem; font-weight:900;">${p2.r}</div>
-                <div class="label">${p2.n}</div>
-                <div class="comp-stat-row">
-                    <div class="comp-val ${wr2 > wr1 ? 'better' : ''}">${wr2}%</div>
-                    <div class="label">WINRATE</div>
-                </div>
-            </div>
-        `;
+    function filterRoster() {
+        const val = document.getElementById('playerSearch').value.toLowerCase();
+        renderRoster(players.filter(p => p.n.toLowerCase().includes(val)));
     }
-
-    function openProfile(id) {
-        const p = players.find(x => x.id === id);
-        const maxH = Math.max(...p.history);
-        const minH = Math.min(...p.history);
-
-        document.getElementById('ov-content').innerHTML = `
-            <h1 style="font-size: 5rem;">${p.n.toUpperCase()}</h1>
-            <div style="font-size: 10rem; font-weight:900; color:${getRankColor(p.r)}">${p.r}</div>
-            
-            <div style="margin-top: 2rem;">
-                <span class="label">Rating Trend (Last 5 Games)</span>
-                <div class="mini-graph">
-                    ${p.history.map(h => {
-                        const height = ((h - minH + 5) / (maxH - minH + 10)) * 40;
-                        return `<div class="graph-bar" style="height:${height}px" title="OVR: ${h}"></div>`
-                    }).join('')}
-                </div>
-            </div>
-
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top:3rem;">
-                <div style="background:#111; padding:2rem; border-radius:15px;">
-                    <span class="label">Total Wins</span>
-                    <div style="font-size:3rem; font-weight:900;">${p.w}</div>
-                </div>
-                <div style="background:#111; padding:2rem; border-radius:15px;">
-                    <span class="label">Current Form</span>
-                    <div style="display:flex; gap:5px; margin-top:10px;">
-                        ${p.form.map(f => `<div style="width:15px; height:15px; background:${f==='W'?'var(--accent)':f==='L'?'#f33':'#555'}"></div>`).join('')}
-                    </div>
-                </div>
-            </div>
-        `;
-        document.getElementById('overlay').style.display = 'block';
-    }
-
-    function getRankColor(r) {
-        if(r >= 80) return 'var(--rank-gold)';
-        if(r >= 70) return 'var(--rank-silver)';
-        return 'var(--rank-bronze)';
-    }
-
-    function toggleAdmin() {
-        const el = document.getElementById('admin-panel');
-        el.style.display = el.style.display === 'block' ? 'none' : 'block';
-    }
-
-    function closeProfile() { document.getElementById('overlay').style.display = 'none'; }
 
     function showSection(id) {
         document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
         document.getElementById(id).classList.add('active');
         document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
-        document.getElementById('btn-'+id).classList.add('active');
-        if(id === 'matches') renderMatches();
+        if(document.getElementById('btn-'+id)) document.getElementById('btn-'+id).classList.add('active');
+        window.scrollTo(0,0);
     }
 
-    function renderMatches() {
-        document.getElementById('matches-list').innerHTML = matches.map(m => `
-            <div style="display:flex; justify-content:space-between; padding:1.5rem; background:#0d0d0d; border:1px solid var(--border); border-radius:15px; margin-bottom:10px;">
-                <span>${m.n1}</span>
-                <span style="font-weight:900; color:var(--accent);">${m.s1} : ${m.s2}</span>
-                <span>${m.n2}</span>
-            </div>
-        `).join('');
+    function closeOverlay(id) {
+        document.getElementById(id).classList.remove('open');
+        document.body.style.overflow = 'auto';
     }
   </script>
 </body>
