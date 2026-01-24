@@ -13,7 +13,6 @@
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    
     body { 
       background: var(--bg); color: var(--text); 
       font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; 
@@ -24,7 +23,7 @@
     #preloader {
       position: fixed; inset: 0; background: #000; z-index: 5000;
       display: flex; align-items: center; justify-content: center;
-      transition: opacity 0.6s var(--cubic);
+      transition: opacity 0.4s var(--cubic); /* Ускоренный выход лоадера */
     }
 
     /* Nav */
@@ -34,96 +33,91 @@
     }
     .nav-container { 
       max-width: 1400px; margin: 0 auto; display: flex; 
-      justify-content: space-between; padding: 1.2rem 2rem; align-items: center; 
+      justify-content: space-between; padding: 1rem 2rem; align-items: center; 
     }
-    .nav-logo { height: 32px; cursor: pointer; transition: 0.3s; }
+    .nav-logo { height: 32px; cursor: pointer; }
     .nav-links { display: flex; gap: 2rem; }
     .nav-links a { 
       color: var(--text-dim); text-decoration: none; font-size: 0.75rem; 
-      font-weight: 800; text-transform: uppercase; transition: 0.3s; cursor: pointer;
+      font-weight: 800; text-transform: uppercase; transition: 0.2s; cursor: pointer;
     }
     .nav-links a.active, .nav-links a:hover { color: var(--accent); }
 
-    .container { max-width: 1200px; margin: 140px auto 0; padding: 0 2rem; min-height: 80vh; }
+    .container { max-width: 1200px; margin: 120px auto 0; padding: 0 2rem; min-height: 80vh; }
     
-    /* Sections */
-    section { display: none; opacity: 0; transform: translateY(10px); transition: 0.4s ease-out; }
+    /* Sections - Ускоренные переходы */
+    section { display: none; opacity: 0; transform: translateY(5px); transition: 0.3s var(--cubic); }
     section.active { display: block; opacity: 1; transform: translateY(0); }
 
     h1 { 
-      font-size: clamp(3rem, 10vw, 7.5rem); font-weight: 900; line-height: 0.8; 
-      letter-spacing: -4px; margin-bottom: 3.5rem; text-transform: uppercase; font-style: italic; 
+      font-size: clamp(3rem, 10vw, 7rem); font-weight: 900; line-height: 0.85; 
+      letter-spacing: -3px; margin-bottom: 3rem; text-transform: uppercase; font-style: italic; 
     }
 
     /* Bento Grid */
-    .bento { display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: 240px; gap: 1rem; margin-bottom: 5rem; }
+    .bento { display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: 220px; gap: 1rem; margin-bottom: 5rem; }
     
     .card { 
-      background: var(--card-bg); border-radius: 12px; padding: 2.2rem; 
+      background: var(--card-bg); border-radius: 20px; padding: 2rem; 
       display: flex; flex-direction: column; justify-content: space-between;
-      transition: 0.3s ease; cursor: pointer; border: 1px solid var(--border);
+      transition: 0.25s var(--cubic); /* Быстрая реакция на ховер */
+      cursor: pointer; border: 1px solid var(--border);
       position: relative; overflow: hidden;
     }
 
-    /* Чистый ховер без наклонов */
+    /* Ховер: только поднятие и смена фона */
     .card:hover { 
-      transform: translateY(-5px); 
+      transform: translateY(-6px); 
       border-color: var(--accent); 
       background: #111;
-      box-shadow: 0 15px 30px rgba(0,0,0,0.4);
     }
-
-    /* Уголки сканера — делаем их тоньше и строже */
-    .card::before {
-      content: ""; position: absolute; inset: 0;
-      border: 1px solid var(--accent); opacity: 0;
-      transition: 0.3s ease; pointer-events: none;
-      clip-path: polygon(0 0, 10% 0, 10% 1px, 1px 1px, 1px 10%, 0 10%, 0 0, 
-                         90% 0, 100% 0, 100% 10%, 99% 10%, 99% 1px, 90% 1px, 90% 0,
-                         100% 90%, 100% 100%, 90% 100%, 90% 99%, 99% 99%, 99% 90%, 100% 90%,
-                         10% 100%, 0 100%, 0 90%, 1px 90%, 1px 99%, 10% 99%, 10% 100%);
-    }
-    .card:hover::before { opacity: 1; inset: 12px; }
     
     .c-main { grid-column: span 2; grid-row: span 2; }
     .c-white { background: #fff; color: #000; border: none; }
-    .c-white:hover { background: var(--accent); color: #000; }
-    .c-white .label { color: rgba(0,0,0,0.5); }
+    .c-white:hover { background: #f0f0f0; color: #000; }
     .c-wide { grid-column: span 2; }
 
-    /* Card Details */
-    .ovr { font-size: 8.5rem; font-weight: 900; color: var(--accent); line-height: 0.75; letter-spacing: -7px; }
+    /* Акцент на OVR при наведении */
+    .ovr { 
+      font-size: 8rem; font-weight: 900; color: var(--accent); 
+      line-height: 0.8; letter-spacing: -6px; 
+      transition: 0.25s ease; /* Плавное свечение цифр */
+    }
+    .card:hover .ovr {
+      filter: drop-shadow(0 0 12px rgba(57, 255, 20, 0.5));
+      transform: scale(1.02);
+    }
+
     .label { font-size: 0.65rem; font-weight: 900; color: var(--text-dim); letter-spacing: 2px; text-transform: uppercase; }
-    .p-name { font-size: 3rem; font-weight: 900; font-style: italic; text-transform: uppercase; line-height: 0.9; margin-top: 10px; }
+    .p-name { font-size: 2.8rem; font-weight: 900; font-style: italic; text-transform: uppercase; line-height: 0.9; }
 
     /* Connect Section */
     .social-row { 
       display: flex; justify-content: space-between; align-items: center; 
-      padding: 2.8rem 0; border-top: 1px solid var(--border); 
-      text-decoration: none; color: #fff; transition: 0.3s var(--cubic);
+      padding: 2.5rem 0; border-top: 1px solid var(--border); 
+      text-decoration: none; color: #fff; transition: 0.2s;
     }
-    .social-row:hover { color: var(--accent); padding-left: 1rem; border-top-color: var(--accent); }
-    .social-row h2 { font-size: 3.5rem; font-weight: 900; font-style: italic; text-transform: uppercase; }
+    .social-row:hover { color: var(--accent); padding-left: 1rem; }
+    .social-row h2 { font-size: 3rem; font-weight: 900; font-style: italic; text-transform: uppercase; }
 
     /* Overlay */
     .overlay { 
       position: fixed; inset: 0; background: #000; z-index: 2000; 
-      display: none; padding: 4rem 2rem; opacity: 0; transition: 0.4s; 
+      display: none; padding: 4rem 2rem; opacity: 0; transition: 0.3s; 
     }
     .overlay.open { display: block; opacity: 1; }
-    .close { position: absolute; top: 2rem; right: 2rem; color: var(--accent); font-weight: 900; cursor: pointer; text-transform: uppercase; letter-spacing: 2px; }
+    .close { position: absolute; top: 2rem; right: 2rem; color: var(--accent); font-weight: 900; cursor: pointer; }
 
-    footer { padding: 5rem 0; color: var(--text-dim); font-size: 0.7rem; font-weight: 800; border-top: 1px solid var(--border); text-align: center; opacity: 0.5; }
+    footer { padding: 4rem 0; color: var(--text-dim); font-size: 0.7rem; font-weight: 800; border-top: 1px solid var(--border); text-align: center; }
 
     @media (max-width: 768px) {
       .bento { grid-template-columns: 1fr; grid-auto-rows: auto; }
-      .c-main, .c-wide { grid-column: span 1; min-height: 320px; }
-      h1 { font-size: 3.8rem; margin-bottom: 2rem; }
-      .social-row h2 { font-size: 2.2rem; }
+      .c-main, .c-wide { grid-column: span 1; min-height: 300px; }
+      h1 { font-size: 4rem; }
     }
   </style>
 </head>
-<body>
+<body id="main-body">
 
   <div id="preloader">
     <svg viewBox="0 0 400 100" width="160" height="40">
@@ -136,7 +130,7 @@
   <nav>
     <div class="nav-container">
       <div class="nav-logo" onclick="showSection('home')">
-        <svg viewBox="0 0 400 100" width="110" height="28">
+        <svg viewBox="0 0 400 100" width="100" height="25">
             <text x="0" y="80" fill="#FFFFFF" font-family="Inter" font-weight="900" font-size="80" letter-spacing="12">
               BOX<tspan fill="#39FF14">1</tspan>V1
             </text>
@@ -153,25 +147,28 @@
   <div class="container">
     
     <section id="home" class="active">
-        <span class="label" style="color:var(--accent)">SEASON 2026 // ELITE DIVISION</span>
-        <h1>STREET<br>PRESTIGE.</h1>
+        <span class="label" style="color:var(--accent)">ELAGINO SEASON 2026</span>
+        <h1>STREET<br>STANDARD.</h1>
         <div class="bento">
             <div class="card c-main" onclick="openProfile('Kuznetsov', 92)">
-                <div><span class="label">RANKING #01</span><div class="ovr">92</div></div>
+                <div><span class="label">LEADERBOARD #01</span><div class="ovr">92</div></div>
                 <div class="p-name">KUZNETSOV</div>
             </div>
             <div class="card c-white" onclick="showSection('connect')">
-                <div style="font-size: 2.2rem; font-weight: 900; font-style: italic; text-transform: uppercase; line-height: 0.9;">JOIN THE<br>CAGE.</div>
-                <p style="font-size: 0.75rem; font-weight: 900;">APPLY FOR TRIAL →</p>
+                <div style="font-size: 2rem; font-weight: 900; font-style: italic; text-transform: uppercase;">JOIN THE<br>CAGE.</div>
+                <p style="font-size: 0.7rem; font-weight: 800;">APPLY FOR TRIAL →</p>
             </div>
             <div class="card" onclick="showSection('ranking')">
                 <span class="label">DATABASE</span>
-                <div style="font-size: 1.6rem; font-weight: 900; font-style: italic; margin-top: 10px; line-height: 1;">BROWSE<br>ROSTER</div>
+                <div style="font-size: 1.4rem; font-weight: 900; font-style: italic;">ALL PLAYERS</div>
             </div>
-            <div class="card c-wide" onclick="window.open('https://instagram.com/box.1v1')">
+            <div class="card c-wide" 
+                 onmouseenter="document.getElementById('main-body').style.background='#0a0a0a'"
+                 onmouseleave="document.getElementById('main-body').style.background='#000'"
+                 onclick="window.open('https://instagram.com/box.1v1')">
                 <span class="label">MEDIA</span>
-                <div style="font-size: 2.2rem; font-weight: 900; font-style: italic; color: var(--accent);">INSTAGRAM ↗</div>
-                <p style="font-size: 0.75rem; color: var(--text-dim);">LATEST HIGHLIGHTS</p>
+                <div style="font-size: 2rem; font-weight: 900; font-style: italic; color: var(--accent);">INSTAGRAM ↗</div>
+                <p style="font-size: 0.75rem; color: var(--text-dim);">WATCH HIGHLIGHTS</p>
             </div>
         </div>
     </section>
@@ -190,14 +187,14 @@
         </div>
     </section>
 
-    <footer>BOX1V1 // 1V1 STREET ELITE // 2026</footer>
+    <footer>BOX1V1 // 1V1 STREET FOOTBALL // 2026</footer>
   </div>
 
   <div class="overlay" id="p-overlay">
     <div class="close" onclick="closeProfile()">[ CLOSE ]</div>
-    <div style="max-width: 1000px; margin: 0 auto; padding-top: 15vh;">
-        <h2 id="p-name" style="font-size: 12vw; font-weight: 900; font-style: italic; text-transform: uppercase; line-height: 0.8;">NAME</h2>
-        <div id="p-ovr" style="font-size: 18rem; font-weight: 900; color: var(--accent); letter-spacing: -12px;">92</div>
+    <div style="max-width: 1000px; margin: 0 auto; padding-top: 10vh;">
+        <h2 id="p-name" style="font-size: 10vw; font-weight: 900; font-style: italic; text-transform: uppercase; line-height: 0.8;">NAME</h2>
+        <div id="p-ovr" style="font-size: 12rem; font-weight: 900; color: var(--accent);">92</div>
     </div>
   </div>
 
@@ -211,8 +208,8 @@
     window.onload = () => {
         setTimeout(() => {
             document.getElementById('preloader').style.opacity = '0';
-            setTimeout(() => document.getElementById('preloader').style.display = 'none', 600);
-        }, 600);
+            setTimeout(() => document.getElementById('preloader').style.display = 'none', 400);
+        }, 400);
         renderPlayers();
     };
 
@@ -221,10 +218,10 @@
       grid.innerHTML = '';
       players.forEach((p, i) => {
         grid.innerHTML += `
-          <div class="card" style="min-height: 240px;" onclick="openProfile('${p.n}', ${p.r})">
-            <span class="label">PLAYER // 0${i+1}</span>
-            <div style="font-size: 5.5rem; font-weight: 900; color: var(--accent); line-height:0.8; letter-spacing:-5px; margin: 15px 0;">${p.r}</div>
-            <div style="font-size: 1.8rem; font-weight: 900; font-style: italic; text-transform: uppercase;">${p.n}</div>
+          <div class="card" style="min-height: 200px;" onclick="openProfile('${p.n}', ${p.r})">
+            <span class="label">ATHLETE // 0${i+1}</span>
+            <div class="ovr" style="font-size: 4rem; line-height:1;">${p.r}</div>
+            <div style="font-size: 1.5rem; font-weight: 900; font-style: italic; text-transform: uppercase;">${p.n}</div>
           </div>
         `;
       });
@@ -254,7 +251,7 @@
       setTimeout(() => {
         over.style.display = 'none';
         document.body.style.overflow = 'auto';
-      }, 400);
+      }, 300);
     }
   </script>
 </body>
