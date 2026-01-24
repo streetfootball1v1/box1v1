@@ -1,264 +1,519 @@
 <!DOCTYPE html>
+
 <html lang="ru">
+
 <head>
+
   <meta charset="UTF-8" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
   <title>BOX1V1 | Street Football Elite</title>
+
   <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,700;0,900;1,900&display=swap" rel="stylesheet">
+
   <style>
+
     :root {
+
       --bg: #000; --card-bg: #0d0d0d; --accent: #39FF14;
+
       --text: #fff; --text-dim: #666; --border: #1a1a1a;
+
       --cubic: cubic-bezier(0.2, 1, 0.2, 1);
+
       --rank-gold: #FFD700; --rank-silver: #C0C0C0; --rank-bronze: #CD7F32;
+
+      --win: #39FF14; --loss: #ff3131; --draw: #888;
+
     }
+
+
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
 
-    /* UI Elements */
-    #preloader { position: fixed; inset: 0; background: #000; z-index: 5000; display: flex; align-items: center; justify-content: center; }
+    body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
+
+
+
+    #preloader { position: fixed; inset: 0; background: #000; z-index: 5000; display: flex; align-items: center; justify-content: center; transition: opacity 0.4s var(--cubic); }
+
+
+
     nav { position: fixed; top: 0; width: 100%; z-index: 1000; background: rgba(0,0,0,0.9); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); }
-    .nav-container { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; padding: 1.2rem 2rem; align-items: center; }
+
+    .nav-container { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; padding: 1rem 2rem; align-items: center; }
+
+    .nav-logo { height: 32px; cursor: pointer; }
+
     .nav-links { display: flex; gap: 2rem; }
-    .nav-links a { color: var(--text-dim); text-decoration: none; font-size: 0.7rem; font-weight: 900; text-transform: uppercase; cursor: pointer; transition: 0.2s; }
-    .nav-links a:hover, .nav-links a.active { color: var(--accent); }
 
-    .container { max-width: 1200px; margin: 120px auto 0; padding: 0 2rem; }
-    section { display: none; }
-    section.active { display: block; animation: fadeIn 0.4s var(--cubic); }
+    .nav-links a { color: var(--text-dim); text-decoration: none; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; transition: 0.2s; cursor: pointer; }
 
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .nav-links a.active, .nav-links a:hover { color: var(--accent); }
 
-    /* Typography */
-    h1 { font-size: clamp(3rem, 12vw, 8rem); font-weight: 900; line-height: 0.8; letter-spacing: -4px; text-transform: uppercase; font-style: italic; margin-bottom: 3rem; }
-    .label { font-size: 0.65rem; font-weight: 900; color: var(--text-dim); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 0.5rem; display: block; }
 
-    /* Bento Grid */
-    .bento { display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: 240px; gap: 1rem; margin-bottom: 5rem; }
-    .card { background: var(--card-bg); border-radius: 24px; padding: 2rem; display: flex; flex-direction: column; justify-content: space-between; border: 1px solid var(--border); transition: 0.3s var(--cubic); cursor: pointer; position: relative; overflow: hidden; }
-    .card:hover { transform: translateY(-8px); border-color: #333; background: #111; }
-    .c-main { grid-column: span 2; grid-row: span 2; }
-    .c-wide { grid-column: span 2; }
-    .c-accent { background: var(--accent); color: #000; border: none; }
 
-    /* Stats */
-    .ovr { font-size: 8rem; font-weight: 900; line-height: 0.75; letter-spacing: -6px; }
-    .p-name { font-size: 2.5rem; font-weight: 900; font-style: italic; text-transform: uppercase; line-height: 0.9; }
+    .container { max-width: 1200px; margin: 120px auto 0; padding: 0 2rem; min-height: 80vh; }
+
+    section { display: none; opacity: 0; transform: translateY(5px); transition: 0.3s var(--cubic); }
+
+    section.active { display: block; opacity: 1; transform: translateY(0); }
+
+
+
+    h1 { font-size: clamp(3rem, 10vw, 7rem); font-weight: 900; line-height: 0.85; letter-spacing: -3px; margin-bottom: 3rem; text-transform: uppercase; font-style: italic; }
+
+
+
+    .bento { display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: 220px; gap: 1rem; margin-bottom: 5rem; }
+
+    .card { background: var(--card-bg); border-radius: 20px; padding: 2rem; display: flex; flex-direction: column; justify-content: space-between; transition: 0.25s var(--cubic); cursor: pointer; border: 1px solid var(--border); position: relative; overflow: hidden; }
+
+    .card:hover { transform: translateY(-6px); border-color: rgba(255,255,255,0.2); background: #111; }
+
     
-    /* Search & Filter - Minimalist */
-    .search-bar { background: transparent; border: none; border-bottom: 2px solid var(--border); color: #fff; font-size: 2rem; font-weight: 900; font-style: italic; width: 100%; margin-bottom: 3rem; padding: 1rem 0; text-transform: uppercase; }
-    .search-bar:focus { border-color: var(--accent); outline: none; }
+
+    .c-main { grid-column: span 2; grid-row: span 2; }
+
+    .c-white { background: #fff; color: #000; border: none; }
+
+    .c-wide { grid-column: span 2; }
+
+
+
+    .ovr { font-size: 8rem; font-weight: 900; line-height: 0.8; letter-spacing: -6px; transition: 0.25s ease; color: var(--ovr-color, var(--accent)); }
+
+    .rank-gold { --ovr-color: var(--rank-gold); }
+
+    .rank-silver { --ovr-color: var(--rank-silver); }
+
+    .rank-bronze { --ovr-color: var(--rank-bronze); }
+
+    .card:hover .ovr { filter: drop-shadow(0 0 15px var(--ovr-color, var(--accent))); transform: scale(1.05); }
+
+
+
+    .label { font-size: 0.65rem; font-weight: 900; color: var(--text-dim); letter-spacing: 2px; text-transform: uppercase; }
+
+    .p-name { font-size: 2.8rem; font-weight: 900; font-style: italic; text-transform: uppercase; line-height: 0.9; }
+
+
 
     /* Profile Overlay */
-    .overlay { position: fixed; inset: 0; background: #000; z-index: 2000; display: none; padding: 5vw; overflow-y: auto; }
-    .overlay.open { display: block; }
-    .close { position: fixed; top: 2rem; right: 2rem; color: var(--accent); font-weight: 900; cursor: pointer; font-size: 0.8rem; letter-spacing: 2px; }
 
-    /* History Dots */
-    .history-dots { display: flex; gap: 6px; margin-top: 10px; }
-    .dot { width: 12px; height: 12px; border-radius: 2px; }
-    .dot-w { background: var(--accent); }
-    .dot-l { background: #ff3131; }
-    .dot-d { background: #444; }
+    .overlay { position: fixed; inset: 0; background: #000; z-index: 2000; display: none; opacity: 0; transition: 0.3s; padding: 2rem; overflow-y: auto; }
 
-    /* Admin Panel - Floating */
-    #admin-toggle { position: fixed; bottom: 2rem; left: 2rem; width: 40px; height: 40px; background: #111; border: 1px solid var(--border); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 4000; font-size: 10px; font-weight: 900; }
-    #admin-panel { position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 4001; display: none; align-items: center; justify-content: center; padding: 2rem; }
-    .admin-box { background: #111; padding: 3rem; border-radius: 30px; border: 1px solid var(--accent); max-width: 500px; width: 100%; }
-    .admin-box select, .admin-box input { width: 100%; background: #000; border: 1px solid var(--border); color: #fff; padding: 1rem; margin-bottom: 1rem; border-radius: 12px; font-weight: 800; }
+    .overlay.open { display: block; opacity: 1; }
+
+    .close { position: fixed; top: 2rem; right: 2rem; color: var(--accent); font-weight: 900; cursor: pointer; z-index: 2100; text-transform: uppercase; font-size: 0.8rem; }
+
+
+
+    .stats-container { max-width: 1000px; margin: 8vh auto; }
+
+    .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-top: 3rem; border-top: 1px solid var(--border); padding-top: 2rem; }
+
+    .stat-item { display: flex; flex-direction: column; }
+
+    .stat-val { font-size: 4rem; font-weight: 900; color: #fff; }
+
+    .stat-lab { font-size: 0.7rem; font-weight: 900; color: var(--text-dim); text-transform: uppercase; letter-spacing: 2px; }
+
+    
+
+    .winrate-box { grid-column: span 2; background: #111; padding: 2rem; border-radius: 15px; display: flex; align-items: center; gap: 2rem; }
+
+    .wr-val { font-size: 5rem; font-weight: 900; color: var(--accent); font-style: italic; }
+
+
+
+    /* История матчей */
+
+    .history-box { grid-column: span 1; background: #111; padding: 2rem; border-radius: 15px; display: flex; flex-direction: column; justify-content: center; }
+
+    .match-history { display: flex; gap: 0.5rem; margin-top: 10px; }
+
+    .m-res { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 4px; font-weight: 900; font-size: 0.75rem; color: #000; }
+
+    .res-w { background: var(--win); }
+
+    .res-l { background: var(--loss); }
+
+    .res-d { background: var(--draw); }
+
+
 
     @media (max-width: 768px) {
+
       .bento { grid-template-columns: 1fr; grid-auto-rows: auto; }
-      .c-main, .c-wide { grid-column: span 1; min-height: 320px; }
-      .ovr { font-size: 6rem; }
+
+      .c-main, .c-wide { grid-column: span 1; min-height: 300px; }
+
+      .stats-grid { grid-template-columns: 1fr; }
+
+      .winrate-box, .history-box { grid-column: span 1; }
+
     }
+
   </style>
+
 </head>
+
 <body>
 
+
+
   <div id="preloader">
+
     <svg viewBox="0 0 400 100" width="160" height="40"><text x="0" y="80" fill="#FFFFFF" font-family="Inter" font-weight="900" font-size="80" letter-spacing="12">BOX<tspan fill="#39FF14">1</tspan>V1</text></svg>
+
   </div>
+
+
 
   <nav>
+
     <div class="nav-container">
+
       <div class="nav-logo" onclick="showSection('home')">
-        <svg viewBox="0 0 400 100" width="80" height="20"><text x="0" y="80" fill="#FFFFFF" font-family="Inter" font-weight="900" font-size="80" letter-spacing="12">BOX<tspan fill="#39FF14">1</tspan>V1</text></svg>
+
+        <svg viewBox="0 0 400 100" width="100" height="25"><text x="0" y="80" fill="#FFFFFF" font-family="Inter" font-weight="900" font-size="80" letter-spacing="12">BOX<tspan fill="#39FF14">1</tspan>V1</text></svg>
+
       </div>
+
       <div class="nav-links">
+
         <a onclick="showSection('home')" id="btn-home" class="active">HOME</a>
-        <a onclick="showSection('ranking')" id="btn-ranking">ROSTER</a>
-        <a onclick="openCompare()">COMPARE</a>
+
+        <a onclick="showSection('ranking')" id="btn-ranking">PLAYERS</a>
+
+        <a onclick="showSection('connect')" id="btn-connect">CONNECT</a>
+
       </div>
+
     </div>
+
   </nav>
 
+
+
   <div class="container">
+
     <section id="home" class="active">
+
         <span class="label" style="color:var(--accent)">ELAGINO SEASON 2026</span>
+
         <h1>STREET<br>STANDARD.</h1>
+
         <div class="bento">
-            <div id="main-leader-slot" class="c-main"></div>
-            <div class="card c-accent" onclick="showSection('ranking')">
-                <div style="font-size: 2.2rem; font-weight: 900; font-style: italic; line-height: 0.9;">VIEW ALL<br>ATHLETES</div>
-                <div style="font-size: 0.8rem; font-weight: 900;">[ → ]</div>
+
+            <div id="leader-card-container"></div>
+
+            <div class="card c-white" onclick="showSection('connect')">
+
+                <div style="font-size: 2rem; font-weight: 900; font-style: italic; text-transform: uppercase;">JOIN THE<br>CAGE.</div>
+
+                <p style="font-size: 0.7rem; font-weight: 800;">APPLY FOR TRIAL →</p>
+
             </div>
-            <div class="card" onclick="window.open('https://t.me/streetbox1v1')">
-                <span class="label">COMMUNITY</span>
-                <div style="font-size: 1.2rem; font-weight: 900; font-style: italic;">TELEGRAM ↗</div>
+
+            <div class="card" onclick="showSection('ranking')">
+
+                <span class="label">DATABASE</span>
+
+                <div style="font-size: 1.4rem; font-weight: 900; font-style: italic;">ALL PLAYERS</div>
+
             </div>
-            <div id="second-leader-slot" class="c-wide"></div>
+
+            <div class="card c-wide" onclick="window.open('https://instagram.com/box.1v1')">
+
+                <span class="label">MEDIA</span>
+
+                <div style="font-size: 2rem; font-weight: 900; font-style: italic; color: var(--accent);">INSTAGRAM ↗</div>
+
+                <p style="font-size: 0.75rem; color: var(--text-dim);">WATCH HIGHLIGHTS</p>
+
+            </div>
+
         </div>
+
     </section>
+
+
 
     <section id="ranking">
-        <input type="text" class="search-bar" id="playerSearch" placeholder="SEARCH ATHLETE..." oninput="filterRoster()">
-        <div id="roster-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; padding-bottom: 5rem;"></div>
+
+        <h1>THE ROSTER</h1>
+
+        <div id="ranking-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; margin-bottom: 4rem;"></div>
+
     </section>
+
+
+
+    <section id="connect">
+
+        <h1>CONNECT.</h1>
+
+        <div style="margin-top: 2rem;">
+
+            <a href="https://t.me/streetbox1v1" target="_blank" class="social-row"><h2>TELEGRAM</h2> <span>↗</span></a>
+
+            <a href="https://instagram.com/box.1v1" target="_blank" class="social-row"><h2>INSTAGRAM</h2> <span>↗</span></a>
+
+            <a href="https://tiktok.com/@box1v1" target="_blank" class="social-row"><h2>TIKTOK</h2> <span>↗</span></a>
+
+        </div>
+
+    </section>
+
+
+
+    <footer>BOX1V1 // 1V1 STREET FOOTBALL // 2026</footer>
+
   </div>
 
-  <div class="overlay" id="profile-overlay">
-    <div class="close" onclick="closeOverlay('profile-overlay')">[ CLOSE ]</div>
-    <div id="profile-content"></div>
-  </div>
 
-  <div id="admin-toggle" onclick="toggleAdmin()">+</div>
-  <div id="admin-panel">
-    <div class="admin-box">
-        <h2 style="margin-bottom: 2rem; font-style: italic;">RECORD MATCH</h2>
-        <select id="adm-p1"></select>
-        <input type="number" id="adm-s1" placeholder="SCORE P1">
-        <div style="text-align: center; font-weight: 900; margin: 10px 0;">VS</div>
-        <input type="number" id="adm-s2" placeholder="SCORE P2">
-        <select id="adm-p2"></select>
-        <button class="card c-accent" style="width: 100%; border-radius: 12px; font-weight: 900;" onclick="submitMatch()">SAVE RESULT</button>
-        <div style="text-align: center; margin-top: 1.5rem; cursor: pointer; color: var(--text-dim); font-size: 0.7rem;" onclick="toggleAdmin()">CANCEL</div>
+
+  <div class="overlay" id="p-overlay">
+
+    <div class="close" onclick="closeProfile()">[ CLOSE ]</div>
+
+    <div class="stats-container">
+
+        <h2 id="p-name" style="font-size: clamp(3rem, 10vw, 8rem); font-weight: 900; font-style: italic; text-transform: uppercase; line-height: 0.8;">NAME</h2>
+
+        <div id="p-ovr" class="ovr" style="font-size: 15rem; margin-top: -10px;">92</div>
+
+        
+
+        <div class="stats-grid">
+
+            <div class="stat-item"><span class="stat-lab">Wins</span><span class="stat-val" id="p-w">0</span></div>
+
+            <div class="stat-item"><span class="stat-lab">Draws</span><span class="stat-val" id="p-d">0</span></div>
+
+            <div class="stat-item"><span class="stat-lab">Losses</span><span class="stat-val" id="p-l" style="color:var(--loss)">0</span></div>
+
+            
+
+            <div class="winrate-box">
+
+                <span class="stat-lab">Total Win Rate</span>
+
+                <div class="wr-val" id="p-wr">0%</div>
+
+            </div>
+
+
+
+            <div class="history-box">
+
+                <span class="stat-lab">Last 5 matches</span>
+
+                <div class="match-history" id="p-history"></div>
+
+            </div>
+
+        </div>
+
     </div>
+
   </div>
+
+
 
   <script>
-    // --- DATABASE ---
-    let players = JSON.parse(localStorage.getItem('box1v1_db')) || [
-        {id: 0, n: 'Kuznetsov', r: 92, w: 45, d: 5, l: 3, h: ['W','W','W','D','W']},
-        {id: 1, n: 'Volkov', r: 90, w: 38, d: 8, l: 6, h: ['W','L','W','W','D']},
-        {id: 2, n: 'Ivanov', r: 89, w: 35, d: 10, l: 4, h: ['D','W','W','L','W']},
-        {id: 3, n: 'Smirnov', r: 81, w: 22, d: 5, l: 15, h: ['L','L','W','D','L']}
+
+    const players = [
+
+        {n: 'Kuznetsov', r: 92, w: 45, d: 5, l: 3, h: ['W','W','W','D','W']}, 
+
+        {n: 'Volkov', r: 90, w: 38, d: 8, l: 6, h: ['W','L','W','W','D']}, 
+
+        {n: 'Ivanov', r: 89, w: 35, d: 10, l: 4, h: ['D','W','W','L','W']}, 
+
+        {n: 'Smirnov', r: 81, w: 22, d: 5, l: 15, h: ['L','L','W','D','L']},
+
+        {n: 'Petrov', r: 78, w: 18, d: 12, l: 14, h: ['W','D','L','L','W']}, 
+
+        {n: 'Mironov', r: 71, w: 12, d: 4, l: 18, h: ['L','W','L','L','D']},
+
+        {n: 'Popov', r: 64, w: 8, d: 2, l: 22, h: ['L','L','L','W','L']}, 
+
+        {n: 'Zuparov', r: 62, w: 5, d: 6, l: 15, h: ['D','L','L','D','L']}, 
+
+        {n: 'Sidorov', r: 55, w: 2, d: 1, l: 25, h: ['L','L','L','L','L']}, 
+
+        {n: 'Dmitriev', r: 51, w: 1, d: 0, l: 30, h: ['L','L','L','L','L']}
+
     ];
 
-    function save() { localStorage.setItem('box1v1_db', JSON.stringify(players)); }
+
+
+    function getRankClass(rating) {
+
+        if (rating >= 85) return 'rank-gold';
+
+        if (rating >= 70) return 'rank-silver';
+
+        return 'rank-bronze';
+
+    }
+
+
 
     window.onload = () => {
-        players.sort((a,b) => b.r - a.r);
-        renderHome();
-        renderRoster(players);
-        populateSelectors();
-        setTimeout(() => { document.getElementById('preloader').style.display = 'none'; }, 600);
+
+        players.sort((a, b) => b.r - a.r);
+
+        setTimeout(() => {
+
+            document.getElementById('preloader').style.opacity = '0';
+
+            setTimeout(() => document.getElementById('preloader').style.display = 'none', 400);
+
+        }, 400);
+
+        renderHomeLeader();
+
+        renderPlayers();
+
     };
 
-    function renderHome() {
-        const top = players[0];
-        const second = players[1];
-        document.getElementById('main-leader-slot').innerHTML = `
-            <div class="card c-main" onclick="openProfile(${top.id})">
-                <div><span class="label">CURRENT NO.1</span><div class="ovr" style="color:${getRankColor(top.r)}">${top.r}</div></div>
-                <div class="p-name">${top.n}</div>
+
+
+    function renderHomeLeader() {
+
+        const leader = players[0];
+
+        document.getElementById('leader-card-container').innerHTML = `
+
+            <div class="card c-main ${getRankClass(leader.r)}" onclick="openProfile('${leader.n}')">
+
+                <div><span class="label">LEADERBOARD #01</span><div class="ovr">${leader.r}</div></div>
+
+                <div class="p-name">${leader.n}</div>
+
             </div>
+
         `;
-        if(second) {
-            document.getElementById('second-leader-slot').innerHTML = `
-                <div class="card c-wide" onclick="openProfile(${second.id})">
-                    <div style="display:flex; justify-content:space-between; align-items:flex-end;">
-                        <div><span class="label">RANK #02</span><div class="p-name">${second.n}</div></div>
-                        <div class="ovr" style="font-size: 5rem; color:${getRankColor(second.r)}">${second.r}</div>
-                    </div>
-                </div>
-            `;
-        }
+
     }
 
-    function renderRoster(data) {
-        const grid = document.getElementById('roster-grid');
-        grid.innerHTML = data.map((p, i) => `
-            <div class="card" onclick="openProfile(${p.id})">
-                <span class="label">ATHLETE // ${String(i+1).padStart(2,'0')}</span>
-                <div class="ovr" style="font-size: 4rem; color:${getRankColor(p.r)}">${p.r}</div>
-                <div style="font-size: 1.5rem; font-weight: 900; font-style: italic; text-transform: uppercase;">${p.n}</div>
-            </div>
-        `).join('');
-    }
 
-    function openProfile(id) {
-        const p = players.find(x => x.id === id);
-        const wr = ((p.w / (p.w+p.d+p.l)) * 100).toFixed(0);
-        document.getElementById('profile-content').innerHTML = `
-            <span class="label" style="color:var(--accent)">PLAYER PROFILE</span>
-            <h2 class="p-name" style="font-size: clamp(4rem, 15vw, 10rem);">${p.n}</h2>
-            <div class="ovr" style="font-size: clamp(8rem, 25vw, 15rem); margin-top: -20px; color:${getRankColor(p.r)}">${p.r}</div>
-            
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; margin-top: 4rem; border-top: 1px solid var(--border); padding-top: 2rem;">
-                <div><span class="label">WIN RATE</span><div style="font-size: 4rem; font-weight: 900; font-style: italic; color:var(--accent)">${wr}%</div></div>
-                <div><span class="label">FORM</span>
-                    <div class="history-dots">${p.h.map(res => `<div class="dot dot-${res.toLowerCase()}"></div>`).join('')}</div>
-                </div>
-                <div><span class="label">RECORD</span><div style="font-size: 2rem; font-weight: 900;">${p.w}W - ${p.d}D - ${p.l}L</div></div>
-            </div>
+
+    function renderPlayers() {
+
+      const grid = document.getElementById('ranking-grid');
+
+      grid.innerHTML = '';
+
+      players.forEach((p, i) => {
+
+        grid.innerHTML += `
+
+          <div class="card ${getRankClass(p.r)}" style="min-height: 200px;" onclick="openProfile('${p.n}')">
+
+            <span class="label">ATHLETE // 0${i+1}</span>
+
+            <div class="ovr" style="font-size: 4rem; line-height:1;">${p.r}</div>
+
+            <div style="font-size: 1.5rem; font-weight: 900; font-style: italic; text-transform: uppercase;">${p.n}</div>
+
+          </div>
+
         `;
-        document.getElementById('profile-overlay').classList.add('open');
-        document.body.style.overflow = 'hidden';
+
+      });
+
     }
 
-    function getRankColor(r) {
-        if(r >= 85) return 'var(--rank-gold)';
-        if(r >= 70) return 'var(--rank-silver)';
-        return 'var(--rank-bronze)';
+
+
+    function openProfile(name) {
+
+      const p = players.find(x => x.n === name);
+
+      const wr = ((p.w / (p.w + p.d + p.l)) * 100).toFixed(0);
+
+      
+
+      document.getElementById('p-name').innerText = p.n;
+
+      document.getElementById('p-ovr').innerText = p.r;
+
+      document.getElementById('p-ovr').className = 'ovr ' + getRankClass(p.r);
+
+      document.getElementById('p-w').innerText = p.w;
+
+      document.getElementById('p-d').innerText = p.d;
+
+      document.getElementById('p-l').innerText = p.l;
+
+      document.getElementById('p-wr').innerText = wr + '%';
+
+      
+
+      // Рендер истории
+
+      const histCont = document.getElementById('p-history');
+
+      histCont.innerHTML = '';
+
+      p.h.forEach(res => {
+
+          const type = res === 'W' ? 'res-w' : res === 'L' ? 'res-l' : 'res-d';
+
+          histCont.innerHTML += `<div class="m-res ${type}">${res}</div>`;
+
+      });
+
+      
+
+      const over = document.getElementById('p-overlay');
+
+      over.style.display = 'block';
+
+      setTimeout(() => over.classList.add('open'), 10);
+
+      document.body.style.overflow = 'hidden';
+
     }
 
-    function toggleAdmin() {
-        const el = document.getElementById('admin-panel');
-        el.style.display = el.style.display === 'flex' ? 'none' : 'flex';
+
+
+    function closeProfile() {
+
+      const over = document.getElementById('p-overlay');
+
+      over.classList.remove('open');
+
+      setTimeout(() => { over.style.display = 'none'; document.body.style.overflow = 'auto'; }, 300);
+
     }
 
-    function populateSelectors() {
-        const opts = players.map(p => `<option value="${p.id}">${p.n}</option>`).join('');
-        document.getElementById('adm-p1').innerHTML = opts;
-        document.getElementById('adm-p2').innerHTML = opts;
-    }
 
-    function submitMatch() {
-        const p1 = players.find(x => x.id == document.getElementById('adm-p1').value);
-        const p2 = players.find(x => x.id == document.getElementById('adm-p2').value);
-        const s1 = parseInt(document.getElementById('adm-s1').value);
-        const s2 = parseInt(document.getElementById('adm-s2').value);
-
-        if(p1.id === p2.id) return alert("Select different players");
-
-        if(s1 > s2) { p1.r += 2; p1.w++; p1.h.unshift('W'); p2.r -= 1; p2.l++; p2.h.unshift('L'); }
-        else if(s2 > s1) { p2.r += 2; p2.w++; p2.h.unshift('W'); p1.r -= 1; p1.l++; p1.h.unshift('L'); }
-        else { p1.d++; p1.h.unshift('D'); p2.d++; p2.h.unshift('D'); }
-
-        p1.h = p1.h.slice(0,5); p2.h = p2.h.slice(0,5);
-        save();
-        location.reload();
-    }
-
-    function filterRoster() {
-        const val = document.getElementById('playerSearch').value.toLowerCase();
-        renderRoster(players.filter(p => p.n.toLowerCase().includes(val)));
-    }
 
     function showSection(id) {
-        document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-        document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
-        if(document.getElementById('btn-'+id)) document.getElementById('btn-'+id).classList.add('active');
-        window.scrollTo(0,0);
+
+      document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+
+      document.getElementById(id).classList.add('active');
+
+      document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+
+      const btn = document.getElementById('btn-' + id);
+
+      if(btn) btn.classList.add('active');
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
     }
 
-    function closeOverlay(id) {
-        document.getElementById(id).classList.remove('open');
-        document.body.style.overflow = 'auto';
-    }
   </script>
+
 </body>
+
 </html>
