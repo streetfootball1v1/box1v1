@@ -3,75 +3,66 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>BOX1V1 | Street Football</title>
+  <title>BOX1V1 | Street Football Elite</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,700;0,900;1,900&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg: #000; --card-bg: #0d0d0d; --accent: #39FF14;
       --text: #fff; --text-dim: #666; --border: #1a1a1a;
-      --cubic: cubic-bezier(0.4, 0, 0.2, 1);
-      --rank-gold: #FFD700;
+      --cubic: cubic-bezier(0.2, 1, 0.2, 1);
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
     body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; overflow-x: hidden; }
 
-    /* Навигация в стиле Apple */
-    nav { position: fixed; top: 0; width: 100%; z-index: 1000; background: rgba(0,0,0,0.7); backdrop-filter: saturate(180%) blur(20px); border-bottom: 1px solid var(--border); }
+    /* Glass Navigation */
+    nav { position: fixed; top: 0; width: 100%; z-index: 1000; background: rgba(0,0,0,0.8); backdrop-filter: saturate(180%) blur(20px); border-bottom: 1px solid var(--border); }
     .nav-container { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; padding: 1.2rem 2rem; align-items: center; }
-    .nav-links { display: flex; gap: 2.5rem; }
-    .nav-links a { color: var(--text-dim); text-decoration: none; font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s var(--cubic); cursor: pointer; }
-    .nav-links a.active, .nav-links a:hover { color: var(--text); }
+    .nav-links { display: flex; gap: 2rem; }
+    .nav-links a { color: var(--text-dim); text-decoration: none; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; cursor: pointer; }
+    .nav-links a.active, .nav-links a:hover { color: var(--accent); }
 
     .container { max-width: 1200px; margin: 140px auto 0; padding: 0 2rem; }
     
-    /* Анимации появления секций */
-    section { display: none; opacity: 0; transform: scale(0.98); transition: 0.6s var(--cubic); }
-    section.active { display: block; opacity: 1; transform: scale(1); }
+    section { display: none; opacity: 0; transform: translateY(20px); transition: 0.8s var(--cubic); }
+    section.active { display: block; opacity: 1; transform: translateY(0); }
 
-    h1 { font-size: clamp(3.5rem, 12vw, 8rem); font-weight: 900; line-height: 0.8; letter-spacing: -4px; text-transform: uppercase; font-style: italic; margin-bottom: 4rem; }
+    h1 { font-size: clamp(3.5rem, 12vw, 8rem); font-weight: 900; line-height: 0.8; letter-spacing: -4px; text-transform: uppercase; font-style: italic; margin-bottom: 3rem; }
 
     /* Bento Grid */
-    .bento { display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: 240px; gap: 1.5rem; }
+    .bento { display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: 240px; gap: 1rem; margin-bottom: 4rem; }
     .card { 
-        background: var(--card-bg); border-radius: 28px; padding: 2.5rem; 
-        display: flex; flex-direction: column; justify-content: space-between; 
-        border: 1px solid var(--border); transition: 0.5s var(--cubic); 
-        cursor: pointer; position: relative; overflow: hidden; 
+      background: var(--card-bg); border-radius: 30px; padding: 2rem; 
+      display: flex; flex-direction: column; justify-content: space-between; 
+      border: 1px solid var(--border); transition: 0.5s var(--cubic); 
+      position: relative; overflow: hidden; text-decoration: none; color: inherit;
     }
     .card:hover { transform: scale(1.02); background: #111; border-color: #333; }
+    
     .c-main { grid-column: span 2; grid-row: span 2; }
     .c-wide { grid-column: span 2; }
+    .c-accent { background: var(--accent); color: #000; border: none; }
+    .c-social { background: #111; display: flex; align-items: center; justify-content: center; text-align: center; }
+
+    /* Typography & Data */
+    .ovr { font-size: 8rem; font-weight: 900; line-height: 0.7; letter-spacing: -6px; color: var(--accent); transition: 0.5s; }
+    .c-accent .ovr { color: #000; }
+    .p-name { font-size: 2.5rem; font-weight: 900; font-style: italic; text-transform: uppercase; line-height: 0.9; }
+    .label { font-size: 0.65rem; font-weight: 800; color: var(--text-dim); text-transform: uppercase; letter-spacing: 2px; }
+
+    /* Mini Graph Simulation */
+    .graph-mini { position: absolute; bottom: 0; left: 0; width: 100%; height: 60px; opacity: 0; transition: 0.5s; pointer-events: none; }
+    .card:hover .graph-mini { opacity: 0.4; }
     
-    .ovr { font-size: 8rem; font-weight: 900; line-height: 0.7; letter-spacing: -6px; color: var(--accent); transition: 0.5s var(--cubic); }
-    .card:hover .ovr { transform: translateX(5px); filter: drop-shadow(0 0 20px var(--accent)); }
-    .p-name { font-size: 3rem; font-weight: 900; font-style: italic; text-transform: uppercase; line-height: 0.9; }
-
-    /* Overlay / Modal */
-    .overlay { 
-        position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 2000; 
-        display: none; opacity: 0; transition: 0.4s var(--cubic); backdrop-filter: blur(15px);
-        padding: 4rem 2rem;
-    }
+    /* Overlay */
+    .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.98); z-index: 2000; display: none; opacity: 0; transition: 0.4s var(--cubic); backdrop-filter: blur(20px); padding: 4rem 2rem; }
     .overlay.open { display: block; opacity: 1; }
-    .close { position: fixed; top: 2.5rem; right: 2.5rem; color: var(--text-dim); font-weight: 900; cursor: pointer; font-size: 0.8rem; transition: 0.3s; }
-    .close:hover { color: var(--text); }
-
-    /* Сравнение игроков */
-    .compare-wrap { display: flex; align-items: center; justify-content: center; gap: 4rem; height: 100%; }
-    .comp-player { text-align: center; width: 300px; }
-    .comp-vs { font-size: 2rem; font-weight: 900; font-style: italic; color: var(--text-dim); }
-
-    /* Формы ввода (Админка) */
-    .admin-trigger { position: fixed; bottom: 2rem; right: 2rem; width: 50px; height: 50px; background: #111; border: 1px solid var(--border); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 3000; transition: 0.3s; }
-    .admin-trigger:hover { border-color: var(--accent); transform: rotate(90deg); }
-
-    select, input { background: #111; border: 1px solid var(--border); color: #fff; padding: 1.2rem; border-radius: 16px; width: 100%; font-family: inherit; font-weight: 700; margin-bottom: 1rem; appearance: none; }
+    .close { position: fixed; top: 2.5rem; right: 2.5rem; color: var(--text-dim); font-weight: 900; cursor: pointer; }
 
     @media (max-width: 768px) {
       .bento { grid-template-columns: 1fr; grid-auto-rows: auto; }
-      .c-main, .c-wide { grid-column: span 1; min-height: 320px; }
-      .compare-wrap { flex-direction: column; gap: 2rem; }
+      .c-main, .c-wide { grid-column: span 1; min-height: 300px; }
+      .ovr { font-size: 6rem; }
     }
   </style>
 </head>
@@ -92,7 +83,8 @@
 
   <div class="container">
     <section id="home" class="active">
-        <h1 id="hero-text">STREET<br>ELITE.</h1>
+        <span class="label" style="color:var(--accent); margin-bottom: 1rem; display: block;">Elite Street League // 2026</span>
+        <h1>STREET<br>STANDARD.</h1>
         <div class="bento" id="home-bento">
             </div>
     </section>
@@ -105,87 +97,88 @@
   </div>
 
   <div class="overlay" id="compare-ov">
-    <div class="close" onclick="toggleOverlay('compare-ov')">CLOSE</div>
-    <div class="compare-wrap">
-        <div class="comp-player">
-            <select id="comp-1" onchange="runCompare()"></select>
-            <div id="comp-res-1"></div>
+    <div class="close" onclick="toggleOverlay('compare-ov')">[ CLOSE ]</div>
+    <div style="display: flex; align-items: center; justify-content: center; gap: 3rem; height: 100%; flex-wrap: wrap;">
+        <div style="text-align: center;">
+            <select id="comp-1" onchange="runCompare()" style="background:#111; color:#fff; border:1px solid #333; padding:1rem; border-radius:15px; width:200px; font-weight:800;"></select>
+            <div id="comp-res-1" style="margin-top:2rem"></div>
         </div>
-        <div class="comp-vs">VS</div>
-        <div class="comp-player">
-            <select id="comp-2" onchange="runCompare()"></select>
-            <div id="comp-res-2"></div>
+        <div style="font-size: 2rem; font-weight: 900; font-style: italic; color: #333;">VS</div>
+        <div style="text-align: center;">
+            <select id="comp-2" onchange="runCompare()" style="background:#111; color:#fff; border:1px solid #333; padding:1rem; border-radius:15px; width:200px; font-weight:800;"></select>
+            <div id="comp-res-2" style="margin-top:2rem"></div>
         </div>
-    </div>
-  </div>
-
-  <div class="admin-trigger" onclick="toggleOverlay('admin-ov')">+</div>
-  <div class="overlay" id="admin-ov">
-    <div class="close" onclick="toggleOverlay('admin-ov')">CLOSE</div>
-    <div style="max-width: 400px; margin: 0 auto; text-align: center;">
-        <h2 style="font-size: 3rem; font-style: italic; margin-bottom: 2rem;">RECORD MATCH</h2>
-        <select id="adm-p1"></select>
-        <input type="number" id="adm-s1" placeholder="SCORE P1">
-        <select id="adm-p2"></select>
-        <input type="number" id="adm-s2" placeholder="SCORE P2">
-        <button onclick="saveMatch()" style="background: var(--accent); border: none; padding: 1.5rem; width: 100%; border-radius: 18px; font-weight: 900; cursor: pointer;">SUBMIT RESULT</button>
     </div>
   </div>
 
   <script>
-    // База данных в LocalStorage
-    let players = JSON.parse(localStorage.getItem('box1v1_pro')) || [
-        {id: 0, n: 'Kuznetsov', r: 92, w: 45, d: 5, l: 3},
-        {id: 1, n: 'Volkov', r: 90, w: 38, d: 8, l: 6},
-        {id: 2, n: 'Ivanov', r: 89, w: 35, d: 10, l: 4},
-        {id: 3, n: 'Smirnov', r: 82, w: 20, d: 2, l: 12}
+    const players = [
+        {id: 0, n: 'Kuznetsov', r: 92, w: 45, d: 5, l: 3, g: 'M20,50 L40,40 L60,45 L80,20 L100,10'},
+        {id: 1, n: 'Volkov', r: 90, w: 38, d: 8, l: 6, g: 'M20,50 L40,55 L60,40 L80,30 L100,20'},
+        {id: 2, n: 'Ivanov', r: 89, w: 35, d: 10, l: 4, g: 'M20,50 L40,45 L60,35 L80,40 L100,15'},
+        {id: 3, n: 'Smirnov', r: 82, w: 20, d: 2, l: 12, g: 'M20,50 L40,60 L60,50 L80,55 L100,40'}
     ];
 
     function init() {
         players.sort((a,b) => b.r - a.r);
         renderHome();
         renderRoster();
-        updateSelectors();
+        const options = players.map(p => `<option value="${p.id}">${p.n}</option>`).join('');
+        document.getElementById('comp-1').innerHTML = options;
+        document.getElementById('comp-2').innerHTML = options;
+    }
+
+    function getGraphSVG(path) {
+        return `<svg class="graph-mini" viewBox="0 0 120 60"><path d="${path}" fill="none" stroke="var(--accent)" stroke-width="3" stroke-linecap="round"/></svg>`;
     }
 
     function renderHome() {
         const top = players[0];
-        const second = players[1];
         document.getElementById('home-bento').innerHTML = `
             <div class="card c-main" onclick="openProfile(${top.id})">
-                <div><span style="font-size:0.7rem; font-weight:800; color:var(--text-dim)">#01 ATHLETE</span><div class="ovr">${top.r}</div></div>
+                <div><span class="label">Current Leader</span><div class="ovr">${top.r}</div></div>
                 <div class="p-name">${top.n}</div>
+                ${getGraphSVG(top.g)}
             </div>
-            <div class="card c-wide" onclick="showSection('roster')">
-                <div class="p-name" style="font-size:2rem">VIEW ENTIRE<br>LEAGUE</div>
-                <span style="color:var(--accent)">→</span>
+            
+            <a href="https://t.me/streetbox1v1" target="_blank" class="card c-social">
+                <span class="label">Join community</span>
+                <div class="p-name" style="font-size:1.8rem; color: #229ED9;">TELEGRAM</div>
+            </a>
+
+            <div class="card c-accent" onclick="showSection('roster')">
+                <div class="p-name" style="font-size:1.5rem">FULL ROSTER</div>
+                <span style="font-weight:900">VIEW ALL →</span>
             </div>
-            <div class="card" onclick="openProfile(${second.id})">
-                <div class="ovr" style="font-size:4rem">${second.r}</div>
-                <div class="p-name" style="font-size:1.5rem">${second.n}</div>
+
+            <a href="https://instagram.com/box.1v1" target="_blank" class="card c-social c-wide">
+                <span class="label">Watch Highlights</span>
+                <div class="p-name" style="font-size:2rem; background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">INSTAGRAM</div>
+            </a>
+            
+            <div class="card">
+                <span class="label">Elite Trials</span>
+                <div class="p-name" style="font-size:1.2rem">APPLY<br>FOR BOX.</div>
             </div>
         `;
     }
 
     function renderRoster() {
         document.getElementById('full-roster').innerHTML = players.map((p, i) => `
-            <div class="card" onclick="openProfile(${p.id})">
-                <div class="ovr" style="font-size:4rem">${p.r}</div>
+            <div class="card">
+                <div><span class="label">OVR // 0${i+1}</span><div class="ovr" style="font-size:4rem">${p.r}</div></div>
                 <div class="p-name" style="font-size:1.5rem">${p.n}</div>
+                ${getGraphSVG(p.g)}
             </div>
         `).join('');
-    }
-
-    function updateSelectors() {
-        const options = players.map(p => `<option value="${p.id}">${p.n}</option>`).join('');
-        ['comp-1', 'comp-2', 'adm-p1', 'adm-p2'].forEach(id => document.getElementById(id).innerHTML = options);
     }
 
     function showSection(id) {
         document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
         document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
         document.getElementById(id).classList.add('active');
-        document.getElementById('btn-' + id).classList.add('active');
+        const btn = document.getElementById('btn-' + id);
+        if(btn) btn.classList.add('active');
         window.scrollTo({top: 0, behavior: 'smooth'});
     }
 
@@ -197,28 +190,15 @@
         } else {
             ov.style.display = 'block';
             setTimeout(() => ov.classList.add('open'), 10);
+            runCompare();
         }
     }
 
     function runCompare() {
         const p1 = players.find(x => x.id == document.getElementById('comp-1').value);
         const p2 = players.find(x => x.id == document.getElementById('comp-2').value);
-        
         document.getElementById('comp-res-1').innerHTML = `<div class="ovr">${p1.r}</div><div class="p-name">${p1.n}</div>`;
         document.getElementById('comp-res-2').innerHTML = `<div class="ovr">${p2.r}</div><div class="p-name">${p2.n}</div>`;
-    }
-
-    function saveMatch() {
-        const p1 = players.find(x => x.id == document.getElementById('adm-p1').value);
-        const p2 = players.find(x => x.id == document.getElementById('adm-p2').value);
-        const s1 = parseInt(document.getElementById('adm-s1').value);
-        const s2 = parseInt(document.getElementById('adm-s2').value);
-
-        if(s1 > s2) { p1.r += 2; p2.r -= 1; }
-        else if(s2 > s1) { p2.r += 2; p1.r -= 1; }
-        
-        localStorage.setItem('box1v1_pro', JSON.stringify(players));
-        location.reload();
     }
 
     init();
