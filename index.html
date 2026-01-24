@@ -3,33 +3,22 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>BOX1V1 | Street Elite</title>
+  <title>BOX1V1 | Ultra Elite</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,700;0,900;1,900&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg: #000; --card-bg: #0d0d0d; --accent: #39FF14;
       --text: #fff; --text-dim: #666; --border: #1a1a1a;
-      --cubic: cubic-bezier(0.16, 1, 0.3, 1);
-      --insta: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
-      --tg: linear-gradient(45deg, #229ED9, #34B7F1, #229ED9);
+      --cubic: cubic-bezier(0.2, 1, 0.2, 1);
+      /* Те самые контрастные градиенты */
+      --insta: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+      --tg: linear-gradient(45deg, #0088cc, #24A1DE, #0088cc);
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
-    body { 
-        background: var(--bg); 
-        color: var(--text); 
-        font-family: 'Inter', sans-serif; 
-        overflow-x: hidden;
-    }
+    body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; overflow-x: hidden; }
 
-    /* Фоновый шум для премиальности */
-    body::before {
-        content: ""; position: fixed; inset: 0; opacity: 0.03; pointer-events: none;
-        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-        z-index: 9999;
-    }
-
-    /* Переливание (Shimmer) */
+    /* Shimmer Effect */
     .shimmer {
       background: linear-gradient(90deg, currentColor 0%, #fff 50%, currentColor 100%);
       background-size: 200% auto;
@@ -37,54 +26,58 @@
       -webkit-text-fill-color: transparent;
       animation: shine 3s linear infinite;
     }
-    
     @keyframes shine { to { background-position: 200% center; } }
 
     nav { position: fixed; top: 0; width: 100%; z-index: 1000; background: rgba(0,0,0,0.8); backdrop-filter: saturate(180%) blur(20px); border-bottom: 1px solid var(--border); }
     .nav-container { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; padding: 1.2rem 2rem; align-items: center; }
     .nav-links { display: flex; gap: 2rem; }
-    .nav-links a { color: var(--text-dim); text-decoration: none; font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; cursor: pointer; }
+    .nav-links a { color: var(--text-dim); text-decoration: none; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; transition: 0.3s; cursor: pointer; }
     .nav-links a.active, .nav-links a:hover { color: var(--accent); }
 
     .container { max-width: 1200px; margin: 140px auto 0; padding: 0 2rem; }
-    
-    section { display: none; opacity: 0; transform: translateY(30px); transition: 1s var(--cubic); }
+    section { display: none; opacity: 0; transform: translateY(30px); transition: 0.8s var(--cubic); }
     section.active { display: block; opacity: 1; transform: translateY(0); }
 
-    h1 { font-size: clamp(3.5rem, 12vw, 8rem); font-weight: 900; line-height: 0.8; letter-spacing: -4px; text-transform: uppercase; font-style: italic; margin-bottom: 3rem; }
+    h1 { font-size: clamp(3rem, 10vw, 7rem); font-weight: 900; letter-spacing: -4px; text-transform: uppercase; font-style: italic; margin-bottom: 3rem; }
 
     /* Bento Grid */
     .bento { display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: 240px; gap: 1rem; margin-bottom: 4rem; }
+    
+    /* Card Styles */
     .card { 
       background: var(--card-bg); border-radius: 32px; padding: 2.5rem; 
       display: flex; flex-direction: column; justify-content: space-between; 
       border: 1px solid var(--border); transition: 0.6s var(--cubic); 
-      position: relative; overflow: hidden; cursor: pointer; text-decoration: none;
+      position: relative; overflow: hidden; cursor: pointer;
     }
-    .card:hover { transform: scale(1.03) translateY(-10px); background: #111; border-color: #444; box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
-    
+    .card:hover { transform: scale(1.02); border-color: #444; }
+
+    /* Video Background Effect */
+    .v-bg { position: absolute; inset: 0; opacity: 0; transition: 0.6s; z-index: 0; pointer-events: none; }
+    .card:hover .v-bg { opacity: 0.3; }
+    .v-bg video { width: 100%; height: 100%; object-fit: cover; }
+    .card-content { position: relative; z-index: 2; }
+
+    /* Socials */
+    .c-insta .p-name { background: var(--insta); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .c-tg .p-name { background: var(--tg); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+    /* 3D Flip Cards (Roster) */
+    .flip-card { perspective: 1000px; grid-column: span 1; height: 240px; }
+    .flip-inner { position: relative; width: 100%; height: 100%; transition: transform 0.8s var(--cubic); transform-style: preserve-3d; }
+    .flip-card.is-flipped .flip-inner { transform: rotateY(180deg); }
+    .flip-front, .flip-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 32px; border: 1px solid var(--border); padding: 2rem; }
+    .flip-front { background: var(--card-bg); display: flex; flex-direction: column; justify-content: space-between; }
+    .flip-back { background: #111; transform: rotateY(180deg); display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
+
+    /* Utils */
     .c-main { grid-column: span 2; grid-row: span 2; }
     .c-wide { grid-column: span 2; }
-    .c-accent { background: var(--accent); color: #000; border: none; }
-
-    /* Соцсети с переливанием */
-    .insta-card:hover .insta-text { animation: shine 1.5s linear infinite; }
-    .tg-card:hover .tg-text { animation: shine 1.5s linear infinite; }
-    
-    .insta-text { background: var(--insta); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 2.2rem; font-weight: 900; font-style: italic; background-size: 200% auto; }
-    .tg-text { background: var(--tg); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 2.2rem; font-weight: 900; font-style: italic; background-size: 200% auto; }
-
-    /* Live Indicator */
-    .live-dot { width: 8px; height: 8px; background: var(--accent); border-radius: 50%; display: inline-block; margin-right: 8px; box-shadow: 0 0 10px var(--accent); animation: pulse 1.5s infinite; }
-    @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
-
     .ovr { font-size: 8rem; font-weight: 900; line-height: 0.7; letter-spacing: -6px; color: var(--accent); }
+    .p-name { font-size: 2.2rem; font-weight: 900; font-style: italic; text-transform: uppercase; line-height: 1; }
     .label { font-size: 0.65rem; font-weight: 800; color: var(--text-dim); text-transform: uppercase; letter-spacing: 2px; }
 
-    @media (max-width: 768px) {
-      .bento { grid-template-columns: 1fr; grid-auto-rows: auto; }
-      .c-main, .c-wide { grid-column: span 1; min-height: 320px; }
-    }
+    @media (max-width: 768px) { .bento { grid-template-columns: 1fr; grid-auto-rows: auto; } .c-main, .c-wide { grid-column: span 1; min-height: 300px; } }
   </style>
 </head>
 <body>
@@ -104,62 +97,63 @@
 
   <div class="container">
     <section id="home" class="active">
-        <span class="label" style="color:var(--accent); margin-bottom: 1rem; display: block;">
-            <span class="live-dot"></span>Live Database // 2026
-        </span>
         <h1 class="shimmer">THE CAGE<br>ELITE.</h1>
-        <div class="bento" id="home-bento"></div>
+        <div class="bento">
+            <div class="card c-main">
+                <div class="v-bg">
+                    <video autoplay muted loop playsinline src="https://assets.mixkit.co/videos/preview/mixkit-football-player-kicking-the-ball-in-the-stadium-4748-large.mp4"></video>
+                </div>
+                <div class="card-content">
+                    <span class="label">Current Alpha</span>
+                    <div class="ovr shimmer">92</div>
+                    <div class="p-name">Kuznetsov</div>
+                </div>
+            </div>
+
+            <a href="#" class="card c-tg">
+                <div class="card-content">
+                    <span class="label">Community</span>
+                    <div class="p-name shimmer">TELEGRAM</div>
+                </div>
+            </a>
+
+            <a href="#" class="card c-wide c-insta">
+                <div class="card-content">
+                    <span class="label">Highlights</span>
+                    <div class="p-name shimmer">INSTAGRAM ↗</div>
+                </div>
+            </a>
+
+            <div class="card" onclick="showSection('tables')">
+                <div class="card-content">
+                    <span class="label">Season</span>
+                    <div class="p-name">STANDINGS</div>
+                </div>
+            </div>
+        </div>
     </section>
 
     <section id="roster">
         <h1 class="shimmer">THE ROSTER</h1>
-        <div class="bento" id="full-roster"></div>
+        <div class="bento" id="roster-grid">
+            </div>
     </section>
 
     <section id="tables">
         <h1 class="shimmer">STANDINGS</h1>
-        <div id="table-view"></div> </section>
+        </section>
   </div>
 
   <script>
     const players = [
-        {id: 0, n: 'Kuznetsov', r: 92},
-        {id: 1, n: 'Volkov', r: 90},
-        {id: 2, n: 'Ivanov', r: 89},
-        {id: 3, n: 'Smirnov', r: 82}
+        {n: 'Kuznetsov', r: 92, stat: '45W - 3L'},
+        {n: 'Volkov', r: 90, stat: '38W - 6L'},
+        {n: 'Ivanov', r: 89, stat: '35W - 4L'},
+        {n: 'Smirnov', r: 82, stat: '22W - 15L'}
     ];
 
-    function renderHome() {
-        const top = players[0];
-        document.getElementById('home-bento').innerHTML = `
-            <div class="card c-main" onclick="showSection('tables')">
-                <div><span class="label">Current Alpha</span><div class="ovr shimmer">${top.r}</div></div>
-                <div style="font-size:3rem; font-weight:900; font-style:italic; text-transform:uppercase">${top.n}</div>
-            </div>
-
-            <a href="https://t.me/streetbox1v1" target="_blank" class="card tg-card">
-                <span class="label">Join Channel</span>
-                <div class="tg-text">TELEGRAM ↗</div>
-            </a>
-
-            <div class="card c-accent" onclick="showSection('roster')">
-                <div style="font-size: 1.5rem; font-weight: 900; font-style: italic;">EXPLORE ROSTER</div>
-                <span style="font-weight:900">→</span>
-            </div>
-
-            <a href="https://instagram.com/box.1v1" target="_blank" class="card c-wide insta-card">
-                <span class="label">Watch Stories</span>
-                <div class="insta-text">INSTAGRAM ↗</div>
-            </a>
-            
-            <div class="card" onclick="showSection('tables')">
-                <span class="label">Statistics</span>
-                <div style="font-size: 1.5rem; font-weight: 900; font-style: italic;">STANDINGS</div>
-            </div>
-        `;
-    }
-
     function showSection(id) {
+        if (window.navigator.vibrate) window.navigator.vibrate(10); // Haptic feedback
         document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
         document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
         document.getElementById(id).classList.add('active');
@@ -168,7 +162,27 @@
         window.scrollTo({top: 0, behavior: 'smooth'});
     }
 
-    renderHome();
+    function renderRoster() {
+        const grid = document.getElementById('roster-grid');
+        grid.innerHTML = players.map(p => `
+            <div class="flip-card" onclick="this.classList.toggle('is-flipped')">
+                <div class="flip-inner">
+                    <div class="flip-front">
+                        <span class="label">Rating</span>
+                        <div class="ovr" style="font-size:4rem">${p.r}</div>
+                        <div class="p-name" style="font-size:1.5rem">${p.n}</div>
+                    </div>
+                    <div class="flip-back">
+                        <div class="label" style="margin-bottom:1rem">Career Stats</div>
+                        <div class="p-name" style="font-size:2rem; color:var(--accent)">${p.stat}</div>
+                        <div class="label" style="margin-top:1rem">Click to flip back</div>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    renderRoster();
   </script>
 </body>
 </html>
