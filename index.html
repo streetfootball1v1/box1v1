@@ -2,195 +2,251 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>BOX1V1 | Street Football Elite</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <title>BOX1V1 | Street Elite</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,700;0,900;1,900&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #000; --card-bg: #0d0d0d; --accent: #39FF14;
-      --text: #fff; --text-dim: #666; --border: #1a1a1a;
-      --cubic: cubic-bezier(0.2, 1, 0.2, 1);
-      /* Оригинальные цвета */
-      --insta: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+      --bg: #000;
+      --card: #0d0d0d;
+      --accent: #39FF14;
+      --text: #ffffff;
+      --text-dim: #86868b;
+      --border: #1c1c1e;
+      --safe-area: 20px;
+      --cubic: cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
-    body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; overflow-x: hidden; }
+    /* Reset & Base */
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    body { 
+      background: var(--bg); 
+      color: var(--text); 
+      font-family: -apple-system, 'Inter', sans-serif; 
+      line-height: 1.2;
+      overflow-x: hidden;
+    }
 
-    /* Эффект Shimmer */
-    .shimmer {
-      background: linear-gradient(90deg, currentColor 0%, #fff 50%, currentColor 100%);
+    /* Smooth Scrolling */
+    html { scroll-behavior: smooth; }
+
+    /* UI Components: Shimmer */
+    .shimmer-text {
+      background: linear-gradient(90deg, #fff 0%, var(--text-dim) 50%, #fff 100%);
       background-size: 200% auto;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      animation: shine 3s linear infinite;
+      animation: shine 4s linear infinite;
     }
     @keyframes shine { to { background-position: 200% center; } }
 
-    /* Навигация */
-    nav { position: fixed; top: 0; width: 100%; z-index: 1000; background: rgba(0,0,0,0.8); backdrop-filter: saturate(180%) blur(20px); border-bottom: 1px solid var(--border); }
-    .nav-container { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; padding: 1.2rem 2rem; align-items: center; }
-    .nav-links { display: flex; gap: 2rem; }
-    .nav-links a { color: var(--text-dim); text-decoration: none; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; cursor: pointer; }
-    .nav-links a.active, .nav-links a:hover { color: var(--accent); }
+    /* Navigation */
+    nav { 
+      position: fixed; top: 0; width: 100%; z-index: 1000; 
+      background: rgba(0,0,0,0.7); backdrop-filter: saturate(180%) blur(20px);
+      border-bottom: 0.5px solid var(--border);
+    }
+    .nav-inner { 
+      max-width: 1200px; margin: 0 auto; 
+      display: flex; justify-content: space-between; align-items: center; 
+      height: 64px; padding: 0 var(--safe-area); 
+    }
+    .nav-links { display: flex; gap: 1.5rem; }
+    .nav-links a { 
+      color: var(--text-dim); text-decoration: none; font-size: 13px; 
+      font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;
+      transition: color 0.3s var(--cubic);
+    }
+    .nav-links a.active { color: var(--accent); }
 
-    .container { max-width: 1200px; margin: 140px auto 0; padding: 0 2rem; }
-    section { display: none; opacity: 0; transform: translateY(20px); transition: 0.8s var(--cubic); }
-    section.active { display: block; opacity: 1; transform: translateY(0); }
+    /* Layout */
+    .main-content { max-width: 1100px; margin: 100px auto 40px; padding: 0 var(--safe-area); }
+    section { display: none; animation: fadeIn 0.6s var(--cubic) forwards; }
+    section.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-    h1 { font-size: clamp(3.5rem, 12vw, 8rem); font-weight: 900; line-height: 0.8; letter-spacing: -4px; text-transform: uppercase; font-style: italic; margin-bottom: 3rem; }
+    h1 { font-size: clamp(2.5rem, 8vw, 6rem); font-weight: 900; letter-spacing: -2px; font-style: italic; margin-bottom: 2rem; text-transform: uppercase; }
 
-    /* Bento Grid */
-    .bento { display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: 240px; gap: 1rem; margin-bottom: 4rem; }
+    /* Bento Grid System */
+    .bento-grid { 
+      display: grid; 
+      grid-template-columns: repeat(4, 1fr); 
+      grid-auto-rows: 220px; 
+      gap: 16px; 
+    }
     
-    .card { 
-      background: var(--card-bg); border-radius: 30px; padding: 2rem; 
-      display: flex; flex-direction: column; justify-content: space-between; 
-      border: 1px solid var(--border); transition: 0.5s var(--cubic); 
-      position: relative; overflow: hidden; text-decoration: none; color: inherit; cursor: pointer;
+    .bento-item {
+      background: var(--card); border-radius: 24px; border: 1px solid var(--border);
+      position: relative; overflow: hidden; display: flex; flex-direction: column;
+      padding: 24px; transition: transform 0.4s var(--cubic), border-color 0.4s;
+      text-decoration: none; color: inherit;
     }
-    .card:hover { transform: scale(1.02); background: #111; border-color: #333; }
+
+    /* Mobile Adaptivity */
+    @media (max-width: 850px) {
+      .bento-grid { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 180px; }
+      .col-span-2 { grid-column: span 2; }
+      .row-span-2 { grid-row: span 2; }
+      h1 { margin-bottom: 1.5rem; }
+    }
+
+    @media (max-width: 480px) {
+      .bento-grid { grid-template-columns: 1fr; grid-auto-rows: 160px; }
+      .col-span-2, .row-span-2 { grid-column: span 1; grid-row: span 1; }
+      .nav-inner { height: 56px; }
+      .main-content { margin-top: 80px; }
+    }
+
+    /* Specific Bento Styles */
+    .col-span-2 { grid-column: span 2; }
+    .row-span-2 { grid-row: span 2; }
     
-    /* Video Background */
-    .v-bg { position: absolute; inset: 0; opacity: 0; transition: 0.6s; z-index: 0; }
-    .card:hover .v-bg { opacity: 0.3; }
-    .v-bg video { width: 100%; height: 100%; object-fit: cover; }
-    .card-content { position: relative; z-index: 2; }
+    .bento-item:active { transform: scale(0.97); }
+    .bento-item:hover { border-color: #333; }
 
-    /* Соцсети (Как в той версии) */
-    .c-instagram .insta-text {
-      font-size: 2.2rem; font-weight: 900; font-style: italic;
-      background: var(--insta);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-    .c-telegram .tg-text {
-      font-size: 1.8rem; font-weight: 900; font-style: italic; color: #229ED9;
-    }
+    /* Elements */
+    .label { font-size: 11px; font-weight: 700; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+    .title-big { font-size: 2rem; font-weight: 900; font-style: italic; line-height: 1; margin-top: auto; text-transform: uppercase; }
+    .ovr-display { font-size: 6rem; font-weight: 900; color: var(--accent); line-height: 0.8; letter-spacing: -4px; margin-top: 10px; }
 
-    .c-main { grid-column: span 2; grid-row: span 2; }
-    .c-wide { grid-column: span 2; }
-    .c-accent { background: var(--accent); color: #000; border: none; }
+    /* Special Cards */
+    .card-insta { background: var(--card); border: 1px solid #2c2c2e; }
+    .card-insta .title-big { background: linear-gradient(45deg, #f09433, #dc2743, #bc1888); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    
+    .card-tg { border-color: #0088cc44; }
+    .card-tg .title-big { color: #24A1DE; }
 
-    /* Flip Card (Roster) */
-    .flip-card { perspective: 1000px; }
-    .flip-inner { position: relative; width: 100%; height: 100%; transition: transform 0.8s var(--cubic); transform-style: preserve-3d; }
-    .flip-card.is-flipped .flip-inner { transform: rotateY(180deg); }
-    .flip-front, .flip-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 30px; border: 1px solid var(--border); padding: 2rem; }
-    .flip-front { background: var(--card-bg); display: flex; flex-direction: column; justify-content: space-between; }
-    .flip-back { background: #111; transform: rotateY(180deg); display: flex; flex-direction: column; justify-content: center; align-items: center; }
+    /* Video Overlay */
+    .video-container { position: absolute; inset: 0; z-index: 0; opacity: 0; transition: opacity 0.5s; }
+    .bento-item:hover .video-container { opacity: 0.2; }
+    video { width: 100%; height: 100%; object-fit: cover; }
 
-    .ovr { font-size: 8rem; font-weight: 900; line-height: 0.7; letter-spacing: -6px; color: var(--accent); }
-    .p-name { font-size: 2.5rem; font-weight: 900; font-style: italic; text-transform: uppercase; line-height: 0.9; }
-    .label { font-size: 0.65rem; font-weight: 800; color: var(--text-dim); text-transform: uppercase; letter-spacing: 2px; }
-
-    @media (max-width: 768px) {
-      .bento { grid-template-columns: 1fr; grid-auto-rows: auto; }
-      .c-main, .c-wide { grid-column: span 1; min-height: 300px; }
-    }
+    /* Table Design */
+    .table-wrapper { background: var(--card); border-radius: 24px; border: 1px solid var(--border); overflow: hidden; }
+    table { width: 100%; border-collapse: collapse; }
+    th { padding: 16px; text-align: left; font-size: 12px; color: var(--text-dim); border-bottom: 1px solid var(--border); text-transform: uppercase; }
+    td { padding: 20px 16px; border-bottom: 1px solid var(--border); font-weight: 600; font-size: 15px; }
+    tr:last-child td { border: none; }
+    .rank-num { color: var(--text-dim); font-style: italic; margin-right: 8px; }
   </style>
 </head>
 <body>
 
   <nav>
-    <div class="nav-container">
-      <div class="nav-logo" onclick="showSection('home')">
-        <svg viewBox="0 0 400 100" width="90" height="22"><text x="0" y="80" fill="#fff" font-family="Inter" font-weight="900" font-size="80" letter-spacing="10">BOX<tspan fill="#39FF14">1</tspan>V1</text></svg>
+    <div class="nav-inner">
+      <div class="logo" onclick="switchTab('home')">
+        <svg viewBox="0 0 400 100" width="80" height="20">
+          <text x="0" y="80" fill="#fff" font-family="Inter" font-weight="900" font-size="80">BOX<tspan fill="#39FF14">1</tspan>V1</text>
+        </svg>
       </div>
       <div class="nav-links">
-        <a onclick="showSection('home')" id="btn-home" class="active">Home</a>
-        <a onclick="showSection('roster')" id="btn-roster">Roster</a>
-        <a onclick="showSection('tables')" id="btn-tables">Standings</a>
+        <a href="javascript:void(0)" onclick="switchTab('home')" id="nav-home" class="active">Home</a>
+        <a href="javascript:void(0)" onclick="switchTab('roster')" id="nav-roster">Roster</a>
+        <a href="javascript:void(0)" onclick="switchTab('stats')" id="nav-stats">Standings</a>
       </div>
     </div>
   </nav>
 
-  <div class="container">
+  <main class="main-content">
+    
     <section id="home" class="active">
-        <span class="label" style="color:var(--accent); margin-bottom: 1rem; display: block;">Elite Street League // 2026</span>
-        <h1 class="shimmer">STREET<br>STANDARD.</h1>
-        <div class="bento">
-            <div class="card c-main">
-                <div class="v-bg">
-                    <video autoplay muted loop playsinline src="https://assets.mixkit.co/videos/preview/mixkit-football-player-kicking-the-ball-in-the-stadium-4748-large.mp4"></video>
-                </div>
-                <div class="card-content">
-                    <span class="label">Current Leader</span>
-                    <div class="ovr shimmer">92</div>
-                    <div class="p-name">Kuznetsov</div>
-                </div>
-            </div>
-            
-            <a href="https://t.me/streetbox1v1" target="_blank" class="card c-telegram">
-                <span class="label">Join community</span>
-                <div class="tg-text shimmer">TELEGRAM ↗</div>
-            </a>
-
-            <div class="card c-accent" onclick="showSection('roster')">
-                <div class="p-name" style="font-size:1.5rem">FULL ROSTER</div>
-                <span style="font-weight:900">VIEW ALL →</span>
-            </div>
-
-            <a href="https://instagram.com/box.1v1" target="_blank" class="card c-wide c-instagram">
-                <span class="label">Watch Highlights</span>
-                <div class="insta-text shimmer">INSTAGRAM ↗</div>
-            </a>
-            
-            <div class="card" onclick="showSection('tables')">
-                <span class="label">Statistics</span>
-                <div class="p-name" style="font-size:1.2rem">STANDINGS</div>
-            </div>
+      <h1 class="shimmer-text">STREET<br>STANDARD.</h1>
+      <div class="bento-grid">
+        <div class="bento-item col-span-2 row-span-2">
+          <div class="video-container">
+            <video autoplay muted loop playsinline src="https://assets.mixkit.co/videos/preview/mixkit-football-player-kicking-the-ball-in-the-stadium-4748-large.mp4"></video>
+          </div>
+          <div style="position:relative; z-index:1; height: 100%; display: flex; flex-direction: column;">
+            <p class="label">Top Rated Athlete</p>
+            <h2 class="ovr-display">92</h2>
+            <h3 class="title-big">Kuznetsov</h3>
+          </div>
         </div>
+
+        <a href="https://t.me/streetbox1v1" target="_blank" class="bento-item card-tg">
+          <p class="label">Community</p>
+          <h3 class="title-big">Telegram ↗</h3>
+        </a>
+
+        <div class="bento-item" onclick="switchTab('stats')">
+          <p class="label">Performance</p>
+          <h3 class="title-big" style="color: var(--accent)">Stats</h3>
+        </div>
+
+        <a href="https://instagram.com/box.1v1" target="_blank" class="bento-item col-span-2 card-insta">
+          <p class="label">Official Media</p>
+          <h3 class="title-big">Instagram ↗</h3>
+        </a>
+      </div>
     </section>
 
     <section id="roster">
-        <h1 class="shimmer">THE ROSTER</h1>
-        <div class="bento" id="roster-grid"></div>
+      <h1 class="shimmer-text">THE ROSTER</h1>
+      <div class="bento-grid" id="roster-grid">
+        </div>
     </section>
 
-    <section id="tables">
-        <h1 class="shimmer">STANDINGS</h1>
-        <div id="table-placeholder"></div>
+    <section id="stats">
+      <h1 class="shimmer-text">STANDINGS</h1>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr><th>Rank</th><th>Player</th><th>Rating</th><th>W-D-L</th></tr>
+          </thead>
+          <tbody id="stats-body">
+            </tbody>
+        </table>
+      </div>
     </section>
-  </div>
+
+  </main>
 
   <script>
-    const players = [
-        {n: 'Kuznetsov', r: 92, stats: '45W - 3L'},
-        {n: 'Volkov', r: 90, stats: '38W - 6L'},
-        {n: 'Ivanov', r: 89, stats: '35W - 4L'},
-        {n: 'Smirnov', r: 82, stats: '22W - 15L'}
+    const data = [
+      { name: 'Kuznetsov', rating: 92, record: '45-5-3' },
+      { name: 'Volkov', rating: 90, record: '38-8-6' },
+      { name: 'Ivanov', rating: 89, record: '35-10-4' },
+      { name: 'Smirnov', rating: 82, record: '22-2-12' }
     ];
 
-    function showSection(id) {
-        if (navigator.vibrate) navigator.vibrate(10);
-        document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
-        document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-        const btn = document.getElementById('btn-' + id);
-        if(btn) btn.classList.add('active');
-        window.scrollTo({top: 0, behavior: 'smooth'});
+    function switchTab(tabId) {
+      // Haptic Feedback
+      if (navigator.vibrate) navigator.vibrate(8);
+
+      // UI Update
+      document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+      
+      document.getElementById(tabId).classList.add('active');
+      document.getElementById('nav-' + tabId).classList.add('active');
+      
+      window.scrollTo(0, 0);
     }
 
-    function renderRoster() {
-        document.getElementById('roster-grid').innerHTML = players.map(p => `
-            <div class="flip-card" onclick="this.classList.toggle('is-flipped')">
-                <div class="flip-inner" style="height:240px">
-                    <div class="flip-front card">
-                        <span class="label">OVR</span>
-                        <div class="ovr" style="font-size:4rem">${p.r}</div>
-                        <div class="p-name" style="font-size:1.5rem">${p.n}</div>
-                    </div>
-                    <div class="flip-back card">
-                        <span class="label">Career Data</span>
-                        <div class="p-name" style="font-size:1.8rem; color:var(--accent)">${p.stats}</div>
-                    </div>
-                </div>
-            </div>
-        `).join('');
+    function init() {
+      // Render Roster
+      const rosterGrid = document.getElementById('roster-grid');
+      rosterGrid.innerHTML = data.map(p => `
+        <div class="bento-item">
+          <p class="label">OVR</p>
+          <h2 style="font-size: 3rem; font-weight:900; color:var(--accent)">${p.rating}</h2>
+          <h3 class="title-big" style="font-size: 1.2rem;">${p.name}</h3>
+        </div>
+      `).join('');
+
+      // Render Table
+      const statsBody = document.getElementById('stats-body');
+      statsBody.innerHTML = data.map((p, i) => `
+        <tr>
+          <td><span class="rank-num">#0${i+1}</span></td>
+          <td>${p.name}</td>
+          <td><span style="color:var(--accent)">${p.rating}</span></td>
+          <td style="color:var(--text-dim); font-size:13px">${p.record}</td>
+        </tr>
+      `).join('');
     }
 
-    renderRoster();
+    document.addEventListener('DOMContentLoaded', init);
   </script>
 </body>
 </html>
