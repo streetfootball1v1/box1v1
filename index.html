@@ -1,341 +1,360 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-    <title>BOX1V1 | Крупнейшая уличная лига Москвы</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Orbitron:wght@900&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg: #000000;
-            --card: #0a0a0a;
-            --accent: #39FF14;
-            --text: #ffffff;
-            --text-dim: #86868b;
-            --border: #1c1c1e;
-            --inst-grad: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
-            --tg-color: #24A1DE;
-            --cubic: cubic-bezier(0.2, 0.8, 0.2, 1);
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <title>BOX1V1 | Уличная лига Москвы</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,700;0,900;1,900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #000; --card: #0d0d0d; --accent: #39FF14;
+      --text: #fff; --text-dim: #86868b; --border: #1c1c1e;
+      --cubic: cubic-bezier(0.4, 0, 0.2, 1);
+    }
 
-        /* Base & Scrollbar */
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-track { background: var(--bg); }
-        ::-webkit-scrollbar-thumb { background: #222; border-radius: 10px; }
-        
-        body { 
-            background: var(--bg); 
-            color: var(--text); 
-            font-family: -apple-system, 'Inter', sans-serif; 
-            line-height: 1.5;
-            overflow-x: hidden;
-        }
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: -apple-system, 'Inter', sans-serif; overflow-x: hidden; }
 
-        /* Navigation */
-        nav { 
-            position: fixed; top: 0; width: 100%; z-index: 1000; 
-            background: rgba(0,0,0,0.8); backdrop-filter: blur(20px); 
-            border-bottom: 0.5px solid var(--border); 
-        }
-        .nav-inner { 
-            max-width: 1200px; margin: 0 auto; display: flex; 
-            justify-content: space-between; align-items: center; 
-            height: 64px; padding: 0 20px; 
-        }
-        .logo { font-family: 'Orbitron'; font-size: 20px; font-weight: 900; cursor: pointer; text-decoration: none; color: #fff; }
-        .nav-links { display: flex; gap: 25px; align-items: center; }
-        .nav-links a { 
-            color: var(--text-dim); text-decoration: none; font-size: 11px; 
-            font-weight: 800; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; 
-        }
-        .nav-links a:hover, .nav-links a.active { color: var(--accent); }
-        .btn-tg { 
-            background: var(--tg-color); color: #fff; padding: 8px 16px; 
-            border-radius: 20px; font-size: 10px; font-weight: 900; text-decoration: none;
-        }
+    .shimmer-text {
+      background: linear-gradient(90deg, #fff 0%, #444 50%, #fff 100%);
+      background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      animation: shine 5s linear infinite;
+    }
+    @keyframes shine { to { background-position: 200% center; } }
 
-        /* Typography & Shimmer */
-        .shimmer {
-            background: linear-gradient(90deg, #fff 0%, #555 50%, #fff 100%);
-            background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            animation: shine 5s linear infinite;
-        }
-        @keyframes shine { to { background-position: 200% center; } }
+    /* Nav */
+    nav { position: fixed; top: 0; width: 100%; z-index: 1000; background: rgba(0,0,0,0.8); backdrop-filter: saturate(180%) blur(20px); border-bottom: 0.5px solid var(--border); }
+    .nav-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; height: 64px; padding: 0 20px; }
+    .nav-links { display: flex; gap: 1.5rem; }
+    .nav-links a { color: var(--text-dim); text-decoration: none; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; }
+    .nav-links a.active { color: var(--accent); }
 
-        /* Reveal Animation on Scroll */
-        .reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s var(--cubic); }
-        .reveal.active { opacity: 1; transform: translateY(0); }
+    /* Layout */
+    .main-content { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+    section { display: none; animation: fadeIn 0.8s var(--cubic); }
+    section.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Hero Section */
-        .hero { 
-            min-height: 100vh; display: flex; flex-direction: column; 
-            justify-content: center; align-items: center; text-align: center;
-            padding: 0 20px;
-        }
-        .hero h1 { 
-            font-size: clamp(3rem, 12vw, 8.5rem); font-weight: 900; 
-            line-height: 0.85; letter-spacing: -4px; text-transform: uppercase; 
-            margin-bottom: 30px; 
-        }
-        .hero p { color: var(--text-dim); font-size: clamp(1rem, 2vw, 1.4rem); max-width: 600px; margin-bottom: 40px; }
+    /* Hero */
+    .hero { min-height: 90vh; display: flex; flex-direction: column; justify-content: center; padding: 120px 0 60px; text-align: center; }
+    .hero h1 { font-size: clamp(3.5rem, 15vw, 10rem); font-weight: 900; line-height: 0.8; letter-spacing: -5px; font-style: italic; text-transform: uppercase; margin-bottom: 40px; }
+    
+    /* Bento */
+    .bento-grid { display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: 240px; gap: 20px; margin-bottom: 60px; }
+    .bento-item { background: var(--card); border-radius: 32px; border: 1px solid var(--border); padding: 30px; position: relative; overflow: hidden; display: flex; flex-direction: column; cursor: pointer; transition: 0.4s var(--cubic); text-decoration: none; color: inherit; }
+    .bento-item:hover { transform: translateY(-5px); border-color: #444; }
+    .col-2 { grid-column: span 2; }
+    .row-2 { grid-row: span 2; }
 
-        /* Bento Grid */
-        .main-content { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
-        .bento-grid { 
-            display: grid; grid-template-columns: repeat(4, 1fr); 
-            grid-auto-rows: 260px; gap: 20px; margin-bottom: 100px; 
-        }
-        .bento-item { 
-            background: var(--card); border-radius: 32px; border: 1px solid var(--border); 
-            padding: 35px; position: relative; overflow: hidden; display: flex; 
-            flex-direction: column; transition: 0.4s var(--cubic); text-decoration: none; color: inherit; 
-        }
-        .bento-item:hover { border-color: var(--accent); transform: scale(0.98); }
-        .col-2 { grid-column: span 2; }
-        .row-2 { grid-row: span 2; }
+    /* Content Blocks */
+    .content-block { padding: 120px 0; border-top: 1px solid var(--border); }
+    .content-block:first-of-type { border-top: none; padding-top: 60px; }
+    .content-title { font-size: clamp(2.4rem, 6vw, 4.2rem); font-weight: 900; font-style: italic; text-transform: uppercase; margin-bottom: 2.5rem; line-height: 0.92; letter-spacing: -1px; }
+    .text-large { font-size: clamp(1.15rem, 2.8vw, 1.65rem); font-weight: 500; line-height: 1.45; color: var(--text-dim); max-width: 720px; margin: 0 auto; }
+    .text-large b { color: #fff; font-weight: 600; }
 
-        /* Custom Cards */
-        .card-rules { background: radial-gradient(circle at top right, #1a1a1a, #000); }
-        .card-insta { background: var(--inst-grad); border: none; }
-        .card-tg { border-color: var(--tg-color); }
+    .founder-quote { text-align: center; max-width: 680px; margin: 0 auto 120px; }
+    .founder-quote-text { font-style: italic; color: var(--accent); line-height: 1.4; font-size: clamp(1.25rem, 3.5vw, 1.75rem); font-weight: 500; }
+    .founder-signature { margin-top: 1.2rem; color: var(--text-dim); font-size: 1rem; opacity: 0.8; }
 
-        /* Founder Section */
-        .founder-block { padding: 120px 0; text-align: center; }
-        .quote { font-size: clamp(1.5rem, 4vw, 2.8rem); font-weight: 700; font-style: italic; line-height: 1.1; margin-bottom: 20px; color: var(--accent); }
-        .signature { color: var(--text-dim); text-transform: uppercase; letter-spacing: 3px; font-size: 14px; }
+    /* Roadmap */
+    .path-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 2.8rem; margin-top: 3.5rem; }
+    .path-step { position: relative; padding-left: 1.2rem; }
+    .step-num { font-size: clamp(3.2rem, 8vw, 4.8rem); font-weight: 900; color: #1a1a1a; position: absolute; top: -0.8rem; left: -1.4rem; z-index: -1; line-height: 1; }
+    .step-title { font-size: 1.15rem; font-weight: 900; text-transform: uppercase; margin-bottom: 1rem; color: var(--accent); letter-spacing: 0.5px; }
+    .step-desc { color: var(--text-dim); line-height: 1.55; font-size: 1rem; }
 
-        /* Stats & Impact */
-        .impact-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin: 80px 0; }
-        .impact-card { 
-            background: #080808; padding: 50px; border-radius: 32px; 
-            text-align: center; border: 1px solid var(--border); 
-        }
-        .impact-val { font-size: 4rem; font-weight: 900; color: var(--accent); display: block; line-height: 1; }
-        .impact-label { font-size: 11px; text-transform: uppercase; color: var(--text-dim); margin-top: 15px; letter-spacing: 2px; }
+    /* Stats & Tables */
+    .impact-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin: 60px 0; }
+    .impact-card { background: #080808; padding: 40px; border-radius: 32px; text-align: center; border: 1px solid var(--border); }
+    .impact-val { font-size: 4rem; font-weight: 900; display: block; margin-bottom: 5px; color: #fff; }
+    .impact-label { font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: var(--text-dim); }
 
-        /* Roadmap */
-        .roadmap { padding: 100px 0; }
-        .roadmap-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
-        .step { padding: 40px; background: #080808; border-radius: 32px; border: 1px solid var(--border); position: relative; }
-        .step-num { font-size: 4rem; font-weight: 900; color: rgba(255,255,255,0.03); position: absolute; top: 10px; right: 20px; }
-        .step-title { color: var(--accent); font-weight: 900; margin-bottom: 15px; text-transform: uppercase; }
+    .stats-container { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    table { width: 100%; border-collapse: collapse; min-width: 500px; }
+    td { white-space: nowrap; }
 
-        /* CTA */
-        .cta-final { 
-            background: var(--accent); color: #000; border-radius: 50px; 
-            padding: 100px 40px; text-align: center; margin: 100px 0; cursor: pointer;
-            transition: 0.5s var(--cubic);
-        }
-        .cta-final:hover { transform: scale(1.02) rotate(-1deg); }
-        .cta-final h2 { font-size: clamp(3rem, 10vw, 7rem); font-weight: 900; line-height: 0.8; }
+    /* CTA Card */
+    .cta-card { background: var(--card); color: var(--text); border: 1px solid var(--accent); border-radius: 40px; padding: clamp(60px, 12vw, 100px) 20px; margin: 100px 0 160px; text-align: center; cursor: pointer; transition: 0.4s var(--cubic); }
+    .cta-card:hover { transform: scale(1.01); background: rgba(57, 255, 20, 0.03); }
+    .cta-card h2 { font-size: clamp(3rem, 10vw, 6rem); font-weight: 900; font-style: italic; text-transform: uppercase; line-height: 0.8; }
 
-        /* Table */
-        .table-container { background: var(--card); border-radius: 32px; border: 1px solid var(--border); overflow: hidden; margin-top: 50px; }
-        table { width: 100%; border-collapse: collapse; text-align: left; }
-        th { padding: 25px; font-size: 12px; color: var(--text-dim); text-transform: uppercase; border-bottom: 1px solid var(--border); }
-        td { padding: 25px; border-bottom: 1px solid var(--border); font-weight: 700; }
+    /* Timer */
+    .timer-container { display: flex; gap: 24px; flex-wrap: wrap; justify-content: center; margin-top: 40px; }
+    .timer-val { font-size: clamp(3rem, 7vw, 5rem); font-weight: 900; color: #fff; line-height: 0.9; }
+    .timer-lab { font-size: 11px; color: var(--text-dim); text-transform: uppercase; font-weight: 800; margin-top: 10px; display: block; }
 
-        /* Modal */
-        .modal { 
-            position: fixed; inset: 0; background: rgba(0,0,0,0.95); 
-            z-index: 2000; display: none; align-items: center; justify-content: center; padding: 20px;
-            backdrop-filter: blur(15px);
-        }
-        .modal.active { display: flex; }
-        .modal-card { 
-            background: #111; width: 100%; max-width: 500px; padding: 50px; 
-            border-radius: 40px; border: 1px solid var(--border); position: relative; 
-        }
+    /* Modals */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.95); backdrop-filter: blur(20px); z-index: 2000; display: none; align-items: center; justify-content: center; padding: 20px; }
+    .modal-overlay.active { display: flex; }
+    .modal-card { background: #111; width: 100%; max-width: 500px; border-radius: 40px; border: 1px solid var(--border); padding: clamp(30px, 8vw, 50px); position: relative; }
+    .close-modal { position: absolute; top: 20px; right: 20px; width: 40px; height: 40px; background: #222; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #fff; z-index: 10; }
 
-        /* Mobile */
-        @media (max-width: 900px) {
-            .bento-grid { grid-template-columns: repeat(2, 1fr); }
-            .impact-grid { grid-template-columns: 1fr; }
-            .nav-links { display: none; }
-        }
-        @media (max-width: 600px) {
-            .bento-grid { grid-template-columns: 1fr; grid-auto-rows: auto; }
-            .col-2 { grid-column: span 1; }
-            .hero h1 { font-size: 3.5rem; letter-spacing: -2px; }
-        }
-    </style>
+    @media (max-width: 900px) { .bento-grid, .impact-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 600px) { 
+      .bento-grid, .impact-grid, .path-grid { grid-template-columns: 1fr; }
+      .col-2, .row-2 { grid-column: span 1; grid-row: span 1; }
+      .timer-val { font-size: 2.5rem; }
+      .content-block { padding: 80px 0; }
+    }
+  </style>
 </head>
 <body>
 
-    <nav>
-        <div class="nav-inner">
-            <a href="#" class="logo">BOX<span style="color:var(--accent)">1</span>V1</a>
-            <div class="nav-links">
-                <a href="#home">Главная</a>
-                <a href="#about">О Лиге</a>
-                <a href="#roster">Игроки</a>
-                <a href="https://t.me/streetbox1v1" class="btn-tg">Telegram</a>
-            </div>
-        </div>
-    </nav>
+  <nav>
+    <div class="nav-inner">
+      <div class="logo" style="cursor:pointer" onclick="switchTab('home')">
+        <svg viewBox="0 0 400 100" width="80" height="20"><text x="0" y="80" fill="#fff" font-family="Inter" font-weight="900" font-size="80">BOX<tspan fill="#39FF14">1</tspan>V1</text></svg>
+      </div>
+      <div class="nav-links">
+        <a href="#home" onclick="switchTab('home')" id="nav-home">Лента</a>
+        <a href="#roster" onclick="switchTab('roster')" id="nav-roster">Игроки</a>
+        <a href="#stats" onclick="switchTab('stats')" id="nav-stats">Рейтинг</a>
+      </div>
+    </div>
+  </nav>
 
-    <main class="main-content">
+  <main class="main-content">
+    
+    <section id="home">
+      <div class="hero">
+        <span class="label shimmer-text" style="font-size:11px; font-weight:800; letter-spacing:2px; text-transform:uppercase;">Street Excellence League</span>
+        <h1 class="shimmer-text">REWRITE<br>THE RULES.</h1>
+        <p style="opacity:0.6; font-size: 1.2rem; max-width:600px; margin: 0 auto 40px;">От первой записной книжки до первого матча. Ты видишь всё в реальном времени.</p>
         
-        <section class="hero" id="home">
-            <span class="shimmer" style="font-weight: 900; letter-spacing: 5px; font-size: 12px; margin-bottom: 20px;">PREMIUM STREET FOOTBALL</span>
-            <h1 class="shimmer">LEVEL UP<br>OR GO HOME.</h1>
-            <p>Первая профессиональная медиа-лига 1 на 1 в Москве. Мы превращаем уличный футбол в цифровое искусство.</p>
-            <div style="display: flex; gap: 20px; margin-top: 20px;">
-                <a href="#apply" class="btn-tg" style="padding: 15px 30px; font-size: 14px;">СТАТЬ УЧАСТНИКОМ</a>
-            </div>
-        </section>
-
-        <section class="founder-block reveal">
-            <div class="quote">«В BOX1V1 твой OVR — это не цифры в игре, <br>это твой авторитет на бетоне.»</div>
-            <div class="signature">— ZUPAROV, Founder</div>
-        </section>
-
-        <section class="bento-grid reveal" id="about">
-            <div class="bento-item col-2 row-2 card-rules" onclick="openModal('rulesModal')">
-                <span style="color:var(--accent); font-weight: 800; font-size: 12px;">PROTOCOL 1.0</span>
-                <h2 style="font-size: 3.5rem; font-weight: 900; line-height: 0.9; margin: 20px 0;">ЗАКОНЫ<br>КЛЕТКИ.</h2>
-                <p style="color:var(--text-dim)">Формат 1x1 с независимым кипером, 20 секунд на атаку и мгновенная победа через Панну.</p>
-                <div style="margin-top: auto; color: var(--accent); font-weight: 900;">ИЗУЧИТЬ РЕГЛАМЕНТ →</div>
-            </div>
-
-            <div class="bento-item row-2" style="background: url('https://images.unsplash.com/photo-1529900948632-58674ba193be?auto=format&fit=crop&q=80&w=600') center; background-size: cover;">
-                <div style="position: absolute; inset: 0; background: linear-gradient(to top, #000, transparent);"></div>
-                <h3 style="position: relative; font-weight: 900; margin-top: auto;">S01 OPEN CALL</h3>
-                <p style="position: relative; font-size: 12px; color: var(--accent);">ОТБОР ОТКРЫТ</p>
-            </div>
-
-            <a href="https://instagram.com/box.1v1" target="_blank" class="bento-item card-insta">
-                <h3 style="font-weight: 900;">INSTAGRAM</h3>
-                <p style="font-size: 12px; opacity: 0.8;">Все хайлайты здесь</p>
-            </a>
-
-            <a href="https://t.me/streetbox1v1" target="_blank" class="bento-item card-tg">
-                <h3 style="color: var(--tg-color); font-weight: 900;">TELEGRAM</h3>
-                <p style="font-size: 12px; color: var(--text-dim);">Закрытый чат игроков</p>
-            </a>
-        </section>
-
-        <section class="impact-grid reveal">
-            <div class="impact-card">
-                <span class="impact-val">20"</span>
-                <span class="impact-label">На одну атаку</span>
-            </div>
-            <div class="impact-card">
-                <span class="impact-val">OVR</span>
-                <span class="impact-label">Система рейтинга</span>
-            </div>
-            <div class="impact-card">
-                <span class="impact-val">1V1+K</span>
-                <span class="impact-label">Уникальный формат</span>
-            </div>
-        </section>
-
-        <section class="roadmap reveal">
-            <h2 style="font-size: 3rem; font-weight: 900; margin-bottom: 50px; font-style: italic;">ROADMAP_2026</h2>
-            <div class="roadmap-grid">
-                <div class="step">
-                    <span class="step-num">01</span>
-                    <h3 class="step-title">ОТБОР</h3>
-                    <p style="color:var(--text-dim)">Формирование ТОП-32 рейтинга Москвы. Верификация навыков через видео-челленджи.</p>
-                </div>
-                <div class="step" style="border-color: var(--accent);">
-                    <span class="step-num">02</span>
-                    <h3 class="step-title">SEASON 01</h3>
-                    <p style="color:var(--text-dim)">Старт регулярного чемпионата. Еженедельные ивенты в «клетках» по всему городу.</p>
-                </div>
-                <div class="step">
-                    <span class="step-num">03</span>
-                    <h3 class="step-title">GRAND FINAL</h3>
-                    <p style="color:var(--text-dim)">Большой медийный финал с призовым фондом и уникальным мерчем BOX1V1.</p>
-                </div>
-            </div>
-        </section>
-
-        <section class="reveal" id="roster" style="padding: 100px 0;">
-            <h2 style="font-size: 3rem; font-weight: 900; margin-bottom: 30px; font-style: italic;">TOP_RANKING</h2>
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>RANK</th>
-                            <th>PLAYER</th>
-                            <th style="text-align: right;">OVR</th>
-                        </tr>
-                    </thead>
-                    <tbody id="playerTable"></tbody>
-                </table>
-            </div>
-        </section>
-
-        <section class="cta-final reveal" id="apply" onclick="openModal('applyModal')">
-            <span style="font-weight: 900; text-transform: uppercase; letter-spacing: 2px;">JOIN THE ELITE</span>
-            <h2 class="shimmer">СТАТЬ ЧАСТЬЮ<br>ЛИГИ</h2>
-            <p style="margin-top: 20px; font-weight: 600;">Нажми, чтобы подать заявку в Telegram</p>
-        </section>
-
-    </main>
-
-    <div class="modal" id="applyModal" onclick="closeModal('applyModal')">
-        <div class="modal-card" onclick="event.stopPropagation()">
-            <h2 style="font-size: 2.5rem; font-weight: 900; margin-bottom: 20px;">РЕГИСТРАЦИЯ</h2>
-            <p style="color: var(--text-dim); margin-bottom: 30px;">
-                Отправь хэштег <b>#WANTTOBOX</b> нашему боту и прикрепи короткое видео своей игры. Скауты рассмотрят твой профиль в течение 24 часов.
-            </p>
-            <a href="https://t.me/streetbox1v1" class="btn-tg" style="display: block; text-align: center; padding: 20px; border-radius: 20px;">ПЕРЕЙТИ В TELEGRAM</a>
+        <div class="timer-container" id="countdown">
+          <div><span class="timer-val" id="days">00</span><span class="timer-lab">Days</span></div>
+          <div><span class="timer-val" id="hours">00</span><span class="timer-lab">Hours</span></div>
+          <div><span class="timer-val" id="mins">00</span><span class="timer-lab">Min</span></div>
+          <div><span class="timer-val" id="secs">00</span><span class="timer-lab">Sec</span></div>
         </div>
-    </div>
+      </div>
 
-    <div class="modal" id="rulesModal" onclick="closeModal('rulesModal')">
-        <div class="modal-card" onclick="event.stopPropagation()">
-            <h2 style="font-size: 2.5rem; font-weight: 900; color: var(--accent); margin-bottom: 20px;">ПРАВИЛА</h2>
-            <ul style="list-style: none; color: var(--text-dim); display: grid; gap: 15px;">
-                <li>⚽️ 1 на 1 против защитника + независимый кипер.</li>
-                <li>⏱ 20 секунд на всё. Не успел — переход мяча.</li>
-                <li>🏆 Игра до 2 забитых мячей.</li>
-                <li>🔥 Панна — это технический нокаут (Game Over).</li>
-            </ul>
+      <div class="content-block" style="border: none;">
+        <div class="founder-quote">
+          <div class="founder-quote-text">«Я устала от футбола, где важны связи, а не скилл. BOX1V1 — место, где побеждает только тот, кто тащит на коробке.»</div>
+          <div class="founder-signature">— Алиса, Founder</div>
         </div>
+      </div>
+
+      <div class="bento-grid">
+        <div class="bento-item col-2 row-2" onclick="openModal('rulesModal')" style="background: radial-gradient(circle at top right, #1a1a1a, #000);">
+          <span style="color:var(--accent); font-size:11px; font-weight:800; text-transform:uppercase; margin-bottom:15px; display:block">The Foundation</span>
+          <h2 style="font-size: 3.5rem; font-weight:900; font-style:italic; text-transform:uppercase; line-height:1.1; margin-bottom: 20px;">ПРАВИЛА.</h2>
+          <p style="color: var(--text-dim); line-height: 1.6; max-width: 80%;">Основа BOX1V1 — это честная игра и жесткий формат. Узнай про OVR, систему Panna и как работает клетка.</p>
+          <div style="margin-top: auto; font-weight: 800; color: var(--accent); letter-spacing: 1px;">ПЕРЕЙТИ К ПРАВИЛАМ →</div>
+        </div>
+
+        <div class="bento-item row-2" onclick="openPlayerModal('KUSCH')">
+          <span style="font-size:11px; font-weight:800; color:var(--text-dim); text-transform:uppercase;">Top Leader</span>
+          <div style="margin-top:20px">
+            <h2 style="font-size: 5rem; color: var(--accent); font-weight:900; font-style:italic;">78</h2>
+            <h3 style="font-size:2rem; font-weight:900; font-style:italic; text-transform:uppercase;">KUSCH</h3>
+          </div>
+          <p style="margin-top: auto; font-size: 0.8rem; color: var(--text-dim);">Profile Analysis Available</p>
+        </div>
+
+        <a href="https://t.me/streetbox1v1" target="_blank" class="bento-item" style="border-color: #24A1DE;">
+          <span style="font-size:11px; font-weight:800; color:var(--text-dim); text-transform:uppercase;">Chat</span>
+          <h3 style="font-size:2rem; font-weight:900; font-style:italic; color: #24A1DE;">TELEGRAM</h3>
+        </a>
+
+        <a href="https://instagram.com/box.1v1" target="_blank" class="bento-item" style="border-color: #dc2743;">
+          <span style="font-size:11px; font-weight:800; color:var(--text-dim); text-transform:uppercase;">Feed</span>
+          <h3 style="font-size:1.8rem; font-weight:900; font-style:italic; background: linear-gradient(45deg, #f09433, #dc2743, #bc1888); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">INSTAGRAM</h3>
+        </a>
+      </div>
+
+      <div class="impact-grid">
+        <div class="impact-card"><span class="impact-val">1V1</span><span class="impact-label">Формат</span></div>
+        <div class="impact-card"><span class="impact-val">3'</span><span class="impact-label">Длительность</span></div>
+        <div class="impact-card"><span class="impact-val">OVR</span><span class="impact-label">Система</span></div>
+      </div>
+
+      <div class="content-block">
+        <h2 class="content-title">БОЛЬШЕ ЧЕМ<br>ФУТБОЛ.</h2>
+        <div class="text-large">
+          BOX1V1 — это пространство <b>абсолютной ответственности</b>. Здесь нет команды, на которую можно свалить вину. Здесь нет тренера, который скажет что делать.<br><br>
+          Только ты, твой оппонент и <b>бетон</b>. Каждая победа повышает твой статус в цифровой таблице, каждое поражение — повод вернуться сильнее.
+        </div>
+      </div>
+
+      <div class="content-block">
+        <h2 class="content-title">ДОРОЖНАЯ<br>КАРТА.</h2>
+        <div class="path-grid">
+          <div class="path-step">
+            <span class="step-num">02</span>
+            <h3 class="step-title">ФЕВРАЛЬ</h3>
+            <p class="step-desc">Набор ядра из 20 игроков. Закрытые тестовые матчи. Финальная настройка OVR.</p>
+          </div>
+          <div class="path-step">
+            <span class="step-num">03</span>
+            <h3 class="step-title">МАРТ</h3>
+            <p class="step-desc">Официальный запуск лиги. Публичный рейтинг. Первые MVP.</p>
+          </div>
+          <div class="path-step">
+            <span class="step-num">06</span>
+            <h3 class="step-title">ИЮНЬ</h3>
+            <p class="step-desc">Финал сезона. Выпуск мерча. BOX1V1 Tour по районам Москвы.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="cta-card" onclick="openModal('applyModal')">
+        <span style="color:var(--accent); font-weight:800; text-transform:uppercase; letter-spacing:2px; font-size:11px;">Только для первых 20</span>
+        <h2 style="margin-top:20px">ВОРВАТЬСЯ<br>В ЛИГУ</h2>
+        <p style="margin-top:20px; color:var(--text-dim); max-width:500px; margin-inline:auto;">Первые 20 игроков получат доступ к закрытому тестовому матчу, базовый OVR и мерч основателя.</p>
+      </div>
+    </section>
+
+    <section id="roster">
+      <div style="padding: 100px 0;">
+        <h1 class="shimmer-text" style="font-size:clamp(3rem, 10vw, 8rem); font-weight:900; font-style:italic;">PLAYERS.</h1>
+        <div class="bento-grid" id="roster-grid" style="margin-top:40px"></div>
+      </div>
+    </section>
+
+    <section id="stats">
+      <div style="padding: 100px 0;">
+        <h1 class="shimmer-text" style="font-size:clamp(3rem, 10vw, 8rem); font-weight:900; font-style:italic;">RANKING.</h1>
+        <div class="stats-container" style="background: var(--card); border-radius: 32px; border: 1px solid var(--border); padding: 10px; margin-top:40px;">
+          <table>
+            <tbody id="stats-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="modal-overlay" id="applyModal" onclick="closeModal('applyModal')">
+    <div class="modal-card" onclick="event.stopPropagation()">
+      <div class="close-modal" onclick="closeModal('applyModal')">✕</div>
+      <span class="label" style="font-size:11px; color:var(--text-dim); font-weight:800; text-transform:uppercase;">Recruitment</span>
+      <h2 style="font-size:2rem; font-weight:900; font-style:italic; text-transform:uppercase; margin: 15px 0;">ПОДАТЬ ЗАЯВКУ</h2>
+      <p style="color: var(--text-dim); margin-bottom: 30px; line-height: 1.6;">
+        Напиши в Telegram с тегом <b>#WANTTOBOX</b>.<br>
+        Укажи возраст и пришли видео 15 сек (любой финт или панна).
+      </p>
+      <a href="https://t.me/streetbox1v1" target="_blank" style="display: block; background: var(--accent); color: #000; text-align: center; padding: 22px; border-radius: 20px; text-decoration: none; font-weight: 900; text-transform: uppercase;">Написать в Telegram</a>
     </div>
+  </div>
 
-    <script>
-        // Player Data
-        const players = [
-            { name: 'KUSCH', ovr: 78 },
-            { name: 'ZUPAROV', ovr: 75 },
-            { name: 'DIDUR', ovr: 72 },
-            { name: 'BIBIKOV', ovr: 70 }
-        ];
+  <div class="modal-overlay" id="rulesModal" onclick="closeModal('rulesModal')">
+    <div class="modal-card" onclick="event.stopPropagation()">
+      <div class="close-modal" onclick="closeModal('rulesModal')">✕</div>
+      <span class="label" style="font-size:11px; color:var(--text-dim); font-weight:800; text-transform:uppercase;">Protocol</span>
+      <h2 style="font-size:2rem; font-weight:900; font-style:italic; text-transform:uppercase; margin: 15px 0;">ЗАКОНЫ</h2>
+      <div style="display: grid; gap: 15px; color:var(--text-dim)">
+        <p>• Игра 1 на 1 без вратаря.</p>
+        <p>• Тайм 3 минуты. При ничьей — «Золотой мяч».</p>
+        <p>• Панна (между ног) = чистая победа.</p>
+        <p>• Рейтинг пересчитывается после каждой игры.</p>
+      </div>
+    </div>
+  </div>
 
-        // Init Table
-        document.getElementById('playerTable').innerHTML = players.map((p, i) => `
-            <tr>
-                <td style="color: var(--text-dim);">#0${i+1}</td>
-                <td style="text-transform: uppercase; letter-spacing: 1px;">${p.name}</td>
-                <td style="text-align: right; color: var(--accent); font-family: 'Orbitron';">${p.ovr}</td>
-            </tr>
+  <div class="modal-overlay" id="playerModal" onclick="closeModal('playerModal')">
+    <div class="modal-card" onclick="event.stopPropagation()">
+      <div class="close-modal" onclick="closeModal('playerModal')">✕</div>
+      <span class="label" id="m-role" style="font-size:11px; color:var(--text-dim); font-weight:800; text-transform:uppercase;">Role</span>
+      <h2 id="m-name" style="font-size: 3rem; font-weight:900; font-style:italic; text-transform:uppercase; margin: 10px 0;">NAME</h2>
+      <div style="font-size: 2.5rem; font-weight: 900; color: var(--accent); margin-bottom: 30px;">OVR <span id="m-ovr">00</span></div>
+      <div id="m-stats"></div>
+    </div>
+  </div>
+
+  <script>
+    const players = {
+      'KUSCH': { r: 78, role: 'Founder', drib: 82, speed: 75, shot: 80, phys: 70 },
+      'ZUPAROV': { r: 75, role: 'Core', drib: 70, speed: 85, shot: 72, phys: 82 },
+      'DIDUR': { r: 72, role: 'Scout', drib: 88, speed: 70, shot: 65, phys: 60 },
+      'BIBIKOV': { r: 70, role: 'Support', drib: 65, speed: 72, shot: 88, phys: 78 },
+      'VARYUSHCHENKOV': { r: 68, role: 'Rookie', drib: 76, speed: 80, shot: 68, phys: 65 }
+    };
+
+    // Таймер с авто-остановкой
+    const targetDate = new Date("March 1, 2026 00:00:00").getTime();
+    const timerInterval = setInterval(() => {
+      const diff = targetDate - new Date().getTime();
+      if (diff <= 0) {
+        clearInterval(timerInterval);
+        document.getElementById('countdown').innerHTML = "<span class='timer-val' style='color:var(--accent)'>ЛИГА ЗАПУЩЕНА</span>";
+        return;
+      }
+      document.getElementById('days').innerText = Math.floor(diff/86400000).toString().padStart(2, '0');
+      document.getElementById('hours').innerText = Math.floor((diff%86400000)/3600000).toString().padStart(2, '0');
+      document.getElementById('mins').innerText = Math.floor((diff%3600000)/60000).toString().padStart(2, '0');
+      document.getElementById('secs').innerText = Math.floor((diff%60000)/1000).toString().padStart(2, '0');
+    }, 1000);
+
+    // Улучшенная навигация
+    function switchTab(t) {
+      if (window.event) window.event.preventDefault();
+      
+      document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+      
+      const targetSection = document.getElementById(t);
+      const targetNav = document.getElementById('nav-' + t);
+      
+      if (targetSection && targetNav) {
+        targetSection.classList.add('active');
+        targetNav.classList.add('active');
+        window.history.pushState(null, null, '#' + t);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }
+
+    // Слушатель кнопки "Назад" в браузере
+    window.addEventListener('popstate', () => {
+      const hash = window.location.hash.replace('#', '') || 'home';
+      switchTab(hash);
+    });
+
+    function openModal(id) { document.getElementById(id).classList.add('active'); }
+    function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+    function openPlayerModal(name) {
+      const p = players[name];
+      if(!p) return;
+      document.getElementById('m-name').innerText = name;
+      document.getElementById('m-role').innerText = p.role;
+      document.getElementById('m-ovr').innerText = p.r;
+      document.getElementById('m-stats').innerHTML = ['drib','speed','shot','phys'].map(s => `
+        <div style="display:flex; justify-content:space-between; margin-bottom:5px"><span style="font-size:11px; font-weight:800; color:var(--text-dim); text-transform:uppercase;">${s}</span><span>${p[s]}</span></div>
+        <div style="height:6px; background:#222; border-radius:3px; margin-bottom:15px; overflow:hidden"><div style="height:100%; background:var(--accent); width:${p[s]}%"></div></div>
+      `).join('');
+      openModal('playerModal');
+    }
+
+    function init() {
+      // Инициализация ростера
+      document.getElementById('roster-grid').innerHTML = Object.keys(players).map(name => `
+        <div class="bento-item" onclick="openPlayerModal('${name}')">
+          <span style="font-size:11px; font-weight:800; color:var(--text-dim); text-transform:uppercase;">OVR ${players[name].r}</span>
+          <h3 style="font-size:1.8rem; font-weight:900; font-style:italic; text-transform:uppercase; margin-top:10px;">${name}</h3>
+          <p style="margin-top:auto; font-size:11px; opacity:0.5; text-transform:uppercase;">${players[name].role}</p>
+        </div>
+      `).join('');
+
+      // Инициализация рейтинга
+      document.getElementById('stats-body').innerHTML = Object.entries(players)
+        .sort((a,b) => b[1].r - a[1].r)
+        .map(([name, p], i) => `
+          <tr style="border-bottom: 1px solid var(--border); cursor:pointer" onclick="openPlayerModal('${name}')">
+            <td style="padding: 25px; color: var(--text-dim)">#0${i+1}</td>
+            <td style="padding: 25px; font-weight: 900; text-transform: uppercase;">${name}</td>
+            <td style="padding: 25px; text-align: right; color: var(--accent); font-weight: 900; font-size: 1.3rem;">${p.r}</td>
+          </tr>
         `).join('');
 
-        // Modal Logic
-        function openModal(id) { document.getElementById(id).classList.add('active'); }
-        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
-
-        // Reveal Animation logic
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) entry.target.classList.add('active');
-            });
-        }, { threshold: 0.1 });
-
-        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-
-        // Smooth Scroll
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
-            });
-        });
-    </script>
+      // Проверка начального хэша
+      const initialHash = window.location.hash.replace('#', '') || 'home';
+      switchTab(initialHash);
+    }
+    
+    init();
+  </script>
 </body>
 </html>
