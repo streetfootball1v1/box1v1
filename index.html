@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>BOX1V1 | Street Football Elite</title>
+  <title>BOX1V1 | Street Elite</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,700;0,900;1,900&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -21,7 +21,6 @@
     .nav-links { display: flex; gap: 2rem; }
     .nav-links a { color: var(--text-dim); text-decoration: none; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; cursor: pointer; }
     .nav-links a.active, .nav-links a:hover { color: var(--accent); }
-    .nav-links a.locked { opacity: 0.4; cursor: not-allowed; }
 
     .container { max-width: 1200px; margin: 140px auto 0; padding: 0 2rem; }
     
@@ -36,32 +35,35 @@
       background: var(--card-bg); border-radius: 30px; padding: 2rem; 
       display: flex; flex-direction: column; justify-content: space-between; 
       border: 1px solid var(--border); transition: 0.5s var(--cubic); 
-      position: relative; overflow: hidden; text-decoration: none; color: inherit; cursor: pointer;
+      position: relative; overflow: hidden; cursor: pointer;
     }
     .card:hover { transform: scale(1.02); background: #111; border-color: #333; }
-    
     .c-main { grid-column: span 2; grid-row: span 2; }
     .c-wide { grid-column: span 2; }
     .c-accent { background: var(--accent); color: #000; border: none; }
-    .c-social { background: #111; display: flex; align-items: center; justify-content: center; text-align: center; }
-    .c-locked { opacity: 0.6; cursor: help; }
+    .c-social { background: #111; display: flex; align-items: center; justify-content: center; }
 
-    /* Typography & Data */
-    .ovr { font-size: 8rem; font-weight: 900; line-height: 0.7; letter-spacing: -6px; color: var(--accent); transition: 0.5s; }
-    .c-accent .ovr { color: #000; }
-    .p-name { font-size: 2.5rem; font-weight: 900; font-style: italic; text-transform: uppercase; line-height: 0.9; }
-    .label { font-size: 0.65rem; font-weight: 800; color: var(--text-dim); text-transform: uppercase; letter-spacing: 2px; }
-
-    /* Mini Graph Simulation */
-    .graph-mini { position: absolute; bottom: 0; left: 0; width: 100%; height: 60px; opacity: 0; transition: 0.5s; pointer-events: none; }
-    .card:hover .graph-mini { opacity: 0.4; }
+    /* Standings Table */
+    .table-container { background: var(--card-bg); border-radius: 32px; border: 1px solid var(--border); padding: 2rem; overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; min-width: 600px; }
+    th { text-align: left; padding: 1rem; color: var(--text-dim); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 2px; border-bottom: 1px solid var(--border); }
+    td { padding: 1.5rem 1rem; border-bottom: 1px solid var(--border); font-weight: 700; transition: 0.3s; }
+    tr:last-child td { border: none; }
+    tr:hover td { background: rgba(255,255,255,0.03); }
     
-    /* Toast Notification (Apple Style) */
+    .rank-cell { color: var(--text-dim); font-style: italic; font-size: 1.2rem; width: 60px; }
+    .name-cell { font-size: 1.2rem; text-transform: uppercase; }
+    .ovr-badge { background: var(--accent); color: #000; padding: 4px 10px; border-radius: 8px; font-size: 0.9rem; font-weight: 900; }
+    .form-dots { display: flex; gap: 6px; }
+    .dot { width: 8px; height: 8px; border-radius: 50%; }
+    .w { background: var(--accent); } .l { background: #ff3131; } .d { background: #555; }
+
+    /* Utils */
+    .ovr { font-size: 8rem; font-weight: 900; line-height: 0.7; letter-spacing: -6px; color: var(--accent); transition: 0.5s; }
+    .label { font-size: 0.65rem; font-weight: 800; color: var(--text-dim); text-transform: uppercase; letter-spacing: 2px; }
     #toast {
         position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px);
-        background: rgba(255,255,255,0.95); color: #000; padding: 12px 24px;
-        border-radius: 20px; font-weight: 700; font-size: 0.9rem; z-index: 5000;
-        transition: 0.5s var(--cubic); backdrop-filter: blur(10px); box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        background: #fff; color: #000; padding: 12px 24px; border-radius: 20px; font-weight: 700; z-index: 5000; transition: 0.5s var(--cubic);
     }
     #toast.show { transform: translateX(-50%) translateY(0); }
 
@@ -81,8 +83,8 @@
       <div class="nav-links">
         <a onclick="showSection('home')" id="btn-home" class="active">Home</a>
         <a onclick="showSection('roster')" id="btn-roster">Roster</a>
-        <a onclick="notify()" class="locked">Tables</a>
-        <a onclick="notify()" class="locked">History</a>
+        <a onclick="showSection('tables')" id="btn-tables">Standings</a>
+        <a onclick="notify('Match history coming soon')">History</a>
       </div>
     </div>
   </nav>
@@ -91,39 +93,55 @@
     <section id="home" class="active">
         <span class="label" style="color:var(--accent); margin-bottom: 1rem; display: block;">Elite Street League // 2026</span>
         <h1>STREET<br>STANDARD.</h1>
-        <div class="bento" id="home-bento">
-            </div>
+        <div class="bento" id="home-bento"></div>
     </section>
 
     <section id="roster">
         <h1>THE ROSTER</h1>
-        <div class="bento" id="full-roster">
-            </div>
+        <div class="bento" id="full-roster"></div>
+    </section>
+
+    <section id="tables">
+        <h1>STANDINGS</h1>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Athlete</th>
+                        <th>OVR</th>
+                        <th>W - D - L</th>
+                        <th>Winrate</th>
+                        <th>Form</th>
+                    </tr>
+                </thead>
+                <tbody id="table-body"></tbody>
+            </table>
+        </div>
     </section>
   </div>
 
-  <div id="toast">Functionality coming soon</div>
+  <div id="toast">Coming soon</div>
 
   <script>
     const players = [
-        {id: 0, n: 'Kuznetsov', r: 92, w: 45, d: 5, l: 3, g: 'M0,50 Q30,10 60,40 T120,10'},
-        {id: 1, n: 'Volkov', r: 90, w: 38, d: 8, l: 6, g: 'M0,50 Q30,60 60,30 T120,20'},
-        {id: 2, n: 'Ivanov', r: 89, w: 35, d: 10, l: 4, g: 'M0,50 Q30,20 60,45 T120,15'},
-        {id: 3, n: 'Smirnov', r: 82, w: 20, d: 2, l: 12, g: 'M0,50 Q30,80 60,50 T120,40'}
+        {id: 0, n: 'Kuznetsov', r: 92, w: 45, d: 5, l: 3, f: ['w','w','w','d','w']},
+        {id: 1, n: 'Volkov', r: 90, w: 38, d: 8, l: 6, f: ['w','l','w','w','d']},
+        {id: 2, n: 'Ivanov', r: 89, w: 35, d: 10, l: 4, f: ['d','w','w','l','w']},
+        {id: 3, n: 'Smirnov', r: 82, w: 22, d: 5, l: 15, f: ['l','l','w','d','l']},
+        {id: 4, n: 'Petrov', r: 78, w: 18, d: 12, l: 14, f: ['w','d','l','l','w']}
     ];
 
     function init() {
         players.sort((a,b) => b.r - a.r);
         renderHome();
         renderRoster();
+        renderTable();
     }
 
-    function getGraphSVG(path) {
-        return `<svg class="graph-mini" viewBox="0 0 120 60"><path d="${path}" fill="none" stroke="var(--accent)" stroke-width="3" stroke-linecap="round"/></svg>`;
-    }
-
-    function notify() {
+    function notify(msg = "Coming soon") {
         const toast = document.getElementById('toast');
+        toast.innerText = msg;
         toast.classList.add('show');
         setTimeout(() => toast.classList.remove('show'), 3000);
     }
@@ -131,47 +149,52 @@
     function renderHome() {
         const top = players[0];
         document.getElementById('home-bento').innerHTML = `
-            <div class="card c-main" onclick="notify()">
+            <div class="card c-main" onclick="showSection('tables')">
                 <div><span class="label">Current Leader</span><div class="ovr">${top.r}</div></div>
-                <div class="p-name">${top.n}</div>
-                ${getGraphSVG(top.g)}
+                <div style="font-size: 2.5rem; font-weight: 900; font-style: italic; text-transform: uppercase;">${top.n}</div>
             </div>
-            
-            <a href="https://t.me/streetbox1v1" target="_blank" class="card c-social">
-                <span class="label">Join community</span>
-                <div class="p-name" style="font-size:1.8rem; color: #229ED9;">TELEGRAM</div>
+            <a href="https://t.me/streetbox1v1" target="_blank" class="card c-social" style="text-decoration:none">
+                <span class="label">Community</span>
+                <div style="font-size: 1.8rem; font-weight: 900; font-style: italic; color: #229ED9;">TELEGRAM</div>
             </a>
-
             <div class="card c-accent" onclick="showSection('roster')">
-                <div class="p-name" style="font-size:1.5rem">FULL ROSTER</div>
+                <div style="font-size: 1.5rem; font-weight: 900; font-style: italic;">FULL ROSTER</div>
                 <span style="font-weight:900">VIEW ALL →</span>
             </div>
-
-            <a href="https://instagram.com/box.1v1" target="_blank" class="card c-social c-wide">
-                <span class="label">Watch Highlights</span>
-                <div class="p-name" style="font-size:2rem; background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">INSTAGRAM</div>
-            </a>
-            
-            <div class="card c-locked" onclick="notify()">
-                <span class="label">Recent Games</span>
-                <div class="p-name" style="font-size:1.2rem">MATCH<br>HISTORY</div>
-            </div>
-
-            <div class="card c-locked" onclick="notify()">
-                <span class="label">League Tables</span>
-                <div class="p-name" style="font-size:1.2rem">STANDINGS</div>
+            <div class="card c-wide" onclick="showSection('tables')">
+                <span class="label">League Overview</span>
+                <div style="font-size: 2rem; font-weight: 900; font-style: italic; color:var(--accent)">LEAGUE STANDINGS ↗</div>
             </div>
         `;
     }
 
     function renderRoster() {
         document.getElementById('full-roster').innerHTML = players.map((p, i) => `
-            <div class="card" onclick="notify()">
+            <div class="card" onclick="notify('${p.n} Profile coming soon')">
                 <div><span class="label">OVR // 0${i+1}</span><div class="ovr" style="font-size:4rem">${p.r}</div></div>
-                <div class="p-name" style="font-size:1.5rem">${p.n}</div>
-                ${getGraphSVG(p.g)}
+                <div style="font-size: 1.5rem; font-weight: 900; font-style: italic; text-transform: uppercase;">${p.n}</div>
             </div>
         `).join('');
+    }
+
+    function renderTable() {
+        document.getElementById('table-body').innerHTML = players.map((p, i) => {
+            const wr = ((p.w / (p.w + p.d + p.l)) * 100).toFixed(0);
+            return `
+                <tr>
+                    <td class="rank-cell">#0${i+1}</td>
+                    <td class="name-cell">${p.n}</td>
+                    <td><span class="ovr-badge">${p.r}</span></td>
+                    <td style="color:var(--text-dim)">${p.w} - ${p.d} - ${p.l}</td>
+                    <td>${wr}%</td>
+                    <td>
+                        <div class="form-dots">
+                            ${p.f.map(res => `<div class="dot ${res}"></div>`).join('')}
+                        </div>
+                    </td>
+                </tr>
+            `;
+        }).join('');
     }
 
     function showSection(id) {
