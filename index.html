@@ -1,152 +1,176 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>BOX1V1</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BOX1V1</title>
 
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
 
-  <style>
-    :root {
-      --bg: #000;
-      --text: #fff;
-      --muted: #777;
-      --accent: #39FF14;
-    }
+<style>
+:root {
+  --bg:#000;
+  --text:#fff;
+  --muted:#777;
+  --accent:#39FF14;
+}
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+*{margin:0;padding:0;box-sizing:border-box;}
 
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'Inter', sans-serif;
-      -webkit-font-smoothing: antialiased;
-    }
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:Inter,sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
 
-    section {
-      min-height: 100vh;
-      padding: 10vh 8vw;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
+section{
+  min-height:100vh;
+  padding:12vh 8vw;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
 
-    /* HERO */
-    .hero h1 {
-      font-size: clamp(3rem, 10vw, 7rem);
-      font-weight: 900;
-      line-height: 0.9;
-      letter-spacing: -0.04em;
-      text-transform: uppercase;
-    }
+.reveal{
+  opacity:0;
+  transform:translateY(40px);
+  transition:1s cubic-bezier(.2,1,.2,1);
+}
 
-    .hero p {
-      margin-top: 2rem;
-      font-size: 1.1rem;
-      color: var(--muted);
-      max-width: 420px;
-    }
+.reveal.active{
+  opacity:1;
+  transform:translateY(0);
+}
 
-    .hero span {
-      color: var(--accent);
-    }
+/* HERO */
+.hero h1{
+  font-size:clamp(3.5rem,10vw,8rem);
+  font-weight:900;
+  line-height:.9;
+  letter-spacing:-0.05em;
+  text-transform:uppercase;
+}
 
-    /* DIVIDER */
-    .divider {
-      height: 1px;
-      width: 100%;
-      background: #111;
-      margin: 6rem 0;
-    }
+.hero h1 span{color:var(--accent);}
 
-    /* FORMAT */
-    .format {
-      max-width: 600px;
-    }
+.hero p{
+  margin-top:2rem;
+  max-width:520px;
+  font-size:1.2rem;
+  color:var(--muted);
+}
 
-    .format h2 {
-      font-size: 2.5rem;
-      font-weight: 900;
-      margin-bottom: 2rem;
-    }
+/* FORMAT STRIP */
+.format-strip{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:2rem;
+  margin-top:4rem;
+}
 
-    .format ul {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      font-size: 1.1rem;
-    }
+.format-item{
+  border-top:1px solid #111;
+  padding-top:1rem;
+  font-weight:700;
+}
 
-    .format li {
-      color: var(--muted);
-    }
+/* PLAYER TEASER */
+.player{
+  display:flex;
+  flex-direction:column;
+  gap:1rem;
+}
 
-    /* STATEMENT */
-    .statement {
-      max-width: 700px;
-    }
+.player .name{
+  font-size:3rem;
+  font-weight:900;
+  font-style:italic;
+}
 
-    .statement h2 {
-      font-size: clamp(2.5rem, 8vw, 5rem);
-      font-weight: 900;
-      line-height: 0.95;
-      letter-spacing: -0.03em;
-    }
+.player .meta{
+  color:var(--muted);
+  letter-spacing:2px;
+  font-size:.7rem;
+  text-transform:uppercase;
+}
 
-    /* FOOTER */
-    footer {
-      padding: 6rem 8vw;
-      font-size: 0.7rem;
-      letter-spacing: 2px;
-      color: var(--muted);
-      text-transform: uppercase;
-    }
-  </style>
+/* STATEMENT */
+.statement{
+  max-width:800px;
+}
+
+.statement h2{
+  font-size:clamp(2.5rem,8vw,5.5rem);
+  font-weight:900;
+  line-height:.95;
+}
+
+/* FOOTER */
+footer{
+  padding:6rem 8vw;
+  font-size:.7rem;
+  color:var(--muted);
+  letter-spacing:2px;
+  text-transform:uppercase;
+}
+</style>
 </head>
+
 <body>
 
-  <!-- HERO -->
-  <section class="hero">
+<section class="hero">
+  <div class="reveal">
     <h1>BOX<span>1</span>V1</h1>
     <p>
-      Street football.<br>
+      Street football league.<br>
       One on one.<br>
-      No teams. No excuses.
+      Built from zero.
     </p>
-  </section>
+  </div>
 
-  <div class="divider"></div>
+  <div class="format-strip reveal">
+    <div class="format-item">1V1 FORMAT</div>
+    <div class="format-item">FIRST TO 2 GOALS</div>
+    <div class="format-item">PERSONAL RANKING</div>
+    <div class="format-item">REAL PLAYERS</div>
+  </div>
+</section>
 
-  <!-- FORMAT -->
-  <section class="format">
-    <h2>The format</h2>
-    <ul>
-      <li>1 vs 1 on a street cage</li>
-      <li>Each player has a goalkeeper</li>
-      <li>First to 2 goals wins</li>
-      <li>No contracts. No agents.</li>
-    </ul>
-  </section>
+<section>
+  <div class="player reveal">
+    <div class="meta">PLAYER PROFILE — PREVIEW</div>
+    <div class="name">ZU P A R O V</div>
+    <p style="max-width:480px;color:var(--muted);">
+      Every match affects your position.<br>
+      No teams. No hiding.
+    </p>
+  </div>
+</section>
 
-  <div class="divider"></div>
-
-  <!-- STATEMENT -->
-  <section class="statement">
+<section>
+  <div class="statement reveal">
     <h2>
-      This is not a league yet.<br>
-      This is the beginning.
+      This is not content.<br>
+      This is infrastructure<br>
+      for street football.
     </h2>
-  </section>
+  </div>
+</section>
 
-  <footer>
-    BOX1V1 — STREET FOOTBALL PROJECT
-  </footer>
+<footer>
+  BOX1V1 — STREET FOOTBALL SYSTEM
+</footer>
+
+<script>
+const observer=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting) e.target.classList.add('active');
+  });
+},{threshold:.2});
+
+document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+</script>
 
 </body>
 </html>
