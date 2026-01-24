@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
   <title>BOX1V1 | Уличная лига Москвы</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,700;0,900;1,900&display=swap" rel="stylesheet">
+  <link href=" https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,700;0,900;1,900&display=swap " rel="stylesheet">
   <style>
     :root {
       --bg: #000; --card: #0d0d0d; --accent: #39FF14;
@@ -119,11 +119,11 @@
         <div class="bento-item row-2">
           <span class="label">Лидер предсезонки</span>
           <div style="margin-top:20px">
-            <h2 class="title-m" style="font-size: 4rem; color: var(--accent);">92</h2>
-            <h3 class="title-m">ZUPAROV</h3>
+            <h2 class="title-m" style="font-size: 4rem; color: var(--accent);">78</h2>
+            <h3 class="title-m">KUSCH</h3>
           </div>
           <p style="margin-top: auto; font-size: 0.8rem; color: var(--text-dim);">
-            Не проигрывает с ноября • Топ-уровень Москвы
+            Founder • В проекте с нуля
           </p>
         </div>
 
@@ -176,12 +176,13 @@
     setInterval(updateTimer, 1000);
     updateTimer();
 
-    // Данные игроков
+    // Данные игроков — ядро BOX1V1
     const data = [
-      { n: 'ZUPAROV', r: 92 },
-      { n: 'ВОЛКОВ', r: 90 },
-      { n: 'ИВАНОВ', r: 89 },
-      { n: 'СМИРНОВ', r: 82 }
+      { n: 'KUSCH', r: 78, role: 'Founder' },
+      { n: 'ZUPAROV', r: 75, role: 'Core' },
+      { n: 'DIDUR', r: 72, role: 'Scout' },
+      { n: 'BIBIKOV', r: 70, role: 'Support' },
+      { n: 'VARYUSHCHENKOV', r: 68, role: 'Rookie' }
     ];
 
     function switchTab(t) {
@@ -198,6 +199,7 @@
         <div class="bento-item">
           <span class="label">OVR ${p.r}</span>
           <h3 class="title-m" style="font-size:1.2rem">${p.n}</h3>
+          <p style="margin-top: auto; font-size: 0.75rem; color: var(--text-dim);">${p.role}</p>
         </div>
       `).join('');
 
@@ -214,4 +216,3 @@
   </script>
 </body>
 </html>
-
