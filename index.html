@@ -10,135 +10,78 @@
       --bg: #000; --card-bg: #0d0d0d; --accent: #39FF14;
       --text: #fff; --text-dim: #666; --border: #1a1a1a;
       --cubic: cubic-bezier(0.2, 1, 0.2, 1);
-      
-      /* Цвета рангов */
-      --rank-gold: #FFD700;
-      --rank-silver: #C0C0C0;
-      --rank-bronze: #CD7F32;
+      --rank-gold: #FFD700; --rank-silver: #C0C0C0; --rank-bronze: #CD7F32;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { 
-      background: var(--bg); color: var(--text); 
-      font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; 
-    }
+    body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
 
-    #preloader {
-      position: fixed; inset: 0; background: #000; z-index: 5000;
-      display: flex; align-items: center; justify-content: center;
-      transition: opacity 0.4s var(--cubic);
-    }
+    #preloader { position: fixed; inset: 0; background: #000; z-index: 5000; display: flex; align-items: center; justify-content: center; transition: opacity 0.4s var(--cubic); }
 
-    nav { 
-      position: fixed; top: 0; width: 100%; z-index: 1000; 
-      background: rgba(0,0,0,0.9); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border);
-    }
-    .nav-container { 
-      max-width: 1400px; margin: 0 auto; display: flex; 
-      justify-content: space-between; padding: 1rem 2rem; align-items: center; 
-    }
+    nav { position: fixed; top: 0; width: 100%; z-index: 1000; background: rgba(0,0,0,0.9); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); }
+    .nav-container { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; padding: 1rem 2rem; align-items: center; }
     .nav-logo { height: 32px; cursor: pointer; }
     .nav-links { display: flex; gap: 2rem; }
-    .nav-links a { 
-      color: var(--text-dim); text-decoration: none; font-size: 0.75rem; 
-      font-weight: 800; text-transform: uppercase; transition: 0.2s; cursor: pointer;
-    }
+    .nav-links a { color: var(--text-dim); text-decoration: none; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; transition: 0.2s; cursor: pointer; }
     .nav-links a.active, .nav-links a:hover { color: var(--accent); }
 
     .container { max-width: 1200px; margin: 120px auto 0; padding: 0 2rem; min-height: 80vh; }
-    
     section { display: none; opacity: 0; transform: translateY(5px); transition: 0.3s var(--cubic); }
     section.active { display: block; opacity: 1; transform: translateY(0); }
 
-    h1 { 
-      font-size: clamp(3rem, 10vw, 7rem); font-weight: 900; line-height: 0.85; 
-      letter-spacing: -3px; margin-bottom: 3rem; text-transform: uppercase; font-style: italic; 
-    }
+    h1 { font-size: clamp(3rem, 10vw, 7rem); font-weight: 900; line-height: 0.85; letter-spacing: -3px; margin-bottom: 3rem; text-transform: uppercase; font-style: italic; }
 
     .bento { display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: 220px; gap: 1rem; margin-bottom: 5rem; }
-    
-    .card { 
-      background: var(--card-bg); border-radius: 20px; padding: 2rem; 
-      display: flex; flex-direction: column; justify-content: space-between;
-      transition: 0.25s var(--cubic);
-      cursor: pointer; border: 1px solid var(--border);
-      position: relative; overflow: hidden;
-    }
-
-    .card:hover { 
-      transform: translateY(-6px); 
-      border-color: rgba(255,255,255,0.2); 
-      background: #111;
-    }
+    .card { background: var(--card-bg); border-radius: 20px; padding: 2rem; display: flex; flex-direction: column; justify-content: space-between; transition: 0.25s var(--cubic); cursor: pointer; border: 1px solid var(--border); position: relative; overflow: hidden; }
+    .card:hover { transform: translateY(-6px); border-color: rgba(255,255,255,0.2); background: #111; }
     
     .c-main { grid-column: span 2; grid-row: span 2; }
     .c-white { background: #fff; color: #000; border: none; }
-    .c-white:hover { background: #f0f0f0; }
     .c-wide { grid-column: span 2; }
 
-    /* Динамическая подсветка OVR */
-    .ovr { 
-      font-size: 8rem; font-weight: 900; 
-      line-height: 0.8; letter-spacing: -6px; 
-      transition: 0.25s ease;
-      color: var(--ovr-color, var(--accent)); /* Цвет по умолчанию */
-    }
-
-    /* Цвета для рангов */
+    .ovr { font-size: 8rem; font-weight: 900; line-height: 0.8; letter-spacing: -6px; transition: 0.25s ease; color: var(--ovr-color, var(--accent)); }
     .rank-gold { --ovr-color: var(--rank-gold); }
     .rank-silver { --ovr-color: var(--rank-silver); }
     .rank-bronze { --ovr-color: var(--rank-bronze); }
-
-    .card:hover .ovr {
-      filter: drop-shadow(0 0 15px var(--ovr-color, var(--accent)));
-      transform: scale(1.05);
-    }
+    .card:hover .ovr { filter: drop-shadow(0 0 15px var(--ovr-color, var(--accent))); transform: scale(1.05); }
 
     .label { font-size: 0.65rem; font-weight: 900; color: var(--text-dim); letter-spacing: 2px; text-transform: uppercase; }
     .p-name { font-size: 2.8rem; font-weight: 900; font-style: italic; text-transform: uppercase; line-height: 0.9; }
 
-    .social-row { 
-      display: flex; justify-content: space-between; align-items: center; 
-      padding: 2.5rem 0; border-top: 1px solid var(--border); 
-      text-decoration: none; color: #fff; transition: 0.2s;
-    }
-    .social-row:hover { color: var(--accent); padding-left: 1rem; }
-    .social-row h2 { font-size: 3rem; font-weight: 900; font-style: italic; text-transform: uppercase; }
-
-    .overlay { 
-      position: fixed; inset: 0; background: #000; z-index: 2000; 
-      display: none; padding: 4rem 2rem; opacity: 0; transition: 0.3s; 
-    }
+    /* Profile Overlay & Stats */
+    .overlay { position: fixed; inset: 0; background: #000; z-index: 2000; display: none; opacity: 0; transition: 0.3s; padding: 2rem; overflow-y: auto; }
     .overlay.open { display: block; opacity: 1; }
-    .close { position: absolute; top: 2rem; right: 2rem; color: var(--accent); font-weight: 900; cursor: pointer; }
+    .close { position: fixed; top: 2rem; right: 2rem; color: var(--accent); font-weight: 900; cursor: pointer; z-index: 2100; }
 
-    footer { padding: 4rem 0; color: var(--text-dim); font-size: 0.7rem; font-weight: 800; border-top: 1px solid var(--border); text-align: center; }
+    .stats-container { max-width: 1000px; margin: 8vh auto; }
+    .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-top: 3rem; border-top: 1px solid var(--border); padding-top: 2rem; }
+    .stat-item { display: flex; flex-direction: column; }
+    .stat-val { font-size: 4rem; font-weight: 900; color: #fff; }
+    .stat-lab { font-size: 0.7rem; font-weight: 900; color: var(--text-dim); text-transform: uppercase; letter-spacing: 2px; }
+    
+    .winrate-box { grid-column: span 3; background: #111; padding: 2rem; border-radius: 15px; margin-top: 2rem; display: flex; align-items: center; gap: 2rem; }
+    .wr-val { font-size: 6rem; font-weight: 900; color: var(--accent); font-style: italic; }
 
     @media (max-width: 768px) {
       .bento { grid-template-columns: 1fr; grid-auto-rows: auto; }
       .c-main, .c-wide { grid-column: span 1; min-height: 300px; }
-      h1 { font-size: 4rem; }
+      .stats-grid { grid-template-columns: 1fr; }
+      .winrate-box { grid-column: span 1; flex-direction: column; align-items: flex-start; }
     }
   </style>
 </head>
-<body id="main-body">
+<body>
 
   <div id="preloader">
     <svg viewBox="0 0 400 100" width="160" height="40">
-        <text x="0" y="80" fill="#FFFFFF" font-family="Inter" font-weight="900" font-size="80" letter-spacing="12">
-          BOX<tspan fill="#39FF14">1</tspan>V1
-        </text>
+        <text x="0" y="80" fill="#FFFFFF" font-family="Inter" font-weight="900" font-size="80" letter-spacing="12">BOX<tspan fill="#39FF14">1</tspan>V1</text>
     </svg>
   </div>
 
   <nav>
     <div class="nav-container">
       <div class="nav-logo" onclick="showSection('home')">
-        <svg viewBox="0 0 400 100" width="100" height="25">
-            <text x="0" y="80" fill="#FFFFFF" font-family="Inter" font-weight="900" font-size="80" letter-spacing="12">
-              BOX<tspan fill="#39FF14">1</tspan>V1
-            </text>
-        </svg>
+        <svg viewBox="0 0 400 100" width="100" height="25"><text x="0" y="80" fill="#FFFFFF" font-family="Inter" font-weight="900" font-size="80" letter-spacing="12">BOX<tspan fill="#39FF14">1</tspan>V1</text></svg>
       </div>
       <div class="nav-links">
         <a onclick="showSection('home')" id="btn-home" class="active">HOME</a>
@@ -154,7 +97,6 @@
         <h1>STREET<br>STANDARD.</h1>
         <div class="bento">
             <div id="leader-card-container"></div>
-            
             <div class="card c-white" onclick="showSection('connect')">
                 <div style="font-size: 2rem; font-weight: 900; font-style: italic; text-transform: uppercase;">JOIN THE<br>CAGE.</div>
                 <p style="font-size: 0.7rem; font-weight: 800;">APPLY FOR TRIAL →</p>
@@ -190,20 +132,36 @@
 
   <div class="overlay" id="p-overlay">
     <div class="close" onclick="closeProfile()">[ CLOSE ]</div>
-    <div style="max-width: 1000px; margin: 0 auto; padding-top: 10vh;">
-        <h2 id="p-name" style="font-size: 10vw; font-weight: 900; font-style: italic; text-transform: uppercase; line-height: 0.8;">NAME</h2>
-        <div id="p-ovr" class="ovr" style="font-size: 12rem;">92</div>
+    <div class="stats-container">
+        <h2 id="p-name" style="font-size: clamp(3rem, 10vw, 8rem); font-weight: 900; font-style: italic; text-transform: uppercase; line-height: 0.8;">NAME</h2>
+        <div id="p-ovr" class="ovr" style="font-size: 15rem; margin-top: -10px;">92</div>
+        
+        <div class="stats-grid">
+            <div class="stat-item"><span class="stat-lab">Wins</span><span class="stat-val" id="p-w">0</span></div>
+            <div class="stat-item"><span class="stat-lab">Draws</span><span class="stat-val" id="p-d">0</span></div>
+            <div class="stat-item"><span class="stat-lab">Losses</span><span class="stat-val" id="p-l" style="color: #ff3131;">0</span></div>
+            <div class="winrate-box">
+                <div><span class="stat-lab">Total Win Rate</span></div>
+                <div class="wr-val" id="p-wr">0%</div>
+            </div>
+        </div>
     </div>
   </div>
 
   <script>
     const players = [
-        {n: 'Kuznetsov', r: 92}, {n: 'Volkov', r: 90}, {n: 'Ivanov', r: 89}, 
-        {n: 'Petrov', r: 78}, {n: 'Smirnov', r: 81}, {n: 'Mironov', r: 71},
-        {n: 'Popov', r: 64}, {n: 'Zuparov', r: 62}, {n: 'Sidorov', r: 55}, {n: 'Dmitriev', r: 51}
+        {n: 'Kuznetsov', r: 92, w: 45, d: 5, l: 3}, 
+        {n: 'Volkov', r: 90, w: 38, d: 8, l: 6}, 
+        {n: 'Ivanov', r: 89, w: 35, d: 10, l: 4}, 
+        {n: 'Smirnov', r: 81, w: 22, d: 5, l: 15},
+        {n: 'Petrov', r: 78, w: 18, d: 12, l: 14}, 
+        {n: 'Mironov', r: 71, w: 12, d: 4, l: 18},
+        {n: 'Popov', r: 64, w: 8, d: 2, l: 22}, 
+        {n: 'Zuparov', r: 62, w: 5, d: 6, l: 15}, 
+        {n: 'Sidorov', r: 55, w: 2, d: 1, l: 25}, 
+        {n: 'Dmitriev', r: 51, w: 1, d: 0, l: 30}
     ];
 
-    // Логика определения ранга
     function getRankClass(rating) {
         if (rating >= 85) return 'rank-gold';
         if (rating >= 70) return 'rank-silver';
@@ -211,24 +169,19 @@
     }
 
     window.onload = () => {
-        // Сортировка игроков по рейтингу (от большего к меньшему)
         players.sort((a, b) => b.r - a.r);
-
         setTimeout(() => {
             document.getElementById('preloader').style.opacity = '0';
             setTimeout(() => document.getElementById('preloader').style.display = 'none', 400);
         }, 400);
-        
         renderHomeLeader();
         renderPlayers();
     };
 
-    // Рендер главной карточки на Home
     function renderHomeLeader() {
         const leader = players[0];
-        const container = document.getElementById('leader-card-container');
-        container.innerHTML = `
-            <div class="card c-main ${getRankClass(leader.r)}" onclick="openProfile('${leader.n}', ${leader.r})">
+        document.getElementById('leader-card-container').innerHTML = `
+            <div class="card c-main ${getRankClass(leader.r)}" onclick="openProfile('${leader.n}')">
                 <div><span class="label">LEADERBOARD #01</span><div class="ovr">${leader.r}</div></div>
                 <div class="p-name">${leader.n}</div>
             </div>
@@ -240,7 +193,7 @@
       grid.innerHTML = '';
       players.forEach((p, i) => {
         grid.innerHTML += `
-          <div class="card ${getRankClass(p.r)}" style="min-height: 200px;" onclick="openProfile('${p.n}', ${p.r})">
+          <div class="card ${getRankClass(p.r)}" style="min-height: 200px;" onclick="openProfile('${p.n}')">
             <span class="label">ATHLETE // 0${i+1}</span>
             <div class="ovr" style="font-size: 4rem; line-height:1;">${p.r}</div>
             <div style="font-size: 1.5rem; font-weight: 900; font-style: italic; text-transform: uppercase;">${p.n}</div>
@@ -249,22 +202,17 @@
       });
     }
 
-    function showSection(id) {
-      document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
-      document.getElementById(id).classList.add('active');
-      document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
-      const activeBtn = document.getElementById('btn-' + id);
-      if(activeBtn) activeBtn.classList.add('active');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    function openProfile(n, r) {
-      const overlayOvr = document.getElementById('p-ovr');
-      document.getElementById('p-name').innerText = n;
-      overlayOvr.innerText = r;
+    function openProfile(name) {
+      const p = players.find(x => x.n === name);
+      const wr = ((p.w / (p.w + p.d + p.l)) * 100).toFixed(0);
       
-      // Сбрасываем и вешаем класс ранга на OVR в оверлее
-      overlayOvr.className = 'ovr ' + getRankClass(r);
+      document.getElementById('p-name').innerText = p.n;
+      document.getElementById('p-ovr').innerText = p.r;
+      document.getElementById('p-ovr').className = 'ovr ' + getRankClass(p.r);
+      document.getElementById('p-w').innerText = p.w;
+      document.getElementById('p-d').innerText = p.d;
+      document.getElementById('p-l').innerText = p.l;
+      document.getElementById('p-wr').innerText = wr + '%';
       
       const over = document.getElementById('p-overlay');
       over.style.display = 'block';
@@ -275,10 +223,16 @@
     function closeProfile() {
       const over = document.getElementById('p-overlay');
       over.classList.remove('open');
-      setTimeout(() => {
-        over.style.display = 'none';
-        document.body.style.overflow = 'auto';
-      }, 300);
+      setTimeout(() => { over.style.display = 'none'; document.body.style.overflow = 'auto'; }, 300);
+    }
+
+    function showSection(id) {
+      document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+      const btn = document.getElementById('btn-' + id);
+      if(btn) btn.classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   </script>
 </body>
