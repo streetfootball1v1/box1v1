@@ -1,14 +1,10 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-    <title>BOX1V1 | MOSCOW STREET LEAGUE</title>
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&family=Orbitron:wght@900&display=swap" rel="stylesheet">
-
+    <title>BOX1V1 | Крупнейшая уличная лига Москвы</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Orbitron:wght@900&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg: #000000;
@@ -16,322 +12,330 @@
             --accent: #39FF14;
             --text: #ffffff;
             --text-dim: #86868b;
-            --border: rgba(255, 255, 255, 0.08);
-            --glass: rgba(10, 10, 10, 0.8);
+            --border: #1c1c1e;
             --inst-grad: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
-            --easing: cubic-bezier(0.4, 0, 0.2, 1);
+            --tg-color: #24A1DE;
+            --cubic: cubic-bezier(0.2, 0.8, 0.2, 1);
         }
 
-        /* Base Settings */
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+        /* Base & Scrollbar */
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: #222; border-radius: 10px; }
         
-        body {
-            background: var(--bg);
-            color: var(--text);
-            font-family: 'Inter', -apple-system, sans-serif;
+        body { 
+            background: var(--bg); 
+            color: var(--text); 
+            font-family: -apple-system, 'Inter', sans-serif; 
+            line-height: 1.5;
             overflow-x: hidden;
-            line-height: 1.4;
         }
 
-        /* Typography */
-        .h-huge { font-family: 'Orbitron', sans-serif; font-size: clamp(3rem, 12vw, 8rem); line-height: 0.85; letter-spacing: -2px; text-transform: uppercase; }
+        /* Navigation */
+        nav { 
+            position: fixed; top: 0; width: 100%; z-index: 1000; 
+            background: rgba(0,0,0,0.8); backdrop-filter: blur(20px); 
+            border-bottom: 0.5px solid var(--border); 
+        }
+        .nav-inner { 
+            max-width: 1200px; margin: 0 auto; display: flex; 
+            justify-content: space-between; align-items: center; 
+            height: 64px; padding: 0 20px; 
+        }
+        .logo { font-family: 'Orbitron'; font-size: 20px; font-weight: 900; cursor: pointer; text-decoration: none; color: #fff; }
+        .nav-links { display: flex; gap: 25px; align-items: center; }
+        .nav-links a { 
+            color: var(--text-dim); text-decoration: none; font-size: 11px; 
+            font-weight: 800; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; 
+        }
+        .nav-links a:hover, .nav-links a.active { color: var(--accent); }
+        .btn-tg { 
+            background: var(--tg-color); color: #fff; padding: 8px 16px; 
+            border-radius: 20px; font-size: 10px; font-weight: 900; text-decoration: none;
+        }
+
+        /* Typography & Shimmer */
         .shimmer {
-            background: linear-gradient(90deg, #fff 0%, #444 50%, #fff 100%);
+            background: linear-gradient(90deg, #fff 0%, #555 50%, #fff 100%);
             background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            animation: shine 6s linear infinite;
+            animation: shine 5s linear infinite;
         }
         @keyframes shine { to { background-position: 200% center; } }
 
-        /* Navigation */
-        nav {
-            position: fixed; top: 0; width: 100%; z-index: 1000;
-            background: var(--glass); backdrop-filter: blur(25px);
-            border-bottom: 0.5px solid var(--border);
-        }
-        .nav-content {
-            max-width: 1200px; margin: 0 auto; height: 64px;
-            display: flex; justify-content: space-between; align-items: center; padding: 0 24px;
-        }
-        .nav-logo { font-family: 'Orbitron'; font-size: 20px; color: #fff; text-decoration: none; font-weight: 900; }
-        .nav-links { display: flex; gap: 24px; }
-        .nav-links a {
-            color: var(--text-dim); text-decoration: none; font-size: 11px; font-weight: 700;
-            text-transform: uppercase; letter-spacing: 1.5px; transition: 0.3s var(--easing);
-        }
-        .nav-links a.active { color: var(--accent); }
+        /* Reveal Animation on Scroll */
+        .reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s var(--cubic); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
 
-        /* Main Layout */
-        main { max-width: 1200px; margin: 0 auto; padding: 100px 24px 60px; }
-        
-        section { display: none; animation: slideUp 0.6s var(--easing); }
-        section.active { display: block; }
-        
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(30px) scale(0.98); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
+        /* Hero Section */
+        .hero { 
+            min-height: 100vh; display: flex; flex-direction: column; 
+            justify-content: center; align-items: center; text-align: center;
+            padding: 0 20px;
         }
+        .hero h1 { 
+            font-size: clamp(3rem, 12vw, 8.5rem); font-weight: 900; 
+            line-height: 0.85; letter-spacing: -4px; text-transform: uppercase; 
+            margin-bottom: 30px; 
+        }
+        .hero p { color: var(--text-dim); font-size: clamp(1rem, 2vw, 1.4rem); max-width: 600px; margin-bottom: 40px; }
 
         /* Bento Grid */
-        .bento {
-            display: grid; grid-template-columns: repeat(12, 1fr);
-            grid-auto-rows: minmax(180px, auto); gap: 20px;
+        .main-content { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        .bento-grid { 
+            display: grid; grid-template-columns: repeat(4, 1fr); 
+            grid-auto-rows: 260px; gap: 20px; margin-bottom: 100px; 
         }
-        .item {
-            background: var(--card); border: 1px solid var(--border);
-            border-radius: 32px; padding: 32px; position: relative;
-            transition: all 0.5s var(--easing); overflow: hidden;
-            display: flex; flex-direction: column; justify-content: flex-end;
+        .bento-item { 
+            background: var(--card); border-radius: 32px; border: 1px solid var(--border); 
+            padding: 35px; position: relative; overflow: hidden; display: flex; 
+            flex-direction: column; transition: 0.4s var(--cubic); text-decoration: none; color: inherit; 
         }
-        .item:hover { border-color: var(--accent); transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
-
-        /* Grid sizing */
-        .col-12 { grid-column: span 12; }
-        .col-8 { grid-column: span 8; }
-        .col-6 { grid-column: span 6; }
-        .col-4 { grid-column: span 4; }
+        .bento-item:hover { border-color: var(--accent); transform: scale(0.98); }
+        .col-2 { grid-column: span 2; }
         .row-2 { grid-row: span 2; }
 
-        /* Cards Specials */
-        .hero-card { justify-content: center; text-align: center; background: radial-gradient(circle at center, #111 0%, #000 100%); border: none; }
-        
-        .insta-card {
-            background: var(--inst-grad); color: #fff;
-            padding: 40px; justify-content: space-between;
-        }
-        .insta-card .icon { font-size: 40px; margin-bottom: 20px; }
+        /* Custom Cards */
+        .card-rules { background: radial-gradient(circle at top right, #1a1a1a, #000); }
+        .card-insta { background: var(--inst-grad); border: none; }
+        .card-tg { border-color: var(--tg-color); }
 
-        .apply-card {
-            background: var(--accent); color: #000; justify-content: center; align-items: center;
-            text-align: center; cursor: pointer;
-        }
-        .apply-card h2 { font-size: 2.5rem; font-weight: 900; line-height: 0.9; margin-bottom: 10px; }
+        /* Founder Section */
+        .founder-block { padding: 120px 0; text-align: center; }
+        .quote { font-size: clamp(1.5rem, 4vw, 2.8rem); font-weight: 700; font-style: italic; line-height: 1.1; margin-bottom: 20px; color: var(--accent); }
+        .signature { color: var(--text-dim); text-transform: uppercase; letter-spacing: 3px; font-size: 14px; }
 
-        /* Player Stats UI */
-        .player-list-item {
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 24px; border-bottom: 0.5px solid var(--border);
-            transition: 0.3s; cursor: pointer;
+        /* Stats & Impact */
+        .impact-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin: 80px 0; }
+        .impact-card { 
+            background: #080808; padding: 50px; border-radius: 32px; 
+            text-align: center; border: 1px solid var(--border); 
         }
-        .player-list-item:hover { background: rgba(255,255,255,0.03); }
-        .ovr-badge {
-            font-family: 'Orbitron'; background: var(--accent); color: #000;
-            padding: 6px 12px; border-radius: 8px; font-weight: 900;
+        .impact-val { font-size: 4rem; font-weight: 900; color: var(--accent); display: block; line-height: 1; }
+        .impact-label { font-size: 11px; text-transform: uppercase; color: var(--text-dim); margin-top: 15px; letter-spacing: 2px; }
+
+        /* Roadmap */
+        .roadmap { padding: 100px 0; }
+        .roadmap-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+        .step { padding: 40px; background: #080808; border-radius: 32px; border: 1px solid var(--border); position: relative; }
+        .step-num { font-size: 4rem; font-weight: 900; color: rgba(255,255,255,0.03); position: absolute; top: 10px; right: 20px; }
+        .step-title { color: var(--accent); font-weight: 900; margin-bottom: 15px; text-transform: uppercase; }
+
+        /* CTA */
+        .cta-final { 
+            background: var(--accent); color: #000; border-radius: 50px; 
+            padding: 100px 40px; text-align: center; margin: 100px 0; cursor: pointer;
+            transition: 0.5s var(--cubic);
+        }
+        .cta-final:hover { transform: scale(1.02) rotate(-1deg); }
+        .cta-final h2 { font-size: clamp(3rem, 10vw, 7rem); font-weight: 900; line-height: 0.8; }
+
+        /* Table */
+        .table-container { background: var(--card); border-radius: 32px; border: 1px solid var(--border); overflow: hidden; margin-top: 50px; }
+        table { width: 100%; border-collapse: collapse; text-align: left; }
+        th { padding: 25px; font-size: 12px; color: var(--text-dim); text-transform: uppercase; border-bottom: 1px solid var(--border); }
+        td { padding: 25px; border-bottom: 1px solid var(--border); font-weight: 700; }
+
+        /* Modal */
+        .modal { 
+            position: fixed; inset: 0; background: rgba(0,0,0,0.95); 
+            z-index: 2000; display: none; align-items: center; justify-content: center; padding: 20px;
+            backdrop-filter: blur(15px);
+        }
+        .modal.active { display: flex; }
+        .modal-card { 
+            background: #111; width: 100%; max-width: 500px; padding: 50px; 
+            border-radius: 40px; border: 1px solid var(--border); position: relative; 
         }
 
-        /* Skill Visualizer */
-        .skill-group { margin-top: 24px; }
-        .skill-bar { height: 4px; background: #222; border-radius: 2px; margin: 8px 0 16px; position: relative; }
-        .skill-fill { height: 100%; background: var(--accent); width: 0; transition: 1.5s var(--easing); }
-
-        /* Modals */
-        .modal-overlay {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.95);
-            backdrop-filter: blur(20px); z-index: 2000; display: none;
-            align-items: center; justify-content: center; padding: 20px;
-        }
-        .modal-overlay.active { display: flex; }
-        .modal-body {
-            background: #111; width: 100%; max-width: 500px;
-            border-radius: 40px; border: 1px solid var(--border);
-            padding: 48px; position: relative;
-        }
-
-        /* Mobile Adaptivity */
+        /* Mobile */
         @media (max-width: 900px) {
-            .col-8, .col-6, .col-4 { grid-column: span 12; }
-            .h-huge { font-size: 4rem; }
-            .nav-links { display: none; } /* Можно добавить бургер, но для минимализма скрываем */
-            main { padding-top: 80px; }
+            .bento-grid { grid-template-columns: repeat(2, 1fr); }
+            .impact-grid { grid-template-columns: 1fr; }
+            .nav-links { display: none; }
         }
-
-        /* Scroll Progress */
-        .scroll-progress {
-            position: fixed; top: 0; left: 0; height: 2px;
-            background: var(--accent); z-index: 1001; width: 0%;
+        @media (max-width: 600px) {
+            .bento-grid { grid-template-columns: 1fr; grid-auto-rows: auto; }
+            .col-2 { grid-column: span 1; }
+            .hero h1 { font-size: 3.5rem; letter-spacing: -2px; }
         }
     </style>
 </head>
 <body>
 
-    <div class="scroll-progress" id="progressBar"></div>
-
     <nav>
-        <div class="nav-content">
-            <a href="#" class="nav-logo" onclick="showSection('home')">BOX<span style="color:var(--accent)">1</span>V1</a>
+        <div class="nav-inner">
+            <a href="#" class="logo">BOX<span style="color:var(--accent)">1</span>V1</a>
             <div class="nav-links">
-                <a href="javascript:void(0)" onclick="showSection('home')" id="l-home" class="active">Главная</a>
-                <a href="javascript:void(0)" onclick="showSection('players')" id="l-players">Рейтинг</a>
-                <a href="javascript:void(0)" onclick="showSection('rules')" id="l-rules">Регламент</a>
+                <a href="#home">Главная</a>
+                <a href="#about">О Лиге</a>
+                <a href="#roster">Игроки</a>
+                <a href="https://t.me/streetbox1v1" class="btn-tg">Telegram</a>
             </div>
-            <div class="btn-mini" onclick="openModal('applyModal')" style="cursor:pointer; background: #fff; color:#000; padding: 8px 16px; border-radius: 20px; font-size: 10px; font-weight: 900; text-transform: uppercase;">Apply</div>
         </div>
     </nav>
 
-    <main>
-        <section id="home" class="active">
-            <div class="bento">
-                <div class="item col-12 hero-card" style="min-height: 60vh;">
-                    <span class="shimmer" style="font-weight: 800; letter-spacing: 4px; font-size: 12px; margin-bottom: 20px;">ESTABLISHED 2025 // MOSCOW</span>
-                    <h1 class="h-huge shimmer">PURE<br>SKILL.</h1>
-                    <p style="color:var(--text-dim); max-width: 500px; margin-top: 30px;">Единственная уличная лига в Москве, где OVR игрока подтверждается делом, а не словами.</p>
-                </div>
+    <main class="main-content">
+        
+        <section class="hero" id="home">
+            <span class="shimmer" style="font-weight: 900; letter-spacing: 5px; font-size: 12px; margin-bottom: 20px;">PREMIUM STREET FOOTBALL</span>
+            <h1 class="shimmer">LEVEL UP<br>OR GO HOME.</h1>
+            <p>Первая профессиональная медиа-лига 1 на 1 в Москве. Мы превращаем уличный футбол в цифровое искусство.</p>
+            <div style="display: flex; gap: 20px; margin-top: 20px;">
+                <a href="#apply" class="btn-tg" style="padding: 15px 30px; font-size: 14px;">СТАТЬ УЧАСТНИКОМ</a>
+            </div>
+        </section>
 
-                <div class="item col-8 row-2" onclick="showSection('rules')" style="background: url('https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&q=80&w=1000') center; background-size: cover;">
-                    <div style="position: absolute; inset: 0; background: linear-gradient(to top, #000, transparent);"></div>
-                    <h2 style="position: relative; font-size: 3rem; font-weight: 900;">МАНФЕСТ<br>ПРАВИЛ</h2>
-                    <p style="position: relative; color: var(--accent); font-weight: 700;">ПРОТОКОЛ 1.0 →</p>
-                </div>
+        <section class="founder-block reveal">
+            <div class="quote">«В BOX1V1 твой OVR — это не цифры в игре, <br>это твой авторитет на бетоне.»</div>
+            <div class="signature">— ZUPAROV, Founder</div>
+        </section>
 
-                <div class="item col-4 insta-card" onclick="window.open('https://instagram.com/box.1v1', '_blank')">
-                    <div class="icon"></div>
-                    <div>
-                        <h3 style="font-size: 1.5rem; font-weight: 900;">INSTAGRAM</h3>
-                        <p style="opacity: 0.8; font-size: 12px;">Следи за хайлайтами в реальном времени</p>
-                    </div>
-                </div>
+        <section class="bento-grid reveal" id="about">
+            <div class="bento-item col-2 row-2 card-rules" onclick="openModal('rulesModal')">
+                <span style="color:var(--accent); font-weight: 800; font-size: 12px;">PROTOCOL 1.0</span>
+                <h2 style="font-size: 3.5rem; font-weight: 900; line-height: 0.9; margin: 20px 0;">ЗАКОНЫ<br>КЛЕТКИ.</h2>
+                <p style="color:var(--text-dim)">Формат 1x1 с независимым кипером, 20 секунд на атаку и мгновенная победа через Панну.</p>
+                <div style="margin-top: auto; color: var(--accent); font-weight: 900;">ИЗУЧИТЬ РЕГЛАМЕНТ →</div>
+            </div>
 
-                <div class="item col-4 apply-card" onclick="openModal('applyModal')">
-                    <h2>ПОДАТЬ<br>ЗАЯВКУ</h2>
-                    <p style="font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;">Стань одним из 32 участников</p>
-                </div>
+            <div class="bento-item row-2" style="background: url('https://images.unsplash.com/photo-1529900948632-58674ba193be?auto=format&fit=crop&q=80&w=600') center; background-size: cover;">
+                <div style="position: absolute; inset: 0; background: linear-gradient(to top, #000, transparent);"></div>
+                <h3 style="position: relative; font-weight: 900; margin-top: auto;">S01 OPEN CALL</h3>
+                <p style="position: relative; font-size: 12px; color: var(--accent);">ОТБОР ОТКРЫТ</p>
+            </div>
 
-                <div class="item col-12">
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <h2 style="font-family: 'Orbitron';">LIVE_FEED</h2>
-                        <span style="color: var(--accent); font-size: 12px;">● ОНЛАЙН</span>
-                    </div>
-                    <div style="margin-top: 20px; color: var(--text-dim);">
-                        <p>— Регистрация на Season 01 открыта до 1 марта.</p>
-                        <p>— Обновлены профили игроков топ-декады.</p>
-                    </div>
+            <a href="https://instagram.com/box.1v1" target="_blank" class="bento-item card-insta">
+                <h3 style="font-weight: 900;">INSTAGRAM</h3>
+                <p style="font-size: 12px; opacity: 0.8;">Все хайлайты здесь</p>
+            </a>
+
+            <a href="https://t.me/streetbox1v1" target="_blank" class="bento-item card-tg">
+                <h3 style="color: var(--tg-color); font-weight: 900;">TELEGRAM</h3>
+                <p style="font-size: 12px; color: var(--text-dim);">Закрытый чат игроков</p>
+            </a>
+        </section>
+
+        <section class="impact-grid reveal">
+            <div class="impact-card">
+                <span class="impact-val">20"</span>
+                <span class="impact-label">На одну атаку</span>
+            </div>
+            <div class="impact-card">
+                <span class="impact-val">OVR</span>
+                <span class="impact-label">Система рейтинга</span>
+            </div>
+            <div class="impact-card">
+                <span class="impact-val">1V1+K</span>
+                <span class="impact-label">Уникальный формат</span>
+            </div>
+        </section>
+
+        <section class="roadmap reveal">
+            <h2 style="font-size: 3rem; font-weight: 900; margin-bottom: 50px; font-style: italic;">ROADMAP_2026</h2>
+            <div class="roadmap-grid">
+                <div class="step">
+                    <span class="step-num">01</span>
+                    <h3 class="step-title">ОТБОР</h3>
+                    <p style="color:var(--text-dim)">Формирование ТОП-32 рейтинга Москвы. Верификация навыков через видео-челленджи.</p>
+                </div>
+                <div class="step" style="border-color: var(--accent);">
+                    <span class="step-num">02</span>
+                    <h3 class="step-title">SEASON 01</h3>
+                    <p style="color:var(--text-dim)">Старт регулярного чемпионата. Еженедельные ивенты в «клетках» по всему городу.</p>
+                </div>
+                <div class="step">
+                    <span class="step-num">03</span>
+                    <h3 class="step-title">GRAND FINAL</h3>
+                    <p style="color:var(--text-dim)">Большой медийный финал с призовым фондом и уникальным мерчем BOX1V1.</p>
                 </div>
             </div>
         </section>
 
-        <section id="players">
-            <h2 class="h-huge" style="margin-bottom: 40px;">TOP<br>RANKING</h2>
-            <div style="background: var(--card); border-radius: 40px; border: 1px solid var(--border); overflow: hidden;" id="rankingContainer">
-                </div>
-        </section>
-
-        <section id="rules">
-            <h2 class="h-huge" style="margin-bottom: 40px;">THE<br>LAWS</h2>
-            <div class="bento">
-                <div class="item col-6">
-                    <h3 style="color: var(--accent); margin-bottom: 15px;">ФОРМАТ 1X1+K</h3>
-                    <p style="color: var(--text-dim);">Игра в клетке с независимым вратарем. Твоя задача — обыграть защитника и пробить кипера. Чистое мастерство.</p>
-                </div>
-                <div class="item col-6">
-                    <h3 style="color: var(--accent); margin-bottom: 15px;">20 SEC ATTACK</h3>
-                    <p style="color: var(--text-dim);">Никаких перепасовок. У тебя есть 20 секунд на завершение атаки. Динамика — наше всё.</p>
-                </div>
-                <div class="item col-12">
-                    <h3 style="color: var(--accent); margin-bottom: 15px;">PANNA VICTORY</h3>
-                    <p style="color: var(--text-dim);">Проброс между ног с сохранением владения — это мгновенный нокаут. Конец игры. Безоговорочная победа.</p>
-                </div>
+        <section class="reveal" id="roster" style="padding: 100px 0;">
+            <h2 style="font-size: 3rem; font-weight: 900; margin-bottom: 30px; font-style: italic;">TOP_RANKING</h2>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>RANK</th>
+                            <th>PLAYER</th>
+                            <th style="text-align: right;">OVR</th>
+                        </tr>
+                    </thead>
+                    <tbody id="playerTable"></tbody>
+                </table>
             </div>
         </section>
+
+        <section class="cta-final reveal" id="apply" onclick="openModal('applyModal')">
+            <span style="font-weight: 900; text-transform: uppercase; letter-spacing: 2px;">JOIN THE ELITE</span>
+            <h2 class="shimmer">СТАТЬ ЧАСТЬЮ<br>ЛИГИ</h2>
+            <p style="margin-top: 20px; font-weight: 600;">Нажми, чтобы подать заявку в Telegram</p>
+        </section>
+
     </main>
 
-    <div class="modal-overlay" id="playerModal">
-        <div class="modal-body">
-            <div style="position: absolute; top: 30px; right: 30px; cursor: pointer; opacity: 0.5;" onclick="closeModal('playerModal')">✕</div>
-            <h4 id="pm-role" style="color: var(--accent); font-size: 10px; text-transform: uppercase; letter-spacing: 2px;">ROOKIE</h4>
-            <h2 id="pm-name" class="h-huge" style="font-size: 3rem; margin: 10px 0;">NAME</h2>
-            <div style="font-size: 2.5rem; font-weight: 900; margin-bottom: 30px;">OVR <span id="pm-ovr" style="color: var(--accent);">00</span></div>
-            
-            <div id="pm-stats"></div>
+    <div class="modal" id="applyModal" onclick="closeModal('applyModal')">
+        <div class="modal-card" onclick="event.stopPropagation()">
+            <h2 style="font-size: 2.5rem; font-weight: 900; margin-bottom: 20px;">РЕГИСТРАЦИЯ</h2>
+            <p style="color: var(--text-dim); margin-bottom: 30px;">
+                Отправь хэштег <b>#WANTTOBOX</b> нашему боту и прикрепи короткое видео своей игры. Скауты рассмотрят твой профиль в течение 24 часов.
+            </p>
+            <a href="https://t.me/streetbox1v1" class="btn-tg" style="display: block; text-align: center; padding: 20px; border-radius: 20px;">ПЕРЕЙТИ В TELEGRAM</a>
         </div>
     </div>
 
-    <div class="modal-overlay" id="applyModal">
-        <div class="modal-body" style="text-align: center;">
-            <div style="position: absolute; top: 30px; right: 30px; cursor: pointer; opacity: 0.5;" onclick="closeModal('applyModal')">✕</div>
-            <h2 style="font-size: 2rem; font-weight: 900; margin-bottom: 20px;">ВСТУПИТЬ В ЛИГУ</h2>
-            <p style="color: var(--text-dim); margin-bottom: 30px;">Отбор проходит через верификацию навыков. Пришли свое видео в Telegram скаутам лиги.</p>
-            <a href="https://t.me/streetbox1v1" target="_blank" style="display: block; background: var(--accent); color: #000; padding: 20px; border-radius: 20px; text-decoration: none; font-weight: 900;">ОТКРЫТЬ TELEGRAM</a>
+    <div class="modal" id="rulesModal" onclick="closeModal('rulesModal')">
+        <div class="modal-card" onclick="event.stopPropagation()">
+            <h2 style="font-size: 2.5rem; font-weight: 900; color: var(--accent); margin-bottom: 20px;">ПРАВИЛА</h2>
+            <ul style="list-style: none; color: var(--text-dim); display: grid; gap: 15px;">
+                <li>⚽️ 1 на 1 против защитника + независимый кипер.</li>
+                <li>⏱ 20 секунд на всё. Не успел — переход мяча.</li>
+                <li>🏆 Игра до 2 забитых мячей.</li>
+                <li>🔥 Панна — это технический нокаут (Game Over).</li>
+            </ul>
         </div>
     </div>
 
     <script>
-        // Data
+        // Player Data
         const players = [
-            { id: 'ZUPAROV', ovr: 75, role: 'FOUNDER', stats: { drib: 72, pace: 85, shot: 70, phys: 80 } },
-            { id: 'KUSCH', ovr: 78, role: 'ELITE STRIKER', stats: { drib: 82, pace: 75, shot: 88, phys: 70 } },
-            { id: 'DIDUR', ovr: 72, role: 'TECHNIQUE', stats: { drib: 90, pace: 70, shot: 60, phys: 62 } },
-            { id: 'BIBIKOV', ovr: 70, role: 'WARRIOR', stats: { drib: 65, pace: 72, shot: 80, phys: 88 } }
+            { name: 'KUSCH', ovr: 78 },
+            { name: 'ZUPAROV', ovr: 75 },
+            { name: 'DIDUR', ovr: 72 },
+            { name: 'BIBIKOV', ovr: 70 }
         ];
 
-        // Section Switcher
-        function showSection(id) {
-            document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
-            document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
-            
-            document.getElementById(id).classList.add('active');
-            const link = document.getElementById('l-' + id);
-            if(link) link.classList.add('active');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
+        // Init Table
+        document.getElementById('playerTable').innerHTML = players.map((p, i) => `
+            <tr>
+                <td style="color: var(--text-dim);">#0${i+1}</td>
+                <td style="text-transform: uppercase; letter-spacing: 1px;">${p.name}</td>
+                <td style="text-align: right; color: var(--accent); font-family: 'Orbitron';">${p.ovr}</td>
+            </tr>
+        `).join('');
 
         // Modal Logic
-        function openModal(id) { 
-            document.getElementById(id).classList.add('active'); 
-            document.body.style.overflow = 'hidden';
-        }
-        function closeModal(id) { 
-            document.getElementById(id).classList.remove('active'); 
-            document.body.style.overflow = 'auto';
-        }
+        function openModal(id) { document.getElementById(id).classList.add('active'); }
+        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
 
-        // Player Profile Logic
-        function openPlayer(name) {
-            const p = players.find(x => x.id === name);
-            document.getElementById('pm-name').innerText = p.id;
-            document.getElementById('pm-role').innerText = p.role;
-            document.getElementById('pm-ovr').innerText = p.ovr;
-            
-            const statsHtml = Object.entries(p.stats).map(([key, val]) => `
-                <div class="skill-group">
-                    <div style="display:flex; justify-content:space-between; font-size:10px; font-weight:900; text-transform:uppercase;">
-                        <span>${key}</span><span>${val}</span>
-                    </div>
-                    <div class="skill-bar"><div class="skill-fill" id="bar-${key}"></div></div>
-                </div>
-            `).join('');
-            
-            document.getElementById('pm-stats').innerHTML = statsHtml;
-            openModal('playerModal');
-            
-            setTimeout(() => {
-                Object.entries(p.stats).forEach(([key, val]) => {
-                    document.getElementById(`bar-${key}`).style.width = val + '%';
-                });
-            }, 100);
-        }
+        // Reveal Animation logic
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('active');
+            });
+        }, { threshold: 0.1 });
 
-        // Initial Render
-        function init() {
-            const container = document.getElementById('rankingContainer');
-            container.innerHTML = players.sort((a,b) => b.ovr - a.ovr).map((p, i) => `
-                <div class="player-list-item" onclick="openPlayer('${p.id}')">
-                    <div style="display:flex; align-items:center; gap: 20px;">
-                        <span style="color: var(--text-dim); font-weight: 800; font-size: 12px;">0${i+1}</span>
-                        <span style="font-weight: 900; letter-spacing: 1px;">${p.id}</span>
-                    </div>
-                    <div class="ovr-badge">${p.ovr}</div>
-                </div>
-            `).join('');
-        }
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-        // Scroll Progress
-        window.onscroll = () => {
-            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-            const scrolled = (winScroll / height) * 100;
-            document.getElementById("progressBar").style.width = scrolled + "%";
-        };
-
-        init();
+        // Smooth Scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
+            });
+        });
     </script>
 </body>
 </html>
