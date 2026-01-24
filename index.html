@@ -3,199 +3,201 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>BOX1V1 // UNBEATABLE</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,900;1,900&family=Plus+Jakarta+Sans:wght@400;700&display=swap" rel="stylesheet">
+  <title>BOX1V1 | Win the Street</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,700;0,900;1,900&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #050505; --accent: #39FF14; --text: #fff;
-      --glass: rgba(255, 255, 255, 0.03); --border: rgba(255, 255, 255, 0.08);
+      --bg: #000; --card-bg: #111; --accent: #39FF14;
+      --text: #fff; --text-dim: #888; --border: #222;
     }
 
-    * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body { 
       background: var(--bg); color: var(--text); 
-      font-family: 'Plus Jakarta Sans', sans-serif; 
-      -webkit-font-smoothing: antialiased; overflow-x: hidden;
+      font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; 
     }
 
-    /* Custom Cursor */
-    #cursor {
-      position: fixed; width: 20px; height: 20px; background: var(--accent);
-      border-radius: 50%; pointer-events: none; z-index: 9999;
-      mix-blend-mode: difference; transition: transform 0.1s;
-    }
-
-    /* Background Noise & Glow */
-    .bg-elements {
-      position: fixed; inset: 0; z-index: -1; pointer-events: none;
-      background: radial-gradient(circle at 80% 20%, rgba(57, 255, 20, 0.05), transparent 40%),
-                  radial-gradient(circle at 10% 80%, rgba(57, 255, 20, 0.03), transparent 40%);
-    }
-    .bg-elements::after {
-      content: ""; position: absolute; inset: 0;
-      background-image: url("https://grainy-gradients.vercel.app/noise.svg");
-      opacity: 0.2; filter: contrast(150%) brightness(100%);
-    }
-
-    /* Nav */
+    /* Навигация как в Apple Store */
     nav { 
       position: fixed; top: 0; width: 100%; z-index: 1000; 
-      padding: 1.5rem 2rem; display: flex; justify-content: space-between; align-items: center;
-      mix-blend-mode: difference;
+      background: rgba(0,0,0,0.8); backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
     }
-    .logo { font-family: 'Inter'; font-weight: 900; font-style: italic; font-size: 1.5rem; letter-spacing: -2px; }
-    .nav-links { display: flex; gap: 3rem; }
+    .nav-container { 
+      max-width: 1200px; margin: 0 auto; display: flex; 
+      justify-content: space-between; padding: 1.2rem 1.5rem; align-items: center; 
+    }
+    .logo { font-weight: 900; font-size: 1.2rem; font-style: italic; letter-spacing: -1px; cursor: pointer; }
+    .nav-links { display: flex; gap: 2.5rem; }
     .nav-links a { 
-      font-size: 0.7rem; font-weight: 700; text-transform: uppercase; 
-      text-decoration: none; color: #fff; letter-spacing: 2px;
+      color: var(--text-dim); text-decoration: none; font-size: 0.75rem; 
+      font-weight: 700; text-transform: uppercase; transition: 0.3s; cursor: pointer;
+    }
+    .nav-links a.active, .nav-links a:hover { color: #fff; }
+
+    .container { max-width: 1100px; margin: 120px auto 0; padding: 0 1.5rem; }
+    section { display: none; }
+    section.active { display: block; animation: fadeIn 0.4s ease; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+    /* Nike Typography */
+    h1 { 
+      font-size: clamp(4rem, 12vw, 8rem); font-weight: 900; line-height: 0.8; 
+      letter-spacing: -4px; margin-bottom: 3.5rem; text-transform: uppercase; font-style: italic; 
     }
 
-    /* Hero */
-    .hero { 
-      height: 100vh; display: flex; flex-direction: column; justify-content: center; 
-      padding: 0 5vw; position: relative; 
-    }
-    .hero h1 { 
-      font-family: 'Inter'; font-size: 18vw; font-weight: 900; font-style: italic;
-      line-height: 0.75; letter-spacing: -1vw; text-transform: uppercase;
-      margin-left: -1vw; color: transparent; -webkit-text-stroke: 1px rgba(255,255,255,0.2);
-    }
-    .hero h1 span { color: var(--text); -webkit-text-stroke: 0; }
-
-    /* Bento Grid */
-    .container { padding: 0 5vw 10vw; }
-    .bento { 
-      display: grid; grid-template-columns: repeat(12, 1fr); gap: 1rem; 
-      margin-top: -5vh;
-    }
+    /* Bento Grid - Пропорции Apple */
+    .bento { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-bottom: 4rem; }
     .card { 
-      background: var(--glass); border: 1px solid var(--border); border-radius: 20px;
-      padding: 2rem; backdrop-filter: blur(10px); transition: 0.5s;
-      position: relative; overflow: hidden;
+      background: var(--card-bg); border-radius: 28px; padding: 2.5rem; 
+      display: flex; flex-direction: column; justify-content: space-between;
+      transition: 0.4s cubic-bezier(0.2, 1, 0.3, 1); cursor: pointer;
+      min-height: 280px; border: 1px solid transparent;
     }
-    .card:hover { border-color: var(--accent); background: rgba(255,255,255,0.05); }
+    .card:hover { transform: scale(0.985); background: #161616; border-color: #333; }
     
-    .c-1 { grid-column: span 8; height: 500px; display: flex; flex-direction: column; justify-content: space-between; }
-    .c-2 { grid-column: span 4; background: var(--accent); color: #000; }
-    .c-3 { grid-column: span 4; height: 300px; }
-    .c-4 { grid-column: span 8; }
+    .card.main { grid-column: span 2; background: linear-gradient(135deg, #111, #050505); }
+    .card.white { background: #fff; color: #000; }
+    .card.small { min-height: 180px; }
 
-    .ovr { font-family: 'Inter'; font-size: 10rem; font-weight: 900; line-height: 0.8; letter-spacing: -8px; color: var(--accent); }
-    .label { font-size: 0.6rem; font-weight: 700; letter-spacing: 3px; color: rgba(255,255,255,0.4); text-transform: uppercase; margin-bottom: 1rem; }
+    .ovr { font-size: 7rem; font-weight: 900; color: var(--accent); line-height: 0.8; letter-spacing: -5px; }
+    .label { font-size: 0.7rem; font-weight: 800; color: var(--text-dim); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 1rem; display: block; }
+    .name { font-size: 2.5rem; font-weight: 900; font-style: italic; text-transform: uppercase; }
 
-    /* Social Links */
-    .social-list { margin-top: 10vh; border-top: 1px solid var(--border); }
-    .social-item { 
-      padding: 3rem 0; border-bottom: 1px solid var(--border); display: flex; 
-      justify-content: space-between; align-items: center; text-decoration: none; color: #fff;
-      transition: 0.4s;
+    /* Links */
+    .social-link { 
+      display: flex; justify-content: space-between; align-items: center; 
+      padding: 2.5rem 0; border-top: 1px solid var(--border); 
+      text-decoration: none; color: #fff; transition: 0.3s;
     }
-    .social-item:hover { color: var(--accent); padding-left: 2rem; }
-    .social-item h2 { font-family: 'Inter'; font-size: 4rem; font-weight: 900; font-style: italic; }
+    .social-link:hover { opacity: 0.5; padding-left: 1rem; }
+    .social-link h2 { font-size: 3rem; font-weight: 900; font-style: italic; }
 
-    /* Preloader */
-    #loader {
-      position: fixed; inset: 0; background: #000; z-index: 9999;
-      display: flex; align-items: center; justify-content: center;
-      font-family: 'Inter'; font-weight: 900; font-size: 2rem; font-style: italic;
+    /* Overlay */
+    .overlay { 
+      position: fixed; inset: 0; background: #000; z-index: 2000; 
+      display: none; padding: 4rem 2rem; 
     }
+    .close { position: absolute; top: 2rem; right: 2rem; font-weight: 900; color: var(--accent); cursor: pointer; }
 
-    footer { padding: 5vh 0; font-size: 0.7rem; opacity: 0.3; letter-spacing: 5px; text-transform: uppercase; text-align: center; }
+    footer { padding: 4rem 0; color: var(--text-dim); font-size: 0.7rem; font-weight: 700; border-top: 1px solid var(--border); }
   </style>
 </head>
 <body>
 
-  <div id="cursor"></div>
-  <div id="loader">BOX1V1 // 2026</div>
-  <div class="bg-elements"></div>
-
   <nav>
-    <div class="logo">BOX1V1</div>
-    <div class="nav-links">
-      <a onclick="scrollToSection('hero')">Home</a>
-      <a onclick="scrollToSection('players')">Players</a>
-      <a onclick="scrollToSection('connect')">Connect</a>
+    <div class="nav-container">
+      <div class="logo" onclick="showSection('home')">BOX1V1</div>
+      <div class="nav-links">
+        <a onclick="showSection('home')" id="btn-home" class="active">HOME</a>
+        <a onclick="showSection('ranking')" id="btn-ranking">PLAYERS</a>
+        <a onclick="showSection('connect')" id="btn-connect">CONNECT</a>
+      </div>
     </div>
   </nav>
 
-  <section class="hero" id="hero">
-    <div class="label" style="color: var(--accent)">Elite Street Society</div>
-    <h1>STREET<br><span>LEGEND.</span></h1>
-  </section>
-
   <div class="container">
-    <div class="bento" id="players">
-      <div class="card c-1" onclick="openProfile('Kuznetsov', 92)">
-        <div>
-          <span class="label">Top Rated Athlete</span>
-          <div class="ovr">92</div>
+    
+    <section id="home" class="active">
+        <span class="label" style="color:var(--accent)">SEASON 2026 // ELAGINO</span>
+        <h1>STREET<br>STANDARD.</h1>
+        
+        <div class="bento">
+            <div class="card main" onclick="openProfile('Kuznetsov', 92)">
+                <div>
+                    <span class="label">LEADERBOARD #1</span>
+                    <div class="ovr">92</div>
+                </div>
+                <div class="name">KUZNETSOV</div>
+            </div>
+
+            <div class="card white" onclick="showSection('connect')">
+                <span class="label" style="color:rgba(0,0,0,0.4)">MEMBERSHIP</span>
+                <div style="font-size: 2.2rem; font-weight: 900; line-height: 0.9; font-style: italic; text-transform: uppercase;">JOIN THE<br>ELITE.</div>
+                <p style="margin-top: 2rem; font-weight: 800; font-size: 0.8rem;">APPLY NOW →</p>
+            </div>
+
+            <div class="card small" style="grid-column: span 2;" onclick="showSection('ranking')">
+                <span class="label">DATABASE</span>
+                <div class="name" style="font-size: 1.5rem;">VIEW FULL RANKING</div>
+            </div>
+
+            <div class="card small" onclick="window.open('https://instagram.com/box.1v1','_blank')">
+                <span class="label">INSTA</span>
+                <div class="name" style="font-size: 1.5rem; color: var(--accent);">MEDIA</div>
+            </div>
         </div>
-        <div style="font-family: 'Inter'; font-size: 3rem; font-style: italic; font-weight: 900;">KUZNETSOV</div>
-      </div>
+    </section>
 
-      <div class="card c-2" onclick="scrollToSection('connect')">
-        <span class="label" style="color: rgba(0,0,0,0.5)">Recruitment</span>
-        <div style="font-family: 'Inter'; font-size: 2.5rem; font-weight: 900; font-style: italic; line-height: 0.9; margin-top: 2rem;">WANT TO<br>BE HERE?</div>
-        <p style="margin-top: 2rem; font-weight: 700; font-size: 0.8rem;">JOIN THE CLOSED LEAGUE ↗</p>
-      </div>
+    <section id="ranking">
+        <h1>THE ROSTER</h1>
+        <div id="ranking-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem;"></div>
+    </section>
 
-      <div class="card c-3" onclick="scrollToSection('connect')">
-        <span class="label">Live Stream</span>
-        <div style="font-family: 'Inter'; font-size: 1.5rem; font-weight: 900; font-style: italic;">WATCH ON TIKTOK</div>
-      </div>
+    <section id="connect">
+        <h1>CONNECT.</h1>
+        <div style="margin-top: 2rem;">
+            <a href="https://t.me/streetbox1v1" target="_blank" class="social-link"><h2>TELEGRAM</h2> <span>↗</span></a>
+            <a href="https://instagram.com/box.1v1" target="_blank" class="social-link"><h2>INSTAGRAM</h2> <span>↗</span></a>
+            <a href="https://tiktok.com/@box1v1" target="_blank" class="social-link"><h2>TIKTOK</h2> <span>↗</span></a>
+        </div>
+    </section>
 
-      <div class="card c-4">
-        <span class="label">League Data</span>
-        <div style="font-family: 'Inter'; font-size: 1.5rem; font-weight: 900; font-style: italic;">ACTIVE SEASON 01 // 10 ATHLETES READY</div>
-      </div>
-    </div>
+    <footer>
+        BOX1V1 // UNBEATABLE STREETS // EST. 2026
+    </footer>
+  </div>
 
-    <div class="social-list" id="connect">
-        <a href="https://t.me/streetbox1v1" target="_blank" class="social-item">
-            <h2>TELEGRAM</h2> <span>DIRECT_CHANNEL ↗</span>
-        </a>
-        <a href="https://instagram.com/box.1v1" target="_blank" class="social-item">
-            <h2>INSTAGRAM</h2> <span>MEDIA_FEED ↗</span>
-        </a>
-        <a href="https://tiktok.com/@box1v1" target="_blank" class="social-item">
-            <h2>TIKTOK</h2> <span>LATEST_HIGHLIGHTS ↗</span>
-        </a>
+  <div class="overlay" id="p-overlay">
+    <div class="close" onclick="closeProfile()">CLOSE_X</div>
+    <div style="max-width: 900px; margin: 0 auto;">
+        <h2 id="p-name" style="font-size: 12vw; font-weight: 900; font-style: italic; text-transform: uppercase;">NAME</h2>
+        <div id="p-ovr" style="font-size: 10rem; font-weight: 900; color: var(--accent); line-height: 0.8;">92</div>
     </div>
   </div>
 
-  <footer>BOX1V1 // UNBEATABLE STREETS // 2026</footer>
-
   <script>
-    // Custom Cursor Logic
-    const cursor = document.getElementById('cursor');
-    document.addEventListener('mousemove', e => {
-      cursor.style.transform = `translate(${e.clientX - 10}px, ${e.clientY - 10}px)`;
-    });
+    const players = [
+        {n: 'Kuznetsov', r: 92}, {n: 'Volkov', r: 90}, {n: 'Ivanov', r: 89}, 
+        {n: 'Petrov', r: 78}, {n: 'Smirnov', r: 81}, {n: 'Mironov', r: 71},
+        {n: 'Popov', r: 64}, {n: 'Zuparov', r: 62}, {n: 'Sidorov', r: 55}, {n: 'Dmitriev', r: 51}
+    ];
 
-    // Loader
-    window.onload = () => {
-      setTimeout(() => {
-        document.getElementById('loader').style.display = 'none';
-      }, 1000);
-    };
-
-    // Smooth Scroll
-    function scrollToSection(id) {
-      document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+    function renderPlayers() {
+      const grid = document.getElementById('ranking-grid');
+      grid.innerHTML = '';
+      players.forEach((p, i) => {
+        grid.innerHTML += `
+          <div class="card" style="min-height: 200px" onclick="openProfile('${p.n}', ${p.r})">
+            <span class="label">ATHLETE // 0${i+1}</span>
+            <div style="font-size: 3.5rem; font-weight: 900; color: var(--accent); line-height:1;">${p.r}</div>
+            <div style="font-size: 1.5rem; font-weight: 900; font-style: italic; text-transform: uppercase;">${p.n}</div>
+          </div>
+        `;
+      });
     }
 
-    // Magnet Effect for Cards
-    document.querySelectorAll('.card').forEach(card => {
-      card.addEventListener('mousemove', e => {
-        const rect = card.getBoundingClientRect();
-        const x = e.clientX - rect.left - rect.width / 2;
-        const y = e.clientY - rect.top - rect.height / 2;
-        card.style.transform = `perspective(1000px) rotateX(${-y * 0.05}deg) rotateY(${x * 0.05}deg) translateY(-10px)`;
-      });
-      card.addEventListener('mouseleave', () => {
-        card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px)`;
-      });
-    });
+    function showSection(id) {
+      document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+      document.getElementById('btn-' + id).classList.add('active');
+      window.scrollTo(0,0);
+    }
+
+    function openProfile(n, r) {
+      document.getElementById('p-name').innerText = n;
+      document.getElementById('p-ovr').innerText = r;
+      document.getElementById('p-overlay').style.display = 'block';
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeProfile() {
+      document.getElementById('p-overlay').style.display = 'none';
+      document.body.style.overflow = 'auto';
+    }
+
+    renderPlayers();
   </script>
 </body>
 </html>
