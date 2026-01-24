@@ -4,70 +4,225 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>BOX1V1</title>
-  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --bg: #000;
+      --text: #fff;
+      --accent: #2E7D32;
+      --text-light: #aaa;
+      --border: #222;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
     body {
-      background: #000;
-      color: #fff;
-      font-family: 'Rajdhani', sans-serif;
-      line-height: 1.6;
-      padding: 2rem 1rem;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      line-height: 1.5;
+      padding: 0;
+      overflow-x: hidden;
+    }
+
+    .container {
       max-width: 800px;
       margin: 0 auto;
+      padding: 2.5rem 1.5rem;
     }
-    h1 { font-size: 2.5rem; margin-bottom: 1rem; }
-    h2 { font-size: 1.4rem; margin-top: 2rem; margin-bottom: 1rem; }
-    p { font-size: 1.1rem; opacity: 0.9; }
+
+    header {
+      text-align: center;
+      margin-bottom: 3rem;
+      padding-top: 1rem;
+    }
+
+    h1 {
+      font-weight: 700;
+      font-size: clamp(2.2rem, 6vw, 3.2rem);
+      letter-spacing: -0.02em;
+      margin-bottom: 0.5rem;
+    }
+
+    .subtitle {
+      font-weight: 400;
+      font-size: 1.1rem;
+      opacity: 0.7;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    section {
+      margin-bottom: 3.5rem;
+    }
+
+    h2 {
+      font-weight: 600;
+      font-size: 1.4rem;
+      margin-bottom: 1.5rem;
+      letter-spacing: -0.01em;
+      position: relative;
+      display: inline-block;
+    }
+
+    h2::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 0;
+      width: 32px;
+      height: 2px;
+      background: var(--accent);
+    }
+
+    p {
+      font-size: 1.05rem;
+      opacity: 0.9;
+      margin-bottom: 1rem;
+      line-height: 1.6;
+    }
+
+    ul {
+      padding-left: 1.2rem;
+      margin-bottom: 1.5rem;
+    }
+
+    li {
+      margin-bottom: 0.6rem;
+      font-size: 1.05rem;
+      opacity: 0.9;
+    }
+
+    /* Рейтинг */
     .ranking-table {
       width: 100%;
       border-collapse: collapse;
-      margin: 2rem 0;
+      margin-top: 1rem;
     }
+
     .ranking-table td {
-      padding: 0.8rem 0;
-      border-bottom: 1px solid #333;
-      font-size: 1.3rem;
+      padding: 0.9rem 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 1.15rem;
+      font-weight: 500;
     }
+
     .ovr {
-      color: #2E7D32;
-      font-weight: bold;
+      color: var(--accent);
       width: 60px;
       text-align: right;
     }
+
     .tier {
       width: 100px;
       text-align: right;
       font-size: 0.95rem;
-      opacity: 0.8;
+      opacity: 0.7;
+      font-weight: 400;
     }
-    footer {
-      margin-top: 3rem;
-      font-size: 0.9rem;
+
+    /* Новости */
+    .news-item {
+      margin-bottom: 1.8rem;
+      padding-bottom: 1.8rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .news-item:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .news-date {
+      font-size: 0.85rem;
       opacity: 0.6;
+      margin-bottom: 0.4rem;
+      letter-spacing: 0.02em;
+    }
+
+    .news-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.01em;
+    }
+
+    footer {
+      margin-top: 4rem;
+      font-size: 0.9rem;
+      opacity: 0.5;
+      text-align: center;
+      padding-bottom: 2rem;
+    }
+
+    @media (max-width: 600px) {
+      .ranking-table td {
+        font-size: 1.05rem;
+        padding: 0.7rem 0;
+      }
+      .ovr, .tier {
+        font-size: 1rem;
+      }
     }
   </style>
 </head>
 <body>
 
-  <h1>BOX1V1</h1>
-  <p>Уличная лига 1v1. Каждый матч — шаг к легенде.</p>
+  <div class="container">
 
-  <h2>Как это работает</h2>
-  <p>• У каждого игрока есть цифровая карточка<br>
-     • OVR растёт за голы, дриблинг, защиту<br>
-     • Ранги: BRONZE → SILVER → GOLD</p>
+    <header>
+      <h1>BOX1V1</h1>
+      <p class="subtitle">Уличная лига 1v1. Каждый матч — шаг к легенде.</p>
+    </header>
 
-  <h2>Рейтинг игроков</h2>
-  <table class="ranking-table">
-    <tr><td>ZUPAROV</td><td class="ovr">62</td><td class="tier">BRONZE</td></tr>
-    <tr><td>KIRILLOV</td><td class="ovr">89</td><td class="tier">GOLD</td></tr>
-    <tr><td>PETROV</td><td class="ovr">74</td><td class="tier">SILVER</td></tr>
-  </table>
+    <section>
+      <h2>Как это работает</h2>
+      <p>• У каждого игрока есть цифровая карточка<br>
+         • OVR растёт за голы, дриблинг, защиту<br>
+         • Ранги: BRONZE → SILVER → GOLD</p>
+    </section>
 
-  <h2>Правила</h2>
-  <p>(заполнишь позже)</p>
+    <section>
+      <h2>Рейтинг игроков</h2>
+      <table class="ranking-table">
+        <tr><td>ZUPAROV</td><td class="ovr">62</td><td class="tier">BRONZE</td></tr>
+        <tr><td>KIRILLOV</td><td class="ovr">89</td><td class="tier">GOLD</td></tr>
+        <tr><td>PETROV</td><td class="ovr">74</td><td class="tier">SILVER</td></tr>
+      </table>
+    </section>
 
-  <footer>© BOX1V1 • Elagino Park • 2026</footer>
+    <section>
+      <h2>Новости</h2>
+      
+      <div class="news-item">
+        <div class="news-date">24 января 2026</div>
+        <div class="news-title">Первые матчи в Elagino Park</div>
+        <p>Состоялись первые официальные матчи BOX1V1. Zuparov одержал победу над Petrov’ым со счётом 3:1.</p>
+      </div>
+
+      <div class="news-item">
+        <div class="news-date">20 января 2026</div>
+        <div class="news-title">Запуск рейтинговой системы</div>
+        <p>Сегодня стартует публичный рейтинг. Все матчи теперь влияют на твой OVR.</p>
+      </div>
+
+    </section>
+
+    <section>
+      <h2>Правила</h2>
+      <p>(заполнишь позже)</p>
+    </section>
+
+    <footer>
+      © BOX1V1 • Elagino Park • 2026
+    </footer>
+
+  </div>
 
 </body>
 </html>
