@@ -1,101 +1,101 @@
-<!DOCTYPE html><!DOCTYPE html><!DOCTYPE html><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>BOX1V1 | Pro Performance Hub</title>
+  <title>BOX1V1 | Elite Football Hub</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #0a0a0a; --card-bg: #121212; --accent: #39FF14;
+      --bg: #000000; --card-bg: #0a0a0a; --accent: #39FF14;
       --gold: #FFD700; --silver: #C0C0C0; --bronze: #CD7F32;
-      --text: #ffffff; --text-dim: #555;
+      --text: #ffffff; --text-dim: #444;
     }
 
-    * { margin: 0; padding: 0; box-sizing: border-box; outline: none; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
 
-    /* Nav */
-    nav { position: fixed; top: 0; width: 100%; background: rgba(0,0,0,0.85); backdrop-filter: saturate(180%) blur(20px); z-index: 1000; border-bottom: 1px solid #1a1a1a; }
+    nav { position: fixed; top: 0; width: 100%; background: rgba(0,0,0,0.9); backdrop-filter: blur(20px); z-index: 1000; border-bottom: 1px solid #111; }
     .nav-container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; padding: 1.2rem 1.5rem; align-items: center; }
-    .logo { font-weight: 900; font-size: 1.4rem; letter-spacing: -1px; color: var(--accent); cursor: pointer; }
+    .logo { font-weight: 900; font-size: 1.4rem; color: var(--accent); cursor: pointer; }
     .nav-links { display: flex; gap: 2rem; }
-    .nav-links a { color: var(--text-dim); text-decoration: none; font-size: 0.85rem; font-weight: 700; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; }
+    .nav-links a { color: var(--text-dim); text-decoration: none; font-size: 0.8rem; font-weight: 700; transition: 0.3s; cursor: pointer; }
     .nav-links a.active, .nav-links a:hover { color: var(--text); }
 
     .container { max-width: 1200px; margin: 120px auto 0; padding: 0 1.5rem; }
-    section { display: none; animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
+    section { display: none; animation: fadeIn 0.5s ease-out; }
     section.active { display: block; }
-    @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-    h1 { font-size: clamp(3rem, 10vw, 5rem); font-weight: 900; letter-spacing: -4px; margin-bottom: 2.5rem; text-transform: uppercase; line-height: 0.9; }
+    h1 { font-size: clamp(3rem, 10vw, 5rem); font-weight: 900; letter-spacing: -3px; margin-bottom: 2rem; text-transform: uppercase; }
 
-    /* Professional Card System */
-    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 2rem; }
-    .card-wrapper { perspective: 1000px; }
+    /* Static Premium Cards */
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 2rem; }
     .card {
-      background: var(--card-bg); border-radius: 20px; padding: 2rem; border: 1px solid #1a1a1a;
-      position: relative; transition: transform 0.15s ease-out, border-color 0.4s; cursor: pointer;
-      transform-style: preserve-3d; overflow: hidden;
+      background: var(--card-bg); border-radius: 24px; padding: 2.5rem; border: 1px solid #161616;
+      position: relative; cursor: pointer; overflow: hidden;
+      transition: transform 0.4s cubic-bezier(0.2, 1, 0.3, 1), border-color 0.4s;
     }
-    .card:hover { border-color: var(--accent); }
-    .card::before {
-      content: ''; position: absolute; inset: 0; background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), rgba(57, 255, 20, 0.08), transparent 70%);
+    .card:hover { transform: scale(1.02); border-color: var(--accent); }
+    
+    /* Spotlight Effect */
+    .card::after {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(57, 255, 20, 0.1), transparent 60%);
       opacity: 0; transition: opacity 0.3s; pointer-events: none;
     }
-    .card:hover::before { opacity: 1; }
+    .card:hover::after { opacity: 1; }
 
-    .card-ovr { font-size: 3rem; font-weight: 900; color: var(--accent); line-height: 1; margin-bottom: 0.5rem; }
-    .card-name { font-size: 1.4rem; font-weight: 700; text-transform: uppercase; margin-bottom: 1.5rem; letter-spacing: -0.5px; }
-    .card-stats { display: flex; gap: 1.5rem; border-top: 1px solid #1a1a1a; padding-top: 1rem; }
-    .stat-label { font-size: 0.65rem; color: var(--text-dim); display: block; }
-    .stat-val { font-weight: 800; font-size: 1.1rem; }
+    .card-ovr { font-size: 3.5rem; font-weight: 900; color: var(--accent); line-height: 1; margin-bottom: 0.5rem; }
+    .card-name { font-size: 1.5rem; font-weight: 700; text-transform: uppercase; margin-bottom: 2rem; }
+    .card-stats { display: flex; gap: 1.5rem; border-top: 1px solid #111; padding-top: 1.2rem; }
+    .stat-val { font-weight: 800; font-size: 1.1rem; display: block; }
+    .stat-label { font-size: 0.6rem; color: var(--text-dim); text-transform: uppercase; }
 
     /* Profile Overlay */
     .overlay {
       position: fixed; inset: 0; background: #000; z-index: 2000; display: none;
-      padding: 4rem 2rem; overflow-y: auto; animation: fadeIn 0.4s ease;
+      padding: 5vh 5vw; overflow-y: auto;
     }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    .close-overlay { position: fixed; top: 30px; right: 30px; font-weight: 900; cursor: pointer; color: var(--accent); z-index: 2100; font-size: 0.8rem; letter-spacing: 2px; }
+    .close-overlay { position: fixed; top: 40px; right: 40px; font-weight: 900; cursor: pointer; color: var(--accent); z-index: 2100; }
 
-    .profile-header { display: grid; grid-template-columns: 1fr 2fr; gap: 4rem; max-width: 1000px; margin: 0 auto; }
-    .profile-photo { width: 100%; aspect-ratio: 1; background: #111; border-radius: 30px; display: flex; align-items: center; justify-content: center; font-size: 5rem; border: 1px solid #222; }
-    .profile-data h2 { font-size: 4rem; font-weight: 900; letter-spacing: -2px; color: var(--accent); text-transform: uppercase; }
-    .history-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-top: 2rem; }
-    .match-dot { aspect-ratio: 1; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.7rem; }
-    .win { background: var(--accent); color: #000; }
-    .loss { background: #222; color: #555; }
+    .profile-content { max-width: 900px; margin: 0 auto; }
+    .profile-main { display: grid; grid-template-columns: 1fr 1.5fr; gap: 4rem; align-items: center; }
+    .profile-img { width: 100%; aspect-ratio: 1; background: #0a0a0a; border-radius: 40px; border: 1px solid #111; display: flex; align-items: center; justify-content: center; font-size: 6rem; }
+    
+    .achievements { display: flex; gap: 1rem; margin-top: 2rem; }
+    .ach-icon { width: 45px; height: 45px; background: #111; border-radius: 10px; display: flex; align-items: center; justify-content: center; border: 1px solid #222; font-size: 1.2rem; filter: grayscale(1); transition: 0.3s; }
+    .ach-icon:hover { filter: grayscale(0); border-color: var(--accent); }
 
-    /* Bracket Styling */
-    .bracket-wrapper { overflow-x: auto; padding: 40px 0; }
-    .bracket-table { display: flex; gap: 60px; min-width: 900px; }
-    .match-box { background: #111; border: 1px solid #1a1a1a; padding: 15px; border-radius: 12px; width: 220px; margin-bottom: 20px; }
-    .m-player { display: flex; justify-content: space-between; padding: 6px 0; font-weight: 700; font-size: 0.9rem; }
-    .m-score { color: var(--accent); }
+    /* Tournament Bracket */
+    .bracket-grid { display: flex; gap: 50px; overflow-x: auto; padding-bottom: 2rem; }
+    .match { background: #0a0a0a; border: 1px solid #111; padding: 20px; border-radius: 16px; width: 240px; margin-bottom: 1.5rem; }
+    .m-team { display: flex; justify-content: space-between; font-weight: 700; margin: 5px 0; }
 
-    footer { text-align: center; padding: 5rem 0; color: #222; font-weight: 900; letter-spacing: 5px; font-size: 0.7rem; border-top: 1px solid #111; }
+    footer { text-align: center; padding: 6rem 0; color: #111; font-weight: 900; font-size: 0.7rem; letter-spacing: 10px; }
   </style>
 </head>
 <body>
 
   <div class="overlay" id="profile-overlay">
-    <div class="close-overlay" onclick="closeProfile()">CLOSE_PROFILE // ESC</div>
-    <div class="profile-header">
-      <div class="profile-photo">👤</div>
-      <div class="profile-data">
-        <p id="p-tier" style="color: var(--text-dim); font-weight: 800; letter-spacing: 2px;">GOLD TIER</p>
-        <h2 id="p-name">PLAYER_NAME</h2>
-        <div style="display: flex; gap: 3rem; margin-top: 2rem;">
-          <div><span style="color: var(--text-dim); font-size: 0.7rem;">OVERALL</span><br><span id="p-ovr" style="font-size: 3rem; font-weight: 900;">92</span></div>
-          <div><span style="color: var(--text-dim); font-size: 0.7rem;">RANK</span><br><span style="font-size: 3rem; font-weight: 900;">#1</span></div>
+    <div class="close-overlay" onclick="closeProfile()">BACK_TO_LEAGUE</div>
+    <div class="profile-content">
+        <div class="profile-main">
+            <div class="profile-img">👤</div>
+            <div>
+                <p style="color: var(--accent); font-weight: 800; letter-spacing: 3px; font-size: 0.7rem;">PRO PLAYER // TIER GOLD</p>
+                <h2 id="p-name" style="font-size: 4rem; font-weight: 900; letter-spacing: -2px; text-transform: uppercase;">PLAYER</h2>
+                <div style="display: flex; gap: 3rem; margin-top: 1.5rem;">
+                    <div><span style="color: var(--text-dim); font-size: 0.6rem;">OVERALL</span><br><span id="p-ovr" style="font-size: 3rem; font-weight: 900;">92</span></div>
+                    <div><span style="color: var(--text-dim); font-size: 0.6rem;">WIN RATE</span><br><span style="font-size: 3rem; font-weight: 900;">84%</span></div>
+                </div>
+                <div class="achievements">
+                    <div class="ach-icon" title="Panna King">👑</div>
+                    <div class="ach-icon" title="Fastest Goal">⚡</div>
+                    <div class="ach-icon" title="Top Scorer">⚽</div>
+                </div>
+            </div>
         </div>
-        
-        <h3 style="margin-top: 3rem; font-size: 0.8rem; letter-spacing: 2px; color: var(--text-dim);">LAST 5 MATCHES</h3>
-        <div class="history-grid">
-          <div class="match-dot win">W</div><div class="match-dot win">W</div><div class="match-dot loss">L</div><div class="match-dot win">W</div><div class="match-dot win">W</div>
-        </div>
-      </div>
     </div>
   </div>
 
@@ -105,7 +105,7 @@
       <div class="nav-links">
         <a onclick="showSection('home')" id="btn-home" class="active">HOME</a>
         <a onclick="showSection('ranking')" id="btn-ranking">RANKING</a>
-        <a onclick="showSection('bracket')" id="btn-bracket">TOURNAMENT</a>
+        <a onclick="showSection('bracket')" id="btn-bracket">BRACKET</a>
         <a onclick="showSection('rules')" id="btn-rules">RULES</a>
       </div>
     </div>
@@ -113,117 +113,84 @@
 
   <div class="container">
     <section id="home" class="active">
-      <h1>THE FUTURE<br>OF 1V1.</h1>
-      <div class="grid" id="featured-grid"></div>
+      <p style="color: var(--accent); font-weight: 800; letter-spacing: 2px; margin-bottom: 10px;">ELAGINO PARK 2026</p>
+      <h1>CORE<br>RANKINGS.</h1>
+      <div class="grid" id="home-grid"></div>
     </section>
 
     <section id="ranking">
-      <h1>ALL PLAYERS</h1>
+      <h1>LEADERBOARD</h1>
       <div class="grid" id="ranking-grid"></div>
     </section>
 
     <section id="bracket">
-      <h1>LIVE BRACKET</h1>
-      <div class="bracket-wrapper">
-        <div class="bracket-table">
-          <div class="round">
-            <p style="margin-bottom: 20px; font-size: 0.7rem; font-weight: 800; color: var(--text-dim);">QUARTER FINALS</p>
-            <div class="match-box"><div class="m-player">Kuznetsov <span class="m-score">3</span></div><div class="m-player">Zuparov <span class="m-score">1</span></div></div>
-            <div class="match-box"><div class="m-player">Mironov <span class="m-score">0</span></div><div class="m-player">Volkov <span class="m-score">5</span></div></div>
-          </div>
-          <div class="round" style="padding-top: 50px;">
-            <p style="margin-bottom: 20px; font-size: 0.7rem; font-weight: 800; color: var(--text-dim);">SEMI FINALS</p>
-            <div class="match-box"><div class="m-player">Kuznetsov <span class="m-score">-</span></div><div class="m-player">Volkov <span class="m-score">-</span></div></div>
-          </div>
+      <h1>TOURNAMENT</h1>
+      <div class="bracket-grid">
+        <div class="round"><p style="color: var(--text-dim); margin-bottom: 20px;">QF</p>
+            <div class="match"><div class="m-team">Kuznetsov <span>3</span></div><div class="m-team">Zuparov <span>1</span></div></div>
+            <div class="match"><div class="m-team">Mironov <span>0</span></div><div class="m-team">Volkov <span>5</span></div></div>
+        </div>
+        <div class="round" style="padding-top: 60px;"><p style="color: var(--text-dim); margin-bottom: 20px;">SF</p>
+            <div class="match" style="border-color: var(--accent);"><div class="m-team">Kuznetsov <span>-</span></div><div class="m-team">Volkov <span>-</span></div></div>
         </div>
       </div>
     </section>
 
     <section id="rules">
-        <h1>THE RULES.</h1>
-        <p style="max-width: 600px; color: var(--text-dim); line-height: 1.8;">Каждый матч в BOX1V1 — это официальный зачет. Формат: 1х1, до 5 голов. Панна (мяч между ног) — мгновенное завершение матча в пользу атакующего. Рейтинг обновляется каждые 24 часа.</p>
+        <h1>RULES.</h1>
+        <p style="color: var(--text-dim); font-size: 1.2rem; max-width: 700px; line-height: 1.6;">Мы создали BOX1V1 для тех, кто не боится ответственности за результат. Тут нет тактики тренера — есть только твоя техника. <br><br> • 5 минут матч. <br> • Мяч между ног = поражение. <br> • Рейтинг ELO.</p>
     </section>
 
-    <footer>BOX1V1 // ELAGINO PARK // 2026</footer>
+    <footer>BOX1V1 // THE_FUTURE_OF_FOOTBALL</footer>
   </div>
 
   <script>
     const players = [
-      {n: 'Kuznetsov', r: 92, t: 'gold'}, {n: 'Volkov', r: 90, t: 'gold'},
-      {n: 'Ivanov', r: 89, t: 'gold'}, {n: 'Petrov', r: 78, t: 'silver'},
-      {n: 'Smirnov', r: 81, t: 'silver'}, {n: 'Mironov', r: 71, t: 'silver'},
-      {n: 'Popov', r: 64, t: 'bronze'}, {n: 'Zuparov', r: 62, t: 'bronze'},
-      {n: 'Sidorov', r: 55, t: 'bronze'}, {n: 'Dmitriev', r: 51, t: 'bronze'}
+      {n: 'Kuznetsov', r: 92}, {n: 'Volkov', r: 90}, {n: 'Ivanov', r: 89}, 
+      {n: 'Petrov', r: 78}, {n: 'Smirnov', r: 81}, {n: 'Mironov', r: 71},
+      {n: 'Popov', r: 64}, {n: 'Zuparov', r: 62}, {n: 'Sidorov', r: 55}, {n: 'Dmitriev', r: 51}
     ];
 
     function render() {
-      const grids = [document.getElementById('ranking-grid'), document.getElementById('featured-grid')];
+      const grids = [document.getElementById('ranking-grid'), document.getElementById('home-grid')];
       players.forEach((p, i) => {
         const html = `
-          <div class="card-wrapper">
-            <div class="card" onclick="openProfile('${p.n}', ${p.r}, '${p.t}')">
-              <div class="card-ovr">${p.r}</div>
-              <div class="card-name">${p.n}</div>
-              <div class="card-stats">
-                <div class="stat"><span class="stat-label">SPD</span><span class="stat-val">${Math.floor(Math.random()*20+70)}</span></div>
-                <div class="stat"><span class="stat-label">DRI</span><span class="stat-val">${Math.floor(Math.random()*20+70)}</span></div>
-                <div class="stat"><span class="stat-label">SHT</span><span class="stat-val">${Math.floor(Math.random()*20+70)}</span></div>
-              </div>
+          <div class="card" onclick="openProfile('${p.n}', ${p.r})">
+            <div class="card-ovr">${p.r}</div>
+            <div class="card-name">${p.n}</div>
+            <div class="card-stats">
+              <div class="stat"><span class="stat-label">SPD</span><span class="stat-val">${Math.floor(Math.random()*20+70)}</span></div>
+              <div class="stat"><span class="stat-label">DRI</span><span class="stat-val">${Math.floor(Math.random()*20+70)}</span></div>
+              <div class="stat"><span class="stat-label">SHT</span><span class="stat-val">${Math.floor(Math.random()*20+70)}</span></div>
             </div>
           </div>
         `;
         if (grids[0]) grids[0].innerHTML += html;
         if (i < 2 && grids[1]) grids[1].innerHTML += html;
       });
+
+      // Spotlight effect logic
+      document.querySelectorAll('.card').forEach(card => {
+        card.onmousemove = e => {
+          const rect = card.getBoundingClientRect();
+          card.style.setProperty('--mx', `${e.clientX - rect.left}px`);
+          card.style.setProperty('--my', `${e.clientY - rect.top}px`);
+        }
+      });
     }
 
-    // Professional Tilt Engine
-    document.addEventListener('mousemove', e => {
-      const cards = document.querySelectorAll('.card');
-      cards.forEach(card => {
-        const rect = card.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        
-        // Update Glow Position
-        card.style.setProperty('--x', `${x}px`);
-        card.style.setProperty('--y', `${y}px`);
-
-        // Calculate Rotation (Limited to 6 deg)
-        const rotateX = ((y / rect.height) - 0.5) * -12;
-        const rotateY = ((x / rect.width) - 0.5) * 12;
-        
-        card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-5px)`;
-      });
-    });
-
-    document.addEventListener('mouseleave', () => {
-      document.querySelectorAll('.card').forEach(card => {
-        card.style.transform = `rotateX(0deg) rotateY(0deg) translateY(0)`;
-      });
-    });
-
-    function openProfile(n, r, t) {
+    function openProfile(n, r) {
       document.getElementById('p-name').innerText = n;
       document.getElementById('p-ovr').innerText = r;
-      document.getElementById('p-tier').innerText = t.toUpperCase() + ' TIER';
       document.getElementById('profile-overlay').style.display = 'block';
-      document.body.style.overflow = 'hidden';
     }
-
-    function closeProfile() {
-      document.getElementById('profile-overlay').style.display = 'none';
-      document.body.style.overflow = 'auto';
-    }
-
+    function closeProfile() { document.getElementById('profile-overlay').style.display = 'none'; }
     function showSection(id) {
       document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
       document.getElementById(id).classList.add('active');
       document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
       document.getElementById('btn-' + id).classList.add('active');
-      window.scrollTo(0,0);
     }
-
     render();
   </script>
 </body>
