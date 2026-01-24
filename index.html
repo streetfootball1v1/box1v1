@@ -3,80 +3,86 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>BOX1V1 | Street Elite</title>
+  <title>BOX1V1 | The Hub</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,700;0,900;1,900&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #000; --card-bg: #0a0a0a; --accent: #39FF14;
-      --text: #fff; --text-dim: #666; --border: #1a1a1a;
+      --bg: #000; --card-bg: #0d0d0d; --accent: #39FF14;
+      --text: #fff; --text-dim: #555; --border: rgba(255,255,255,0.08);
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+    body { 
+      background: var(--bg); color: var(--text); 
+      font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; 
+      overflow-x: hidden; 
+    }
 
-    /* Preloader */
+    /* Живой фон (как у Apple) */
+    .bg-glow {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: radial-gradient(circle at 50% 50%, #111 0%, #000 100%);
+      z-index: -2;
+    }
+    .bg-blob {
+      position: fixed; width: 500px; height: 500px; background: var(--accent);
+      filter: blur(150px); opacity: 0.05; z-index: -1; border-radius: 50%;
+      animation: drift 20s infinite alternate;
+    }
+    @keyframes drift { from { transform: translate(-20%, -20%); } to { transform: translate(20%, 20%); } }
+
     #preloader {
       position: fixed; inset: 0; background: #000; z-index: 5000;
       display: flex; align-items: center; justify-content: center;
-      transition: opacity 0.6s ease;
+      transition: 0.8s cubic-bezier(0.16, 1, 0.3, 1);
     }
-    .loader-logo { font-size: 3rem; font-weight: 900; font-style: italic; letter-spacing: -2px; }
 
-    /* Nav */
-    nav { position: fixed; top: 0; width: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(20px); z-index: 1000; border-bottom: 1px solid var(--border); }
-    .nav-container { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; padding: 1.2rem 2rem; align-items: center; }
-    .logo { font-weight: 900; font-size: 1.5rem; color: #fff; letter-spacing: -1px; cursor: pointer; font-style: italic; }
+    nav { position: fixed; top: 0; width: 100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(20px); z-index: 1000; border-bottom: 1px solid var(--border); }
+    .nav-container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; padding: 1rem 1.5rem; align-items: center; }
+    .logo { font-weight: 900; font-size: 1.1rem; letter-spacing: -1px; font-style: italic; }
     .nav-links { display: flex; gap: 2rem; }
-    .nav-links a { color: var(--text-dim); text-decoration: none; font-size: 0.8rem; font-weight: 800; transition: 0.3s; cursor: pointer; text-transform: uppercase; }
-    .nav-links a.active, .nav-links a:hover { color: var(--accent); }
+    .nav-links a { color: var(--text-dim); text-decoration: none; font-size: 0.7rem; font-weight: 800; transition: 0.3s; cursor: pointer; text-transform: uppercase; }
+    .nav-links a.active, .nav-links a:hover { color: #fff; }
 
-    .container { max-width: 1400px; margin: 140px auto 0; padding: 0 2rem; }
+    .container { max-width: 1100px; margin: 100px auto 0; padding: 0 1.5rem; }
     section { display: none; }
-    section.active { display: block; animation: reveal 0.5s ease-out; }
-    @keyframes reveal { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
+    section.active { display: block; animation: reveal 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+    @keyframes reveal { from { opacity: 0; filter: blur(10px); } to { opacity: 1; filter: blur(0); } }
 
-    h1 { font-size: clamp(4rem, 15vw, 10rem); font-weight: 900; line-height: 0.8; letter-spacing: -6px; margin-bottom: 4rem; text-transform: uppercase; font-style: italic; }
+    h1 { font-size: clamp(3rem, 10vw, 6rem); font-weight: 900; line-height: 0.9; letter-spacing: -3px; margin-bottom: 3rem; text-transform: uppercase; font-style: italic; }
 
-    /* Bento Grid - THE PREVIOUS LOOK */
-    .bento { display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: 320px; gap: 1.5rem; margin-bottom: 5rem; }
-    .bento-item { background: var(--card-bg); border-radius: 32px; border: 1px solid var(--border); padding: 2.5rem; position: relative; overflow: hidden; cursor: pointer; transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
-    .bento-item:hover { transform: translateY(-8px); border-color: #333; }
+    /* Более компактный Bento Grid */
+    .bento { display: grid; grid-template-columns: repeat(6, 1fr); grid-auto-rows: 180px; gap: 1rem; margin-bottom: 4rem; }
+    .bento-item { 
+      background: var(--card-bg); border-radius: 24px; border: 1px solid var(--border); 
+      padding: 1.5rem; position: relative; overflow: hidden; cursor: pointer; 
+      transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .bento-item:hover { background: #141414; border-color: rgba(255,255,255,0.2); transform: scale(0.99); }
     
-    .big { grid-column: span 2; grid-row: span 2; display: flex; flex-direction: column; justify-content: space-between; }
-    .tall { grid-row: span 2; }
-    .wide { grid-column: span 2; }
+    .i-1 { grid-column: span 4; grid-row: span 2; display: flex; flex-direction: column; justify-content: space-between; }
+    .i-2 { grid-column: span 2; grid-row: span 2; background: #fff; color: #000; }
+    .i-3 { grid-column: span 3; }
+    .i-4 { grid-column: span 3; }
 
-    /* Content Styling */
-    .ovr-large { font-size: 10rem; font-weight: 900; color: var(--accent); letter-spacing: -8px; line-height: 0.9; margin-top: -10px; }
-    .card-label { font-size: 0.8rem; font-weight: 900; color: var(--text-dim); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 1rem; display: block; }
-    .badge { background: var(--accent); color: #000; padding: 6px 14px; border-radius: 6px; font-weight: 900; font-size: 0.8rem; display: inline-block; }
+    .ovr-num { font-size: 6rem; font-weight: 900; color: var(--accent); line-height: 0.8; letter-spacing: -4px; }
+    .card-label { font-size: 0.6rem; font-weight: 800; color: var(--text-dim); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 0.5rem; display: block; }
 
     /* Connect Section */
-    .link-row { border-top: 1px solid var(--border); padding: 3rem 0; display: flex; justify-content: space-between; align-items: center; text-decoration: none; color: #fff; transition: 0.4s; }
-    .link-row:hover { color: var(--accent); transform: translateX(20px); }
-    .link-row h2 { font-size: clamp(2rem, 6vw, 5rem); font-weight: 900; font-style: italic; }
+    .link-row { border-top: 1px solid var(--border); padding: 1.5rem 0; display: flex; justify-content: space-between; align-items: center; text-decoration: none; color: #fff; }
+    .link-row:hover h2 { color: var(--accent); transform: translateX(10px); }
+    .link-row h2 { font-size: 2rem; font-weight: 900; transition: 0.3s; font-style: italic; }
 
-    /* Overlay */
-    .overlay { position: fixed; inset: 0; background: #000; z-index: 2000; display: none; padding: 5vw; }
-    .close-btn { position: fixed; top: 40px; right: 40px; font-weight: 900; color: var(--accent); cursor: pointer; font-size: 1rem; }
-
-    footer { padding: 8rem 0; opacity: 0.1; font-weight: 900; font-size: 12vw; letter-spacing: -8px; pointer-events: none; text-transform: uppercase; line-height: 0.7; }
+    footer { padding: 4rem 0; border-top: 1px solid var(--border); margin-top: 4rem; display: flex; justify-content: space-between; font-size: 0.7rem; color: var(--text-dim); font-weight: 700; }
   </style>
 </head>
 <body>
 
+  <div class="bg-glow"></div>
+  <div class="bg-blob"></div>
+
   <div id="preloader">
     <div class="loader-logo">BOX1V1</div>
-  </div>
-
-  <div class="overlay" id="p-overlay">
-    <div class="close-btn" onclick="closeProfile()">BACK_TO_HUB</div>
-    <div style="max-width: 1200px; margin: 0 auto;">
-        <h2 id="p-name" style="font-size: 10vw; font-weight: 900; letter-spacing: -6px; line-height: 0.8; font-style: italic; text-transform: uppercase;">NAME</h2>
-        <div style="display: flex; gap: 4rem; margin-top: 4rem;">
-            <div><span class="card-label">RATING</span><span id="p-ovr" style="font-size: 10rem; font-weight: 900; color: var(--accent); line-height: 0.8;">92</span></div>
-        </div>
-    </div>
   </div>
 
   <nav>
@@ -93,78 +99,77 @@
   <div class="container">
     
     <section id="home" class="active">
-        <span class="hero-label" style="color:var(--accent); font-weight:900; letter-spacing:4px">SEASON ONE // 2026</span>
-        <h1>UNBEATABLE<br>STREETS.</h1>
+        <span class="card-label" style="color:var(--accent)">PROHUB // 2026</span>
+        <h1>STREET<br>STANDARD.</h1>
         
         <div class="bento">
-            <div class="bento-item big" onclick="openProfile('Kuznetsov', 92)">
+            <div class="bento-item i-1" onclick="openProfile('Kuznetsov', 92)">
                 <div>
-                    <span class="card-label">LEADERBOARD TOP</span>
-                    <div class="ovr-large">92</div>
+                    <span class="card-label">CURRENT LEADER</span>
+                    <div class="ovr-num">92</div>
                 </div>
-                <div>
-                    <div style="font-size: 4rem; font-weight: 900; font-style: italic; text-transform: uppercase; margin-bottom: 1rem;">KUZNETSOV</div>
-                    <span class="badge">RANK #1</span>
+                <div style="display:flex; justify-content:space-between; align-items:flex-end;">
+                    <div style="font-size: 2rem; font-weight: 900; font-style: italic;">KUZNETSOV</div>
+                    <span style="font-size: 0.6rem; font-weight: 900; border: 1px solid var(--border); padding: 4px 8px; border-radius: 4px;">RANK #1</span>
                 </div>
             </div>
 
-            <div class="bento-item tall" style="background: #fff; color: #000;" onclick="showSection('connect')">
-                <span class="card-label" style="color: rgba(0,0,0,0.5);">ADMISSION</span>
-                <div style="font-size: 3.5rem; font-weight: 900; line-height: 0.85; margin-top: 2rem; font-style: italic; text-transform: uppercase;">JOIN THE<br>CIRCLE.</div>
-                <p style="margin-top: 3rem; font-weight: 800; font-size: 1rem;">Стань частью закрытого комьюнити 1v1.</p>
+            <div class="bento-item i-2" onclick="showSection('connect')">
+                <span class="card-label" style="color:rgba(0,0,0,0.4)">MEMBERSHIP</span>
+                <div style="font-size: 2rem; font-weight: 900; font-style: italic; line-height: 0.9; margin-top: 1rem;">JOIN THE<br>ROSTER.</div>
+                <div style="margin-top: 2rem; font-size: 0.7rem; font-weight: 800;">APPLY FOR TRIAL →</div>
             </div>
 
-            <div class="bento-item wide" onclick="showSection('ranking')">
-                <span class="card-label">ROSTER</span>
-                <div style="font-size: 2.5rem; font-weight: 900; margin-top: 1rem; font-style: italic; text-transform: uppercase;">Explore Athletes</div>
-                <div style="margin-top: 2rem; color: var(--accent); font-weight: 900;">10 ACTIVE PLAYERS →</div>
+            <div class="bento-item i-3" onclick="showSection('ranking')">
+                <span class="card-label">DATABASE</span>
+                <div style="font-size: 1.2rem; font-weight: 800; font-style: italic;">EXPLORE ALL ATHLETES</div>
             </div>
 
-            <div class="bento-item" onclick="window.open('https://tiktok.com/@box1v1', '_blank')">
-                <span class="card-label">TIKTOK</span>
-                <div style="font-size: 2.5rem; font-weight: 900; margin-top: 1rem;">LIVE</div>
-            </div>
-
-            <div class="bento-item" onclick="window.open('https://instagram.com/box.1v1', '_blank')">
-                <span class="card-label">INSTA</span>
-                <div style="font-size: 2.5rem; font-weight: 900; margin-top: 1rem; color: var(--accent);">MEDIA</div>
+            <div class="bento-item i-4" onclick="window.open('https://instagram.com/box.1v1','_blank')">
+                <span class="card-label">MEDIA</span>
+                <div style="font-size: 1.2rem; font-weight: 800; font-style: italic;">FOLLOW ON INSTAGRAM</div>
             </div>
         </div>
     </section>
 
     <section id="ranking">
-        <h1>THE ROSTER</h1>
-        <div id="ranking-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem;"></div>
+        <h1>ATHLETES.</h1>
+        <div id="ranking-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1rem;"></div>
     </section>
 
     <section id="connect">
-        <span class="hero-label" style="color:var(--accent); font-weight:900; letter-spacing:4px">DIRECT LINE</span>
-        <h1>LET'S TALK.</h1>
-        <div style="margin-top: 4rem;">
-            <a href="https://t.me/streetbox1v1" target="_blank" class="link-row" onclick="playSound()"><h2>TELEGRAM</h2> <span>DIRECT ↗</span></a>
-            <a href="https://instagram.com/box.1v1" target="_blank" class="link-row" onclick="playSound()"><h2>INSTAGRAM</h2> <span>MEDIA ↗</span></a>
-            <a href="https://tiktok.com/@box1v1" target="_blank" class="link-row" onclick="playSound()"><h2>TIKTOK</h2> <span>WATCH ↗</span></a>
+        <h1>CONNECT.</h1>
+        <div style="margin-top: 2rem;">
+            <a href="https://t.me/streetbox1v1" target="_blank" class="link-row"><h2>TELEGRAM</h2> <span>↗</span></a>
+            <a href="https://instagram.com/box.1v1" target="_blank" class="link-row"><h2>INSTAGRAM</h2> <span>↗</span></a>
+            <a href="https://tiktok.com/@box1v1" target="_blank" class="link-row"><h2>TIKTOK</h2> <span>↗</span></a>
         </div>
     </section>
 
-    <footer>BOX1V1 ELITE</footer>
+    <footer>
+        <div>BOX1V1 ELITE FOOTBALL</div>
+        <div>EST. 2026</div>
+    </footer>
+  </div>
+
+  <div class="overlay" id="p-overlay" style="position:fixed; inset:0; background:#000; z-index:2000; display:none; padding:4rem 2rem;">
+    <div onclick="closeProfile()" style="position:absolute; top:2rem; right:2rem; font-weight:900; color:var(--accent); cursor:pointer; font-size:0.7rem;">CLOSE_X</div>
+    <h2 id="p-name" style="font-size:15vw; font-weight:900; font-style:italic; line-height:0.8;">NAME</h2>
+    <div id="p-ovr" style="font-size:8rem; font-weight:900; color:var(--accent);">92</div>
   </div>
 
   <script>
-    // Audio Context for the click sound
+    // Audio Context
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     function playSound() {
         const osc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(800, audioCtx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.1);
-        gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-        osc.start();
-        osc.stop(audioCtx.currentTime + 0.1);
+        osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(200, audioCtx.currentTime + 0.05);
+        gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.05);
+        osc.connect(gain); gain.connect(audioCtx.destination);
+        osc.start(); osc.stop(audioCtx.currentTime + 0.05);
     }
 
     const players = [
@@ -176,8 +181,8 @@
     window.onload = () => {
       setTimeout(() => {
         document.getElementById('preloader').style.opacity = '0';
-        setTimeout(() => document.getElementById('preloader').style.display = 'none', 600);
-      }, 1200);
+        setTimeout(() => document.getElementById('preloader').style.display = 'none', 800);
+      }, 1000);
       renderPlayers();
     };
 
@@ -185,10 +190,10 @@
       const grid = document.getElementById('ranking-grid');
       players.forEach((p, i) => {
         grid.innerHTML += `
-          <div class="bento-item" onclick="playSound(); openProfile('${p.n}', ${p.r})">
+          <div class="bento-item" onclick="openProfile('${p.n}', ${p.r})">
             <span class="card-label">ATHLETE // 00${i+1}</span>
-            <div style="font-size: 5rem; font-weight: 900; color: var(--accent); letter-spacing:-4px;">${p.r}</div>
-            <div style="font-size: 2rem; font-weight: 900; font-style: italic; text-transform: uppercase;">${p.n}</div>
+            <div style="font-size: 3rem; font-weight: 900; color: var(--accent); line-height:1;">${p.r}</div>
+            <div style="font-size: 1.1rem; font-weight: 800; font-style: italic; margin-top: 0.5rem;">${p.n}</div>
           </div>
         `;
       });
@@ -200,7 +205,6 @@
       document.getElementById(id).classList.add('active');
       document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
       document.getElementById('btn-' + id).classList.add('active');
-      window.scrollTo(0,0);
     }
 
     function openProfile(n, r) {
@@ -212,7 +216,6 @@
     }
 
     function closeProfile() {
-      playSound();
       document.getElementById('p-overlay').style.display = 'none';
       document.body.style.overflow = 'auto';
     }
