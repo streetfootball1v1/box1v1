@@ -21,6 +21,7 @@
     .nav-links { display: flex; gap: 2rem; }
     .nav-links a { color: var(--text-dim); text-decoration: none; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; cursor: pointer; }
     .nav-links a.active, .nav-links a:hover { color: var(--accent); }
+    .nav-links a.locked { opacity: 0.4; cursor: not-allowed; }
 
     .container { max-width: 1200px; margin: 140px auto 0; padding: 0 2rem; }
     
@@ -35,7 +36,7 @@
       background: var(--card-bg); border-radius: 30px; padding: 2rem; 
       display: flex; flex-direction: column; justify-content: space-between; 
       border: 1px solid var(--border); transition: 0.5s var(--cubic); 
-      position: relative; overflow: hidden; text-decoration: none; color: inherit;
+      position: relative; overflow: hidden; text-decoration: none; color: inherit; cursor: pointer;
     }
     .card:hover { transform: scale(1.02); background: #111; border-color: #333; }
     
@@ -43,6 +44,7 @@
     .c-wide { grid-column: span 2; }
     .c-accent { background: var(--accent); color: #000; border: none; }
     .c-social { background: #111; display: flex; align-items: center; justify-content: center; text-align: center; }
+    .c-locked { opacity: 0.6; cursor: help; }
 
     /* Typography & Data */
     .ovr { font-size: 8rem; font-weight: 900; line-height: 0.7; letter-spacing: -6px; color: var(--accent); transition: 0.5s; }
@@ -54,15 +56,18 @@
     .graph-mini { position: absolute; bottom: 0; left: 0; width: 100%; height: 60px; opacity: 0; transition: 0.5s; pointer-events: none; }
     .card:hover .graph-mini { opacity: 0.4; }
     
-    /* Overlay */
-    .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.98); z-index: 2000; display: none; opacity: 0; transition: 0.4s var(--cubic); backdrop-filter: blur(20px); padding: 4rem 2rem; }
-    .overlay.open { display: block; opacity: 1; }
-    .close { position: fixed; top: 2.5rem; right: 2.5rem; color: var(--text-dim); font-weight: 900; cursor: pointer; }
+    /* Toast Notification (Apple Style) */
+    #toast {
+        position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px);
+        background: rgba(255,255,255,0.95); color: #000; padding: 12px 24px;
+        border-radius: 20px; font-weight: 700; font-size: 0.9rem; z-index: 5000;
+        transition: 0.5s var(--cubic); backdrop-filter: blur(10px); box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+    #toast.show { transform: translateX(-50%) translateY(0); }
 
     @media (max-width: 768px) {
       .bento { grid-template-columns: 1fr; grid-auto-rows: auto; }
       .c-main, .c-wide { grid-column: span 1; min-height: 300px; }
-      .ovr { font-size: 6rem; }
     }
   </style>
 </head>
@@ -76,7 +81,8 @@
       <div class="nav-links">
         <a onclick="showSection('home')" id="btn-home" class="active">Home</a>
         <a onclick="showSection('roster')" id="btn-roster">Roster</a>
-        <a onclick="toggleOverlay('compare-ov')">Compare</a>
+        <a onclick="notify()" class="locked">Tables</a>
+        <a onclick="notify()" class="locked">History</a>
       </div>
     </div>
   </nav>
@@ -96,46 +102,36 @@
     </section>
   </div>
 
-  <div class="overlay" id="compare-ov">
-    <div class="close" onclick="toggleOverlay('compare-ov')">[ CLOSE ]</div>
-    <div style="display: flex; align-items: center; justify-content: center; gap: 3rem; height: 100%; flex-wrap: wrap;">
-        <div style="text-align: center;">
-            <select id="comp-1" onchange="runCompare()" style="background:#111; color:#fff; border:1px solid #333; padding:1rem; border-radius:15px; width:200px; font-weight:800;"></select>
-            <div id="comp-res-1" style="margin-top:2rem"></div>
-        </div>
-        <div style="font-size: 2rem; font-weight: 900; font-style: italic; color: #333;">VS</div>
-        <div style="text-align: center;">
-            <select id="comp-2" onchange="runCompare()" style="background:#111; color:#fff; border:1px solid #333; padding:1rem; border-radius:15px; width:200px; font-weight:800;"></select>
-            <div id="comp-res-2" style="margin-top:2rem"></div>
-        </div>
-    </div>
-  </div>
+  <div id="toast">Functionality coming soon</div>
 
   <script>
     const players = [
-        {id: 0, n: 'Kuznetsov', r: 92, w: 45, d: 5, l: 3, g: 'M20,50 L40,40 L60,45 L80,20 L100,10'},
-        {id: 1, n: 'Volkov', r: 90, w: 38, d: 8, l: 6, g: 'M20,50 L40,55 L60,40 L80,30 L100,20'},
-        {id: 2, n: 'Ivanov', r: 89, w: 35, d: 10, l: 4, g: 'M20,50 L40,45 L60,35 L80,40 L100,15'},
-        {id: 3, n: 'Smirnov', r: 82, w: 20, d: 2, l: 12, g: 'M20,50 L40,60 L60,50 L80,55 L100,40'}
+        {id: 0, n: 'Kuznetsov', r: 92, w: 45, d: 5, l: 3, g: 'M0,50 Q30,10 60,40 T120,10'},
+        {id: 1, n: 'Volkov', r: 90, w: 38, d: 8, l: 6, g: 'M0,50 Q30,60 60,30 T120,20'},
+        {id: 2, n: 'Ivanov', r: 89, w: 35, d: 10, l: 4, g: 'M0,50 Q30,20 60,45 T120,15'},
+        {id: 3, n: 'Smirnov', r: 82, w: 20, d: 2, l: 12, g: 'M0,50 Q30,80 60,50 T120,40'}
     ];
 
     function init() {
         players.sort((a,b) => b.r - a.r);
         renderHome();
         renderRoster();
-        const options = players.map(p => `<option value="${p.id}">${p.n}</option>`).join('');
-        document.getElementById('comp-1').innerHTML = options;
-        document.getElementById('comp-2').innerHTML = options;
     }
 
     function getGraphSVG(path) {
         return `<svg class="graph-mini" viewBox="0 0 120 60"><path d="${path}" fill="none" stroke="var(--accent)" stroke-width="3" stroke-linecap="round"/></svg>`;
     }
 
+    function notify() {
+        const toast = document.getElementById('toast');
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 3000);
+    }
+
     function renderHome() {
         const top = players[0];
         document.getElementById('home-bento').innerHTML = `
-            <div class="card c-main" onclick="openProfile(${top.id})">
+            <div class="card c-main" onclick="notify()">
                 <div><span class="label">Current Leader</span><div class="ovr">${top.r}</div></div>
                 <div class="p-name">${top.n}</div>
                 ${getGraphSVG(top.g)}
@@ -156,16 +152,21 @@
                 <div class="p-name" style="font-size:2rem; background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">INSTAGRAM</div>
             </a>
             
-            <div class="card">
-                <span class="label">Elite Trials</span>
-                <div class="p-name" style="font-size:1.2rem">APPLY<br>FOR BOX.</div>
+            <div class="card c-locked" onclick="notify()">
+                <span class="label">Recent Games</span>
+                <div class="p-name" style="font-size:1.2rem">MATCH<br>HISTORY</div>
+            </div>
+
+            <div class="card c-locked" onclick="notify()">
+                <span class="label">League Tables</span>
+                <div class="p-name" style="font-size:1.2rem">STANDINGS</div>
             </div>
         `;
     }
 
     function renderRoster() {
         document.getElementById('full-roster').innerHTML = players.map((p, i) => `
-            <div class="card">
+            <div class="card" onclick="notify()">
                 <div><span class="label">OVR // 0${i+1}</span><div class="ovr" style="font-size:4rem">${p.r}</div></div>
                 <div class="p-name" style="font-size:1.5rem">${p.n}</div>
                 ${getGraphSVG(p.g)}
@@ -180,25 +181,6 @@
         const btn = document.getElementById('btn-' + id);
         if(btn) btn.classList.add('active');
         window.scrollTo({top: 0, behavior: 'smooth'});
-    }
-
-    function toggleOverlay(id) {
-        const ov = document.getElementById(id);
-        if(ov.classList.contains('open')) {
-            ov.classList.remove('open');
-            setTimeout(() => ov.style.display = 'none', 400);
-        } else {
-            ov.style.display = 'block';
-            setTimeout(() => ov.classList.add('open'), 10);
-            runCompare();
-        }
-    }
-
-    function runCompare() {
-        const p1 = players.find(x => x.id == document.getElementById('comp-1').value);
-        const p2 = players.find(x => x.id == document.getElementById('comp-2').value);
-        document.getElementById('comp-res-1').innerHTML = `<div class="ovr">${p1.r}</div><div class="p-name">${p1.n}</div>`;
-        document.getElementById('comp-res-2').innerHTML = `<div class="ovr">${p2.r}</div><div class="p-name">${p2.n}</div>`;
     }
 
     init();
