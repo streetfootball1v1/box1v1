@@ -7,7 +7,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,700;0,900;1,900&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #000; --card: #0d0d0d; --accent: #39FF14;
+      --bg: #000; --card: #0d0d0d; --accent: #2E7D32; /* Смягчённый зелёный */
       --text: #fff; --text-dim: #86868b; --border: #1c1c1e;
       --cubic: cubic-bezier(0.23, 1, 0.32, 1);
       --tg: #24A1DE;
@@ -94,7 +94,7 @@
   <nav>
     <div class="nav-inner">
       <div class="logo" onclick="switchTab('home')" style="cursor:pointer">
-        <svg viewBox="0 0 400 100" width="90" height="22"><text x="0" y="80" fill="#fff" font-family="Inter" font-weight="900" font-size="80">BOX<tspan fill="#39FF14">1</tspan>V1</text></svg>
+        <svg viewBox="0 0 400 100" width="90" height="22"><text x="0" y="80" fill="#fff" font-family="Inter" font-weight="900" font-size="80">BOX<tspan fill="#2E7D32">1</tspan>V1</text></svg>
       </div>
       <div class="nav-links">
         <a href="#home" onclick="switchTab('home')" id="nav-home">Лента</a>
@@ -117,7 +117,7 @@
     
     <section id="home" class="active">
       <div class="hero reveal">
-        <span style="font-weight:800; letter-spacing:3px; text-transform:uppercase; font-size:11px; color:var(--accent)">Уличная лига футбола</span>
+        <span style="font-weight:800; letter-spacing:3px; text-transform:uppercase; font-size:11px; color:var(--accent)">УЛИЧНАЯ ЛИГА ФУТБОЛА</span>
         <h1 class="shimmer-text">ТВОЙ<br>ХОД.</h1>
         <div id="countdown" style="display:flex; gap:20px; margin-top:10px">
            <div><span id="days" style="font-size:2rem; font-weight:900">00</span><small style="display:block; font-size:9px; color:var(--text-dim); text-transform:uppercase">Дней</small></div>
@@ -157,12 +157,12 @@
     </section>
 
     <section id="roster">
-      <h1 class="shimmer-text reveal" style="font-size: clamp(3.5rem, 10vw, 8rem); font-weight: 900; font-style: italic; margin-bottom:40px">ROSTER.</h1>
+      <h1 class="shimmer-text reveal" style="font-size: clamp(3.5rem, 10vw, 8rem); font-weight: 900; font-style: italic; margin-bottom:40px">ИГРОКИ.</h1>
       <div class="bento-grid" id="roster-grid"></div>
     </section>
 
     <section id="stats">
-      <h1 class="shimmer-text reveal" style="font-size: clamp(3.5rem, 10vw, 8rem); font-weight: 900; font-style: italic;">RANKING.</h1>
+      <h1 class="shimmer-text reveal" style="font-size: clamp(3.5rem, 10vw, 8rem); font-weight: 900; font-style: italic;">РЕЙТИНГ.</h1>
       <div class="reveal" style="background: var(--card); border-radius: 40px; border: 1px solid var(--border); overflow: hidden; margin-top:40px">
         <table style="width:100%; border-collapse:collapse;"><tbody id="stats-body"></tbody></table>
       </div>
