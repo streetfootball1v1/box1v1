@@ -1,129 +1,73 @@
-<!DOCTYPE html>
+<!DOCTYPE html><!DOCTYPE html>
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>BOX1V1 | Street Football League</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <title>BOX1V1 | Tournament Hub</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;900&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg: #050505;
-      --card-bg: #111111;
-      --accent: #39FF14; /* Тот самый сочный зеленый */
-      --text: #ffffff;
-      --text-dim: #888;
-      --gold: #FFD700;
-      --silver: #C0C0C0;
-      --bronze: #CD7F32;
+      --card-bg: #111;
+      --accent: #39FF14;
+      --text: #fff;
+      --text-dim: #666;
+      --gold: #FFD700; --silver: #C0C0C0; --bronze: #CD7F32;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'Inter', sans-serif;
-      overflow-x: hidden;
-    }
+    body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; }
 
-    /* Apple-style Navigation */
-    nav {
-      position: fixed;
-      top: 0;
-      width: 100%;
-      background: rgba(0,0,0,0.8);
-      backdrop-filter: blur(20px);
-      z-index: 1000;
-      border-bottom: 1px solid #222;
-    }
-    .nav-container {
-      max-width: 1000px;
-      margin: 0 auto;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 1rem 1.5rem;
-    }
-    .logo { font-weight: 800; font-size: 1.2rem; letter-spacing: 1px; color: var(--accent); }
-    .nav-links { display: flex; gap: 1.5rem; }
-    .nav-links a { 
-      color: var(--text-dim); 
-      text-decoration: none; 
-      font-size: 0.9rem; 
-      transition: 0.3s; 
-      cursor: pointer;
-    }
-    .nav-links a.active { color: var(--text); font-weight: 600; }
+    /* Nav */
+    nav { position: fixed; top: 0; width: 100%; background: rgba(0,0,0,0.9); backdrop-filter: blur(15px); z-index: 1000; border-bottom: 1px solid #222; }
+    .nav-container { max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; padding: 1rem 1.5rem; }
+    .nav-links { display: flex; gap: 1.2rem; }
+    .nav-links a { color: var(--text-dim); text-decoration: none; font-size: 0.8rem; font-weight: 600; transition: 0.3s; cursor: pointer; }
+    .nav-links a:hover, .nav-links a.active { color: var(--accent); }
 
-    .container { max-width: 1000px; margin: 80px auto 0; padding: 2rem 1.5rem; }
-
-    /* Sections Control */
-    section { display: none; animation: fadeIn 0.5s ease-in-out; }
+    .container { max-width: 1100px; margin: 100px auto 0; padding: 0 1.5rem 4rem; }
+    section { display: none; animation: fadeIn 0.4s ease-out; }
     section.active { display: block; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-    h1 { font-size: 3rem; font-weight: 800; margin-bottom: 1rem; letter-spacing: -2px; }
-    .hero-text { color: var(--text-dim); font-size: 1.2rem; margin-bottom: 3rem; max-width: 600px; }
+    h1 { font-size: clamp(2.5rem, 8vw, 4rem); font-weight: 900; letter-spacing: -3px; margin-bottom: 2rem; text-transform: uppercase; }
 
-    /* Cards Grid */
-    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; }
-
-    /* FIFA Style Card */
+    /* 3D Cards Grid */
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1.5rem; }
+    
     .card {
       background: var(--card-bg);
-      border-radius: 16px;
+      border-radius: 12px;
       padding: 1.5rem;
-      position: relative;
       border: 1px solid #222;
-      transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      overflow: hidden;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.1s ease;
+      cursor: pointer;
     }
-    .card:hover { transform: scale(1.05); border-color: var(--accent); box-shadow: 0 0 30px rgba(57, 255, 20, 0.1); }
-    
-    .card-ovr { font-size: 2.5rem; font-weight: 800; color: var(--accent); margin-bottom: 0.5rem; }
-    .card-name { font-size: 1.5rem; font-weight: 700; text-transform: uppercase; margin-bottom: 1rem; }
-    
-    .card-stats { display: flex; gap: 0.8rem; border-top: 1px solid #222; padding-top: 1rem; margin-bottom: 1rem; }
-    .stat-item { text-align: center; }
-    .stat-val { display: block; font-weight: 700; font-size: 1.1rem; }
-    .stat-label { font-size: 0.6rem; color: var(--text-dim); text-transform: uppercase; }
+    .card-ovr { font-size: 2.2rem; font-weight: 900; color: var(--accent); line-height: 1; }
+    .card-name { font-size: 1.2rem; font-weight: 700; margin: 1rem 0; text-transform: uppercase; }
+    .card-stats { display: flex; justify-content: space-between; border-top: 1px solid #222; padding-top: 0.8rem; font-size: 0.7rem; color: var(--text-dim); }
+    .stat span { display: block; color: #fff; font-weight: 700; font-size: 0.9rem; }
 
-    .tier-badge {
-      display: inline-block;
-      padding: 0.3rem 0.8rem;
-      border-radius: 4px;
-      font-size: 0.7rem;
-      font-weight: 800;
-      letter-spacing: 1px;
-    }
-    .tier-gold { background: var(--gold); color: #000; }
-    .tier-silver { background: var(--silver); color: #000; }
-    .tier-bronze { background: var(--bronze); color: #000; }
+    .tier-line { height: 4px; width: 40px; margin-top: 1rem; border-radius: 2px; }
+    .gold-line { background: var(--gold); }
+    .silver-line { background: var(--silver); }
+    .bronze-line { background: var(--bronze); }
 
-    /* Upcoming / Soon */
-    .soon-box {
-      border: 2px dashed #222;
-      border-radius: 16px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 300px;
-      color: var(--text-dim);
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-    }
+    /* Tournament Bracket (Сетка) */
+    .bracket-container { overflow-x: auto; padding: 2rem 0; }
+    .bracket { display: flex; gap: 40px; min-width: 800px; justify-content: space-between; }
+    .round { display: flex; flex-direction: column; justify-content: space-around; gap: 20px; }
+    .match { background: #111; border: 1px solid #222; padding: 10px; border-radius: 8px; width: 180px; position: relative; }
+    .match::after { content: ''; position: absolute; right: -41px; top: 50%; width: 40px; height: 1px; background: #333; }
+    .round:last-child .match::after { display: none; }
+    .match-team { display: flex; justify-content: space-between; padding: 5px 0; font-size: 0.85rem; font-weight: 600; }
+    .match-team.winner { color: var(--accent); }
+    .score { color: var(--text-dim); }
 
-    /* Rules Table */
-    .rules-list { list-style: none; }
-    .rules-list li { 
-      padding: 1.5rem; 
-      border-bottom: 1px solid #222; 
-      display: flex; 
-      gap: 1rem;
-    }
-    .rules-list span { color: var(--accent); font-weight: 800; }
-
-    footer { text-align: center; padding: 4rem 0; color: var(--text-dim); font-size: 0.8rem; }
+    /* Footer */
+    footer { border-top: 1px solid #222; margin-top: 4rem; padding: 2rem 0; text-align: center; color: #444; font-size: 0.7rem; letter-spacing: 2px; }
   </style>
 </head>
 <body>
@@ -132,9 +76,10 @@
     <div class="nav-container">
       <div class="logo">BOX1V1</div>
       <div class="nav-links">
-        <a onclick="showSection('home')" id="link-home" class="active">ГЛАВНАЯ</a>
-        <a onclick="showSection('ranking')" id="link-ranking">РЕЙТИНГ</a>
-        <a onclick="showSection('rules')" id="link-rules">ПРАВИЛА</a>
+        <a onclick="showSection('home')" id="btn-home" class="active">ГЛАВНАЯ</a>
+        <a onclick="showSection('ranking')" id="btn-ranking">РЕЙТИНГ</a>
+        <a onclick="showSection('bracket')" id="btn-bracket">СЕТКА</a>
+        <a onclick="showSection('rules')" id="btn-rules">ПРАВИЛА</a>
       </div>
     </div>
   </nav>
@@ -142,77 +87,121 @@
   <div class="container">
 
     <section id="home" class="active">
-      <h1>Street Football<br>Reinvented.</h1>
-      <p class="hero-text">Лига, где твоя статистика превращается в реальный статус. Здесь нет команд, есть только ты и твой оппонент. 1 на 1. Докажи, что ты GOLD.</p>
-      
+      <h1>THE ARENA<br>IS WAITING.</h1>
       <div class="grid">
-        <div class="card">
+        <div class="card js-tilt">
           <div class="card-ovr">92</div>
           <div class="card-name">ZUZNETSOV</div>
           <div class="card-stats">
-            <div class="stat-item"><span class="stat-val">65</span><span class="stat-label">SPD</span></div>
-            <div class="stat-item"><span class="stat-val">88</span><span class="stat-label">SHT</span></div>
-            <div class="stat-item"><span class="stat-val">68</span><span class="stat-label">DRI</span></div>
-            <div class="stat-item"><span class="stat-val">60</span><span class="stat-label">DEF</span></div>
+            <div class="stat">SPD<span>88</span></div>
+            <div class="stat">DRI<span>91</span></div>
+            <div class="stat">SHT<span>85</span></div>
           </div>
-          <div class="tier-badge tier-gold">TIER: GOLD</div>
+          <div class="tier-line gold-line"></div>
         </div>
-        <div class="soon-box">СЛЕДУЮЩИЙ МАТЧ: СКОРО</div>
+        <div style="border: 2px dashed #222; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-weight: 800; color: #222;">NEXT MATCH SOON</div>
       </div>
     </section>
 
     <section id="ranking">
-      <h1>Лидеры Коробки</h1>
-      <p class="hero-text">Обновление после каждого игрового дня. Твои победы поднимают тебя в топ.</p>
-      <div class="grid" id="ranking-list">
-        <div class="card">
-            <div class="card-ovr">85</div>
-            <div class="card-name">KUZNETSOV</div>
-            <div class="tier-badge tier-silver">TIER: SILVER</div>
+      <h1>RANKINGS</h1>
+      <div class="grid" id="ranking-grid">
         </div>
-        <div class="card">
-            <div class="card-ovr">62</div>
-            <div class="card-name">ZUPAROV</div>
-            <div class="tier-badge tier-bronze">TIER: BRONZE</div>
+    </section>
+
+    <section id="bracket">
+      <h1>TOURNAMENT</h1>
+      <div class="bracket-container">
+        <div class="bracket">
+          <div class="round">
+            <div class="match"><div class="match-team">PLAYER 1 <span class="score">-</span></div><div class="match-team">PLAYER 2 <span class="score">-</span></div></div>
+            <div class="match"><div class="match-team">PLAYER 3 <span class="score">-</span></div><div class="match-team">PLAYER 4 <span class="score">-</span></div></div>
+            <div class="match"><div class="match-team">PLAYER 5 <span class="score">-</span></div><div class="match-team">PLAYER 6 <span class="score">-</span></div></div>
+            <div class="match"><div class="match-team">PLAYER 7 <span class="score">-</span></div><div class="match-team">PLAYER 8 <span class="score">-</span></div></div>
+          </div>
+          <div class="round">
+            <div class="match" style="margin-top: 50px;"><div class="match-team">TBD <span class="score"></span></div><div class="match-team">TBD <span class="score"></span></div></div>
+            <div class="match" style="margin-top: 100px;"><div class="match-team">TBD <span class="score"></span></div><div class="match-team">TBD <span class="score"></span></div></div>
+          </div>
+          <div class="round">
+            <div class="match" style="margin-top: 130px; border-color: var(--accent);"><div class="match-team">FINAL <span class="score"></span></div><div class="match-team">FINAL <span class="score"></span></div></div>
+          </div>
         </div>
-        <div class="soon-box">МЕСТО ВАКАНТНО</div>
       </div>
     </section>
 
     <section id="rules">
-      <h1>The Law of Box.</h1>
-      <ul class="rules-list">
-        <li><span>01.</span> Формат матча — 5 минут или до 5 забитых мячей.</li>
-        <li><span>02.</span> Чистое время на последней минуте каждого тайма.</li>
-        <li><span>03.</span> Проброс между ног (Panna) дает +1 OVR вне зависимости от счета.</li>
-        <li><span>04.</span> Победа в основное время: +3 к рейтингу.</li>
-        <li><span>05.</span> Уважение к оппоненту — основа лиги.</li>
-      </ul>
+      <h1>THE RULES</h1>
+      <div style="max-width: 600px; line-height: 2;">
+        <p style="color: var(--accent); font-weight: 800; margin-bottom: 1rem;">1. МАТЧ</p>
+        <p>5 минут. 1 на 1. Половина поля. Без аутов (игра от бортов).</p>
+        <p style="color: var(--accent); font-weight: 800; margin-top: 2rem; margin-bottom: 1rem;">2. РЕЙТИНГ</p>
+        <p>OVR рассчитывается по системе ELO. Победа над сильным соперником дает больше очков.</p>
+        <p style="color: var(--accent); font-weight: 800; margin-top: 2rem; margin-bottom: 1rem;">3. ПАННА</p>
+        <p>Мяч, пропущенный между ног — мгновенное поражение или -2 гола (на выбор организатора).</p>
+      </div>
     </section>
 
     <footer>
-      © 2026 BOX1V1 • ELAGINO PARK • СТАНЬ ЛЕГЕНДОЙ
+      BOX1V1 • ELAGINO PARK • VOL. 1
     </footer>
+
   </div>
 
   <script>
-    function showSection(sectionId) {
-      // Скрываем все секции
-      document.querySelectorAll('section').forEach(section => {
-        section.classList.remove('active');
-      });
-      // Показываем нужную
-      document.getElementById(sectionId).classList.add('active');
-      
-      // Обновляем ссылки в меню
-      document.querySelectorAll('.nav-links a').forEach(link => {
-        link.classList.remove('active');
-      });
-      document.getElementById('link-' + sectionId).classList.add('active');
-
-      // Скролл вверх при переключении
-      window.scrollTo(0, 0);
+    // Переключение секций
+    function showSection(id) {
+      document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+      document.getElementById('btn-' + id).classList.add('active');
+      window.scrollTo(0,0);
     }
+
+    // Генерация 10 карточек
+    const players = [
+      {n: 'Zuznetsov', r: 92, t: 'gold'}, {n: 'Kuznetsov', r: 85, t: 'silver'},
+      {n: 'Zuparov', r: 62, t: 'bronze'}, {n: 'Petrov', r: 78, t: 'silver'},
+      {n: 'Sidorov', r: 55, t: 'bronze'}, {n: 'Ivanov', r: 89, t: 'gold'},
+      {n: 'Mironov', r: 71, t: 'silver'}, {n: 'Popov', r: 64, t: 'bronze'},
+      {n: 'Smirnov', r: 81, t: 'silver'}, {n: 'Volkov', r: 90, t: 'gold'}
+    ];
+
+    const grid = document.getElementById('ranking-grid');
+    players.forEach(p => {
+      grid.innerHTML += `
+        <div class="card js-tilt">
+          <div class="card-ovr">${p.r}</div>
+          <div class="card-name">${p.n}</div>
+          <div class="card-stats">
+            <div class="stat">SPD<span>${Math.floor(Math.random()*40+50)}</span></div>
+            <div class="stat">DRI<span>${Math.floor(Math.random()*40+50)}</span></div>
+            <div class="stat">SHT<span>${Math.floor(Math.random()*40+50)}</span></div>
+          </div>
+          <div class="tier-line ${p.t}-line"></div>
+        </div>
+      `;
+    });
+
+    // 3D эффект наклона
+    document.addEventListener('mousemove', e => {
+      document.querySelectorAll('.js-tilt').forEach(card => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const xc = rect.width / 2;
+        const yc = rect.height / 2;
+        const dx = x - xc;
+        const dy = y - yc;
+        card.style.transform = `perspective(500px) rotateX(${-dy/10}deg) rotateY(${dx/10}deg)`;
+      });
+    });
+
+    document.addEventListener('mouseleave', () => {
+      document.querySelectorAll('.js-tilt').forEach(card => {
+        card.style.transform = `perspective(500px) rotateX(0deg) rotateY(0deg)`;
+      });
+    });
   </script>
 </body>
 </html>
