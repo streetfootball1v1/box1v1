@@ -7,7 +7,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,700;0,900;1,900&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #000; --card: #0d0d0d; --accent: #2E7D32; /* Смягчённый зелёный */
+      --bg: #000; --card: #0d0d0d; --accent: #39FF14;
       --text: #fff; --text-dim: #86868b; --border: #1c1c1e;
       --cubic: cubic-bezier(0.23, 1, 0.32, 1);
       --tg: #24A1DE;
@@ -19,7 +19,6 @@
     body { background: var(--bg); color: var(--text); font-family: -apple-system, 'Inter', sans-serif; overflow-x: hidden; }
     body.menu-open { overflow: hidden; }
 
-    /* Анимации */
     .reveal { opacity: 0; transform: translateY(30px); transition: transform 0.8s var(--cubic), opacity 0.8s var(--cubic); }
     .reveal.active { opacity: 1; transform: translateY(0); }
 
@@ -31,7 +30,7 @@
     @keyframes shine { to { background-position: 200% center; } }
 
     /* Навигация */
-    nav { position: fixed; top: 0; width: 100%; z-index: 1000; background: rgba(0,0,0,0.7); backdrop-filter: blur(20px); border-bottom: 0.5px solid var(--border); }
+    nav { position: fixed; top: 0; width: 100%; z-index: 1000; background: rgba(0,0,0,0.8); backdrop-filter: blur(20px); border-bottom: 0.5px solid var(--border); }
     .nav-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; height: 72px; padding: 0 24px; }
     
     .nav-links { display: flex; gap: 2rem; }
@@ -50,13 +49,13 @@
 
     /* Секции */
     .main-content { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
-    section { display: none; padding-top: 100px; min-height: 100vh; }
+    section { display: none; padding-top: 120px; min-height: 100vh; }
     section.active { display: block; animation: sectionEnter 0.6s var(--cubic); }
     @keyframes sectionEnter { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
 
     /* Hero блок */
-    .hero { min-height: 80vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
-    .hero h1 { font-size: clamp(3.5rem, 18vw, 11rem); font-weight: 900; line-height: 0.8; letter-spacing: -6px; font-style: italic; text-transform: uppercase; margin: 20px 0; }
+    .hero { min-height: 70vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 40px 0; }
+    .hero h1 { font-size: clamp(4rem, 20vw, 12rem); font-weight: 900; line-height: 1.1; letter-spacing: -4px; font-style: italic; text-transform: uppercase; margin: 10px 0; padding: 10px 0; }
     
     /* Bento Сетка */
     .bento-grid { display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: 260px; gap: 20px; margin: 60px 0; }
@@ -65,7 +64,6 @@
     .col-2 { grid-column: span 2; }
     .row-2 { grid-row: span 2; }
 
-    /* Соцсети (Стилизация) */
     .item-tg:hover { border-color: var(--tg); }
     .item-inst:hover { border-color: #dc2743; }
 
@@ -86,6 +84,8 @@
       .burger { display: flex; }
       .bento-grid { grid-template-columns: 1fr; grid-auto-rows: auto; }
       .col-2, .row-2 { grid-column: span 1; grid-row: span 1; }
+      .hero { min-height: 60vh; }
+      .hero h1 { letter-spacing: -2px; }
     }
   </style>
 </head>
@@ -94,11 +94,11 @@
   <nav>
     <div class="nav-inner">
       <div class="logo" onclick="switchTab('home')" style="cursor:pointer">
-        <svg viewBox="0 0 400 100" width="90" height="22"><text x="0" y="80" fill="#fff" font-family="Inter" font-weight="900" font-size="80">BOX<tspan fill="#2E7D32">1</tspan>V1</text></svg>
+        <svg viewBox="0 0 400 100" width="90" height="22"><text x="0" y="80" fill="#fff" font-family="Inter" font-weight="900" font-size="80">BOX<tspan fill="#39FF14">1</tspan>V1</text></svg>
       </div>
       <div class="nav-links">
         <a href="#home" onclick="switchTab('home')" id="nav-home">Лента</a>
-        <a href="#roster" onclick="switchTab('roster')" id="nav-roster">Игроки</a>
+        <a href="#roster" onclick="switchTab('roster')" id="nav-roster">Состав</a>
         <a href="#stats" onclick="switchTab('stats')" id="nav-stats">Рейтинг</a>
       </div>
       <div class="burger" id="burger" onclick="toggleMenu()">
@@ -109,7 +109,7 @@
 
   <div class="mobile-nav" id="mobile-nav">
     <a href="#home" onclick="toggleMenu(); switchTab('home')">Лента</a>
-    <a href="#roster" onclick="toggleMenu(); switchTab('roster')">Игроки</a>
+    <a href="#roster" onclick="toggleMenu(); switchTab('roster')">Состав</a>
     <a href="#stats" onclick="toggleMenu(); switchTab('stats')">Рейтинг</a>
   </div>
 
@@ -117,7 +117,7 @@
     
     <section id="home" class="active">
       <div class="hero reveal">
-        <span style="font-weight:800; letter-spacing:3px; text-transform:uppercase; font-size:11px; color:var(--accent)">УЛИЧНАЯ ЛИГА ФУТБОЛА</span>
+        <span style="font-weight:800; letter-spacing:3px; text-transform:uppercase; font-size:11px; color:var(--text-dim)">Уличная футбольная лига</span>
         <h1 class="shimmer-text">ТВОЙ<br>ХОД.</h1>
         <div id="countdown" style="display:flex; gap:20px; margin-top:10px">
            <div><span id="days" style="font-size:2rem; font-weight:900">00</span><small style="display:block; font-size:9px; color:var(--text-dim); text-transform:uppercase">Дней</small></div>
@@ -157,7 +157,7 @@
     </section>
 
     <section id="roster">
-      <h1 class="shimmer-text reveal" style="font-size: clamp(3.5rem, 10vw, 8rem); font-weight: 900; font-style: italic; margin-bottom:40px">ИГРОКИ.</h1>
+      <h1 class="shimmer-text reveal" style="font-size: clamp(3.5rem, 10vw, 8rem); font-weight: 900; font-style: italic; margin-bottom:40px">СОСТАВ.</h1>
       <div class="bento-grid" id="roster-grid"></div>
     </section>
 
@@ -203,11 +203,11 @@
 
   <script>
     const players = {
-      'ZUPAROV': { r: 0, role: 'Founder', drib: 15, speed: 15, shot: 15, phys: 15 },
+      'ZUPAROV': { r: 0, role: 'Основатель', drib: 15, speed: 15, shot: 15, phys: 15 },
       'ALISA': { r: 0, role: 'Core Team', drib: 15, speed: 15, shot: 15, phys: 15 },
-      'KUSCH': { r: 0, role: 'Player', drib: 15, speed: 15, shot: 15, phys: 15 },
-      'DIDUR': { r: 0, role: 'Player', drib: 15, speed: 15, shot: 15, phys: 15 },
-      'BIBIKOV': { r: 0, role: 'Player', drib: 15, speed: 15, shot: 15, phys: 15 }
+      'KUSCH': { r: 0, role: 'Игрок', drib: 15, speed: 15, shot: 15, phys: 15 },
+      'DIDUR': { r: 0, role: 'Игрок', drib: 15, speed: 15, shot: 15, phys: 15 },
+      'BIBIKOV': { r: 0, role: 'Игрок', drib: 15, speed: 15, shot: 15, phys: 15 }
     };
 
     function toggleMenu() {
