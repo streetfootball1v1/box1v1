@@ -10,23 +10,25 @@
       --bg: #000; --card-bg: #0d0d0d; --accent: #39FF14;
       --text: #fff; --text-dim: #666; --border: #1a1a1a;
       --cubic: cubic-bezier(0.2, 1, 0.2, 1);
+      
+      /* Цвета рангов */
+      --rank-gold: #FFD700;
+      --rank-silver: #C0C0C0;
+      --rank-bronze: #CD7F32;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { 
       background: var(--bg); color: var(--text); 
       font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; 
-      overflow-x: hidden;
     }
 
-    /* Loader */
     #preloader {
       position: fixed; inset: 0; background: #000; z-index: 5000;
       display: flex; align-items: center; justify-content: center;
-      transition: opacity 0.4s var(--cubic); /* Ускоренный выход лоадера */
+      transition: opacity 0.4s var(--cubic);
     }
 
-    /* Nav */
     nav { 
       position: fixed; top: 0; width: 100%; z-index: 1000; 
       background: rgba(0,0,0,0.9); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border);
@@ -45,7 +47,6 @@
 
     .container { max-width: 1200px; margin: 120px auto 0; padding: 0 2rem; min-height: 80vh; }
     
-    /* Sections - Ускоренные переходы */
     section { display: none; opacity: 0; transform: translateY(5px); transition: 0.3s var(--cubic); }
     section.active { display: block; opacity: 1; transform: translateY(0); }
 
@@ -54,44 +55,48 @@
       letter-spacing: -3px; margin-bottom: 3rem; text-transform: uppercase; font-style: italic; 
     }
 
-    /* Bento Grid */
     .bento { display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: 220px; gap: 1rem; margin-bottom: 5rem; }
     
     .card { 
       background: var(--card-bg); border-radius: 20px; padding: 2rem; 
       display: flex; flex-direction: column; justify-content: space-between;
-      transition: 0.25s var(--cubic); /* Быстрая реакция на ховер */
+      transition: 0.25s var(--cubic);
       cursor: pointer; border: 1px solid var(--border);
       position: relative; overflow: hidden;
     }
 
-    /* Ховер: только поднятие и смена фона */
     .card:hover { 
       transform: translateY(-6px); 
-      border-color: var(--accent); 
+      border-color: rgba(255,255,255,0.2); 
       background: #111;
     }
     
     .c-main { grid-column: span 2; grid-row: span 2; }
     .c-white { background: #fff; color: #000; border: none; }
-    .c-white:hover { background: #f0f0f0; color: #000; }
+    .c-white:hover { background: #f0f0f0; }
     .c-wide { grid-column: span 2; }
 
-    /* Акцент на OVR при наведении */
+    /* Динамическая подсветка OVR */
     .ovr { 
-      font-size: 8rem; font-weight: 900; color: var(--accent); 
+      font-size: 8rem; font-weight: 900; 
       line-height: 0.8; letter-spacing: -6px; 
-      transition: 0.25s ease; /* Плавное свечение цифр */
+      transition: 0.25s ease;
+      color: var(--ovr-color, var(--accent)); /* Цвет по умолчанию */
     }
+
+    /* Цвета для рангов */
+    .rank-gold { --ovr-color: var(--rank-gold); }
+    .rank-silver { --ovr-color: var(--rank-silver); }
+    .rank-bronze { --ovr-color: var(--rank-bronze); }
+
     .card:hover .ovr {
-      filter: drop-shadow(0 0 12px rgba(57, 255, 20, 0.5));
-      transform: scale(1.02);
+      filter: drop-shadow(0 0 15px var(--ovr-color, var(--accent)));
+      transform: scale(1.05);
     }
 
     .label { font-size: 0.65rem; font-weight: 900; color: var(--text-dim); letter-spacing: 2px; text-transform: uppercase; }
     .p-name { font-size: 2.8rem; font-weight: 900; font-style: italic; text-transform: uppercase; line-height: 0.9; }
 
-    /* Connect Section */
     .social-row { 
       display: flex; justify-content: space-between; align-items: center; 
       padding: 2.5rem 0; border-top: 1px solid var(--border); 
@@ -100,7 +105,6 @@
     .social-row:hover { color: var(--accent); padding-left: 1rem; }
     .social-row h2 { font-size: 3rem; font-weight: 900; font-style: italic; text-transform: uppercase; }
 
-    /* Overlay */
     .overlay { 
       position: fixed; inset: 0; background: #000; z-index: 2000; 
       display: none; padding: 4rem 2rem; opacity: 0; transition: 0.3s; 
@@ -145,15 +149,12 @@
   </nav>
 
   <div class="container">
-    
     <section id="home" class="active">
         <span class="label" style="color:var(--accent)">ELAGINO SEASON 2026</span>
         <h1>STREET<br>STANDARD.</h1>
         <div class="bento">
-            <div class="card c-main" onclick="openProfile('Kuznetsov', 92)">
-                <div><span class="label">LEADERBOARD #01</span><div class="ovr">92</div></div>
-                <div class="p-name">KUZNETSOV</div>
-            </div>
+            <div id="leader-card-container"></div>
+            
             <div class="card c-white" onclick="showSection('connect')">
                 <div style="font-size: 2rem; font-weight: 900; font-style: italic; text-transform: uppercase;">JOIN THE<br>CAGE.</div>
                 <p style="font-size: 0.7rem; font-weight: 800;">APPLY FOR TRIAL →</p>
@@ -162,10 +163,7 @@
                 <span class="label">DATABASE</span>
                 <div style="font-size: 1.4rem; font-weight: 900; font-style: italic;">ALL PLAYERS</div>
             </div>
-            <div class="card c-wide" 
-                 onmouseenter="document.getElementById('main-body').style.background='#0a0a0a'"
-                 onmouseleave="document.getElementById('main-body').style.background='#000'"
-                 onclick="window.open('https://instagram.com/box.1v1')">
+            <div class="card c-wide" onclick="window.open('https://instagram.com/box.1v1')">
                 <span class="label">MEDIA</span>
                 <div style="font-size: 2rem; font-weight: 900; font-style: italic; color: var(--accent);">INSTAGRAM ↗</div>
                 <p style="font-size: 0.75rem; color: var(--text-dim);">WATCH HIGHLIGHTS</p>
@@ -194,7 +192,7 @@
     <div class="close" onclick="closeProfile()">[ CLOSE ]</div>
     <div style="max-width: 1000px; margin: 0 auto; padding-top: 10vh;">
         <h2 id="p-name" style="font-size: 10vw; font-weight: 900; font-style: italic; text-transform: uppercase; line-height: 0.8;">NAME</h2>
-        <div id="p-ovr" style="font-size: 12rem; font-weight: 900; color: var(--accent);">92</div>
+        <div id="p-ovr" class="ovr" style="font-size: 12rem;">92</div>
     </div>
   </div>
 
@@ -205,20 +203,44 @@
         {n: 'Popov', r: 64}, {n: 'Zuparov', r: 62}, {n: 'Sidorov', r: 55}, {n: 'Dmitriev', r: 51}
     ];
 
+    // Логика определения ранга
+    function getRankClass(rating) {
+        if (rating >= 85) return 'rank-gold';
+        if (rating >= 70) return 'rank-silver';
+        return 'rank-bronze';
+    }
+
     window.onload = () => {
+        // Сортировка игроков по рейтингу (от большего к меньшему)
+        players.sort((a, b) => b.r - a.r);
+
         setTimeout(() => {
             document.getElementById('preloader').style.opacity = '0';
             setTimeout(() => document.getElementById('preloader').style.display = 'none', 400);
         }, 400);
+        
+        renderHomeLeader();
         renderPlayers();
     };
+
+    // Рендер главной карточки на Home
+    function renderHomeLeader() {
+        const leader = players[0];
+        const container = document.getElementById('leader-card-container');
+        container.innerHTML = `
+            <div class="card c-main ${getRankClass(leader.r)}" onclick="openProfile('${leader.n}', ${leader.r})">
+                <div><span class="label">LEADERBOARD #01</span><div class="ovr">${leader.r}</div></div>
+                <div class="p-name">${leader.n}</div>
+            </div>
+        `;
+    }
 
     function renderPlayers() {
       const grid = document.getElementById('ranking-grid');
       grid.innerHTML = '';
       players.forEach((p, i) => {
         grid.innerHTML += `
-          <div class="card" style="min-height: 200px;" onclick="openProfile('${p.n}', ${p.r})">
+          <div class="card ${getRankClass(p.r)}" style="min-height: 200px;" onclick="openProfile('${p.n}', ${p.r})">
             <span class="label">ATHLETE // 0${i+1}</span>
             <div class="ovr" style="font-size: 4rem; line-height:1;">${p.r}</div>
             <div style="font-size: 1.5rem; font-weight: 900; font-style: italic; text-transform: uppercase;">${p.n}</div>
@@ -237,8 +259,13 @@
     }
 
     function openProfile(n, r) {
+      const overlayOvr = document.getElementById('p-ovr');
       document.getElementById('p-name').innerText = n;
-      document.getElementById('p-ovr').innerText = r;
+      overlayOvr.innerText = r;
+      
+      // Сбрасываем и вешаем класс ранга на OVR в оверлее
+      overlayOvr.className = 'ovr ' + getRankClass(r);
+      
       const over = document.getElementById('p-overlay');
       over.style.display = 'block';
       setTimeout(() => over.classList.add('open'), 10);
