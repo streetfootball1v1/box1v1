@@ -293,9 +293,9 @@ text-transform: uppercase; white-space: nowrap; transition: 0.3s;
 <div class="intro-block">
 <span style="font-size:12px; font-weight:800; text-transform:uppercase; letter-spacing:0.4em; color:var(--accent-dark); display:block; margin-bottom:20px;">The Next Gen Football</span>
 <h1>BOX1V1.</h1>
-<p>Тут решает не команда.<br>Тут решаешь ты.</p>
+<p>Решает не команда.<br>Решаешь ты.</p>
 <div class="btn-group" style="display:flex; gap:16px; justify-content:center; flex-wrap:wrap;">
-<button class="btn btn-primary" onclick="switchTab('roster')">Попасть в систему</button>
+<button class="btn btn-primary" onclick="switchTab('roster')">Участники</button>
 <button class="btn btn-outline" onclick="openModal('applyModal')">Подать заявку</button>
 </div>
 <div class="timer-context" id="timer-container">
@@ -312,23 +312,23 @@ text-transform: uppercase; white-space: nowrap; transition: 0.3s;
 <div class="card" style="grid-column: span 2; background: #fafafa;" onclick="openModal('rulesModal')" tabindex="0">
 <span style="font-size:11px; font-weight:800; color:var(--accent-dark); text-transform:uppercase; letter-spacing:0.1em;">Документация</span>
 <h2 style="font-size: 3.5rem; margin: 20px 0 15px;">РЕГЛАМЕНТ.</h2>
-<p>Полный свод правил проведения матчей в закрытой системе. Изучи, чтобы доминировать.</p>
+<p>Свод правил проведения матчей.</p>
 <div style="margin-top: auto; padding-top: 30px; font-weight: 800; font-size: 12px; text-transform: uppercase;">Изучить правила →</div>
 </div>
 <div class="card" onclick="window.open('https://t.me/streetbox1v1')" tabindex="0">
 <h3 style="font-size: 1.8rem;">TELEGRAM</h3>
-<p style="font-size: 14px; margin-top: 8px;">Оперативные сводки и инсайды экосистемы.</p>
+<p style="font-size: 14px; margin-top: 8px;">Свежие новости и актуальная информация.</p>
 </div>
 <div class="card" onclick="window.open('https://instagram.com/box.1v1')" tabindex="0">
 <h3 style="font-size: 1.8rem;">INSTAGRAM</h3>
-<p style="font-size: 14px; margin-top: 8px;">Главный визуальный поток и хайлайты.</p>
+<p style="font-size: 14px; margin-top: 8px;">Главные новости в медиа формате.</p>
 </div>
 </div>
 </section>
 <section id="roster">
 <div style="margin-bottom: 60px;">
-<h1 style="font-size: clamp(3rem, 10vw, 8rem);">РОСТЕР.</h1>
-<p style="font-size: 1.25rem;">Действующие активы системы BOX1V1.</p>
+<h1 style="font-size: clamp(3rem, 10vw, 8rem);">УЧАСТНИКИ.</h1>
+<p style="font-size: 1.25rem;">Действующие участники BOX1V1.</p>
 </div>
 <div class="controls-row" style="margin-bottom: 40px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:20px;">
 <input type="text" class="search-input" id="playerSearch" placeholder="Поиск по имени..." oninput="debouncedRender()">
@@ -345,7 +345,7 @@ text-transform: uppercase; white-space: nowrap; transition: 0.3s;
 <div class="table-wrapper">
 <table role="grid">
 <thead>
-<tr><th>Поз.</th><th>Атлет</th><th style="text-align:right;">OVR рейтинг</th></tr>
+<tr><th>#.</th><th>Игрок</th><th style="text-align:right;">OVR рейтинг</th></tr>
 </thead>
 <tbody id="stats-body"></tbody>
 </table>
@@ -388,15 +388,15 @@ text-transform: uppercase; white-space: nowrap; transition: 0.3s;
 <div style="display:flex; flex-direction:column; gap:20px;">
 <div style="padding-bottom:15px; border-bottom:1px solid var(--border);">
 <strong style="text-transform:uppercase; font-size:12px; display:block; margin-bottom:4px; color:var(--accent-dark)">01. Формат</strong>
-<p style="font-size:15px; color:var(--text); font-weight:500;">Матчи 1 на 1 в коробке (пантна).</p>
+<p style="font-size:15px; color:var(--text); font-weight:500;">Матчи 1 на 1 с участием независимого вратаря.</p>
 </div>
 <div style="padding-bottom:15px; border-bottom:1px solid var(--border);">
 <strong style="text-transform:uppercase; font-size:12px; display:block; margin-bottom:4px; color:var(--accent-dark)">02. Тайминг</strong>
-<p style="font-size:15px; color:var(--text); font-weight:500;">3 минуты чистого времени. Лимит на атаку — 20 секунд.</p>
+<p style="font-size:15px; color:var(--text); font-weight:500;">Лимит на атаку — 20 секунд.</p>
 </div>
 <div style="padding-bottom:15px; border-bottom:1px solid var(--border);">
-<strong style="text-transform:uppercase; font-size:12px; display:block; margin-bottom:4px; color:var(--accent-dark)">03. Физика</strong>
-<p style="font-size:15px; color:var(--text); font-weight:500;">Подкаты строго запрещены. Любая агрессия — моментальный бан.</p>
+<strong style="text-transform:uppercase; font-size:12px; display:block; margin-bottom:4px; color:var(--accent-dark)">03. Результат</strong>
+<p style="font-size:15px; color:var(--text); font-weight:500;">Продолжительность игры до двух голов, без ничьи.</p>
 </div>
 </div>
 </div>
@@ -701,4 +701,5 @@ window.onload = init;
 </script>
 </body>
 </html>
+
 
