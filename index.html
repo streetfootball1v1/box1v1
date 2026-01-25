@@ -8,10 +8,10 @@
   <style>
     :root {
       --bg: #ffffff;
-      --card: #f8f9fa;
-      --text: #0a0a0a;
-      --dim: #666666;
-      --border: #ececec;
+      --card: #fbfbfb;
+      --text: #111111;
+      --dim: #7d7d7d;
+      --border: rgba(0,0,0,0.08);
       --accent: #22c55e;
       --accent2: #06b6d4;
       --shadow: 0 22px 60px rgba(0,0,0,0.08);
@@ -21,7 +21,7 @@
 
     * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color: transparent; }
     html { scroll-behavior:smooth; background: var(--bg); }
-    body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--text); overflow-x:hidden; letter-spacing: -0.01em; }
+    body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--text); overflow-x:hidden; }
 
     /* --- PRELOADER --- */
     #preloader {
@@ -31,32 +31,16 @@
     }
     #preloader.loaded { opacity:0; visibility:hidden; }
     .loader { text-align:center; font-weight:900; color:#111; }
-    .loader-line {
-      width: 150px; height:2px; background:#eee; margin:18px auto 0;
-      position:relative; overflow:hidden; border-radius:2px;
-    }
-    .loader-line::after {
-      content:''; position:absolute; left:-100%; width:100%; height:100%;
-      background: linear-gradient(90deg, transparent, var(--accent), transparent);
-      animation: load 1.5s infinite var(--cubic);
-    }
+    .loader-line { width: 150px; height:2px; background:#eee; margin:18px auto 0; position:relative; overflow:hidden; border-radius:2px; }
+    .loader-line::after { content:''; position:absolute; left:-100%; width:100%; height:100%; background: linear-gradient(90deg, transparent, var(--accent), transparent); animation: load 1.5s infinite var(--cubic); }
     @keyframes load { 0% { left:-100%; } 100% { left:100%; } }
 
     /* --- NAV --- */
-    nav {
-      position: fixed; top: 16px; left:50%; transform: translateX(-50%);
-      width: calc(100% - 32px); max-width: 1100px;
-      background: var(--glass); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
-      border: 1px solid var(--border); border-radius: 22px; z-index: 1000;
-      transition: all .35s var(--cubic);
-    }
+    nav { position: fixed; top: 16px; left:50%; transform: translateX(-50%); width: calc(100% - 32px); max-width: 1100px; background: var(--glass); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); border: 1px solid var(--border); border-radius: 22px; z-index: 1000; transition: all .35s var(--cubic); }
     body.scrolled nav { top: 0; width: 100%; border-radius: 0; border-bottom: 1px solid var(--border); }
     .nav-inner { height: 64px; display:flex; align-items:center; justify-content:space-between; padding: 0 22px; }
     .nav-links { display:flex; gap: 22px; }
-    .nav-links a {
-      text-decoration:none; font-size: 11px; font-weight: 800; letter-spacing: 1.5px;
-      text-transform: uppercase; color: var(--dim); position:relative; padding: 8px 0; transition: .25s var(--cubic);
-    }
+    .nav-links a { text-decoration:none; font-size: 11px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: var(--dim); position:relative; padding: 8px 0; transition: .25s var(--cubic); }
     .nav-links a.active { color: var(--text); }
     .nav-links a.active::after { content:''; position:absolute; bottom:0; left:0; width:100%; height:2px; background: var(--accent); }
 
@@ -66,123 +50,85 @@
     .burger.open span:nth-child(2){ opacity:0; }
     .burger.open span:nth-child(3){ transform: translateY(-8px) rotate(-45deg); }
 
-    .mobile-nav {
-      position: fixed; inset:0; background: rgba(255,255,255,0.98); backdrop-filter: blur(18px);
-      z-index: 2000; display:flex; flex-direction:column; justify-content:center; align-items:center;
-      gap: 30px; opacity:0; visibility:hidden; transition: .35s var(--cubic);
-    }
+    .mobile-nav { position: fixed; inset:0; background: rgba(255,255,255,0.98); backdrop-filter: blur(18px); z-index: 2000; display:flex; flex-direction:column; justify-content:center; align-items:center; gap: 30px; opacity:0; visibility:hidden; transition: .35s var(--cubic); }
     .mobile-nav.open { opacity:1; visibility:visible; }
     .mobile-nav a { font-size: 3rem; font-weight: 900; text-decoration:none; color: var(--text); text-transform:uppercase; font-style: italic; }
 
     /* --- CONTENT --- */
-    .main-content { max-width: 1200px; margin: 0 auto; padding: 0 22px 120px; }
+    .main-content { max-width: 1200px; margin: 0 auto; padding: 0 22px 100px; }
     section { display:none; padding-top: 100px; min-height: 100vh; }
     section.active { display:block; animation: sectionIn .45s var(--cubic); }
     @keyframes sectionIn { from{opacity:0; transform: translateY(10px);} to{opacity:1; transform: translateY(0);} }
 
-    .hero { min-height: 70vh; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; position:relative; }
-    .hero h1 {
-      font-size: clamp(3rem, 15vw, 8.5rem); font-weight: 900; line-height: 0.85;
-      letter-spacing: -0.05em; text-transform: uppercase; font-style: italic; margin: 20px 0;
-    }
+    .hero { min-height: 60vh; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; position:relative; }
+    .hero h1 { font-size: clamp(3.5rem, 15vw, 8.5rem); font-weight: 900; line-height: 0.85; letter-spacing: -0.05em; text-transform: uppercase; font-style: italic; margin: 20px 0; }
     .hero span { font-size: 11px; letter-spacing: 3px; font-weight: 800; text-transform: uppercase; color: var(--dim); }
 
-    .countdown { display:flex; gap: 24px; margin-top: 40px; }
+    .countdown { display:flex; gap: 24px; margin-top: 30px; }
     .countdown-item { display:flex; flex-direction:column; align-items:center; }
     .countdown-value { font-size: clamp(1.5rem, 5vw, 2.5rem); font-weight: 900; letter-spacing: -1px; }
     .countdown-label { font-size: 9px; text-transform: uppercase; color: var(--dim); font-weight: 700; margin-top: 4px; }
 
-    /* --- BENTO GRID & CARDS --- */
-    .bento-grid { display:grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin: 60px 0; }
-    .bento-item {
-      background: var(--card); border-radius: 28px; border: 1px solid var(--border);
-      padding: 28px; display:flex; flex-direction:column; position:relative;
-      overflow:hidden; cursor:pointer; transition: .4s var(--cubic);
-    }
+    /* --- BENTO GRID --- */
+    .bento-grid { display:grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin: 40px 0; }
+    .bento-item { background: var(--card); border-radius: 28px; border: 1px solid var(--border); padding: 32px; display:flex; flex-direction:column; position:relative; overflow:hidden; cursor:pointer; transition: .4s var(--cubic); }
     .bento-item:hover { transform: translateY(-5px); box-shadow: var(--shadow); }
     .col-2 { grid-column: span 2; }
     .row-2 { grid-row: span 2; }
 
-    /* Специальные стили для КАРТОЧЕК ИГРОКОВ */
-    #roster-grid .bento-item {
-      height: 400px; background: #000; border: none; justify-content: flex-end; padding: 24px;
-    }
-    .player-img-container {
-      position: absolute; inset:0; opacity: 0.7; 
-      filter: grayscale(0.4) contrast(1.1); transition: 0.6s var(--cubic); z-index: 1;
-      background-size: cover; background-position: center;
-    }
-    .bento-item:hover .player-img-container { opacity: 0.9; filter: grayscale(0) scale(1.05); }
-    
-    /* Затемнение снизу для читаемости */
-    .bento-item::after {
-      content: ''; position: absolute; inset: 0;
-      background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.3) 50%, transparent 100%);
-      z-index: 2;
-    }
+    /* ВОЗВРАЩАЕМ ЦВЕТА ГЛАВНОЙ */
+    .bento-item.green-gradient { background: linear-gradient(135deg, rgba(34,197,94,0.12), rgba(255,255,255,0.9)); border-color: rgba(34,197,94,0.2); }
+    .bento-item.blue-light { background: #f0f9ff; border-color: rgba(6,182,212,0.15); }
+    .bento-item.red-light { background: #fff5f5; border-color: rgba(220,38,38,0.1); }
+    .bento-item.dark-apply { background: var(--text); color:#fff; border:none; }
+
+    /* СТИЛИ ДЛЯ ИГРОКОВ (ОСТАВЛЯЕМ НОВЫМИ) */
+    #roster-grid .bento-item { height: 400px; background: #000; border: none; justify-content: flex-end; padding: 24px; }
+    .player-img-container { position: absolute; inset:0; opacity: 0.7; filter: grayscale(0.4) contrast(1.1); transition: 0.6s var(--cubic); z-index: 1; background-size: cover; background-position: center; }
+    #roster-grid .bento-item:hover .player-img-container { opacity: 0.9; filter: grayscale(0) scale(1.05); }
+    #roster-grid .bento-item::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.3) 50%, transparent 100%); z-index: 2; }
 
     .card-content { position: relative; z-index: 3; }
-    .bento-item h3 { color: #fff; font-size: 2rem; font-weight: 900; font-style: italic; line-height: 1; margin-bottom: 4px; }
+    .bento-item h3 { font-size: 2rem; font-weight: 900; font-style: italic; line-height: 1; margin-bottom: 4px; }
+    #roster-grid .bento-item h3 { color: #fff; }
     .role-text { color: var(--accent); font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
 
-    .tag {
-      position: relative; z-index: 3; display: inline-block;
-      font-size: 11px; font-weight: 900; text-transform: uppercase;
-      padding: 6px 12px; border-radius: 10px; background: rgba(0,0,0,0.05); color: var(--text);
-    }
-    #roster-grid .tag { position: absolute; top: 20px; left: 20px; background: var(--accent); color: #000; z-index: 4; }
+    .tag { display: inline-block; font-size: 11px; font-weight: 900; text-transform: uppercase; padding: 6px 12px; border-radius: 10px; background: rgba(0,0,0,0.05); color: var(--text); margin-bottom: 12px; }
+    #roster-grid .tag { position: absolute; top: 20px; left: 20px; background: var(--accent); color: #000; z-index: 4; margin:0; }
     
-    .status-tag {
-      position: absolute; top: 20px; right: 20px; z-index: 4;
-      font-size: 10px; font-weight: 900; text-transform: uppercase;
-      padding: 6px 12px; border-radius: 10px; background: rgba(255,255,255,0.2);
-      backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); color: #fff; border: 1px solid rgba(255,255,255,0.1);
-    }
+    .status-tag { position: absolute; top: 20px; right: 20px; z-index: 4; font-size: 10px; font-weight: 900; text-transform: uppercase; padding: 6px 12px; border-radius: 10px; background: var(--accent); color: #fff; }
+    #roster-grid .status-tag { background: rgba(255,255,255,0.2); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); }
 
     .badges { display:flex; flex-wrap:wrap; gap: 6px; margin-top: 12px; position: relative; z-index: 3; }
-    .badge {
-      font-size: 9px; font-weight: 800; text-transform: uppercase;
-      padding: 4px 10px; border-radius: 8px; background: rgba(255,255,255,0.1);
-      color: #ddd; border: 1px solid rgba(255,255,255,0.1);
-    }
+    .badge { font-size: 9px; font-weight: 800; text-transform: uppercase; padding: 4px 10px; border-radius: 8px; background: rgba(0,0,0,0.04); color: var(--dim); border: 1px solid var(--border); }
+    #roster-grid .badge { background: rgba(255,255,255,0.1); color: #ddd; border: 1px solid rgba(255,255,255,0.1); }
 
     /* --- MODALS --- */
-    .modal-overlay {
-      position: fixed; inset:0; background: rgba(255,255,255,0.95); backdrop-filter: blur(20px);
-      z-index: 3000; display:none; align-items:center; justify-content:center; padding: 20px;
-    }
+    .modal-overlay { position: fixed; inset:0; background: rgba(255,255,255,0.95); backdrop-filter: blur(20px); z-index: 3000; display:none; align-items:center; justify-content:center; padding: 20px; }
     .modal-overlay.active { display:flex; }
     .modal-card { width:100%; max-width: 500px; background: #fff; border-radius: 32px; padding: 32px; box-shadow: var(--shadow); position:relative; border: 1px solid var(--border); }
     .close-modal { position:absolute; top: 20px; right: 20px; width: 44px; height: 44px; border-radius: 50%; background: #f0f0f0; display:flex; align-items:center; justify-content:center; cursor:pointer; font-weight: 900; }
 
     #m-img-box { width:100%; height: 280px; border-radius: 24px; overflow:hidden; margin-bottom: 20px; background: #eee; }
     #m-img-box img { width:100%; height:100%; object-fit:cover; }
-    #m-name { font-size: 3.5rem; font-weight: 900; font-style: italic; text-transform: uppercase; line-height: 0.9; margin: 15px 0; }
+    #m-name { font-size: 3rem; font-weight: 900; font-style: italic; text-transform: uppercase; line-height: 0.9; margin: 15px 0; }
     .stat-row { display:flex; justify-content:space-between; font-size: 11px; font-weight: 800; text-transform:uppercase; color: var(--dim); margin-bottom: 4px; }
     .bar { height: 6px; background: #f0f0f0; border-radius: 10px; overflow:hidden; margin-bottom: 16px; }
-    .bar > div { height:100%; background: var(--accent); transition: width 1s ease; }
+    .bar > div { height:100%; background: var(--accent); }
 
     /* --- TABLE --- */
     .stats-container { background: var(--card); border-radius: 32px; border: 1px solid var(--border); overflow:hidden; }
     table { width:100%; border-collapse:collapse; }
-    tr { border-bottom: 1px solid var(--border); cursor:pointer; transition: .2s; }
+    tr { border-bottom: 1px solid var(--border); cursor:pointer; }
     tr:hover { background: #fff; }
-    td { padding: 24px; font-size: 14px; }
-    .rank-col { color: var(--dim); font-weight: 800; width: 60px; }
-    .name-col { font-weight: 900; font-style: italic; text-transform: uppercase; font-size: 1.2rem; }
-    .val-col { text-align: right; }
-    .val-badge { background: var(--accent); padding: 8px 14px; border-radius: 12px; font-weight: 900; color: #000; }
+    td { padding: 24px; }
+    .val-badge { background: var(--accent); padding: 8px 14px; border-radius: 12px; font-weight: 900; }
 
-    /* --- RESPONSIVE --- */
     @media (max-width: 1000px) { .bento-grid { grid-template-columns: repeat(2, 1fr); } }
     @media (max-width: 650px) {
-      .nav-links { display:none; }
-      .burger { display:flex; }
-      .bento-grid { grid-template-columns: 1fr; }
-      .col-2, .row-2 { grid-column: span 1; grid-row: span 1; }
-      .hero h1 { font-size: 4rem; }
-      #roster-grid .bento-item { height: 450px; }
-      #m-name { font-size: 2.5rem; }
+      .nav-links { display:none; } .burger { display:flex; }
+      .bento-grid { grid-template-columns: 1fr; } .col-2, .row-2 { grid-column: span 1; grid-row: span 1; }
+      .hero h1 { font-size: 3.5rem; }
     }
   </style>
 </head>
@@ -190,24 +136,20 @@
 
   <div id="preloader">
     <div class="loader">
-      <h2 style="font-size:2rem; font-style:italic;">BOX<span style="color:var(--accent)">1</span>V1</h2>
+      <h2 style="font-style:italic;">BOX<span style="color:var(--accent)">1</span>V1</h2>
       <div class="loader-line"></div>
     </div>
   </div>
 
   <nav id="navbar">
     <div class="nav-inner">
-      <div class="logo" onclick="switchTab('home')" style="cursor:pointer; font-weight:900; font-style:italic; font-size:1.2rem;">
-        BOX<span style="color:var(--accent)">1</span>V1
-      </div>
+      <div class="logo" onclick="switchTab('home')" style="cursor:pointer; font-weight:900; font-style:italic;">BOX<span style="color:var(--accent)">1</span>V1</div>
       <div class="nav-links">
         <a href="#home" onclick="switchTab('home')" id="nav-home" class="active">Лента</a>
         <a href="#roster" onclick="switchTab('roster')" id="nav-roster">Состав</a>
         <a href="#stats" onclick="switchTab('stats')" id="nav-stats">Рейтинг</a>
       </div>
-      <div class="burger" id="burger" onclick="toggleMenu()">
-        <span></span><span></span><span></span>
-      </div>
+      <div class="burger" id="burger" onclick="toggleMenu()"><span></span><span></span><span></span></div>
     </div>
   </nav>
 
@@ -231,22 +173,22 @@
       </div>
 
       <div class="bento-grid">
-        <div class="bento-item col-2 row-2" onclick="openModal('rulesModal')">
+        <div class="bento-item col-2 row-2 green-gradient" onclick="openModal('rulesModal')">
           <span class="tag">Архитектура сезона</span>
-          <h2 style="font-size: clamp(2rem, 5vw, 4rem); font-style:italic; margin: 15px 0;">ЗАКОНЫ<br>КЛЕТКИ.</h2>
-          <p style="color:var(--dim); font-size: 14px; line-height: 1.6; max-width: 300px;">Сериал, где ты пишешь сценарий своей игры. Без права на ошибку.</p>
-          <div style="margin-top:auto; font-weight:900; font-size:12px; letter-spacing:1px;">ЧИТАТЬ МАНИФЕСТ →</div>
+          <h2 style="font-size: clamp(2rem, 5vw, 3.5rem); font-style:italic; margin-bottom:15px; line-height:0.9;">ЗАКОНЫ<br>КЛЕТКИ.</h2>
+          <p style="color:var(--dim); font-size: 14px; line-height: 1.6; max-width: 280px;">Сериал, где ты пишешь сценарий своей игры. Без права на ошибку.</p>
+          <div style="margin-top:auto; font-weight:900; font-size:11px; letter-spacing:1px; text-transform:uppercase;">Читать манифест →</div>
         </div>
-        <div class="bento-item" style="background: #e0f7fa; border-color: #b2ebf2;" onclick="window.open('https://t.me/streetbox1v1')">
-          <h3 style="color:var(--accent2); font-size: 1.5rem;">TG</h3>
-          <p style="font-size:10px; color:var(--dim); margin-top:5px;">Голос лиги</p>
+        <div class="bento-item blue-light" onclick="window.open('https://t.me/streetbox1v1')">
+          <h3 style="color:var(--accent2); font-style:italic;">TELEGRAM</h3>
+          <p style="font-size:11px; color:var(--dim); margin-top:5px;">Голос лиги и прямые эфиры</p>
         </div>
-        <div class="bento-item" style="background: #fff0f0; border-color: #ffcdd2;" onclick="window.open('https://instagram.com/box.1v1')">
-          <h3 style="color:#ff4d4d; font-size: 1.5rem;">INST</h3>
-          <p style="font-size:10px; color:var(--dim); margin-top:5px;">Эстетика</p>
+        <div class="bento-item red-light" onclick="window.open('https://instagram.com/box.1v1')">
+          <h3 style="color:#ff4d4d; font-style:italic;">INSTAGRAM</h3>
+          <p style="font-size:11px; color:var(--dim); margin-top:5px;">Визуальная эстетика улиц</p>
         </div>
-        <div class="bento-item col-2" onclick="openModal('applyModal')" style="background: var(--text); color:#fff; align-items:center; justify-content:center; text-align:center;">
-          <h2 style="font-size:1.5rem; font-style:italic;">СТАТЬ ЧАСТЬЮ</h2>
+        <div class="bento-item col-2 dark-apply" onclick="openModal('applyModal')" style="display:flex; align-items:center; justify-content:center; text-align:center;">
+          <h2 style="font-size:1.6rem; font-style:italic; text-transform:uppercase;">Стать частью системы</h2>
         </div>
       </div>
     </section>
@@ -258,9 +200,7 @@
 
     <section id="stats">
       <h1 style="font-size: clamp(3rem, 10vw, 7rem); font-style:italic; margin-bottom:40px;">ТАБЛИЦА.</h1>
-      <div class="stats-container">
-        <table><tbody id="stats-body"></tbody></table>
-      </div>
+      <div class="stats-container"><table><tbody id="stats-body"></tbody></table></div>
     </section>
   </main>
 
@@ -268,7 +208,7 @@
     <div class="modal-card" onclick="event.stopPropagation()">
       <div class="close-modal" onclick="closeModal('playerModal')">✕</div>
       <div id="m-img-box"><img id="m-photo" src="" alt=""></div>
-      <div id="m-role" class="tag" style="background:var(--accent); color:#000;">Роль</div>
+      <div id="m-role" class="tag" style="background:var(--accent); color:#000; margin-bottom:10px;">Роль</div>
       <h2 id="m-name">NAME</h2>
       <div id="m-badges-container" class="badges"></div>
       <div id="m-stats" style="margin-top:25px;"></div>
@@ -278,11 +218,11 @@
   <div class="modal-overlay" id="rulesModal" onclick="closeModal('rulesModal')">
     <div class="modal-card" onclick="event.stopPropagation()">
       <div class="close-modal" onclick="closeModal('rulesModal')">✕</div>
-      <h2 style="font-style:italic; margin-bottom:20px;">РЕГЛАМЕНТ</h2>
-      <div style="line-height:1.8; color:var(--dim);">
-        <p>• <b>ФОРМАТ:</b> 1 на 1 + вратарь.</p>
-        <p>• <b>ЦЕЛЬ:</b> До 2-х голов.</p>
-        <p>• <b>ТАЙМИНГ:</b> 20 секунд на атаку.</p>
+      <h2 style="font-style:italic; margin-bottom:20px; text-transform:uppercase;">Регламент</h2>
+      <div style="line-height:1.8; color:var(--dim); font-size:15px;">
+        <p>• <b>Формат:</b> 1 на 1 + вратарь.</p>
+        <p>• <b>Цель:</b> До 2-х голов.</p>
+        <p>• <b>Атака:</b> 20 секунд на завершение.</p>
       </div>
     </div>
   </div>
@@ -290,8 +230,8 @@
   <div class="modal-overlay" id="applyModal" onclick="closeModal('applyModal')">
     <div class="modal-card" onclick="event.stopPropagation()">
       <div class="close-modal" onclick="closeModal('applyModal')">✕</div>
-      <h2 style="font-style:italic; margin-bottom:20px;">РЕГИСТРАЦИЯ</h2>
-      <button onclick="window.open('https://t.me/streetbox1v1')" style="width:100%; padding:20px; border-radius:18px; border:none; background:#000; color:#fff; font-weight:900; cursor:pointer;">ПОДАТЬ ЗАЯВКУ В TG</button>
+      <h2 style="font-style:italic; margin-bottom:20px; text-transform:uppercase;">Заявка</h2>
+      <button onclick="window.open('https://t.me/streetbox1v1')" style="width:100%; padding:20px; border-radius:18px; border:none; background:#000; color:#fff; font-weight:900; cursor:pointer; text-transform:uppercase; letter-spacing:1px;">Написать в Telegram</button>
     </div>
   </div>
 
@@ -299,9 +239,7 @@
     const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vREjbeB6jNrU01kw1npVtFTvqGdP134ERjmyROoOYeYXbzjgL0ZCNK6KwF0VTk3c1yxZEZEUsJjy2Ur/pub?output=csv';
     let playersData = {};
 
-    window.addEventListener('scroll', () => {
-      document.body.classList.toggle('scrolled', window.scrollY > 20);
-    });
+    window.addEventListener('scroll', () => { document.body.classList.toggle('scrolled', window.scrollY > 20); });
 
     async function loadPlayers() {
       try {
@@ -313,14 +251,10 @@
           if(col[0]) {
             const name = col[0].trim();
             playersData[name] = {
-              r: parseInt(col[1]) || 0,
-              role: col[2] || 'Игрок',
-              drib: parseInt(col[3]) || 0,
-              speed: parseInt(col[4]) || 0,
-              shot: parseInt(col[5]) || 0,
-              phys: parseInt(col[6]) || 0,
-              photo: col[7] ? col[7].trim() : '',
-              status: col[8] ? col[8].trim() : '',
+              r: parseInt(col[1]) || 0, role: col[2] || 'Игрок',
+              drib: parseInt(col[3]) || 0, speed: parseInt(col[4]) || 0,
+              shot: parseInt(col[5]) || 0, phys: parseInt(col[6]) || 0,
+              photo: col[7] ? col[7].trim() : '', status: col[8] ? col[8].trim() : '',
               badges: col[9] ? col[9].split('|').map(b => b.trim()) : []
             };
           }
@@ -355,9 +289,9 @@
       const sorted = Object.entries(playersData).sort((a, b) => b[1].r - a[1].r);
       body.innerHTML = sorted.map(([name, p], i) => `
         <tr onclick="openPlayerModal('${name.replace(/'/g, "\\'")}')">
-          <td class="rank-col">#${(i+1).toString().padStart(2,'0')}</td>
-          <td class="name-col">${name}</td>
-          <td class="val-col"><span class="val-badge">${p.r}</span></td>
+          <td style="color:var(--dim); font-weight:800; width:50px;">#${(i+1).toString().padStart(2,'0')}</td>
+          <td style="font-weight:900; font-style:italic; text-transform:uppercase; font-size:1.1rem;">${name}</td>
+          <td style="text-align:right;"><span class="val-badge">${p.r}</span></td>
         </tr>
       `).join('');
     }
@@ -370,8 +304,7 @@
       const imgBox = document.getElementById('m-img-box');
       if(p.photo) { imgBox.style.display = 'block'; document.getElementById('m-photo').src = p.photo; } 
       else imgBox.style.display = 'none';
-
-      document.getElementById('m-badges-container').innerHTML = p.badges.map(b => `<span class="badge" style="color:#111; border-color:#eee;">${b}</span>`).join('');
+      document.getElementById('m-badges-container').innerHTML = p.badges.map(b => `<span class="badge">${b}</span>`).join('');
       document.getElementById('m-stats').innerHTML = [
         { l: 'Дриблинг', v: p.drib }, { l: 'Скорость', v: p.speed },
         { l: 'Удар', v: p.shot }, { l: 'Физика', v: p.phys }
@@ -408,11 +341,7 @@
       }
     }
 
-    window.addEventListener('load', () => {
-      loadPlayers();
-      setInterval(updateTimer, 1000);
-      updateTimer();
-    });
+    window.addEventListener('load', () => { loadPlayers(); setInterval(updateTimer, 1000); updateTimer(); });
   </script>
 </body>
 </html>
