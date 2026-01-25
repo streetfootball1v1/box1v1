@@ -88,28 +88,16 @@
     .highlight-card {
       min-width: 280px; height: 380px; background: var(--card); border-radius: 35px;
       border: 1px solid var(--border); position: relative; overflow: hidden;
-      scroll-snap-align: start; flex-shrink: 0; cursor: pointer;
+      scroll-snap-align: start; flex-shrink: 0;
     }
-    .highlight-card img { width: 100%; height: 100%; object-fit: cover; opacity: 0.5; transition: 0.5s var(--cubic); }
-    .highlight-card:hover img { opacity: 0.8; transform: scale(1.05); }
-    .highlight-info { position: absolute; bottom: 25px; left: 25px; z-index: 2; }
+    .highlight-card video { 
+      width: 100%; height: 100%; object-fit: cover; 
+      opacity: 0.6; transition: 0.5s var(--cubic); 
+    }
+    .highlight-card:hover video { opacity: 1; transform: scale(1.05); }
+    .highlight-info { position: absolute; bottom: 25px; left: 25px; z-index: 2; pointer-events: none; }
     .highlight-tag { background: var(--accent); color: #000; font-size: 9px; font-weight: 900; padding: 4px 8px; border-radius: 6px; text-transform: uppercase; margin-bottom: 8px; display: inline-block; }
-    .highlight-title { font-weight: 900; font-style: italic; text-transform: uppercase; font-size: 1.2rem; line-height: 1.1; }
-
-    /* --- VIDEO PLAYER MODAL --- */
-    .video-modal {
-      position: fixed; inset: 0; background: #000; z-index: 4000;
-      display: none; flex-direction: column; align-items: center; justify-content: center;
-    }
-    .video-modal.active { display: flex; }
-    .video-container { width: 100%; height: 100%; max-width: 500px; position: relative; background: #000; }
-    .video-container iframe, .video-container video { width: 100%; height: 100%; border: none; }
-    .close-video {
-      position: absolute; top: 30px; right: 20px; z-index: 4001;
-      width: 44px; height: 44px; background: rgba(255,255,255,0.2);
-      backdrop-filter: blur(10px); border-radius: 50%; display: flex;
-      align-items: center; justify-content: center; cursor: pointer; color: #fff; font-size: 20px;
-    }
+    .highlight-title { font-weight: 900; font-style: italic; text-transform: uppercase; font-size: 1.2rem; line-height: 1.1; text-shadow: 0 2px 10px rgba(0,0,0,0.5); }
 
     /* --- CONTENT --- */
     .reveal { opacity: 0; transform: translateY(30px); transition: transform 0.8s var(--cubic), opacity 0.8s var(--cubic); }
@@ -286,37 +274,26 @@
     </div>
   </div>
 
-  <div class="video-modal" id="v-modal">
-      <div class="close-video" onclick="closeVideo()">✕</div>
-      <div class="video-container" id="v-container"></div>
-  </div>
-
   <script>
     const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vREjbeB6jNrU01kw1npVtFTvqGdP134ERjmyROoOYeYXbzjgL0ZCNK6KwF0VTk3c1yxZEZEUsJjy2Ur/pub?output=csv';
     let playersData = {};
 
-    // Данные для хайлайтов (Бесплатные видео для примера)
+    // Данные для хайлайтов (Бесконечные видео в стиле GIF)
     const highlightsData = [
       { 
-        id: 'https://videos.pexels.com/video-files/5653351/5653351-uhd_1440_2732_25fps.mp4', 
+        video: 'https://videos.pexels.com/video-files/5653351/5653351-uhd_1440_2732_25fps.mp4', 
         title: 'Техника в движении', 
-        tag: 'Skills', 
-        img: 'https://images.pexels.com/photos/5653351/pexels-photo-5653351.jpeg?auto=compress&cs=tinysrgb&w=800',
-        type: 'file' 
+        tag: 'Skills'
       },
       { 
-        id: 'https://videos.pexels.com/video-files/3823055/3823055-uhd_1440_2732_24fps.mp4', 
+        video: 'https://videos.pexels.com/video-files/3823055/3823055-uhd_1440_2732_24fps.mp4', 
         title: 'Атмосфера улиц', 
-        tag: 'Vibe', 
-        img: 'https://images.pexels.com/photos/3823055/pexels-photo-3823055.jpeg?auto=compress&cs=tinysrgb&w=800',
-        type: 'file'
+        tag: 'Vibe'
       },
       { 
-        id: 'dQw4w9WgXcQ', 
-        title: 'YouTube Пример', 
-        tag: 'Classic', 
-        img: 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&q=80&w=800',
-        type: 'youtube'
+        video: 'https://videos.pexels.com/video-files/5653358/5653358-uhd_1440_2732_25fps.mp4', 
+        title: 'Тренировка в клетке', 
+        tag: 'Training'
       }
     ];
 
@@ -350,39 +327,14 @@
     function renderHighlights() {
       const container = document.getElementById('highlights-list');
       container.innerHTML = highlightsData.map(h => `
-        <div class="highlight-card" onclick="openVideo('${h.id}')">
-          <img src="${h.img}">
+        <div class="highlight-card">
+          <video src="${h.video}" autoplay loop muted playsinline></video>
           <div class="highlight-info">
             <span class="highlight-tag">${h.tag}</span>
             <div class="highlight-title">${h.title}</div>
           </div>
         </div>
       `).join('');
-    }
-
-    function openVideo(id) {
-      const container = document.getElementById('v-container');
-      const hItem = highlightsData.find(h => h.id === id);
-      
-      if (hItem && hItem.type === 'file') {
-        // Если это прямой видео-файл (mp4)
-        container.innerHTML = `
-          <video src="${id}" controls autoplay loop style="width:100%; height:100%; object-fit:contain;"></video>
-        `;
-      } else {
-        // Если это YouTube ID
-        const url = `https://www.youtube.com/embed/${id}?autoplay=1&rel=0&modestbranding=1`;
-        container.innerHTML = `<iframe src="${url}" allow="autoplay; fullscreen"></iframe>`;
-      }
-      
-      document.getElementById('v-modal').classList.add('active');
-      document.body.style.overflow = 'hidden';
-    }
-
-    function closeVideo() {
-      document.getElementById('v-modal').classList.remove('active');
-      document.getElementById('v-container').innerHTML = '';
-      document.body.style.overflow = 'auto';
     }
 
     function renderRoster() {
