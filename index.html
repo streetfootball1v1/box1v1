@@ -3,292 +3,306 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-  <title>BOX1V1 | DIGITAL FOOTBALL ECOSYSTEM</title>
+  <title>BOX1V1 | THE ULTIMATE FOOTBALL ECOSYSTEM</title>
   
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&family=Syncopate:wght@700&display=swap" rel="stylesheet">
   
   <style>
     :root {
-      /* Базовая палитра */
-      --bg: #050505;
-      --card: rgba(20, 20, 20, 0.7);
-      --accent: #39FF14;
-      --accent-glow: rgba(57, 255, 20, 0.3);
-      
-      /* Дополнительные энергии */
-      --cyan: #00F0FF;   /* Speed / Dribbling */
-      --orange: #FF5C00; /* Power / Impact */
-      --violet: #8A2BE2; /* Icon / Status */
-      
+      /* Palette: Digital Street */
+      --bg: #05070A; /* Deep Ink */
+      --glass: rgba(255, 255, 255, 0.03);
+      --glass-border: rgba(255, 255, 255, 0.1);
+      --accent: #39FF14; /* Neo Green */
+      --cyan: #00F0FF;   /* Speed/Dribbling */
+      --orange: #FF5C00; /* Power/Impact */
+      --violet: #8A2BE2; /* Icon Status */
       --text: #ffffff;
-      --text-dim: #a1a1a6;
-      --border: rgba(255, 255, 255, 0.1);
+      --text-dim: #86868b;
       --cubic: cubic-bezier(0.23, 1, 0.32, 1);
     }
 
-    /* Глобальные стили и Эффект Зерна */
-    body {
-      margin: 0; background: var(--bg); color: var(--text);
-      font-family: 'Space Grotesk', 'Inter', sans-serif;
-      overflow-x: hidden; line-height: 1.5;
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { 
+      background-color: var(--bg); 
+      color: var(--text); 
+      font-family: 'Space Grotesk', sans-serif; 
+      overflow-x: hidden;
     }
 
-    body::before {
-      content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    /* Интерактивная сетка на фоне */
+    #net-bg {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background-image: 
+        linear-gradient(var(--glass-border) 1px, transparent 1px),
+        linear-gradient(90deg, var(--glass-border) 1px, transparent 1px);
+      background-size: 50px 50px;
+      perspective: 1000px;
+      transform-style: preserve-3d;
+      z-index: -1;
+      opacity: 0.3;
+    }
+
+    /* Эффект зернистости */
+    body::after {
+      content: ""; position: fixed; inset: 0;
       background: url('https://grainy-gradients.vercel.app/noise.svg');
-      opacity: 0.04; pointer-events: none; z-index: 9999;
+      opacity: 0.03; pointer-events: none; z-index: 10000;
     }
 
-    /* Навигация (Glassmorphism) */
+    /* Навигация */
     nav {
-      position: fixed; top: 0; width: 100%; z-index: 1000;
-      background: rgba(0,0,0,0.8); backdrop-filter: blur(20px);
-      border-bottom: 1px solid var(--border); padding: 15px 0;
+      position: fixed; top: 0; width: 100%; z-index: 5000;
+      background: rgba(5, 7, 10, 0.8); backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--glass-border);
+      padding: 20px 0;
     }
-    .nav-container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 20px; }
-    .logo { font-weight: 700; font-size: 22px; letter-spacing: -1px; color: var(--text); text-decoration: none; }
+    .nav-content { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 40px; }
+    .logo { font-family: 'Syncopate', sans-serif; font-size: 24px; color: #fff; text-decoration: none; letter-spacing: -2px; }
     .logo span { color: var(--accent); }
-    .nav-links { display: flex; gap: 25px; }
-    .nav-links a { text-decoration: none; color: var(--text-dim); font-size: 14px; font-weight: 500; transition: 0.3s; text-transform: uppercase; letter-spacing: 1px; }
-    .nav-links a.active, .nav-links a:hover { color: var(--accent); }
 
-    /* Hero секция */
-    .hero { height: 85vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 0 20px; background: radial-gradient(circle at 50% 50%, #111 0%, #000 100%); }
-    .hero h1 { font-size: clamp(40px, 8vw, 90px); line-height: 0.9; margin-bottom: 20px; font-weight: 700; letter-spacing: -3px; }
-    .hero p { color: var(--text-dim); max-width: 600px; font-size: 18px; margin-bottom: 35px; }
-    
-    .btn-main {
-      padding: 18px 40px; background: var(--accent); color: #000; font-weight: 700;
-      text-decoration: none; border-radius: 2px; text-transform: uppercase;
-      box-shadow: 0 0 30px var(--accent-glow); transition: 0.3s var(--cubic);
-    }
-    .btn-main:hover { transform: scale(1.05); filter: brightness(1.1); }
+    /* Контейнеры */
+    .section { display: none; padding: 120px 40px 60px; max-width: 1400px; margin: 0 auto; min-height: 100vh; }
+    .section.active { display: block; animation: sectionIn 0.8s var(--cubic); }
 
-    /* Таймер */
-    .timer-wrap { margin-top: 50px; display: flex; gap: 20px; }
-    .t-item { display: flex; flex-direction: column; }
-    .t-val { font-size: 32px; font-weight: 700; color: #fff; }
-    .t-lab { font-size: 10px; color: var(--text-dim); text-transform: uppercase; }
+    @keyframes sectionIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
-    /* Сетка Bento (Roster) */
-    .container { max-width: 1200px; margin: 60px auto; padding: 0 20px; display: none; }
-    .container.active { display: block; animation: fadeIn 0.8s var(--cubic); }
+    /* 3D Living Card */
+    .roster-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 30px; }
     
-    .bento-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
-    
-    .bento-item {
-      background: var(--card); backdrop-filter: blur(10px);
-      border: 1px solid var(--border); border-radius: 16px; padding: 20px;
-      position: relative; overflow: hidden; transition: all 0.5s var(--cubic);
+    .player-card {
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius: 24px;
+      padding: 25px;
+      position: relative;
+      transition: all 0.6s var(--cubic);
       cursor: pointer;
-    }
-    
-    .bento-item:hover {
-      transform: translateY(-10px); border-color: var(--accent);
-      background: rgba(40, 40, 40, 0.4);
+      overflow: hidden;
+      backdrop-filter: blur(10px);
     }
 
-    .player-photo { width: 100%; height: 320px; object-fit: cover; border-radius: 12px; margin-bottom: 15px; filter: grayscale(0.2); transition: 0.5s; }
-    .bento-item:hover .player-photo { filter: grayscale(0); transform: scale(1.02); }
+    .player-card:hover {
+      transform: translateY(-15px) scale(1.02);
+      border-color: var(--accent);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 20px var(--glass-border);
+    }
 
-    .role-badge { position: absolute; top: 30px; right: 30px; padding: 5px 12px; background: rgba(0,0,0,0.6); border: 1px solid var(--border); border-radius: 20px; font-size: 10px; font-weight: 700; color: var(--cyan); }
+    .card-img-wrapper {
+      width: 100%; height: 380px; border-radius: 16px;
+      overflow: hidden; margin-bottom: 20px;
+      position: relative;
+    }
 
-    .card-footer { display: flex; justify-content: space-between; align-items: flex-end; }
-    .p-name { font-size: 24px; font-weight: 700; letter-spacing: -1px; }
-    .p-ovr { font-size: 40px; font-weight: 700; color: var(--accent); line-height: 1; opacity: 0.9; }
+    .card-img-wrapper img {
+      width: 100%; height: 100%; object-fit: cover;
+      transition: transform 0.8s var(--cubic);
+    }
 
-    /* Таблица статов */
-    .stats-table { width: 100%; border-collapse: collapse; margin-top: 30px; background: var(--card); border-radius: 16px; overflow: hidden; }
-    .stats-table th { text-align: left; padding: 20px; color: var(--text-dim); font-size: 12px; text-transform: uppercase; border-bottom: 1px solid var(--border); }
-    .stats-table td { padding: 20px; border-bottom: 1px solid var(--border); font-size: 15px; }
-    .stats-table tr:hover { background: rgba(255,255,255,0.03); }
+    .player-card:hover img { transform: scale(1.1) translateY(-10px); }
 
-    /* Модальное окно */
+    .card-info { display: flex; justify-content: space-between; align-items: center; }
+    .p-name { font-family: 'Syncopate', sans-serif; font-size: 20px; text-transform: uppercase; }
+    .p-ovr { font-size: 48px; font-weight: 700; color: var(--accent); font-family: 'Syncopate', sans-serif; }
+
+    /* Радарная диаграмма в карточке (мини) */
+    .mini-radar { position: absolute; top: 20px; right: 20px; width: 60px; height: 60px; opacity: 0.8; }
+
+    /* Modal: Elite Interface */
     .modal {
-      position: fixed; inset: 0; background: rgba(0,0,0,0.95); backdrop-filter: blur(15px);
-      display: flex; align-items: center; justify-content: center; z-index: 2000;
-      opacity: 0; pointer-events: none; transition: 0.4s;
+      position: fixed; inset: 0; background: rgba(0,0,0,0.9);
+      display: none; align-items: center; justify-content: center; z-index: 9999;
+      backdrop-filter: blur(30px);
     }
-    .modal.active { opacity: 1; pointer-events: all; }
-    .modal-content { width: 90%; max-width: 900px; display: grid; grid-template-columns: 1fr 1fr; gap: 40px; position: relative; }
+    .modal.active { display: flex; }
     
-    /* Секция Снаряжения (Style ID) */
-    .style-id { margin-top: 30px; display: grid; gap: 15px; }
+    .modal-content {
+      width: 95%; max-width: 1100px;
+      display: grid; grid-template-columns: 1fr 1.2fr; gap: 60px;
+      padding: 40px; position: relative;
+    }
+
+    .radar-container { width: 100%; aspect-ratio: 1; position: relative; }
+    
+    /* Style ID (Gear Slots) */
+    .style-grid { display: grid; gap: 15px; margin-top: 40px; }
     .gear-slot {
-      background: rgba(255,255,255,0.05); border: 1px solid var(--border);
-      padding: 15px; border-radius: 12px; display: flex; align-items: center; gap: 15px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--glass-border);
+      padding: 20px; border-radius: 16px;
+      display: flex; align-items: center; gap: 20px;
+      transition: 0.4s;
     }
-    .gear-label { font-size: 10px; color: var(--text-dim); text-transform: uppercase; }
-    .gear-value { font-size: 14px; font-weight: 700; color: var(--text); }
+    .gear-slot:hover { background: rgba(255,255,255,0.06); border-color: var(--cyan); }
+    .gear-icon { font-size: 24px; filter: drop-shadow(0 0 10px rgba(255,255,255,0.2)); }
+    .gear-label { font-size: 10px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 2px; }
+    .gear-name { font-weight: 700; font-size: 16px; }
 
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    /* Rarity Colors */
+    .rarity-pro { color: var(--cyan); border-left: 3px solid var(--cyan); }
+    .rarity-icon { color: var(--orange); border-left: 3px solid var(--orange); }
 
-    @media (max-width: 768px) {
-      .modal-content { grid-template-columns: 1fr; max-height: 90vh; overflow-y: auto; }
-      .hero h1 { font-size: 50px; }
-    }
   </style>
 </head>
 <body>
 
+  <div id="net-bg"></div>
+
   <nav>
-    <div class="nav-container">
-      <a href="#" class="logo" onclick="switchTab('home')">BOX<span>1V1</span></a>
-      <div class="nav-links">
-        <a href="#" id="nav-home" class="active" onclick="switchTab('home')">Главная</a>
-        <a href="#" id="nav-roster" onclick="switchTab('roster')">Ростер</a>
-        <a href="#" id="nav-stats" onclick="switchTab('stats')">Рейтинг</a>
+    <div class="nav-content">
+      <a href="#" class="logo">BOX<span>1V1</span></a>
+      <div style="display: flex; gap: 40px;">
+        <a href="#" onclick="showSection('roster')" style="color:#fff; text-decoration:none; font-weight:700; font-size:12px; letter-spacing:2px;">ROSTER</a>
+        <a href="#" onclick="showSection('stats')" style="color:var(--text-dim); text-decoration:none; font-weight:700; font-size:12px; letter-spacing:2px;">RANKING</a>
       </div>
     </div>
   </nav>
 
-  <section id="home" class="container active">
-    <div class="hero">
-      <p>SEASON 0: THE GENESIS</p>
-      <h1>CRAFT YOUR<br>FOOTBALL LEGACY</h1>
-      <p>Первая цифровая экосистема для мастеров уличного футбола 1 на 1. Твой путь начинается здесь.</p>
-      <a href="#" class="btn-main" onclick="switchTab('roster')">Вступить в игру</a>
-      
-      <div class="timer-wrap">
-        <div class="t-item"><span id="days" class="t-val">00</span><span class="t-lab">дней</span></div>
-        <div class="t-item"><span id="hours" class="t-val">00</span><span class="t-lab">часов</span></div>
-        <div class="t-item"><span id="mins" class="t-val">00</span><span class="t-lab">мин</span></div>
-        <div class="t-item"><span id="secs" class="t-val">00</span><span class="t-lab">сек</span></div>
-      </div>
+  <section id="roster" class="section active">
+    <div style="margin-bottom: 60px;">
+      <h1 style="font-family:'Syncopate'; font-size: 60px; letter-spacing: -4px;">THE ELITE</h1>
+      <p style="color:var(--text-dim); letter-spacing: 2px;">SEASON 00 / GENESIS</p>
     </div>
+    <div id="roster-container" class="roster-grid"></div>
   </section>
 
-  <section id="roster" class="container">
-    <h2 style="margin-bottom: 40px; font-size: 40px;">МАСТЕРА КЛЕТКИ</h2>
-    <div id="roster-grid" class="bento-grid">
-      </div>
-  </section>
-
-  <section id="stats" class="container">
-    <h2 style="margin-bottom: 40px; font-size: 40px;">GLOBAL RANKING</h2>
-    <table class="stats-table">
-      <thead>
-        <tr>
-          <th>Ранг</th>
-          <th>Игрок</th>
-          <th>OVR</th>
-          <th>Impact</th>
-          <th>Стиль</th>
-        </tr>
-      </thead>
-      <tbody id="stats-body">
-        </tbody>
-    </table>
-  </section>
-
-  <div id="player-modal" class="modal" onclick="closeModal('player-modal')">
+  <div id="player-modal" class="modal" onclick="this.classList.remove('active')">
     <div class="modal-content" onclick="event.stopPropagation()">
-      <div id="modal-img-container">
-        </div>
-      <div id="modal-info">
-        <h2 id="m-name" style="font-size: 50px; margin-bottom: 10px;"></h2>
-        <div id="m-ovr" class="p-ovr" style="margin-bottom: 20px;"></div>
-        <p id="m-bio" style="color: var(--text-dim); margin-bottom: 30px;"></p>
-        
-        <div class="style-id">
-          <div class="gear-slot">
-            <span style="font-size: 24px;">👟</span>
-            <div><div class="gear-label">BOOTS</div><div id="m-boots" class="gear-value">—</div></div>
+      
+      <div class="modal-visual">
+        <div id="m-radar" class="radar-container">
           </div>
-          <div class="gear-slot">
-            <span style="font-size: 24px;">👕</span>
-            <div><div class="gear-label">STYLE ID</div><div id="m-fit" class="gear-value">—</div></div>
+        <div id="m-img" style="margin-top: 40px; height: 300px; border-radius: 20px; overflow: hidden; border: 1px solid var(--glass-border);"></div>
+      </div>
+
+      <div class="modal-data">
+        <h2 id="m-name" style="font-family:'Syncopate'; font-size: 50px; line-height: 1;"></h2>
+        <div id="m-role" style="color:var(--cyan); font-weight:700; margin: 10px 0 30px; letter-spacing: 3px;"></div>
+        
+        <p id="m-bio" style="color:var(--text-dim); line-height: 1.8; margin-bottom: 40px;"></p>
+
+        <div class="style-grid">
+          <div id="slot-boots" class="gear-slot">
+            <div class="gear-icon">👟</div>
+            <div>
+              <div class="gear-label">Weapon of Choice</div>
+              <div id="val-boots" class="gear-name">Nike Air Zoom</div>
+            </div>
+          </div>
+          <div id="slot-fit" class="gear-slot">
+            <div class="gear-icon">👕</div>
+            <div>
+              <div class="gear-label">The Fit</div>
+              <div id="val-fit" class="gear-name">Stealth Pro</div>
+            </div>
           </div>
         </div>
       </div>
+
+      <button onclick="document.getElementById('player-modal').classList.remove('active')" 
+              style="position:absolute; top:0; right:0; background:none; border:none; color:#fff; font-size:30px; cursor:pointer;">&times;</button>
     </div>
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
   <script>
     const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT5uD_m669n1Ld2PqN2C_T6f2N_8f55G84yFmFvY-Nf76S6Rk8-h0r_vN_v-w0j7S_9n-w/pub?output=csv';
-    let playersData = [];
+    let players = [];
+
+    // Динамическая сетка бэкграунда
+    document.addEventListener('mousemove', (e) => {
+      const x = (e.clientX / window.innerWidth - 0.5) * 20;
+      const y = (e.clientY / window.innerHeight - 0.5) * 20;
+      document.getElementById('net-bg').style.transform = `rotateX(${y}deg) rotateY(${x}deg)`;
+    });
 
     async function init() {
       Papa.parse(SHEET_URL, {
-        download: true,
-        header: true,
-        complete: (results) => {
-          playersData = results.data.filter(p => p.Игрок);
+        download: true, header: true,
+        complete: (res) => {
+          players = res.data.filter(p => p.Игрок);
           renderRoster();
-          renderStats();
         }
       });
-      updateTimer();
-      setInterval(updateTimer, 1000);
     }
 
     function renderRoster() {
-      const grid = document.getElementById('roster-grid');
-      grid.innerHTML = playersData.map(p => {
-        const role = p.role || 'GHOST';
-        const color = role === 'Artist' ? 'var(--cyan)' : role === 'Tank' ? 'var(--orange)' : 'var(--accent)';
-        
-        return `
-          <div class="bento-item" onclick="openPlayer('${p.Игрок}')">
-            <div class="role-badge" style="color: ${color}">${role.toUpperCase()}</div>
-            <img src="${p.photo || 'https://via.placeholder.com/400'}" class="player-photo">
-            <div class="card-footer">
-              <div class="p-name">${p.Игрок}</div>
-              <div class="p-ovr">${p.r}</div>
-            </div>
+      const container = document.getElementById('roster-container');
+      container.innerHTML = players.map(p => `
+        <div class="player-card" onclick="openPlayer('${p.Игрок}')">
+          <div class="card-img-wrapper">
+            <img src="${p.photo}" alt="${p.Игрок}">
           </div>
-        `;
-      }).join('');
-    }
-
-    function renderStats() {
-      const body = document.getElementById('stats-body');
-      body.innerHTML = playersData
-        .sort((a,b) => b.r - a.r)
-        .map((p, i) => `
-          <tr>
-            <td style="color: var(--accent); font-weight: 700;">#${i+1}</td>
-            <td style="font-weight: 700;">${p.Игрок}</td>
-            <td style="color: var(--accent);">${p.r}</td>
-            <td>${p.impact || '85'}</td>
-            <td style="color: var(--text-dim); font-size: 12px;">${p.role || 'Standard'}</td>
-          </tr>
-        `).join('');
+          <div class="card-info">
+            <div>
+              <div style="font-size:10px; color:var(--text-dim); letter-spacing:2px;">${p.role || 'PRO'}</div>
+              <div class="p-name">${p.Игрок}</div>
+            </div>
+            <div class="p-ovr">${p.r}</div>
+          </div>
+        </div>
+      `).join('');
     }
 
     function openPlayer(name) {
-      const p = playersData.find(x => x.Игрок === name);
-      document.getElementById('m-name').innerText = p.Игрок;
-      document.getElementById('m-ovr').innerText = p.r;
-      document.getElementById('m-bio').innerText = p.bio || 'Этот игрок еще не написал свою историю. Скоро в клетке.';
-      document.getElementById('m-boots').innerText = p.boots || 'Standard Issue';
-      document.getElementById('m-fit').innerText = p.fit || 'Pro Default';
-      document.getElementById('modal-img-container').innerHTML = `<img src="${p.photo}" style="width:100%; height:100%; object-fit:cover; border-radius:12px;">`;
+      const p = players.find(x => x.Игрок === name);
+      const modal = document.getElementById('player-modal');
       
-      document.getElementById('player-modal').classList.add('active');
+      document.getElementById('m-name').innerText = p.Игрок;
+      document.getElementById('m-role').innerText = (p.role || 'PLAYER').toUpperCase();
+      document.getElementById('m-bio').innerText = p.bio || 'Мастер клетки. Творец истории 1v1.';
+      
+      // Style ID Logic
+      document.getElementById('val-boots').innerText = p.gear_boots || 'None';
+      document.getElementById('val-fit').innerText = p.gear_fit || 'Standard';
+      
+      const rarity = (p.gear_rarity || 'basic').toLowerCase();
+      const slotBoots = document.getElementById('slot-boots');
+      slotBoots.className = `gear-slot rarity-${rarity}`;
+
+      document.getElementById('m-img').innerHTML = `<img src="${p.photo}" style="width:100%; height:100%; object-fit:cover;">`;
+      
+      // Generate Radar Chart
+      const skills = {
+        spd: p.speed || 50,
+        dri: p.dribble || 50,
+        pwr: p.power || 50,
+        def: p.defense || 50,
+        pas: p.pass || 50
+      };
+      drawRadar(skills);
+
+      modal.classList.add('active');
     }
 
-    function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+    function drawRadar(s) {
+      const size = 300;
+      const center = size / 2;
+      const radius = size * 0.4;
+      const points = [];
+      const keys = Object.keys(s);
+      
+      keys.forEach((key, i) => {
+        const angle = (Math.PI * 2 / keys.length) * i - Math.PI/2;
+        const val = s[key] / 100;
+        const x = center + radius * val * Math.cos(angle);
+        const y = center + radius * val * Math.sin(angle);
+        points.push(`${x},${y}`);
+      });
 
-    function switchTab(tab) {
-      document.querySelectorAll('.container').forEach(c => c.classList.remove('active'));
-      document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
-      document.getElementById(tab).classList.add('active');
-      document.getElementById('nav-' + tab).classList.add('active');
-      window.scrollTo(0,0);
+      const svg = `
+        <svg viewBox="0 0 ${size} ${size}" style="filter: drop-shadow(0 0 10px var(--cyan));">
+          <circle cx="${center}" cy="${center}" r="${radius}" fill="none" stroke="var(--glass-border)" stroke-width="1"/>
+          <circle cx="${center}" cy="${center}" r="${radius/2}" fill="none" stroke="var(--glass-border)" stroke-width="1" stroke-dasharray="5,5"/>
+          <polygon points="${points.join(' ')}" fill="rgba(0, 240, 255, 0.2)" stroke="var(--cyan)" stroke-width="2"/>
+        </svg>
+      `;
+      document.getElementById('m-radar').innerHTML = svg;
     }
 
-    function updateTimer() {
-      const target = new Date("Mar 1, 2026 00:00:00").getTime();
-      const now = new Date().getTime();
-      const diff = target - now;
-      if (diff > 0) {
-        document.getElementById('days').innerText = String(Math.floor(diff / 864e5)).padStart(2, '0');
-        document.getElementById('hours').innerText = String(Math.floor((diff % 864e5) / 36e5)).padStart(2, '0');
-        document.getElementById('mins').innerText = String(Math.floor((diff % 36e5) / 6e4)).padStart(2, '0');
-        document.getElementById('secs').innerText = String(Math.floor((diff % 6e4) / 1000)).padStart(2, '0');
-      }
+    function showSection(id) {
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
     }
 
     init();
