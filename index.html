@@ -18,39 +18,11 @@
       --shadow2: 0 12px 30px rgba(0,0,0,0.06);
       --cubic: cubic-bezier(0.2, 0.9, 0.2, 1);
       --glass: rgba(255,255,255,0.75);
-
-      /* new: graffiti textures */
-      --concrete: url('data:image/svg+xml;utf8,\
-        <svg xmlns="http://www.w3.org/2000/svg" width="200" height="200">\
-          <filter id="noise"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="3" stitchTiles="stitch"/></filter>\
-          <rect width="200" height="200" fill="#d9d9d9" filter="url(#noise)"/>\
-        </svg>');
-      --graffiti: url('data:image/svg+xml;utf8,\
-        <svg xmlns="http://www.w3.org/2000/svg" width="400" height="200">\
-          <defs>\
-            <linearGradient id="g" x1="0" x2="1">\
-              <stop offset="0" stop-color="rgba(255,77,77,0.85)"/>\
-              <stop offset="0.5" stop-color="rgba(255,122,0,0.85)"/>\
-              <stop offset="1" stop-color="rgba(34,197,94,0.85)"/>\
-            </linearGradient>\
-            <filter id="blur"><feGaussianBlur stdDeviation="1.2"/></filter>\
-          </defs>\
-          <text x="20" y="70" font-size="64" font-family="Impact, sans-serif" fill="url(#g)" filter="url(#blur)" opacity="0.8">GRAFFITI</text>\
-          <text x="10" y="130" font-size="56" font-family="Impact, sans-serif" fill="url(#g)" filter="url(#blur)" opacity="0.6">STREET</text>\
-        </svg>');
     }
 
     * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color: transparent; }
     html { scroll-behavior:smooth; background: var(--bg); }
-    body {
-      font-family: 'Inter', system-ui, sans-serif;
-      background:
-        var(--graffiti) center/cover no-repeat,
-        var(--concrete) center/cover no-repeat,
-        var(--bg);
-      color: var(--text);
-      overflow-x:hidden;
-    }
+    body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--text); overflow-x:hidden; }
 
     /* --- PRELOADER --- */
     #preloader {
@@ -157,20 +129,9 @@
 
     /* --- CONTENT --- */
     .main-content { max-width: 1200px; margin: 0 auto; padding: 0 22px; }
-    section {
-      padding-top: 100px;
-      min-height: 100vh;
-      opacity: 0;
-      pointer-events: none;
-      position: absolute;
-      inset: 0;
-      transition: opacity .55s var(--cubic);
-    }
-    section.active {
-      opacity: 1;
-      pointer-events: auto;
-      position: relative;
-    }
+    section { display:none; padding-top: 100px; min-height: 100vh; }
+    section.active { display:block; animation: sectionIn .45s var(--cubic); }
+    @keyframes sectionIn { from{opacity:0; transform: scale(.99);} to{opacity:1; transform: scale(1);} }
 
     .hero {
       min-height: 70vh;
@@ -199,32 +160,6 @@
       text-transform: uppercase;
       font-style: italic;
       margin-top: 22px;
-      position: relative;
-      z-index: 1;
-    }
-
-    /* new graffiti effect on title */
-    .hero h1 {
-      background: linear-gradient(90deg, rgba(255,77,77,0.9), rgba(255,122,0,0.9), rgba(34,197,94,0.9));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      filter: drop-shadow(0 12px 20px rgba(0,0,0,0.25));
-    }
-    .hero h1::after {
-      content:'';
-      position:absolute; inset:0;
-      background: url('data:image/svg+xml;utf8,\
-        <svg xmlns="http://www.w3.org/2000/svg" width="800" height="400">\
-          <filter id="spray"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" stitchTiles="stitch"/><feColorMatrix type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 30 -15"/></filter>\
-          <rect width="800" height="400" fill="white" filter="url(#spray)" opacity="0.45"/>\
-        </svg>') center/cover no-repeat;
-      mix-blend-mode: multiply;
-      opacity: 0;
-      animation: sprayIn 1.2s var(--cubic) forwards;
-    }
-    @keyframes sprayIn {
-      from { opacity:0; }
-      to { opacity:1; }
     }
 
     .hero span {
@@ -264,7 +199,7 @@
       margin: 60px 0;
     }
     .bento-item {
-      background: linear-gradient(135deg, rgba(255,255,255,0.8), rgba(255,255,255,0.95));
+      background: var(--card);
       border-radius: 30px;
       border: 1px solid var(--border);
       padding: 28px;
@@ -275,21 +210,6 @@
       cursor:pointer;
       transition: .35s var(--cubic);
       box-shadow: var(--shadow2);
-    }
-    .bento-item::before {
-      content:'';
-      position:absolute; inset:0;
-      background: var(--concrete);
-      opacity: 0.18;
-      pointer-events:none;
-    }
-    .bento-item::after {
-      content:'';
-      position:absolute; inset:-20px;
-      background: var(--graffiti);
-      opacity: 0.15;
-      pointer-events:none;
-      transform: rotate(-8deg);
     }
     .bento-item:hover {
       transform: translateY(-4px);
@@ -310,8 +230,6 @@
       background: rgba(0,0,0,0.04);
       color: var(--text);
       margin-bottom: 16px;
-      position: relative;
-      z-index: 2;
     }
 
     .bento-item h2 {
@@ -321,8 +239,6 @@
       text-transform: uppercase;
       line-height: .9;
       margin: 0;
-      position: relative;
-      z-index: 2;
     }
     .bento-item p {
       margin-top: 18px;
@@ -330,8 +246,6 @@
       line-height: 1.6;
       max-width: 360px;
       font-size: 14px;
-      position: relative;
-      z-index: 2;
     }
 
     .bento-item .cta {
@@ -340,8 +254,6 @@
       letter-spacing: 1px;
       color: var(--text);
       display:inline-block;
-      position: relative;
-      z-index: 2;
     }
 
     .bento-item.green {
@@ -362,7 +274,6 @@
       filter: grayscale(1);
       transition: .5s var(--cubic);
       pointer-events:none;
-      z-index: 2;
     }
     .bento-item:hover .player-img-container {
       opacity:1;
@@ -391,8 +302,6 @@
       flex-wrap:wrap;
       gap: 6px;
       margin-top: 12px;
-      position: relative;
-      z-index: 2;
     }
     .badge {
       font-size: 9px;
