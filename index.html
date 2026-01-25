@@ -3,14 +3,19 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-  <title>BOX1V1 | ADMIN & LEAGUE</title>
+  <title>BOX1V1 | PRO LEAGUE</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,700;0,900;1,900&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  
   <style>
     :root {
-      --bg: #000; --card: #0d0d0d; --accent: #39FF14;
+      --bg: #000; --card-dark: #0d0d0d; --accent: #39FF14;
       --text: #fff; --text-dim: #86868b; --border: #1c1c1e;
-      --cubic: cubic-bezier(0.23, 1, 0.32, 1);
+      --gold: linear-gradient(135deg, #f5d061 0%, #e3a61a 100%);
+      --silver: linear-gradient(135deg, #d7d7d7 0%, #898989 100%);
+      --bronze: linear-gradient(135deg, #cd7f32 0%, #7d4411 100%);
     }
+
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
     body { background: var(--bg); color: var(--text); overflow-x: hidden; }
     
@@ -28,54 +33,67 @@
     .nav-links a { color: var(--text-dim); text-decoration: none; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; cursor: pointer; }
     .nav-links a.active { color: var(--accent); }
 
+    /* Sections */
     .main-content { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
-    section { display: none; padding-top: 100px; min-height: 100vh; animation: fadeIn 0.4s var(--cubic); }
+    section { display: none; padding-top: 100px; min-height: 100vh; animation: fadeIn 0.4s ease; }
     section.active { display: block; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-    /* Bento Cards */
+    /* Bento Grid */
     .bento-grid { display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: 240px; gap: 20px; margin: 40px 0; }
-    .bento-item { background: var(--card); border-radius: 32px; border: 1px solid var(--border); padding: 30px; display: flex; flex-direction: column; cursor: pointer; transition: 0.4s var(--cubic); position: relative; overflow: hidden; }
+    .bento-item { background: var(--card-dark); border-radius: 32px; border: 1px solid var(--border); padding: 30px; display: flex; flex-direction: column; cursor: pointer; transition: 0.4s; position: relative; }
     .bento-item:hover { border-color: var(--accent); transform: translateY(-5px); }
     .col-2 { grid-column: span 2; }
 
-    /* Tournament Bracket */
-    .bracket-wrapper { display: flex; gap: 40px; overflow-x: auto; padding: 40px 0; align-items: flex-start; }
-    .round-col { display: flex; flex-direction: column; gap: 30px; min-width: 220px; }
-    .match-box { background: #111; border: 1px solid var(--border); border-radius: 16px; overflow: hidden; }
-    .match-slot { padding: 15px; font-size: 12px; font-weight: 900; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; cursor: pointer; transition: 0.2s; }
-    .match-slot:hover { background: #1a1a1a; }
-    .match-slot.winner { color: var(--accent); background: #0f260f; }
-    .round-label { font-size: 10px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 15px; font-weight: 800; }
+    /* FIFA CARD STYLES */
+    .fifa-card-container { padding: 20px; background: #000; border-radius: 20px; display: inline-block; }
+    .fifa-card {
+      width: 280px; height: 400px; border-radius: 10px; position: relative;
+      padding: 25px; color: #000; clip-path: polygon(15% 0%, 85% 0%, 100% 15%, 100% 85%, 85% 100%, 15% 100%, 0% 85%, 0% 15%);
+      display: flex; flex-direction: column; box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+    }
+    .card-gold { background: var(--gold); }
+    .card-silver { background: var(--silver); }
+    .card-bronze { background: var(--bronze); color: #fff; }
 
-    /* Admin Panel */
+    .card-ovr { font-size: 4rem; font-weight: 900; line-height: 0.8; letter-spacing: -2px; }
+    .card-pos { font-size: 1.2rem; font-weight: 700; border-bottom: 2px solid rgba(0,0,0,0.2); width: fit-content; padding-bottom: 5px; }
+    .card-name { font-size: 1.6rem; font-weight: 900; text-transform: uppercase; text-align: center; margin: 20px 0 10px; border-top: 2px solid rgba(0,0,0,0.1); padding-top: 10px; }
+    .card-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; font-size: 14px; font-weight: 800; }
+    .stat-line { display: flex; gap: 8px; justify-content: center; }
+    .stat-val { font-weight: 900; }
+
+    /* Admin Tournament UI */
     .admin-panel { background: #0a0a0a; border: 1px solid var(--accent); border-radius: 24px; padding: 25px; margin-bottom: 40px; }
-    .player-select-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; margin: 20px 0; }
-    .select-tag { padding: 10px; border: 1px solid var(--border); border-radius: 10px; font-size: 11px; font-weight: 800; text-align: center; cursor: pointer; transition: 0.2s; }
+    .player-select-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; margin: 15px 0; }
+    .select-tag { padding: 12px; border: 1px solid var(--border); border-radius: 12px; font-size: 11px; font-weight: 800; text-align: center; cursor: pointer; }
     .select-tag.selected { background: var(--accent); color: #000; border-color: var(--accent); }
+
+    .bracket-wrapper { display: flex; gap: 40px; overflow-x: auto; padding: 20px 0; }
+    .match-box { background: #111; border: 1px solid var(--border); border-radius: 12px; margin-bottom: 15px; width: 200px; }
+    .match-slot { padding: 12px; font-size: 11px; font-weight: 900; cursor: pointer; display: flex; justify-content: space-between; }
+    .match-slot:first-child { border-bottom: 1px solid var(--border); }
+    .match-slot.winner { color: var(--accent); background: #0f260f; }
 
     /* Modals */
     .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.95); backdrop-filter: blur(20px); z-index: 3000; display: none; align-items: center; justify-content: center; padding: 20px; }
     .modal-overlay.active { display: flex; }
-    .modal-card { background: #080808; width: 100%; max-width: 500px; border-radius: 32px; border: 1px solid var(--border); padding: 40px; position: relative; }
-    
-    input, select, textarea { width: 100%; background: #151515; border: 1px solid var(--border); padding: 15px; color: #fff; border-radius: 12px; margin: 10px 0; }
-    .btn-action { background: var(--accent); color: #000; border: none; padding: 18px; border-radius: 12px; font-weight: 900; cursor: pointer; width: 100%; text-transform: uppercase; }
-    .logout-btn { background: none; border: 1px solid #ff4444; color: #ff4444; margin-top: 20px; font-size: 10px; padding: 10px; border-radius: 8px; cursor: pointer; }
+    .modal-card { background: #080808; width: 100%; max-width: 500px; border-radius: 32px; border: 1px solid var(--border); padding: 40px; text-align: center; }
 
-    @media (max-width: 800px) { .bento-grid { grid-template-columns: repeat(2, 1fr); } }
+    input, select, textarea { width: 100%; background: #151515; border: 1px solid var(--border); padding: 15px; color: #fff; border-radius: 12px; margin: 10px 0; }
+    .btn-action { background: var(--accent); color: #000; border: none; padding: 18px; border-radius: 12px; font-weight: 900; cursor: pointer; width: 100%; text-transform: uppercase; margin-top: 10px; }
   </style>
 </head>
 <body>
 
   <nav>
     <div class="nav-inner">
-      <div class="logo" onclick="switchTab('home')" style="cursor:pointer; font-weight:900; font-size:20px">BOX<span style="color:var(--accent)">1</span>V1</div>
+      <div onclick="switchTab('home')" style="cursor:pointer; font-weight:900; font-size:20px">BOX<span style="color:var(--accent)">1</span>V1</div>
       <div class="nav-links">
         <a onclick="switchTab('home')" id="nav-home" class="active">Лента</a>
         <a onclick="switchTab('roster')" id="nav-roster">Состав</a>
         <a onclick="switchTab('tournament')" id="nav-tournament">Турнир</a>
-        <a id="auth-btn" onclick="openModal('regModal')" style="color:var(--accent)">ВХОД</a>
+        <a id="auth-btn" onclick="openModal('regModal')" style="color:var(--accent)">Вход</a>
       </div>
     </div>
   </nav>
@@ -84,43 +102,41 @@
     
     <section id="home" class="active">
       <div style="padding: 60px 0; text-align: center;">
-        <h1 class="shimmer-text" style="font-size: clamp(3rem, 10vw, 8rem); font-weight: 900; font-style: italic; line-height: 0.9;">КЛЕТКА<br>ЖДЕТ ТЕБЯ.</h1>
+        <h1 class="shimmer-text" style="font-size: clamp(3rem, 10vw, 7rem); font-weight: 900; font-style: italic; line-height: 0.9;">КЛЕТКА<br>ВЫБИРАЕТ ЛУЧШИХ.</h1>
       </div>
       <div class="bento-grid">
         <div id="hero-card" class="bento-item col-2" onclick="openModal('regModal')" style="background: linear-gradient(45deg, #111, #000); border-color: var(--accent);">
-          <span style="font-size:10px; font-weight:800; color:var(--accent); text-transform:uppercase">Join the league</span>
+          <span style="font-size:10px; font-weight:800; color:var(--accent)">IDENTITY SYSTEM</span>
           <h2 style="font-size:2.5rem; font-weight:900; font-style:italic; margin-top:10px">СОЗДАТЬ КАРТОЧКУ</h2>
         </div>
         <div class="bento-item" onclick="switchTab('tournament')">
-          <span style="font-size:10px; font-weight:800; color:var(--text-dim); text-transform:uppercase">Tournament</span>
-          <h2 style="font-size:1.8rem; font-weight:900; margin-top:10px">СЕТКА ИГР</h2>
+          <h2 style="font-size:1.5rem; font-weight:900;">ТУРНИРНАЯ СЕТКА</h2>
+          <p style="color:var(--text-dim); margin-top:auto">Следи за прогрессом LIVE</p>
         </div>
       </div>
     </section>
 
     <section id="roster">
-      <h1 class="shimmer-text" style="font-size: 3.5rem; font-weight: 900; font-style: italic; margin-bottom:30px">СОСТАВ.</h1>
+      <h1 class="shimmer-text" style="font-size: 3rem; font-weight: 900; font-style: italic; margin-bottom:30px">ИГРОКИ ЛИГИ.</h1>
       <div class="bento-grid" id="roster-grid"></div>
     </section>
 
     <section id="tournament">
-      <h1 class="shimmer-text" style="font-size: 3.5rem; font-weight: 900; font-style: italic; margin-bottom:20px">GRID.</h1>
+      <h1 class="shimmer-text" style="font-size: 3rem; font-weight: 900; font-style: italic; margin-bottom:20px">TOURNAMENT GRID.</h1>
       
-      <div class="admin-panel" id="admin-panel">
-        <h3 style="font-size: 12px; text-transform: uppercase; color: var(--accent)">Админ-панель: Выбор 8 игроков</h3>
-        <div class="player-select-grid" id="admin-player-list">
-          </div>
-        <button class="btn-action" style="padding: 12px; font-size: 12px;" onclick="generateManualBracket()">Сформировать сетку</button>
+      <div class="admin-panel">
+        <h3 style="font-size: 11px; text-transform: uppercase; color: var(--accent)">Управление: Выбери 8 игроков</h3>
+        <div class="player-select-grid" id="admin-player-list"></div>
+        <button class="btn-action" style="padding: 12px; font-size: 11px;" onclick="generateManualBracket()">Сформировать сетку</button>
       </div>
 
-      <div class="bracket-wrapper" id="bracket-display">
-        </div>
+      <div class="bracket-wrapper" id="bracket-display"></div>
     </section>
   </main>
 
   <div class="modal-overlay" id="regModal" onclick="closeModal('regModal')">
     <div class="modal-card" onclick="event.stopPropagation()">
-      <h2 style="font-weight:900; font-style:italic; text-transform:uppercase; margin-bottom:20px">Регистрация</h2>
+      <h2 style="font-weight:900; font-style:italic; text-transform:uppercase">Регистрация</h2>
       <form onsubmit="handleRegister(event)">
         <input type="text" id="reg-name" placeholder="НИКНЕЙМ" required>
         <div style="display:flex; gap:10px">
@@ -130,176 +146,207 @@
         <select id="reg-foot">
           <option value="Правая">ПРАВАЯ НОГА</option>
           <option value="Левая">ЛЕВАЯ НОГА</option>
-          <option value="Обе">ОБЕ (АМБИДЕКСТР)</option>
         </select>
-        <textarea id="reg-quote" placeholder="ТВОЯ ЦИТАТА ДЛЯ ПРОФИЛЯ" rows="2" required></textarea>
-        <button type="submit" class="btn-action">СОЗДАТЬ ИГРОКА</button>
+        <textarea id="reg-quote" placeholder="ТВОЯ ЦИТАТА ДЛЯ КАРТОЧКИ" required></textarea>
+        <button type="submit" class="btn-action">СОЗДАТЬ ПРОФИЛЬ</button>
       </form>
     </div>
   </div>
 
   <div class="modal-overlay" id="playerModal" onclick="closeModal('playerModal')">
-    <div class="modal-card" id="p-modal-content" onclick="event.stopPropagation()">
-      </div>
+    <div class="modal-card" style="background:none; border:none;" onclick="event.stopPropagation()">
+      <div id="card-capture-area">
+        </div>
+      <button class="btn-action" id="download-btn" onclick="downloadCard()" style="background:#fff; color:#000; margin-top:20px">СОХРАНИТЬ КАРТОЧКУ (PNG)</button>
+      <div id="profile-actions"></div>
+      <button class="btn-action" style="background:#222; color:#fff" onclick="closeModal()">ЗАКРЫТЬ</button>
+    </div>
   </div>
 
   <script>
-    // 1. БАЗА ДАННЫХ (ИСПОЛЬЗУЕМ ТЕ ЖЕ КЛЮЧИ ЧТОБЫ НЕ ТЕРЯТЬ ДАННЫЕ)
+    // 1. БАЗА ДАННЫХ
     let players = JSON.parse(localStorage.getItem('box_league_players')) || {
-      'ZUPAROV': { ovr: 99, status: 'Основатель', age: 25, height: 185, foot: 'Правая', quote: 'Создаю историю.' },
-      'KUSCH': { ovr: 85, status: 'PRO', age: 22, height: 180, foot: 'Левая', quote: 'Скилл решает.' }
+      'ZUPAROV': { ovr: 92, age: 25, height: 185, foot: 'Правая', quote: 'King of the Box', stats: {pac:95, sho:90, pas:88, dri:94, def:80, phy:85} },
+      'KUSCH': { ovr: 84, age: 22, height: 180, foot: 'Левая', quote: 'No mercy.', stats: {pac:88, sho:82, pas:80, dri:86, def:75, phy:78} }
     };
     let currentUser = localStorage.getItem('box_league_logged_user');
     let selectedForTournament = [];
 
-    // 2. СИСТЕМА ВКЛАДОК
+    // 2. НАВИГАЦИЯ
     function switchTab(t) {
       document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
       document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
       document.getElementById(t).classList.add('active');
       if(document.getElementById('nav-'+t)) document.getElementById('nav-'+t).classList.add('active');
       if(t === 'tournament') renderAdminList();
-      window.scrollTo(0,0);
     }
 
     function openModal(id) { document.getElementById(id).classList.add('active'); }
-    function closeModal(id) { 
-        if(id) document.getElementById(id).classList.remove('active');
-        else document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('active'));
+    function closeModal() { document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('active')); }
+
+    // 3. FIFA CARD LOGIC
+    function getCardClass(ovr) {
+      if (ovr >= 85) return 'card-gold';
+      if (ovr >= 75) return 'card-silver';
+      return 'card-bronze';
     }
 
-    // 3. РЕГИСТРАЦИЯ
     function handleRegister(e) {
       e.preventDefault();
       const name = document.getElementById('reg-name').value.toUpperCase().trim();
+      const stats = {
+        pac: Math.floor(Math.random() * 30) + 65,
+        sho: Math.floor(Math.random() * 30) + 60,
+        pas: Math.floor(Math.random() * 30) + 60,
+        dri: Math.floor(Math.random() * 30) + 65,
+        def: Math.floor(Math.random() * 30) + 50,
+        phy: Math.floor(Math.random() * 30) + 60
+      };
+      const ovr = Math.round((stats.pac + stats.sho + stats.dri) / 3);
+
       players[name] = {
-        ovr: 0,
-        status: 'НОВИЧОК',
-        age: document.getElementById('reg-age').value,
+        ovr: ovr, age: document.getElementById('reg-age').value,
         height: document.getElementById('reg-height').value,
         foot: document.getElementById('reg-foot').value,
-        quote: document.getElementById('reg-quote').value
+        quote: document.getElementById('reg-quote').value,
+        stats: stats
       };
       localStorage.setItem('box_league_players', JSON.stringify(players));
       localStorage.setItem('box_league_logged_user', name);
       location.reload();
     }
 
-    // 4. ОТОБРАЖЕНИЕ СОСТАВА
-    function renderRoster() {
-      const grid = document.getElementById('roster-grid');
-      grid.innerHTML = Object.entries(players).map(([name, p]) => `
-        <div class="bento-item" onclick="showProfile('${name}')">
-          <span style="font-size:10px; font-weight:900; color:var(--accent)">OVR ${p.ovr}</span>
-          <h3 style="font-size:1.5rem; font-weight:900; font-style:italic; margin-top:5px">${name}</h3>
-          <p style="margin-top:auto; font-size:10px; color:var(--text-dim); text-transform:uppercase">${p.status}</p>
+    function showProfile(name) {
+      const p = players[name];
+      const s = p.stats;
+      const cardArea = document.getElementById('card-capture-area');
+      
+      cardArea.innerHTML = `
+        <div class="fifa-card ${getCardClass(p.ovr)}">
+          <div style="display:flex; align-items:flex-start; gap:10px">
+            <div>
+              <div class="card-ovr">${p.ovr}</div>
+              <div class="card-pos">ST</div>
+            </div>
+            <div style="font-size:9px; font-weight:900; transform: rotate(90deg); margin-top:20px">BOX1V1</div>
+          </div>
+          <div class="card-name">${name}</div>
+          <div class="card-stats">
+            <div class="stat-line"><span class="stat-val">${s.pac}</span> PAC</div>
+            <div class="stat-line"><span class="stat-val">${s.dri}</span> DRI</div>
+            <div class="stat-line"><span class="stat-val">${s.sho}</span> SHO</div>
+            <div class="stat-line"><span class="stat-val">${s.def}</span> DEF</div>
+            <div class="stat-line"><span class="stat-val">${s.pas}</span> PAS</div>
+            <div class="stat-line"><span class="stat-val">${s.phy}</span> PHY</div>
+          </div>
+          <div style="margin-top:auto; font-size:9px; font-weight:900; opacity:0.6; text-align:center">
+            ${p.foot.toUpperCase()} FOOT | ${p.height} CM
+          </div>
         </div>
+      `;
+
+      const actions = document.getElementById('profile-actions');
+      actions.innerHTML = name === currentUser ? `<button class="btn-action" style="background:none; border:1px solid #ff4444; color:#ff4444; font-size:10px; padding:10px" onclick="logout()">ВЫЙТИ ИЗ ПРОФИЛЯ</button>` : '';
+      
+      openModal('playerModal');
+    }
+
+    // 4. ТУРНИРНАЯ ЛОГИКА (АДМИН)
+    let tourney = { qf: [], sf: [null, null, null, null], f: [null, null] };
+
+    function renderAdminList() {
+      const list = document.getElementById('admin-player-list');
+      list.innerHTML = Object.keys(players).map(name => `
+        <div class="select-tag ${selectedForTournament.includes(name) ? 'selected' : ''}" onclick="toggleSelect('${name}')">${name}</div>
       `).join('');
     }
 
-    function showProfile(name) {
-      const p = players[name];
-      const content = document.getElementById('p-modal-content');
-      content.innerHTML = `
-        <h1 style="font-size:3rem; font-weight:900; font-style:italic">${name}</h1>
-        <p style="color:var(--accent); font-weight:800; letter-spacing:2px">OVR ${p.ovr} | ${p.status}</p>
-        <div style="font-style:italic; color:#eee; border-left:3px solid var(--accent); padding-left:15px; margin:20px 0; font-size:1.1rem">"${p.quote}"</div>
-        <p style="font-size:11px; color:var(--text-dim)">РОСТ: ${p.height} СМ | НОГА: ${p.foot.toUpperCase()}</p>
-        ${name === currentUser ? `<button class="logout-btn" onclick="logout()">ВЫЙТИ ИЗ СИСТЕМЫ</button>` : ''}
-        <button class="btn-action" style="margin-top:20px; background:#222; color:#fff" onclick="closeModal()">ЗАКРЫТЬ</button>
+    function toggleSelect(n) {
+      if(selectedForTournament.includes(n)) selectedForTournament = selectedForTournament.filter(x => x !== n);
+      else if(selectedForTournament.length < 8) selectedForTournament.push(n);
+      renderAdminList();
+    }
+
+    function generateManualBracket() {
+      if(selectedForTournament.length < 8) return alert('Выбери 8 игроков!');
+      tourney.qf = [
+        [selectedForTournament[0], selectedForTournament[1]], [selectedForTournament[2], selectedForTournament[3]],
+        [selectedForTournament[4], selectedForTournament[5]], [selectedForTournament[6], selectedForTournament[7]]
+      ];
+      renderBracket();
+    }
+
+    function setWinner(round, idx, name) {
+      if(round === 'qf') tourney.sf[idx] = name;
+      if(round === 'sf') tourney.f[idx] = name;
+      renderBracket();
+    }
+
+    function renderBracket() {
+      const display = document.getElementById('bracket-display');
+      display.innerHTML = `
+        <div class="round-col">
+          <div style="font-size:9px; margin-bottom:10px">QUARTER</div>
+          ${tourney.qf.map((m, i) => `
+            <div class="match-box">
+              <div class="match-slot ${tourney.sf[i] === m[0] ? 'winner' : ''}" onclick="setWinner('qf', ${i}, '${m[0]}')">${m[0]}</div>
+              <div class="match-slot ${tourney.sf[i] === m[1] ? 'winner' : ''}" onclick="setWinner('qf', ${i}, '${m[1]}')">${m[1]}</div>
+            </div>
+          `).join('')}
+        </div>
+        <div class="round-col">
+          <div style="font-size:9px; margin-bottom:10px">SEMI</div>
+          ${[0, 1].map(i => `
+            <div class="match-box">
+              <div class="match-slot ${tourney.f[i] === tourney.sf[i*2] ? 'winner' : ''}" onclick="setWinner('sf', ${i}, '${tourney.sf[i*2]}')">${tourney.sf[i*2] || '???'}</div>
+              <div class="match-slot ${tourney.f[i] === tourney.sf[i*2+1] ? 'winner' : ''}" onclick="setWinner('sf', ${i}, '${tourney.sf[i*2+1]}')">${tourney.sf[i*2+1] || '???'}</div>
+            </div>
+          `).join('')}
+        </div>
+        <div class="round-col">
+          <div style="font-size:9px; margin-bottom:10px">FINAL</div>
+          <div class="match-box">
+            <div class="match-slot">${tourney.f[0] || '???'}</div>
+            <div class="match-slot">${tourney.f[1] || '???'}</div>
+          </div>
+        </div>
       `;
-      openModal('playerModal');
+    }
+
+    // 5. ДОПОЛНИТЕЛЬНЫЕ ФУНКЦИИ
+    function downloadCard() {
+      const area = document.getElementById('card-capture-area');
+      html2canvas(area, { backgroundColor: '#000' }).then(canvas => {
+        const link = document.createElement('a');
+        link.download = 'box1v1-card.png';
+        link.href = canvas.toDataURL();
+        link.click();
+      });
     }
 
     function logout() { localStorage.removeItem('box_league_logged_user'); location.reload(); }
 
-    // 5. ТУРНИР: АДМИН-ПАНЕЛЬ
-    function renderAdminList() {
-      const list = document.getElementById('admin-player-list');
-      list.innerHTML = Object.keys(players).map(name => `
-        <div class="select-tag ${selectedForTournament.includes(name) ? 'selected' : ''}" onclick="togglePlayerSelect('${name}')">
-          ${name}
-        </div>
-      `).join('');
-    }
-
-    function togglePlayerSelect(name) {
-      if(selectedForTournament.includes(name)) {
-        selectedForTournament = selectedForTournament.filter(n => n !== name);
-      } else {
-        if(selectedForTournament.length < 8) selectedForTournament.push(name);
-      }
-      renderAdminList();
-    }
-
-    // 6. ТУРНИР: РУЧНАЯ СЕТКА
-    let tournamentData = { sf: [null, null, null, null], f: [null, null] };
-
-    function generateManualBracket() {
-      if(selectedForTournament.length < 8) return alert('Выберите ровно 8 игроков из списка!');
-      
-      tournamentData.qf = [
-        [selectedForTournament[0], selectedForTournament[1]],
-        [selectedForTournament[2], selectedForTournament[3]],
-        [selectedForTournament[4], selectedForTournament[5]],
-        [selectedForTournament[6], selectedForTournament[7]]
-      ];
-      tournamentData.sf = [null, null, null, null];
-      tournamentData.f = [null, null];
-      renderBracketDisplay();
-    }
-
-    function winMatch(round, matchIdx, name) {
-      if(round === 'qf') tournamentData.sf[matchIdx] = name;
-      if(round === 'sf') tournamentData.f[matchIdx] = name;
-      renderBracketDisplay();
-    }
-
-    function renderBracketDisplay() {
-      const display = document.getElementById('bracket-display');
-      if(!tournamentData.qf) return;
-
-      display.innerHTML = `
-        <div class="round-col"><div class="round-label">1/4 Финала</div>
-          ${tournamentData.qf.map((m, i) => `
-            <div class="match-box">
-              <div class="match-slot ${tournamentData.sf[i] === m[0] ? 'winner' : ''}" onclick="winMatch('qf', ${i}, '${m[0]}')">${m[0]}</div>
-              <div class="match-slot ${tournamentData.sf[i] === m[1] ? 'winner' : ''}" onclick="winMatch('qf', ${i}, '${m[1]}')">${m[1]}</div>
-            </div>
-          `).join('')}
-        </div>
-        <div class="round-col"><div class="round-label">Полуфинал</div>
-          ${[0, 1].map(i => `
-            <div class="match-box">
-              <div class="match-slot ${tournamentData.f[i] === tournamentData.sf[i*2] ? 'winner' : ''}" onclick="winMatch('sf', ${i}, '${tournamentData.sf[i*2]}')">${tournamentData.sf[i*2] || '???'}</div>
-              <div class="match-slot ${tournamentData.f[i] === tournamentData.sf[i*2+1] ? 'winner' : ''}" onclick="winMatch('sf', ${i}, '${tournamentData.sf[i*2+1]}')">${tournamentData.sf[i*2+1] || '???'}</div>
-            </div>
-          `).join('')}
-        </div>
-        <div class="round-col"><div class="round-label">Финал</div>
-            <div class="match-box">
-              <div class="match-slot">${tournamentData.f[0] || '???'}</div>
-              <div class="match-slot">${tournamentData.f[1] || '???'}</div>
-            </div>
-            <p style="font-size:9px; color:var(--accent); margin-top:10px; text-align:center">Кликни на игрока выше, чтобы он прошел дальше</p>
-        </div>
-      `;
-    }
-
-    // ИНИЦИАЛИЗАЦИЯ
     window.onload = () => {
       if(currentUser && players[currentUser]) {
         document.getElementById('auth-btn').innerText = currentUser;
         document.getElementById('auth-btn').onclick = () => showProfile(currentUser);
         document.getElementById('hero-card').innerHTML = `
-          <span style="font-size:10px; font-weight:800; color:var(--accent)">Welcome back</span>
+          <span style="font-size:10px; font-weight:900; color:var(--accent)">PLAYER PROFILE</span>
           <h2 style="font-size:2.5rem; font-weight:900; font-style:italic; margin-top:10px">${currentUser}</h2>
-          <p style="color:var(--text-dim); margin-top:10px">Твой OVR: ${players[currentUser].ovr}</p>
+          <p style="color:var(--text-dim)">OVR ${players[currentUser].ovr} | Нажми, чтобы открыть карточку</p>
         `;
         document.getElementById('hero-card').onclick = () => showProfile(currentUser);
       }
-      renderRoster();
-    }
+      
+      // Рендер состава
+      document.getElementById('roster-grid').innerHTML = Object.keys(players).map(name => `
+        <div class="bento-item" onclick="showProfile('${name}')">
+          <span style="color:var(--accent); font-weight:900">OVR ${players[name].ovr}</span>
+          <h3 style="font-size:1.4rem; font-weight:900; font-style:italic; margin-top:5px">${name}</h3>
+          <p style="margin-top:auto; font-size:9px; color:var(--text-dim); text-transform:uppercase">View Card</p>
+        </div>
+      `).join('');
+    };
   </script>
 </body>
 </html>
