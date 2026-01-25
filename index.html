@@ -22,7 +22,30 @@
 
     * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color: transparent; }
     html { scroll-behavior:smooth; background: var(--bg); }
-    body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--text); overflow-x:hidden; }
+    body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--text); overflow:hidden; }
+
+    /* ====== TEXTURES (бетон + граффити) ====== */
+    body::before{
+      content:'';
+      position:fixed; inset:0;
+      background-image:
+        url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="800" height="800"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" stitchTiles="stitch"/></filter><rect width="800" height="800" filter="url(%23n)" opacity="0.25"/></svg>'),
+        url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="800" height="800"><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="%23ffffff" stop-opacity="0"/><stop offset="1" stop-color="%23000000" stop-opacity="0.12"/></linearGradient><rect width="800" height="800" fill="url(%23g)"/><path d="M0 0 L800 0 L800 800" stroke="%23ffffff" stroke-opacity="0.05" stroke-width="6"/></svg>');
+      background-blend-mode: overlay, multiply;
+      pointer-events:none;
+      z-index:-2;
+    }
+
+    body::after{
+      content:'';
+      position:fixed; inset:0;
+      background-image:
+        url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="1000"><text x="50" y="120" font-size="120" font-family="Impact" fill="%23ff4d4d" opacity="0.08">GRAFFITI</text><text x="200" y="250" font-size="120" font-family="Impact" fill="%2306b6d4" opacity="0.06">STREET</text><text x="50" y="500" font-size="120" font-family="Impact" fill="%2322c55e" opacity="0.05">BOX1V1</text></svg>');
+      background-repeat: repeat;
+      opacity:0.5;
+      pointer-events:none;
+      z-index:-1;
+    }
 
     /* --- PRELOADER --- */
     #preloader {
@@ -127,12 +150,38 @@
     }
     .mobile-nav.open a { transform: translateY(0); opacity:1; }
 
-    /* --- CONTENT --- */
-    .main-content { max-width: 1200px; margin: 0 auto; padding: 0 22px; }
-    section { display:none; padding-top: 100px; min-height: 100vh; }
-    section.active { display:block; animation: sectionIn .45s var(--cubic); }
-    @keyframes sectionIn { from{opacity:0; transform: scale(.99);} to{opacity:1; transform: scale(1);} }
+    /* --- SLIDER (FULLPAGE) --- */
+    .main-content {
+      position: relative;
+      height: 100vh;
+      overflow: hidden;
+    }
+    section {
+      position:absolute;
+      inset:0;
+      padding-top: 100px;
+      min-height: 100vh;
+      transition: transform .8s var(--cubic), opacity .8s var(--cubic);
+    }
+    section:not(.active){
+      opacity: 0;
+      pointer-events: none;
+    }
+    section.active{
+      opacity: 1;
+      pointer-events: auto;
+    }
 
+    /* --- SLIDE POSITIONS --- */
+    section[data-index="0"] { transform: translateY(0); }
+    section[data-index="1"] { transform: translateY(100%); }
+    section[data-index="2"] { transform: translateY(200%); }
+
+    section.active[data-index="0"] { transform: translateY(0); }
+    section.active[data-index="1"] { transform: translateY(0); }
+    section.active[data-index="2"] { transform: translateY(0); }
+
+    /* --- HERO --- */
     .hero {
       min-height: 70vh;
       display:flex;
@@ -152,7 +201,9 @@
       pointer-events:none;
     }
 
-    .hero h1 {
+    /* ====== GRAFFITI SPRAY HEADER ====== */
+    .graffiti-title {
+      position: relative;
       font-size: clamp(4rem, 18vw, 10rem);
       font-weight: 900;
       line-height: 1.05;
@@ -160,6 +211,27 @@
       text-transform: uppercase;
       font-style: italic;
       margin-top: 22px;
+      color: transparent;
+      -webkit-text-stroke: 2px rgba(0,0,0,0.6);
+      text-stroke: 2px rgba(0,0,0,0.6);
+      animation: spray 2.5s ease forwards;
+    }
+
+    @keyframes spray {
+      0% {
+        color: transparent;
+        background-position: 0 0;
+        background-size: 120% 120%;
+      }
+      100% {
+        color: var(--accent);
+        background-image:
+          radial-gradient(circle at 10% 20%, rgba(34,197,94,0.95) 0%, rgba(34,197,94,0.0) 60%),
+          radial-gradient(circle at 70% 40%, rgba(6,182,212,0.9) 0%, rgba(6,182,212,0.0) 60%),
+          radial-gradient(circle at 40% 80%, rgba(255,77,77,0.85) 0%, rgba(255,77,77,0.0) 60%);
+        -webkit-background-clip: text;
+        background-clip: text;
+      }
     }
 
     .hero span {
@@ -399,6 +471,30 @@
     td { padding: 22px; }
     tr:hover { background: #fafafa; }
 
+    /* NAV DOTS */
+    .nav-dots {
+      position: fixed;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      display:flex;
+      flex-direction:column;
+      gap: 12px;
+      z-index: 1200;
+    }
+    .nav-dots button{
+      width: 14px; height: 14px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.7);
+      cursor:pointer;
+      transition: .3s var(--cubic);
+    }
+    .nav-dots button.active{
+      background: var(--accent);
+      box-shadow: 0 0 0 4px rgba(34,197,94,0.2);
+    }
+
     /* RESPONSIVE */
     @media (max-width: 1000px) {
       .bento-grid { grid-template-columns: repeat(2, 1fr); }
@@ -415,6 +511,7 @@
       .hero h1 { font-size: clamp(3.2rem, 18vw, 6.5rem); }
       .countdown { flex-wrap: wrap; justify-content:center; }
       .mobile-nav a { font-size: 2.4rem; }
+      .nav-dots { display:none; }
     }
   </style>
 </head>
@@ -436,7 +533,7 @@
 
   <nav id="navbar">
     <div class="nav-inner">
-      <div class="logo" onclick="switchTab('home')" style="cursor:pointer">
+      <div class="logo" onclick="switchTab(0)" style="cursor:pointer">
         <svg viewBox="0 0 400 100" width="90" height="22">
           <text x="0" y="80" fill="#111" font-family="Inter" font-weight="900" font-size="80">
             BOX<tspan fill="#22c55e">1</tspan>V1
@@ -445,9 +542,9 @@
       </div>
 
       <div class="nav-links">
-        <a href="#home" onclick="switchTab('home')" id="nav-home" class="active">Лента</a>
-        <a href="#roster" onclick="switchTab('roster')" id="nav-roster">Состав</a>
-        <a href="#stats" onclick="switchTab('stats')" id="nav-stats">Рейтинг</a>
+        <a href="#home" onclick="switchTab(0)" id="nav-home" class="active">Лента</a>
+        <a href="#roster" onclick="switchTab(1)" id="nav-roster">Состав</a>
+        <a href="#stats" onclick="switchTab(2)" id="nav-stats">Рейтинг</a>
       </div>
 
       <div class="burger" id="burger" onclick="toggleMenu()">
@@ -457,16 +554,16 @@
   </nav>
 
   <div class="mobile-nav" id="mobile-nav">
-    <a href="#home" onclick="toggleMenu(); switchTab('home')">Лента</a>
-    <a href="#roster" onclick="toggleMenu(); switchTab('roster')">Состав</a>
-    <a href="#stats" onclick="toggleMenu(); switchTab('stats')">Рейтинг</a>
+    <a href="#home" onclick="toggleMenu(); switchTab(0)">Лента</a>
+    <a href="#roster" onclick="toggleMenu(); switchTab(1)">Состав</a>
+    <a href="#stats" onclick="toggleMenu(); switchTab(2)">Рейтинг</a>
   </div>
 
   <main class="main-content">
-    <section id="home" class="active">
+    <section id="home" class="active" data-index="0">
       <div class="hero">
         <span>Экосистема уличного футбола</span>
-        <h1>ПУТЬ<br>ГЕРОЯ.</h1>
+        <h1 class="graffiti-title">ПУТЬ<br>ГЕРОЯ.</h1>
 
         <div class="countdown" id="timer">
           <div class="countdown-item">
@@ -512,18 +609,25 @@
       </div>
     </section>
 
-    <section id="roster">
+    <section id="roster" data-index="1">
       <h1 style="font-size: clamp(3.5rem, 10vw, 8rem); font-weight: 900; font-style: italic; margin-bottom:40px;">АКТИВЫ.</h1>
       <div class="bento-grid" id="roster-grid"></div>
     </section>
 
-    <section id="stats">
+    <section id="stats" data-index="2">
       <h1 style="font-size: clamp(3.5rem, 10vw, 8rem); font-weight: 900; font-style: italic; margin-bottom: 40px;">ТАБЛИЦА.</h1>
       <div style="background: var(--card); border-radius: 30px; border:1px solid var(--border); overflow:hidden;">
         <table><tbody id="stats-body"></tbody></table>
       </div>
     </section>
   </main>
+
+  <!-- NAV DOTS -->
+  <div class="nav-dots" id="navDots">
+    <button class="active" onclick="switchTab(0)"></button>
+    <button onclick="switchTab(1)"></button>
+    <button onclick="switchTab(2)"></button>
+  </div>
 
   <!-- PLAYER MODAL -->
   <div class="modal-overlay" id="playerModal" onclick="closeModal('playerModal')">
@@ -675,15 +779,46 @@
       document.body.style.overflow = open ? 'hidden' : 'auto';
     }
 
-    function switchTab(t) {
-      document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+    // ====== FULLPAGE SLIDER LOGIC ======
+    let currentIndex = 0;
+    const sections = document.querySelectorAll('section');
+    const dots = document.querySelectorAll('#navDots button');
+
+    function switchTab(index) {
+      if(index < 0) index = 0;
+      if(index > sections.length - 1) index = sections.length - 1;
+      currentIndex = index;
+
+      sections.forEach((sec, i) => {
+        sec.classList.remove('active');
+        sec.style.transform = `translateY(${(i - currentIndex) * 100}%)`;
+      });
+      sections[currentIndex].classList.add('active');
+
       document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
-      const target = document.getElementById(t);
-      if(target) target.classList.add('active');
-      const navLink = document.getElementById('nav-' + t);
-      if(navLink) navLink.classList.add('active');
-      window.scrollTo(0,0);
+      document.getElementById('nav-home').classList.toggle('active', currentIndex === 0);
+      document.getElementById('nav-roster').classList.toggle('active', currentIndex === 1);
+      document.getElementById('nav-stats').classList.toggle('active', currentIndex === 2);
+
+      dots.forEach((d, i) => d.classList.toggle('active', i === currentIndex));
     }
+
+    // Mouse wheel navigation
+    let wheelLock = false;
+    window.addEventListener('wheel', (e) => {
+      if(wheelLock) return;
+      wheelLock = true;
+      setTimeout(() => wheelLock = false, 900);
+
+      if(e.deltaY > 0) switchTab(currentIndex + 1);
+      else switchTab(currentIndex - 1);
+    });
+
+    // Keyboard navigation
+    window.addEventListener('keydown', (e) => {
+      if(e.key === 'ArrowDown') switchTab(currentIndex + 1);
+      if(e.key === 'ArrowUp') switchTab(currentIndex - 1);
+    });
 
     function openModal(id) { document.getElementById(id).classList.add('active'); }
     function closeModal(id) { document.getElementById(id).classList.remove('active'); }
@@ -702,6 +837,7 @@
       loadPlayers();
       setInterval(updateTimer, 1000);
       updateTimer();
+      switchTab(0);
     });
   </script>
 </body>
