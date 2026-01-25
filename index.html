@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
   <title>BOX1V1 | ZUPAROV</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,700;0,900;1,900&display=swap" rel="stylesheet">
+  <!-- Tabletop.js для загрузки данных из Google Sheets -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tabletop.js/1.6.2/tabletop.min.js"></script>
   <style>
     :root {
       --bg: #000; --card: #0d0d0d; --accent: #39FF14;
@@ -219,14 +221,84 @@
   </div>
 
   <script>
-    const players = {
-      'ZUPAROV': { role: 'Основатель' },
-      'ALISA': { role: 'Core Team' },
-      'KUSCH': { role: 'Игрок' },
-      'DIDUR': { role: 'Игрок' },
-      'BIBIKOV': { role: 'Игрок' }
-    };
+    // === ДИНАМИЧЕСКАЯ ЗАГРУЗКА ИЗ GOOGLE SHEETS ===
+    const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vREjbeB6jNrU01kw1npVtFTvqGdP134ERjmyROoOYeYXbzjgL0ZCNK6KwF0VTk3c1yxZEZEUsJjy2Ur/pubhtml';
 
+    let playersData = [];
+
+    function loadPlayers() {
+      Tabletop.init({
+        key: SHEET_URL,
+        callback: function(data, tabletop) {
+          // Преобразуем данные в объект, как раньше
+          playersData = {};
+          data.forEach(row => {
+            playersData[row.Name] = {
+              r: parseInt(row.OVR) || 0,
+              role: row.Role || 'Игрок',
+              drib: parseInt(row.Dribbling) || 0,
+              speed: parseInt(row.Speed) || 0,
+              shot: parseInt(row.Shot) || 0,
+              phys: parseInt(row.Physique) || 0
+            };
+          });
+          renderAll();
+        },
+        simpleSheet: true
+      });
+    }
+
+    function renderAll() {
+      renderRoster();
+      renderStats();
+    }
+
+    function renderRoster() {
+      const grid = document.getElementById('roster-grid');
+      grid.innerHTML = Object.keys(playersData).map(name => `
+        <div class="bento-item reveal" onclick="openPlayerModal('${name}')">
+          <span style="font-size:10px; font-weight:900; color:var(--accent)">OVR ${playersData[name].r}</span>
+          <h3 style="font-size:1.6rem; font-weight:900; font-style:italic; margin-top:10px; text-transform:uppercase">${name}</h3>
+          <p style="margin-top:auto; font-size:10px; color:var(--text-dim); text-transform:uppercase">${playersData[name].role}</p>
+        </div>
+      `).join('');
+      refreshAnimations();
+    }
+
+    function renderStats() {
+      const body = document.getElementById('stats-body');
+      const sorted = Object.entries(playersData).sort((a, b) => b[1].r - a[1].r);
+      body.innerHTML = sorted.map(([name, p], i) => `
+        <tr onclick="openPlayerModal('${name}')" style="border-bottom: 1px solid var(--border); transition-delay: ${i * 0.1}s">
+          <td style="padding:25px; color:var(--text-dim); font-weight:700">#0${i+1}</td>
+          <td style="padding:25px; font-weight:900; font-style:italic; text-transform:uppercase;">${name}</td>
+          <td style="padding:25px; text-align:right; color:var(--accent); font-weight:900; font-size:1.4rem">${p.r}</td>
+        </tr>
+      `).join('');
+    }
+
+    function openPlayerModal(name) {
+      const p = playersData[name];
+      if (!p) return;
+      document.getElementById('m-name').innerText = name;
+      document.getElementById('m-role').innerText = p.role;
+      document.getElementById('m-stats').innerHTML = [
+        { label: 'дриблинг', value: p.drib },
+        { label: 'скорость', value: p.speed },
+        { label: 'удар', value: p.shot },
+        { label: 'физика', value: p.phys }
+      ].map(s => `
+        <div style="display:flex; justify-content:space-between; margin-bottom:5px; font-size:10px; font-weight:800; text-transform:uppercase; color:var(--text-dim)">
+          <span>${s.label}</span><span>${s.value}</span>
+        </div>
+        <div style="height:3px; background:#222; border-radius:2px; margin-bottom:12px; overflow:hidden">
+          <div style="height:100%; background:var(--accent); width:${s.value}%"></div>
+        </div>
+      `).join('');
+      openModal('playerModal');
+    }
+
+    // === ОСТАЛЬНЫЙ ФУНКЦИОНАЛ ===
     function toggleMenu() {
       document.getElementById('burger').classList.toggle('open');
       document.getElementById('mobile-nav').classList.toggle('open');
@@ -255,57 +327,28 @@
     function closeModal(id) { document.getElementById(id).classList.remove('active'); }
     function openModal(id) { document.getElementById(id).classList.add('active'); }
 
-    function openPlayerModal(name) {
-      const p = players[name];
-      document.getElementById('m-name').innerText = name;
-      document.getElementById('m-role').innerText = p.role;
-      document.getElementById('m-stats').innerHTML = ['дриблинг','скорость','удар','физика'].map(s => `
-        <div style="display:flex; justify-content:space-between; margin-bottom:5px; font-size:10px; font-weight:800; text-transform:uppercase; color:var(--text-dim)"><span>${s}</span><span>15</span></div>
-        <div style="height:3px; background:#222; border-radius:2px; margin-bottom:12px; overflow:hidden"><div style="height:100%; background:var(--accent); width:15%"></div></div>
-      `).join('');
-      openModal('playerModal');
-    }
-
-    // ЛОГИКА ТАЙМЕРА — УСТАНОВЛЕНО НА 1 МАРТА 2026
+    // Таймер
     function updateTimer() {
       const targetDate = new Date("Mar 1, 2026 00:00:00").getTime();
       const now = new Date().getTime();
       const diff = targetDate - now;
 
       if (diff > 0) {
-        document.getElementById('days').innerText = Math.floor(diff / (1000 * 60 * 60 * 24));
-        document.getElementById('hours').innerText = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        document.getElementById('mins').innerText = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-        document.getElementById('secs').innerText = Math.floor((diff % (1000 * 60)) / 1000);
+        document.getElementById('days').innerText = String(Math.floor(diff / (1000 * 60 * 60 * 24))).padStart(2, '0');
+        document.getElementById('hours').innerText = String(Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))).padStart(2, '0');
+        document.getElementById('mins').innerText = String(Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))).padStart(2, '0');
+        document.getElementById('secs').innerText = String(Math.floor((diff % (1000 * 60)) / 1000)).padStart(2, '0');
       } else {
         document.getElementById('timer').style.display = 'none';
       }
     }
 
-    function init() {
-      // Состав
-      document.getElementById('roster-grid').innerHTML = Object.keys(players).map(name => `
-        <div class="bento-item reveal" onclick="openPlayerModal('${name}')">
-          <span style="font-size:10px; font-weight:900; color:var(--accent)">OVR 0</span>
-          <h3 style="font-size:1.6rem; font-weight:900; font-style:italic; margin-top:10px; text-transform:uppercase">${name}</h3>
-          <p style="margin-top:auto; font-size:10px; color:var(--text-dim); text-transform:uppercase">${players[name].role}</p>
-        </div>
-      `).join('');
-
-      // Рейтинг
-      document.getElementById('stats-body').innerHTML = Object.keys(players).map((name, i) => `
-        <tr onclick="openPlayerModal('${name}')" style="border-bottom: 1px solid var(--border); transition-delay: ${i * 0.1}s">
-          <td style="padding:25px; color:var(--text-dim); font-weight:700">#0${i+1}</td>
-          <td style="padding:25px; font-weight:900; font-style:italic; text-transform:uppercase;">${name}</td>
-          <td style="padding:25px; text-align:right; color:var(--accent); font-weight:900; font-size:1.4rem">0</td>
-        </tr>
-      `).join('');
-      
+    // ЗАПУСК
+    window.addEventListener('load', () => {
+      loadPlayers();
       setInterval(updateTimer, 1000);
       updateTimer();
-      refreshAnimations();
-    }
-    init();
+    });
   </script>
 </body>
 </html>
