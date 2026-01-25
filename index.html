@@ -23,6 +23,18 @@
     html { scroll-behavior:smooth; background: var(--bg); }
     body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--text); overflow-x:hidden; }
 
+    /* --- UX: SKELETON ANIMATION --- */
+    @keyframes skeleton-pulse {
+      0% { background-color: #f2f2f2; }
+      50% { background-color: #fcfcfc; }
+      100% { background-color: #f2f2f2; }
+    }
+    .skeleton-card {
+      height: 400px;
+      border-radius: 28px;
+      animation: skeleton-pulse 1.5s infinite ease-in-out;
+    }
+
     /* --- PRELOADER --- */
     #preloader { position: fixed; inset:0; background:#fff; z-index:9999; display:flex; justify-content:center; align-items:center; transition: opacity .6s var(--cubic), visibility .6s var(--cubic); }
     #preloader.loaded { opacity:0; visibility:hidden; }
@@ -50,17 +62,17 @@
     .mobile-nav.open { opacity:1; visibility:visible; }
     .mobile-nav a { font-size: 3rem; font-weight: 900; text-decoration:none; color: var(--text); text-transform:uppercase; font-style: italic; }
 
-    /* --- UX: FILTERS --- */
-    .filter-bar { display: flex; gap: 10px; margin-bottom: 30px; overflow-x: auto; padding-bottom: 5px; }
+    /* --- UX: FILTERS & INTERACTION --- */
+    .filter-bar { display: flex; gap: 10px; margin-bottom: 30px; overflow-x: auto; padding-bottom: 5px; scrollbar-width: none; }
     .filter-bar::-webkit-scrollbar { display: none; }
-    .filter-btn { padding: 10px 20px; border-radius: 12px; border: 1px solid var(--border); background: var(--card); color: var(--dim); font-size: 11px; font-weight: 800; text-transform: uppercase; cursor: pointer; transition: 0.3s; white-space: nowrap; }
+    .filter-btn { padding: 10px 20px; border-radius: 12px; border: 1px solid var(--border); background: var(--card); color: var(--dim); font-size: 11px; font-weight: 800; text-transform: uppercase; cursor: pointer; transition: 0.3s var(--cubic); white-space: nowrap; }
+    .filter-btn:active { transform: scale(0.95); }
     .filter-btn.active { background: var(--text); color: #fff; border-color: var(--text); }
 
-    /* --- CONTENT --- */
+    /* --- CONTENT & SMOOTH TAB TRANSITION --- */
     .main-content { max-width: 1200px; margin: 0 auto; padding: 0 22px 100px; }
-    section { display:none; padding-top: 100px; min-height: 100vh; }
-    section.active { display:block; animation: sectionIn .45s var(--cubic); }
-    @keyframes sectionIn { from{opacity:0; transform: translateY(10px);} to{opacity:1; transform: translateY(0);} }
+    section { display:none; padding-top: 100px; min-height: 100vh; opacity: 0; transform: translateY(15px); transition: opacity 0.5s var(--cubic), transform 0.5s var(--cubic); }
+    section.active { display:block; opacity: 1; transform: translateY(0); }
 
     .hero { min-height: 60vh; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; }
     .hero h1 { font-size: clamp(3.5rem, 15vw, 8.5rem); font-weight: 900; line-height: 0.85; letter-spacing: -0.05em; text-transform: uppercase; font-style: italic; margin: 20px 0; }
@@ -75,6 +87,7 @@
     .bento-grid { display:grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin: 40px 0; }
     .bento-item { background: var(--card); border-radius: 28px; border: 1px solid var(--border); padding: 32px; display:flex; flex-direction:column; position:relative; overflow:hidden; cursor:pointer; transition: .4s var(--cubic); }
     .bento-item:hover { transform: translateY(-5px); box-shadow: var(--shadow); }
+    .bento-item:active { transform: scale(0.98); }
     .col-2 { grid-column: span 2; }
     .row-2 { grid-row: span 2; }
 
@@ -110,8 +123,10 @@
     .td-role { font-size: 9px; font-weight: 800; color: var(--dim); text-transform: uppercase; }
     .val-badge { background: var(--accent); padding: 8px 14px; border-radius: 12px; font-weight: 900; min-width: 45px; text-align: center; display: inline-block; }
 
-    .badges { display:flex; flex-wrap:wrap; gap: 6px; margin-top: 12px; position: relative; z-index: 3; }
-    .badge { font-size: 9px; font-weight: 800; text-transform: uppercase; padding: 4px 10px; border-radius: 8px; background: rgba(255,255,255,0.1); color: #ddd; border: 1px solid rgba(255,255,255,0.1); }
+    /* --- FLOATING ACTION BUTTON (UX) --- */
+    .fab { position: fixed; bottom: 30px; right: 30px; background: var(--text); color: #fff; width: 60px; height: 60px; border-radius: 30px; display: none; align-items: center; justify-content: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2); z-index: 900; cursor: pointer; transition: 0.3s var(--cubic); }
+    .fab:active { transform: scale(0.9); }
+    .fab svg { width: 24px; height: 24px; fill: white; }
 
     /* --- MODALS --- */
     .modal-overlay { position: fixed; inset:0; background: rgba(255,255,255,0.95); backdrop-filter: blur(20px); z-index: 3000; display:none; align-items:center; justify-content:center; padding: 20px; }
@@ -124,13 +139,14 @@
     #m-name { font-size: 3rem; font-weight: 900; font-style: italic; text-transform: uppercase; line-height: 0.9; margin: 15px 0; color: var(--text); }
     .stat-row { display:flex; justify-content:space-between; font-size: 11px; font-weight: 800; text-transform:uppercase; color: var(--dim); margin-bottom: 4px; }
     .bar { height: 6px; background: #f0f0f0; border-radius: 10px; overflow:hidden; margin-bottom: 16px; }
-    .bar > div { height:100%; background: var(--accent); }
+    .bar > div { height:100%; background: var(--accent); transition: width 1s var(--cubic); }
 
     @media (max-width: 1000px) { .bento-grid { grid-template-columns: repeat(2, 1fr); } }
     @media (max-width: 650px) {
       .nav-links { display:none; } .burger { display:flex; }
       .bento-grid { grid-template-columns: 1fr; } .col-2, .row-2 { grid-column: span 1; grid-row: span 1; }
       .hero h1 { font-size: 3.5rem; }
+      .fab { display: flex; }
     }
   </style>
 </head>
@@ -155,6 +171,10 @@
     </div>
   </nav>
 
+  <div class="fab" onclick="openModal('applyModal')">
+    <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+  </div>
+
   <div class="mobile-nav" id="mobile-nav">
     <a href="#home" onclick="handleMobileNav('home')">Лента</a>
     <a href="#roster" onclick="handleMobileNav('roster')">Состав</a>
@@ -162,7 +182,7 @@
   </div>
 
   <main class="main-content">
-    <section id="home" class="active">
+    <section id="home" class="active" style="opacity: 1;">
       <div class="hero">
         <span>Система уличного футбола</span>
         <h1>BOX1V1.</h1>
@@ -216,7 +236,10 @@
         <button class="filter-btn" onclick="filterRoster('Вратарь', this)">Вратари</button>
       </div>
 
-      <div class="bento-grid" id="roster-grid"></div>
+      <div class="bento-grid" id="roster-grid">
+        <div class="skeleton-card"></div><div class="skeleton-card"></div>
+        <div class="skeleton-card"></div><div class="skeleton-card"></div>
+      </div>
     </section>
 
     <section id="stats">
@@ -265,7 +288,9 @@
     const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vREjbeB6jNrU01kw1npVtFTvqGdP134ERjmyROoOYeYXbzjgL0ZCNK6KwF0VTk3c1yxZEZEUsJjy2Ur/pub?output=csv';
     let playersData = {};
 
-    window.addEventListener('scroll', () => { document.body.classList.toggle('scrolled', window.scrollY > 20); });
+    window.addEventListener('scroll', () => { 
+      document.body.classList.toggle('scrolled', window.scrollY > 20); 
+    });
 
     async function loadPlayers() {
       try {
@@ -277,17 +302,21 @@
           if(col[0]) {
             const name = col[0].trim();
             playersData[name] = {
-              r: parseInt(col[1]) || 0, role: (col[2] || 'Игрок').trim(),
+              r: parseInt(col[1]) || 0, 
+              role: (col[2] || 'Игрок').trim(),
               drib: parseInt(col[3]) || 0, speed: parseInt(col[4]) || 0,
               shot: parseInt(col[5]) || 0, phys: parseInt(col[6]) || 0,
-              photo: col[7] ? col[7].trim() : '', status: col[8] ? col[8].trim() : '',
+              photo: col[7] ? col[7].trim() : '', 
+              status: col[8] ? col[8].trim() : '',
               badges: col[9] ? col[9].split('|').map(b => b.trim()) : []
             };
           }
         });
         renderAll();
         document.getElementById('preloader').classList.add('loaded');
-      } catch (e) { document.getElementById('preloader').classList.add('loaded'); }
+      } catch (e) { 
+        document.getElementById('preloader').classList.add('loaded'); 
+      }
     }
 
     function filterRoster(role, btn) {
@@ -298,22 +327,34 @@
 
     function renderRoster(filter = 'Все') {
       const grid = document.getElementById('roster-grid');
-      const keys = Object.keys(playersData).filter(name => filter === 'Все' || playersData[name].role === filter);
-      grid.innerHTML = keys.map(name => {
-        const p = playersData[name];
-        return `
-          <div class="bento-item" onclick="openPlayerModal('${name.replace(/'/g, "\\'")}')">
-            ${p.status ? `<div class="status-tag">${p.status}</div>` : ''}
-            <div class="player-img-container" style="background-image: url('${p.photo || ''}')"></div>
-            <span class="tag">OVR ${p.r}</span>
-            <div class="card-content">
-              <div class="role-text">${p.role}</div>
-              <h3>${name}</h3>
-              <div class="badges">${p.badges.map(b => `<span class="badge">${b}</span>`).join('')}</div>
+      // Плавное обновление контента внутри сетки
+      grid.style.opacity = '0';
+      
+      setTimeout(() => {
+        const keys = Object.keys(playersData).filter(name => {
+            const p = playersData[name];
+            if (filter === 'Все') return true;
+            const isGoalie = p.role.toLowerCase().includes('вратарь');
+            return filter === 'Вратарь' ? isGoalie : !isGoalie;
+        });
+
+        grid.innerHTML = keys.map(name => {
+          const p = playersData[name];
+          return `
+            <div class="bento-item" onclick="openPlayerModal('${name.replace(/'/g, "\\'")}')">
+              ${p.status ? `<div class="status-tag">${p.status}</div>` : ''}
+              <div class="player-img-container" style="background-image: url('${p.photo || ''}')"></div>
+              <span class="tag">OVR ${p.r}</span>
+              <div class="card-content">
+                <div class="role-text">${p.role}</div>
+                <h3>${name}</h3>
+                <div class="badges">${p.badges.map(b => `<span class="badge">${b}</span>`).join('')}</div>
+              </div>
             </div>
-          </div>
-        `;
-      }).join('');
+          `;
+        }).join('');
+        grid.style.opacity = '1';
+      }, 200);
     }
 
     function renderStats() {
@@ -350,9 +391,17 @@
         { l: 'Удар', v: p.shot }, { l: 'Физика', v: p.phys }
       ].map(s => `
         <div class="stat-row"><span>${s.l}</span><span>${s.v}</span></div>
-        <div class="bar"><div style="width:${s.v}%"></div></div>
+        <div class="bar"><div style="width:0%"></div></div>
       `).join('');
+      
       openModal('playerModal');
+      
+      // Анимация прогресс-баров при открытии
+      setTimeout(() => {
+        const bars = document.querySelectorAll('.bar > div');
+        const stats = [p.drib, p.speed, p.shot, p.phys];
+        bars.forEach((bar, i) => bar.style.width = stats[i] + '%');
+      }, 300);
     }
 
     function renderAll() { renderRoster(); renderStats(); }
@@ -369,12 +418,27 @@
     }
 
     function switchTab(t) {
-      document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
-      document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
-      document.getElementById(t).classList.add('active');
-      const navBtn = document.getElementById('nav-' + t);
-      if(navBtn) navBtn.classList.add('active');
-      window.scrollTo(0,0);
+      const sections = document.querySelectorAll('section');
+      const navLinks = document.querySelectorAll('.nav-links a');
+      
+      // Сначала скрываем всё
+      sections.forEach(s => {
+        s.style.opacity = '0';
+        setTimeout(() => s.classList.remove('active'), 250);
+      });
+      navLinks.forEach(a => a.classList.remove('active'));
+
+      // Показываем нужный таб
+      setTimeout(() => {
+        const target = document.getElementById(t);
+        target.classList.add('active');
+        setTimeout(() => target.style.opacity = '1', 50);
+        
+        const navBtn = document.getElementById('nav-' + t);
+        if(navBtn) navBtn.classList.add('active');
+      }, 300);
+
+      window.scrollTo({top: 0, behavior: 'smooth'});
     }
 
     function openModal(id) { document.getElementById(id).classList.add('active'); }
@@ -390,7 +454,11 @@
       }
     }
 
-    window.addEventListener('load', () => { loadPlayers(); setInterval(updateTimer, 1000); updateTimer(); });
+    window.addEventListener('load', () => { 
+      loadPlayers(); 
+      setInterval(updateTimer, 1000); 
+      updateTimer(); 
+    });
   </script>
 </body>
 </html>
