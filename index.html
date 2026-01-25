@@ -24,15 +24,11 @@
     body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--text); overflow-x:hidden; }
 
     /* --- PRELOADER --- */
-    #preloader {
-      position: fixed; inset:0; background:#fff; z-index:9999;
-      display:flex; justify-content:center; align-items:center;
-      transition: opacity .6s var(--cubic), visibility .6s var(--cubic);
-    }
+    #preloader { position: fixed; inset:0; background:#fff; z-index:9999; display:flex; justify-content:center; align-items:center; transition: opacity .6s var(--cubic), visibility .6s var(--cubic); }
     #preloader.loaded { opacity:0; visibility:hidden; }
     .loader { text-align:center; font-weight:900; color:#111; }
     .loader-line { width: 150px; height:2px; background:#eee; margin:18px auto 0; position:relative; overflow:hidden; border-radius:2px; }
-    .loader-line::after { content:''; position:absolute; left:-100%; width:100%; height:100%; background: linear-gradient(90deg, transparent, var(--accent), transparent); animation: load 1.5s infinite var(--cubic); }
+    .loader-line::after { content:''; position:absolute; left:-100%; width:100%; height:100%; background: var(--accent); animation: load 1.5s infinite var(--cubic); }
     @keyframes load { 0% { left:-100%; } 100% { left:100%; } }
 
     /* --- NAV --- */
@@ -54,13 +50,19 @@
     .mobile-nav.open { opacity:1; visibility:visible; }
     .mobile-nav a { font-size: 3rem; font-weight: 900; text-decoration:none; color: var(--text); text-transform:uppercase; font-style: italic; }
 
+    /* --- UX: FILTERS --- */
+    .filter-bar { display: flex; gap: 10px; margin-bottom: 30px; overflow-x: auto; padding-bottom: 5px; }
+    .filter-bar::-webkit-scrollbar { display: none; }
+    .filter-btn { padding: 10px 20px; border-radius: 12px; border: 1px solid var(--border); background: var(--card); color: var(--dim); font-size: 11px; font-weight: 800; text-transform: uppercase; cursor: pointer; transition: 0.3s; white-space: nowrap; }
+    .filter-btn.active { background: var(--text); color: #fff; border-color: var(--text); }
+
     /* --- CONTENT --- */
     .main-content { max-width: 1200px; margin: 0 auto; padding: 0 22px 100px; }
     section { display:none; padding-top: 100px; min-height: 100vh; }
     section.active { display:block; animation: sectionIn .45s var(--cubic); }
     @keyframes sectionIn { from{opacity:0; transform: translateY(10px);} to{opacity:1; transform: translateY(0);} }
 
-    .hero { min-height: 60vh; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; position:relative; }
+    .hero { min-height: 60vh; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; }
     .hero h1 { font-size: clamp(3.5rem, 15vw, 8.5rem); font-weight: 900; line-height: 0.85; letter-spacing: -0.05em; text-transform: uppercase; font-style: italic; margin: 20px 0; }
     .hero span { font-size: 11px; letter-spacing: 3px; font-weight: 800; text-transform: uppercase; color: var(--dim); }
 
@@ -76,53 +78,53 @@
     .col-2 { grid-column: span 2; }
     .row-2 { grid-row: span 2; }
 
-    /* ВОЗВРАЩАЕМ ЦВЕТА ГЛАВНОЙ */
     .bento-item.green-gradient { background: linear-gradient(135deg, rgba(34,197,94,0.12), rgba(255,255,255,0.9)); border-color: rgba(34,197,94,0.2); }
     .bento-item.blue-light { background: #f0f9ff; border-color: rgba(6,182,212,0.15); }
     .bento-item.red-light { background: #fff5f5; border-color: rgba(220,38,38,0.1); }
     .bento-item.dark-apply { background: var(--text); color:#fff; border:none; }
 
-    /* СТИЛИ ДЛЯ ИГРОКОВ (ОСТАВЛЯЕМ НОВЫМИ) */
-    #roster-grid .bento-item { height: 400px; background: #000; border: none; justify-content: flex-end; padding: 24px; }
+    /* ROSTER CARDS */
+    #roster-grid .bento-item { height: 400px; background: #000; border: none; justify-content: flex-end; padding: 24px; animation: cardFade .4s var(--cubic); }
+    @keyframes cardFade { from { opacity: 0; scale: 0.95; } to { opacity: 1; scale: 1; } }
     .player-img-container { position: absolute; inset:0; opacity: 0.7; filter: grayscale(0.4) contrast(1.1); transition: 0.6s var(--cubic); z-index: 1; background-size: cover; background-position: center; }
     #roster-grid .bento-item:hover .player-img-container { opacity: 0.9; filter: grayscale(0) scale(1.05); }
     #roster-grid .bento-item::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.3) 50%, transparent 100%); z-index: 2; }
 
     .card-content { position: relative; z-index: 3; }
-    .bento-item h3 { font-size: 2rem; font-weight: 900; font-style: italic; line-height: 1; margin-bottom: 4px; }
-    #roster-grid .bento-item h3 { color: #fff; }
+    .bento-item h3 { font-size: 2rem; font-weight: 900; font-style: italic; line-height: 1; margin-bottom: 4px; color: #fff; }
     .role-text { color: var(--accent); font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
-
     .tag { display: inline-block; font-size: 11px; font-weight: 900; text-transform: uppercase; padding: 6px 12px; border-radius: 10px; background: rgba(0,0,0,0.05); color: var(--text); margin-bottom: 12px; }
     #roster-grid .tag { position: absolute; top: 20px; left: 20px; background: var(--accent); color: #000; z-index: 4; margin:0; }
-    
-    .status-tag { position: absolute; top: 20px; right: 20px; z-index: 4; font-size: 10px; font-weight: 900; text-transform: uppercase; padding: 6px 12px; border-radius: 10px; background: var(--accent); color: #fff; }
-    #roster-grid .status-tag { background: rgba(255,255,255,0.2); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); }
+    .status-tag { position: absolute; top: 20px; right: 20px; z-index: 4; font-size: 10px; font-weight: 900; text-transform: uppercase; padding: 6px 12px; border-radius: 10px; background: rgba(255,255,255,0.2); backdrop-filter: blur(10px); color: #fff; border: 1px solid rgba(255,255,255,0.1); }
+
+    /* --- UX: PRO TABLE --- */
+    .stats-container { background: var(--card); border-radius: 32px; border: 1px solid var(--border); overflow:hidden; }
+    table { width:100%; border-collapse:collapse; }
+    tr { border-bottom: 1px solid var(--border); cursor:pointer; transition: background 0.2s; }
+    tr:hover { background: #fff; }
+    td { padding: 16px 24px; vertical-align: middle; }
+    .td-player { display: flex; align-items: center; gap: 15px; }
+    .td-avatar { width: 44px; height: 44px; border-radius: 12px; background: #eee; object-fit: cover; border: 1px solid var(--border); }
+    .td-info { display: flex; flex-direction: column; }
+    .td-name { font-weight: 900; font-style: italic; text-transform: uppercase; font-size: 1.1rem; color: var(--text); }
+    .td-role { font-size: 9px; font-weight: 800; color: var(--dim); text-transform: uppercase; }
+    .val-badge { background: var(--accent); padding: 8px 14px; border-radius: 12px; font-weight: 900; min-width: 45px; text-align: center; display: inline-block; }
 
     .badges { display:flex; flex-wrap:wrap; gap: 6px; margin-top: 12px; position: relative; z-index: 3; }
-    .badge { font-size: 9px; font-weight: 800; text-transform: uppercase; padding: 4px 10px; border-radius: 8px; background: rgba(0,0,0,0.04); color: var(--dim); border: 1px solid var(--border); }
-    #roster-grid .badge { background: rgba(255,255,255,0.1); color: #ddd; border: 1px solid rgba(255,255,255,0.1); }
+    .badge { font-size: 9px; font-weight: 800; text-transform: uppercase; padding: 4px 10px; border-radius: 8px; background: rgba(255,255,255,0.1); color: #ddd; border: 1px solid rgba(255,255,255,0.1); }
 
     /* --- MODALS --- */
     .modal-overlay { position: fixed; inset:0; background: rgba(255,255,255,0.95); backdrop-filter: blur(20px); z-index: 3000; display:none; align-items:center; justify-content:center; padding: 20px; }
     .modal-overlay.active { display:flex; }
-    .modal-card { width:100%; max-width: 500px; background: #fff; border-radius: 32px; padding: 32px; box-shadow: var(--shadow); position:relative; border: 1px solid var(--border); }
+    .modal-card { width:100%; max-width: 500px; background: #fff; border-radius: 32px; padding: 32px; border: 1px solid var(--border); position: relative; }
     .close-modal { position:absolute; top: 20px; right: 20px; width: 44px; height: 44px; border-radius: 50%; background: #f0f0f0; display:flex; align-items:center; justify-content:center; cursor:pointer; font-weight: 900; }
 
     #m-img-box { width:100%; height: 280px; border-radius: 24px; overflow:hidden; margin-bottom: 20px; background: #eee; }
     #m-img-box img { width:100%; height:100%; object-fit:cover; }
-    #m-name { font-size: 3rem; font-weight: 900; font-style: italic; text-transform: uppercase; line-height: 0.9; margin: 15px 0; }
+    #m-name { font-size: 3rem; font-weight: 900; font-style: italic; text-transform: uppercase; line-height: 0.9; margin: 15px 0; color: var(--text); }
     .stat-row { display:flex; justify-content:space-between; font-size: 11px; font-weight: 800; text-transform:uppercase; color: var(--dim); margin-bottom: 4px; }
     .bar { height: 6px; background: #f0f0f0; border-radius: 10px; overflow:hidden; margin-bottom: 16px; }
     .bar > div { height:100%; background: var(--accent); }
-
-    /* --- TABLE --- */
-    .stats-container { background: var(--card); border-radius: 32px; border: 1px solid var(--border); overflow:hidden; }
-    table { width:100%; border-collapse:collapse; }
-    tr { border-bottom: 1px solid var(--border); cursor:pointer; }
-    tr:hover { background: #fff; }
-    td { padding: 24px; }
-    .val-badge { background: var(--accent); padding: 8px 14px; border-radius: 12px; font-weight: 900; }
 
     @media (max-width: 1000px) { .bento-grid { grid-template-columns: repeat(2, 1fr); } }
     @media (max-width: 650px) {
@@ -154,53 +156,76 @@
   </nav>
 
   <div class="mobile-nav" id="mobile-nav">
-    <a href="#home" onclick="toggleMenu(); switchTab('home')">Лента</a>
-    <a href="#roster" onclick="toggleMenu(); switchTab('roster')">Состав</a>
-    <a href="#stats" onclick="toggleMenu(); switchTab('stats')">Рейтинг</a>
+    <a href="#home" onclick="handleMobileNav('home')">Лента</a>
+    <a href="#roster" onclick="handleMobileNav('roster')">Состав</a>
+    <a href="#stats" onclick="handleMobileNav('stats')">Рейтинг</a>
   </div>
 
   <main class="main-content">
     <section id="home" class="active">
       <div class="hero">
-        <span>Экосистема уличного футбола</span>
-        <h1>ПУТЬ<br>ГЕРОЯ.</h1>
+        <span>Система уличного футбола</span>
+        <h1>BOX1V1.</h1>
         <div class="countdown" id="timer">
-          <div class="countdown-item"><span class="countdown-value" id="days">00</span><span class="countdown-label">Дней</span></div>
-          <div class="countdown-item"><span class="countdown-value" id="hours">00</span><span class="countdown-label">Часов</span></div>
-          <div class="countdown-item"><span class="countdown-value" id="mins">00</span><span class="countdown-label">Мин</span></div>
-          <div class="countdown-item"><span class="countdown-value" id="secs">00</span><span class="countdown-label">Сек</span></div>
+          <div class="countdown-item"><span class="countdown-value" id="days">00</span><span class="countdown-label">Д</span></div>
+          <div class="countdown-item"><span class="countdown-value" id="hours">00</span><span class="countdown-label">Ч</span></div>
+          <div class="countdown-item"><span class="countdown-value" id="mins">00</span><span class="countdown-label">М</span></div>
+          <div class="countdown-item"><span class="countdown-value" id="secs">00</span><span class="countdown-label">С</span></div>
         </div>
       </div>
 
       <div class="bento-grid">
         <div class="bento-item col-2 row-2 green-gradient" onclick="openModal('rulesModal')">
-          <span class="tag">Архитектура сезона</span>
-          <h2 style="font-size: clamp(2rem, 5vw, 3.5rem); font-style:italic; margin-bottom:15px; line-height:0.9;">ЗАКОНЫ<br>КЛЕТКИ.</h2>
-          <p style="color:var(--dim); font-size: 14px; line-height: 1.6; max-width: 280px;">Сериал, где ты пишешь сценарий своей игры. Без права на ошибку.</p>
-          <div style="margin-top:auto; font-weight:900; font-size:11px; letter-spacing:1px; text-transform:uppercase;">Читать манифест →</div>
+          <span class="tag">Формат</span>
+          <h2 style="font-size: clamp(2rem, 5vw, 3.5rem); font-style:italic; margin-bottom:15px; line-height:0.9; color:var(--text);">ЗАКОНЫ<br>КОРОБКИ.</h2>
+          <p style="color:var(--dim); font-size: 15px; line-height: 1.5; max-width: 320px;">
+            В коробке не за кем спрятаться. Формат 1 на 1 убирает всё лишнее. Только твоя техника и твоя выносливость.
+          </p>
+          <div style="margin-top:auto; font-weight:800; font-size:11px; text-transform:uppercase; color:var(--text);">Регламент матчей →</div>
         </div>
+
+        <div class="bento-item col-2" style="background: #f1f5f9; border:none;">
+          <span class="tag">Вратари</span>
+          <h3 style="font-style:italic; margin-bottom:10px; color:var(--text);">ТРЕТЬЯ СТОРОНА</h3>
+          <p style="font-size: 14px; color: var(--dim);">
+            Вратари в BOX1V1 независимы. У них свои показатели и свой рейтинг. Чтобы забить, нужно пройти через профи.
+          </p>
+        </div>
+
         <div class="bento-item blue-light" onclick="window.open('https://t.me/streetbox1v1')">
-          <h3 style="color:var(--accent2); font-style:italic;">TELEGRAM</h3>
-          <p style="font-size:11px; color:var(--dim); margin-top:5px;">Голос лиги и прямые эфиры</p>
+          <h3 style="color:var(--accent2); font-style:italic; font-size: 1.2rem;">TELEGRAM</h3>
+          <p style="font-size:11px; color:var(--dim); margin-top:5px;">Обсуждение и эфиры</p>
         </div>
         <div class="bento-item red-light" onclick="window.open('https://instagram.com/box.1v1')">
-          <h3 style="color:#ff4d4d; font-style:italic;">INSTAGRAM</h3>
-          <p style="font-size:11px; color:var(--dim); margin-top:5px;">Визуальная эстетика улиц</p>
+          <h3 style="color:#ff4d4d; font-style:italic; font-size: 1.2rem;">INSTAGRAM</h3>
+          <p style="font-size:11px; color:var(--dim); margin-top:5px;">Медиа и хайлайты</p>
         </div>
+
         <div class="bento-item col-2 dark-apply" onclick="openModal('applyModal')" style="display:flex; align-items:center; justify-content:center; text-align:center;">
-          <h2 style="font-size:1.6rem; font-style:italic; text-transform:uppercase;">Стать частью системы</h2>
+          <h2 style="font-size:1.6rem; font-style:italic; text-transform:uppercase;">Вступить в систему</h2>
         </div>
       </div>
     </section>
 
     <section id="roster">
-      <h1 style="font-size: clamp(3rem, 10vw, 7rem); font-style:italic; margin-bottom:40px;">АКТИВЫ.</h1>
+      <h1 style="font-size: clamp(3rem, 10vw, 7rem); font-style:italic; margin-bottom:20px;">АКТИВЫ.</h1>
+      
+      <div class="filter-bar">
+        <button class="filter-btn active" onclick="filterRoster('Все', this)">Все</button>
+        <button class="filter-btn" onclick="filterRoster('Игрок', this)">Игроки</button>
+        <button class="filter-btn" onclick="filterRoster('Вратарь', this)">Вратари</button>
+      </div>
+
       <div class="bento-grid" id="roster-grid"></div>
     </section>
 
     <section id="stats">
       <h1 style="font-size: clamp(3rem, 10vw, 7rem); font-style:italic; margin-bottom:40px;">ТАБЛИЦА.</h1>
-      <div class="stats-container"><table><tbody id="stats-body"></tbody></table></div>
+      <div class="stats-container">
+        <table>
+          <tbody id="stats-body"></tbody>
+        </table>
+      </div>
     </section>
   </main>
 
@@ -221,8 +246,9 @@
       <h2 style="font-style:italic; margin-bottom:20px; text-transform:uppercase;">Регламент</h2>
       <div style="line-height:1.8; color:var(--dim); font-size:15px;">
         <p>• <b>Формат:</b> 1 на 1 + вратарь.</p>
-        <p>• <b>Цель:</b> До 2-х голов.</p>
+        <p>• <b>Цель:</b> До 2-х голов или 3 минуты.</p>
         <p>• <b>Атака:</b> 20 секунд на завершение.</p>
+        <p>• <b>Борта:</b> Мяч всегда в игре.</p>
       </div>
     </div>
   </div>
@@ -231,7 +257,7 @@
     <div class="modal-card" onclick="event.stopPropagation()">
       <div class="close-modal" onclick="closeModal('applyModal')">✕</div>
       <h2 style="font-style:italic; margin-bottom:20px; text-transform:uppercase;">Заявка</h2>
-      <button onclick="window.open('https://t.me/streetbox1v1')" style="width:100%; padding:20px; border-radius:18px; border:none; background:#000; color:#fff; font-weight:900; cursor:pointer; text-transform:uppercase; letter-spacing:1px;">Написать в Telegram</button>
+      <button onclick="window.open('https://t.me/streetbox1v1')" style="width:100%; padding:20px; border-radius:18px; border:none; background:#000; color:#fff; font-weight:900; cursor:pointer; text-transform:uppercase;">Написать в Telegram</button>
     </div>
   </div>
 
@@ -251,7 +277,7 @@
           if(col[0]) {
             const name = col[0].trim();
             playersData[name] = {
-              r: parseInt(col[1]) || 0, role: col[2] || 'Игрок',
+              r: parseInt(col[1]) || 0, role: (col[2] || 'Игрок').trim(),
               drib: parseInt(col[3]) || 0, speed: parseInt(col[4]) || 0,
               shot: parseInt(col[5]) || 0, phys: parseInt(col[6]) || 0,
               photo: col[7] ? col[7].trim() : '', status: col[8] ? col[8].trim() : '',
@@ -264,15 +290,21 @@
       } catch (e) { document.getElementById('preloader').classList.add('loaded'); }
     }
 
-    function renderRoster() {
+    function filterRoster(role, btn) {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderRoster(role);
+    }
+
+    function renderRoster(filter = 'Все') {
       const grid = document.getElementById('roster-grid');
-      grid.innerHTML = Object.keys(playersData).map(name => {
+      const keys = Object.keys(playersData).filter(name => filter === 'Все' || playersData[name].role === filter);
+      grid.innerHTML = keys.map(name => {
         const p = playersData[name];
-        const photoStyle = p.photo ? `style="background-image: url('${p.photo}')"` : '';
         return `
           <div class="bento-item" onclick="openPlayerModal('${name.replace(/'/g, "\\'")}')">
             ${p.status ? `<div class="status-tag">${p.status}</div>` : ''}
-            <div class="player-img-container" ${photoStyle}></div>
+            <div class="player-img-container" style="background-image: url('${p.photo || ''}')"></div>
             <span class="tag">OVR ${p.r}</span>
             <div class="card-content">
               <div class="role-text">${p.role}</div>
@@ -289,8 +321,16 @@
       const sorted = Object.entries(playersData).sort((a, b) => b[1].r - a[1].r);
       body.innerHTML = sorted.map(([name, p], i) => `
         <tr onclick="openPlayerModal('${name.replace(/'/g, "\\'")}')">
-          <td style="color:var(--dim); font-weight:800; width:50px;">#${(i+1).toString().padStart(2,'0')}</td>
-          <td style="font-weight:900; font-style:italic; text-transform:uppercase; font-size:1.1rem;">${name}</td>
+          <td style="color:var(--dim); font-weight:800; width:40px;">${(i+1)}</td>
+          <td>
+            <div class="td-player">
+              <img src="${p.photo || ''}" class="td-avatar" alt="">
+              <div class="td-info">
+                <span class="td-name">${name}</span>
+                <span class="td-role">${p.role}</span>
+              </div>
+            </div>
+          </td>
           <td style="text-align:right;"><span class="val-badge">${p.r}</span></td>
         </tr>
       `).join('');
@@ -304,7 +344,7 @@
       const imgBox = document.getElementById('m-img-box');
       if(p.photo) { imgBox.style.display = 'block'; document.getElementById('m-photo').src = p.photo; } 
       else imgBox.style.display = 'none';
-      document.getElementById('m-badges-container').innerHTML = p.badges.map(b => `<span class="badge">${b}</span>`).join('');
+      document.getElementById('m-badges-container').innerHTML = p.badges.map(b => `<span class="badge" style="color:#111; border-color:rgba(0,0,0,0.1);">${b}</span>`).join('');
       document.getElementById('m-stats').innerHTML = [
         { l: 'Дриблинг', v: p.drib }, { l: 'Скорость', v: p.speed },
         { l: 'Удар', v: p.shot }, { l: 'Физика', v: p.phys }
@@ -316,18 +356,27 @@
     }
 
     function renderAll() { renderRoster(); renderStats(); }
+    
     function toggleMenu() { 
-      const open = document.getElementById('mobile-nav').classList.toggle('open');
+      const isOpen = document.getElementById('mobile-nav').classList.toggle('open');
       document.getElementById('burger').classList.toggle('open');
-      document.body.style.overflow = open ? 'hidden' : 'auto';
+      document.body.style.overflow = isOpen ? 'hidden' : 'auto';
     }
+
+    function handleMobileNav(tab) {
+      toggleMenu();
+      switchTab(tab);
+    }
+
     function switchTab(t) {
       document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
       document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
       document.getElementById(t).classList.add('active');
-      document.getElementById('nav-' + t).classList.add('active');
+      const navBtn = document.getElementById('nav-' + t);
+      if(navBtn) navBtn.classList.add('active');
       window.scrollTo(0,0);
     }
+
     function openModal(id) { document.getElementById(id).classList.add('active'); }
     function closeModal(id) { document.getElementById(id).classList.remove('active'); }
 
