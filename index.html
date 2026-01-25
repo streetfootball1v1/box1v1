@@ -5,8 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
   <title>BOX1V1 | ZUPAROV</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,700;0,900;1,900&display=swap" rel="stylesheet">
-  <!-- Tabletop.js для загрузки данных из Google Sheets -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/tabletop.js/1.6.2/tabletop.min.js"></script>
   <style>
     :root {
       --bg: #000; --card: #0d0d0d; --accent: #39FF14;
@@ -71,7 +69,7 @@
     .countdown-value { font-size: clamp(1.5rem, 5vw, 2.5rem); font-weight: 900; color: #fff; }
     .countdown-label { font-size: 9px; text-transform: uppercase; color: var(--text-dim); letter-spacing: 1px; font-weight: 700; margin-top: 5px; }
     
-    /* Таблица рейтинга анимация */
+    /* Таблица рейтинга */
     #stats-body tr { 
       opacity: 0; 
       transform: translateY(15px); 
@@ -221,31 +219,38 @@
   </div>
 
   <script>
-    // === ДИНАМИЧЕСКАЯ ЗАГРУЗКА ИЗ GOOGLE SHEETS ===
-    const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vREjbeB6jNrU01kw1npVtFTvqGdP134ERjmyROoOYeYXbzjgL0ZCNK6KwF0VTk3c1yxZEZEUsJjy2Ur/pubhtml';
+    // === ЗАМЕНИ ЭТУ ССЫЛКУ НА СВОЙ CSV (Файл -> Опубликовать в интернете -> CSV) ===
+    const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vREjbeB6jNrU01kw1npVtFTvqGdP134ERjmyROoOYeYXbzjgL0ZCNK6KwF0VTk3c1yxZEZEUsJjy2Ur/pub?output=csv';
 
-    let playersData = [];
+    let playersData = {};
 
-    function loadPlayers() {
-      Tabletop.init({
-        key: SHEET_URL,
-        callback: function(data, tabletop) {
-          // Преобразуем данные в объект, как раньше
-          playersData = {};
-          data.forEach(row => {
-            playersData[row.Name] = {
-              r: parseInt(row.OVR) || 0,
-              role: row.Role || 'Игрок',
-              drib: parseInt(row.Dribbling) || 0,
-              speed: parseInt(row.Speed) || 0,
-              shot: parseInt(row.Shot) || 0,
-              phys: parseInt(row.Physique) || 0
+    async function loadPlayers() {
+      try {
+        const response = await fetch(SHEET_CSV_URL);
+        const data = await response.text();
+        
+        // Парсим CSV строки
+        const rows = data.split('\n').map(row => row.split(','));
+        const body = rows.slice(1); // Убираем заголовки
+
+        playersData = {};
+        body.forEach(col => {
+          if(col[0]) {
+            const name = col[0].trim();
+            playersData[name] = {
+              r: parseInt(col[1]) || 0,
+              role: col[2] || 'Игрок',
+              drib: parseInt(col[3]) || 0,
+              speed: parseInt(col[4]) || 0,
+              shot: parseInt(col[5]) || 0,
+              phys: parseInt(col[6]) || 0
             };
-          });
-          renderAll();
-        },
-        simpleSheet: true
-      });
+          }
+        });
+        renderAll();
+      } catch (e) {
+        console.error("Ошибка загрузки данных", e);
+      }
     }
 
     function renderAll() {
@@ -256,7 +261,7 @@
     function renderRoster() {
       const grid = document.getElementById('roster-grid');
       grid.innerHTML = Object.keys(playersData).map(name => `
-        <div class="bento-item reveal" onclick="openPlayerModal('${name}')">
+        <div class="bento-item reveal" onclick="openPlayerModal('${name.replace(/'/g, "\\'")}')">
           <span style="font-size:10px; font-weight:900; color:var(--accent)">OVR ${playersData[name].r}</span>
           <h3 style="font-size:1.6rem; font-weight:900; font-style:italic; margin-top:10px; text-transform:uppercase">${name}</h3>
           <p style="margin-top:auto; font-size:10px; color:var(--text-dim); text-transform:uppercase">${playersData[name].role}</p>
@@ -269,8 +274,8 @@
       const body = document.getElementById('stats-body');
       const sorted = Object.entries(playersData).sort((a, b) => b[1].r - a[1].r);
       body.innerHTML = sorted.map(([name, p], i) => `
-        <tr onclick="openPlayerModal('${name}')" style="border-bottom: 1px solid var(--border); transition-delay: ${i * 0.1}s">
-          <td style="padding:25px; color:var(--text-dim); font-weight:700">#0${i+1}</td>
+        <tr onclick="openPlayerModal('${name.replace(/'/g, "\\'")}')" style="border-bottom: 1px solid var(--border); transition-delay: ${i * 0.05}s">
+          <td style="padding:25px; color:var(--text-dim); font-weight:700">#${(i+1).toString().padStart(2, '0')}</td>
           <td style="padding:25px; font-weight:900; font-style:italic; text-transform:uppercase;">${name}</td>
           <td style="padding:25px; text-align:right; color:var(--accent); font-weight:900; font-size:1.4rem">${p.r}</td>
         </tr>
@@ -298,7 +303,6 @@
       openModal('playerModal');
     }
 
-    // === ОСТАЛЬНЫЙ ФУНКЦИОНАЛ ===
     function toggleMenu() {
       document.getElementById('burger').classList.toggle('open');
       document.getElementById('mobile-nav').classList.toggle('open');
@@ -307,10 +311,13 @@
     function switchTab(t) {
       document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
       document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+      
       const target = document.getElementById(t);
+      const navItem = document.getElementById('nav-' + t);
+      
       if(target) {
         target.classList.add('active');
-        document.getElementById('nav-' + t).classList.add('active');
+        if(navItem) navItem.classList.add('active');
         window.scrollTo(0, 0);
         setTimeout(refreshAnimations, 50);
       }
@@ -327,7 +334,6 @@
     function closeModal(id) { document.getElementById(id).classList.remove('active'); }
     function openModal(id) { document.getElementById(id).classList.add('active'); }
 
-    // Таймер
     function updateTimer() {
       const targetDate = new Date("Mar 1, 2026 00:00:00").getTime();
       const now = new Date().getTime();
@@ -343,11 +349,11 @@
       }
     }
 
-    // ЗАПУСК
     window.addEventListener('load', () => {
       loadPlayers();
       setInterval(updateTimer, 1000);
       updateTimer();
+      refreshAnimations();
     });
   </script>
 </body>
