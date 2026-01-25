@@ -50,9 +50,6 @@
       animation: skeleton-pulse 1.8s infinite ease-in-out;
       position: relative;
     }
-    .skeleton-card::after {
-      content: ''; position: absolute; bottom: 32px; left: 32px; width: 60%; height: 24px; background: #eee; border-radius: 4px;
-    }
 
     /* --- PRELOADER --- */
     #preloader { position: fixed; inset:0; background:#fff; z-index:9999; display:flex; justify-content:center; align-items:center; transition: opacity .8s var(--cubic), visibility .8s var(--cubic); }
@@ -74,7 +71,7 @@
     .nav-links a.active { color: var(--text); }
     .nav-links a.active::after { content:''; position:absolute; bottom:0; left:0; width:100%; height:2px; background: var(--text); border-radius: 2px; }
 
-    /* --- MOBILE TAB BAR (UX UPGRADE) --- */
+    /* --- MOBILE TAB BAR --- */
     .mobile-tab-bar {
       position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
       width: calc(100% - 40px); max-width: 400px;
@@ -90,16 +87,10 @@
     .tab-item.active { opacity: 1; color: var(--accent); }
     .tab-item svg { width: 22px; height: 22px; fill: currentColor; }
 
-    /* --- BURGER (Still exists for backup) --- */
-    .burger { display:none; cursor:pointer; gap:5px; flex-direction:column; padding:10px; }
-    .burger span { width:20px; height:2px; background: var(--text); border-radius:10px; }
-
     /* --- FILTERS --- */
     .filter-bar { display: flex; gap: 12px; margin-bottom: 40px; overflow-x: auto; padding-bottom: 8px; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
-    .filter-bar::-webkit-scrollbar { display: none; }
     .filter-btn { padding: 12px 24px; border-radius: 14px; border: 1px solid var(--border); background: var(--card); color: var(--dim); font-size: 12px; font-weight: 700; text-transform: uppercase; cursor: pointer; transition: all 0.3s var(--cubic); white-space: nowrap; }
-    .filter-btn:active { transform: scale(0.95); }
-    .filter-btn.active { background: var(--text); color: #fff; border-color: var(--text); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+    .filter-btn.active { background: var(--text); color: #fff; border-color: var(--text); }
 
     /* --- CONTENT --- */
     .main-content { max-width: 1200px; margin: 0 auto; padding: 0 24px 120px; }
@@ -110,68 +101,70 @@
     .hero h1 { font-size: clamp(4rem, 18vw, 10rem); font-weight: 900; line-height: 0.8; letter-spacing: -0.06em; text-transform: uppercase; font-style: italic; margin: 32px 0; }
     .hero span { font-size: 12px; letter-spacing: 4px; font-weight: 800; text-transform: uppercase; color: var(--dim); }
 
-    .countdown { display:flex; gap: 32px; margin-top: 40px; font-feature-settings: "tnum"; }
+    .countdown { display:flex; gap: 32px; margin-top: 40px; }
     .countdown-item { display:flex; flex-direction:column; align-items:center; min-width: 60px; }
     .countdown-value { font-size: clamp(2rem, 6vw, 3.5rem); font-weight: 900; letter-spacing: -2px; line-height: 1; }
-    .countdown-label { font-size: 10px; text-transform: uppercase; color: var(--dim); font-weight: 800; margin-top: 8px; letter-spacing: 1px; }
+    .countdown-label { font-size: 10px; text-transform: uppercase; color: var(--dim); font-weight: 800; margin-top: 8px; }
 
     /* --- BENTO GRID --- */
     .bento-grid { display:grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin: 48px 0; }
     .bento-item { background: var(--card); border-radius: 32px; border: 1px solid var(--border); padding: 40px; display:flex; flex-direction:column; position:relative; overflow:hidden; cursor:pointer; transition: all .5s var(--cubic); }
-    .bento-item:active { transform: scale(0.97); }
-    .bento-item:hover { transform: translateY(-8px); box-shadow: var(--shadow); border-color: transparent; }
+    .bento-item:hover { transform: translateY(-8px); box-shadow: var(--shadow); }
     .col-2 { grid-column: span 2; }
     .row-2 { grid-row: span 2; }
 
-    /* ROSTER CARDS (UX IMPROVED) */
+    /* ROSTER CARDS (FIXED DESIGN) */
     #roster-grid .bento-item { height: 440px; background: #111; border: none; justify-content: flex-end; padding: 32px; }
-    .player-img-container { position: absolute; inset:0; opacity: 0.8; filter: grayscale(1) contrast(1.1); transition: 0.8s var(--cubic); z-index: 1; background-size: cover; background-position: center top; }
-    #roster-grid .bento-item:hover .player-img-container { opacity: 1; filter: grayscale(0) scale(1.05); }
-    #roster-grid .bento-item::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.4) 40%, transparent 100%); z-index: 2; }
+    .player-img-container { position: absolute; inset:0; opacity: 0.7; filter: grayscale(1); transition: 0.8s var(--cubic); z-index: 1; background-size: cover; background-position: center top; }
+    
+    /* GLASS EFFECT ON HOVER */
+    #roster-grid .bento-item::before { content: ''; position: absolute; inset: 0; background: rgba(0,0,0,0); backdrop-filter: blur(0px); transition: 0.5s var(--cubic); z-index: 2; }
+    #roster-grid .bento-item:hover::before { background: rgba(0,0,0,0.3); backdrop-filter: blur(8px); }
+    #roster-grid .bento-item:hover .player-img-container { opacity: 1; filter: grayscale(0); transform: scale(1.05); }
 
     .card-content { position: relative; z-index: 3; }
     .bento-item h3 { font-size: 2.2rem; font-weight: 900; font-style: italic; line-height: 0.95; margin-bottom: 8px; color: #fff; text-transform: uppercase; }
     .role-text { color: var(--accent); font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 6px; }
     
-    /* OVR TAGS (UX COLOR CODING) */
-    .tag-ovr { position: absolute; top: 24px; left: 24px; z-index: 4; font-size: 11px; font-weight: 900; text-transform: uppercase; padding: 8px 14px; border-radius: 12px; background: var(--accent); color: #000; margin:0; }
-    .tag-ovr.gold { background: var(--gold); box-shadow: 0 0 15px rgba(255,215,0,0.4); }
+    .tag-ovr { position: absolute; top: 24px; left: 24px; z-index: 4; font-size: 11px; font-weight: 900; text-transform: uppercase; padding: 8px 14px; border-radius: 12px; background: var(--accent); color: #000; }
+    .tag-ovr.gold { background: var(--gold); }
     .tag-ovr.silver { background: var(--silver); }
 
-    .status-tag { position: absolute; top: 24px; right: 24px; z-index: 4; font-size: 10px; font-weight: 900; text-transform: uppercase; padding: 8px 14px; border-radius: 12px; background: rgba(255,255,255,0.15); backdrop-filter: blur(12px); color: #fff; border: 1px solid rgba(255,255,255,0.1); }
+    .status-tag { position: absolute; top: 24px; right: 24px; z-index: 4; font-size: 10px; font-weight: 900; text-transform: uppercase; padding: 8px 14px; border-radius: 12px; background: rgba(255,255,255,0.15); backdrop-filter: blur(12px); color: #fff; }
 
-    /* --- PRO TABLE --- */
+    /* --- PRO TABLE (CLEAN TYPOGRAPHY) --- */
     .stats-container { background: var(--card); border-radius: 32px; border: 1px solid var(--border); overflow:hidden; }
     table { width:100%; border-collapse:collapse; }
-    tr { border-bottom: 1px solid var(--border); cursor:pointer; transition: background 0.3s var(--cubic); }
-    tr:active { background: #f0f0f0; }
+    tr { border-bottom: 1px solid var(--border); cursor:pointer; transition: background 0.3s; }
     tr:hover { background: #fff; }
-    td { padding: 20px 32px; vertical-align: middle; }
+    td { padding: 24px 32px; vertical-align: middle; }
+    
     .td-player { display: flex; align-items: center; gap: 20px; }
-    .td-avatar { width: 52px; height: 52px; border-radius: 16px; background: #eee; object-fit: cover; border: 1px solid var(--border); }
-    .td-name { font-weight: 900; font-style: italic; text-transform: uppercase; font-size: 1.2rem; color: var(--text); line-height: 1; }
-    .td-role { font-size: 10px; font-weight: 700; color: var(--dim); text-transform: uppercase; letter-spacing: 0.5px; }
-    .val-badge { background: var(--accent); color: #000; padding: 10px 16px; border-radius: 14px; font-weight: 900; min-width: 50px; text-align: center; display: inline-block; font-feature-settings: "tnum"; }
+    .td-avatar { width: 56px; height: 56px; border-radius: 18px; background: #eee; object-fit: cover; border: 1px solid var(--border); }
+    .td-name { font-weight: 900; font-style: italic; text-transform: uppercase; font-size: 1.3rem; line-height: 1; display: block; }
+    
+    /* Clean role badge in table */
+    .td-role-badge { 
+      font-size: 9px; font-weight: 900; text-transform: uppercase; 
+      color: var(--dim); letter-spacing: 0.5px; 
+      margin-top: 6px; display: inline-block;
+      opacity: 0.7;
+    }
+
+    .val-badge { background: var(--accent); color: #000; padding: 12px 18px; border-radius: 14px; font-weight: 900; min-width: 55px; text-align: center; font-size: 1.1rem; }
     .val-badge.gold { background: var(--gold); }
     .val-badge.silver { background: var(--silver); }
 
     /* --- MODALS --- */
     .modal-overlay { position: fixed; inset:0; background: rgba(255,255,255,0.9); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); z-index: 3000; display:none; align-items:center; justify-content:center; padding: 24px; }
-    .modal-overlay.active { display:flex; animation: fadeIn 0.4s var(--cubic); }
-    .modal-card { width:100%; max-width: 500px; background: #fff; border-radius: 40px; padding: 40px; border: 1px solid var(--border); position: relative; box-shadow: 0 40px 100px rgba(0,0,0,0.1); }
-    .close-modal { position:absolute; top: 24px; right: 24px; width: 48px; height: 48px; border-radius: 50%; background: #f5f5f5; display:flex; align-items:center; justify-content:center; cursor:pointer; font-weight: 900; transition: .3s var(--cubic); }
-    
-    .info-hint { display: inline-flex; width: 16px; height: 16px; background: #eee; border-radius: 50%; font-size: 10px; align-items: center; justify-content: center; margin-left: 6px; cursor: help; color: var(--dim); font-weight: 900; }
+    .modal-overlay.active { display:flex; }
+    .modal-card { width:100%; max-width: 500px; background: #fff; border-radius: 40px; padding: 40px; position: relative; box-shadow: 0 40px 100px rgba(0,0,0,0.1); }
+    .close-modal { position:absolute; top: 24px; right: 24px; width: 48px; height: 48px; border-radius: 50%; background: #f5f5f5; display:flex; align-items:center; justify-content:center; cursor:pointer; font-weight: 900; }
 
-    #m-img-box { width:100%; height: 320px; border-radius: 28px; overflow:hidden; margin-bottom: 24px; background: #f0f0f0; }
-    #m-img-box img { width:100%; height:100%; object-fit:cover; }
-    #m-name { font-size: 3.5rem; font-weight: 900; font-style: italic; text-transform: uppercase; line-height: 0.85; margin: 20px 0; color: var(--text); letter-spacing: -2px; }
     .stat-row { display:flex; justify-content:space-between; font-size: 12px; font-weight: 800; text-transform:uppercase; color: var(--dim); margin-bottom: 6px; }
-    .bar { height: 8px; background: #f0f0f0; border-radius: 20px; overflow:hidden; margin-bottom: 20px; }
+    .bar { height: 8px; background: #f0f0f0; border-radius: 20px; overflow:hidden; margin-bottom: 4px; }
     .bar > div { height:100%; background: var(--accent); transition: width 1.2s var(--cubic); }
-
-    .badges { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
-    .badge { font-size: 10px; font-weight: 800; padding: 6px 12px; border-radius: 10px; border: 1px solid rgba(0,0,0,0.06); text-transform: uppercase; background: #fafafa; }
+    .stat-desc { font-size: 10px; color: #999; margin-bottom: 20px; font-weight: 500; }
 
     @media (max-width: 1000px) { .bento-grid { grid-template-columns: repeat(2, 1fr); } }
     @media (max-width: 650px) {
@@ -207,21 +200,18 @@
 
   <div class="mobile-tab-bar">
     <a href="#home" class="tab-item active" id="tab-home" onclick="switchTab('home')">
-        <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
-        Лента
+        <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>Лента
     </a>
     <a href="#roster" class="tab-item" id="tab-roster" onclick="switchTab('roster')">
-        <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
-        Состав
+        <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>Состав
     </a>
     <a href="#stats" class="tab-item" id="tab-stats" onclick="switchTab('stats')">
-        <svg viewBox="0 0 24 24"><path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/></svg>
-        Рейтинг
+        <svg viewBox="0 0 24 24"><path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/></svg>Рейтинг
     </a>
   </div>
 
   <main class="main-content">
-    <section id="home" class="active" style="opacity: 1;">
+    <section id="home" class="active">
       <div class="hero">
         <span>Элитная цифровая экосистема</span>
         <h1>BOX1V1.</h1>
@@ -229,35 +219,27 @@
           <div class="countdown-item"><span class="countdown-value" id="days">00</span><span class="countdown-label">Дней</span></div>
           <div class="countdown-item"><span class="countdown-value" id="hours">00</span><span class="countdown-label">Часов</span></div>
           <div class="countdown-item"><span class="countdown-value" id="mins">00</span><span class="countdown-label">Мин</span></div>
-          <div class="countdown-item"><span class="countdown-value" id="secs">00</span><span class="countdown-label">Сек</span></div>
         </div>
       </div>
 
       <div class="bento-grid">
         <div class="bento-item col-2 row-2" style="background: linear-gradient(145deg, #f0fdf4 0%, #ffffff 100%); border-color: #dcfce7;" onclick="openModal('rulesModal')">
-          <span class="badge" style="background:var(--accent); color:#000; border:none; margin-bottom:20px; align-self:flex-start;">Регламент</span>
-          <h2 style="font-size: clamp(2.2rem, 5vw, 4rem); font-style:italic; margin-bottom:20px; line-height:0.9; color:var(--text); letter-spacing:-1.5px;">ЗАКОНЫ<br>КОРОБКИ.</h2>
-          <p style="color:var(--dim); font-size: 16px; line-height: 1.6; max-width: 340px;">В коробке не за кем спрятаться. Формат 1 на 1 убирает всё лишнее. Только твоя техника, характер и выносливость.</p>
-          <div style="margin-top:auto; font-weight:800; font-size:12px; text-transform:uppercase; color:var(--text); letter-spacing: 1px;">Посмотреть правила →</div>
+          <span style="background:var(--accent); color:#000; padding:6px 12px; border-radius:10px; font-size:10px; font-weight:800; margin-bottom:20px; align-self:flex-start;">РЕГЛАМЕНТ</span>
+          <h2 style="font-size: clamp(2.2rem, 5vw, 4rem); font-style:italic; margin-bottom:20px; line-height:0.9; letter-spacing:-1.5px;">ЗАКОНЫ<br>КОРОБКИ.</h2>
+          <p style="color:var(--dim); font-size: 16px; line-height: 1.6; max-width: 340px;">В коробке не за кем спрятаться. Формат 1 на 1 убирает всё лишнее.</p>
+          <div style="margin-top:auto; font-weight:800; font-size:12px; text-transform:uppercase;">Посмотреть правила →</div>
         </div>
 
         <div class="bento-item col-2" style="background: #f1f5f9; border:none;" onclick="openModal('applyModal')">
-          <span class="badge" style="margin-bottom:12px; align-self:flex-start;">Вратари</span>
-          <h3 style="font-style:italic; margin-bottom:12px; color:var(--text); letter-spacing:-0.5px; font-size: 1.8rem;">ТРЕТЬЯ СТОРОНА</h3>
-          <p style="font-size: 15px; color: var(--dim); line-height: 1.5;">Вратари в BOX1V1 независимы. У них свои показатели и рейтинг. Чтобы забить, нужно пройти через профи.</p>
+          <h3 style="font-style:italic; margin-bottom:12px; font-size: 1.8rem;">ТРЕТЬЯ СТОРОНА</h3>
+          <p style="font-size: 15px; color: var(--dim);">Вратари в BOX1V1 независимы. У них свои показатели и рейтинг.</p>
         </div>
 
-        <div class="bento-item" style="background: #f0f9ff; border-color: #e0f2fe;" onclick="window.open('https://t.me/streetbox1v1')">
-          <h3 style="color:var(--accent2); font-style:italic; font-size: 1.4rem;">TELEGRAM</h3>
-          <p style="font-size:12px; color:var(--dim); margin-top:8px; font-weight:600;">Обсуждение и эфиры</p>
-        </div>
-        <div class="bento-item" style="background: #fef2f2; border-color: #fee2e2;" onclick="window.open('https://instagram.com/box.1v1')">
-          <h3 style="color:#ff4d4d; font-style:italic; font-size: 1.4rem;">INSTAGRAM</h3>
-          <p style="font-size:12px; color:var(--dim); margin-top:8px; font-weight:600;">Медиа и хайлайты</p>
-        </div>
+        <div class="bento-item" style="background: #f0f9ff;" onclick="window.open('https://t.me/streetbox1v1')"><h3>TG</h3><p style="font-size:10px; font-weight:700; color:var(--dim);">CHANNEL</p></div>
+        <div class="bento-item" style="background: #fef2f2;" onclick="window.open('https://instagram.com/box.1v1')"><h3>INST</h3><p style="font-size:10px; font-weight:700; color:var(--dim);">MEDIA</p></div>
 
-        <div class="bento-item col-2" style="background:var(--text); color:#fff; border:none; align-items:center; justify-content:center;" onclick="openModal('applyModal')">
-          <h2 style="font-size:1.8rem; font-style:italic; text-transform:uppercase; letter-spacing: -1px;">Вступить в систему</h2>
+        <div class="bento-item col-2" style="background:var(--text); color:#fff; align-items:center; justify-content:center;" onclick="openModal('applyModal')">
+          <h2 style="font-size:1.5rem; font-style:italic; text-transform:uppercase;">Вступить в систему</h2>
         </div>
       </div>
     </section>
@@ -275,7 +257,7 @@
     </section>
 
     <section id="stats">
-      <h1 style="font-size: clamp(3.5rem, 10vw, 8rem); font-style:italic; margin-bottom:48px; letter-spacing:-4px;">ТАБЛИЦА.</h1>
+      <h1 style="font-size: clamp(3.5rem, 10vw, 8rem); font-style:italic; margin-bottom:48px; letter-spacing:-4px;">РЕЙТИНГ.</h1>
       <div class="stats-container">
         <table><tbody id="stats-body"></tbody></table>
       </div>
@@ -285,23 +267,23 @@
   <div class="modal-overlay" id="playerModal" onclick="closeModal('playerModal')">
     <div class="modal-card" onclick="event.stopPropagation()">
       <div class="close-modal" onclick="closeModal('playerModal')">✕</div>
-      <div id="m-img-box"><img id="m-photo" src="" alt=""></div>
-      <div id="m-role" class="tag-ovr" style="position:static; display:inline-block; margin-bottom:12px;">Роль</div>
-      <h2 id="m-name">NAME</h2>
-      <div id="m-badges-container" class="badges"></div>
-      <div id="m-stats" style="margin-top:32px;"></div>
+      <div id="m-img-box" style="width:100%; height:320px; border-radius:28px; overflow:hidden; margin-bottom:24px; background:#f0f0f0;">
+        <img id="m-photo" src="" style="width:100%; height:100%; object-fit:cover;">
+      </div>
+      <div id="m-role" class="tag-ovr" style="position:static; display:inline-block; margin-bottom:12px;">РОЛЬ</div>
+      <h2 id="m-name" style="font-size: 3.5rem; font-weight: 900; font-style: italic; text-transform: uppercase; line-height: 0.85; margin: 10px 0 24px;">NAME</h2>
+      <div id="m-stats"></div>
     </div>
   </div>
 
   <div class="modal-overlay" id="rulesModal" onclick="closeModal('rulesModal')">
     <div class="modal-card" onclick="event.stopPropagation()">
       <div class="close-modal" onclick="closeModal('rulesModal')">✕</div>
-      <h2 style="font-style:italic; margin-bottom:24px; text-transform:uppercase; font-size:2rem; letter-spacing:-1px;">Регламент</h2>
-      <div style="line-height:2; color:var(--dim); font-size:16px;">
-        <p>• <b>Формат:</b> 1 на 1 + профессиональный вратарь.</p>
-        <p>• <b>Цель:</b> Победа до 2-х голов или 3 мин.</p>
-        <p>• <b>Атака:</b> Лимит 20 секунд на фазу.</p>
-        <p>• <b>Борта:</b> Мяч всегда в игре.</p>
+      <h2 style="font-style:italic; margin-bottom:24px; text-transform:uppercase; font-size:2rem;">Регламент</h2>
+      <div style="line-height:2; color:var(--dim);">
+        <p>• 1 на 1 + профессиональный вратарь.</p>
+        <p>• Победа до 2-х голов или 3 мин.</p>
+        <p>• Атака: лимит 20 секунд.</p>
       </div>
     </div>
   </div>
@@ -309,9 +291,9 @@
   <div class="modal-overlay" id="applyModal" onclick="closeModal('applyModal')">
     <div class="modal-card" onclick="event.stopPropagation()">
       <div class="close-modal" onclick="closeModal('applyModal')">✕</div>
-      <h2 style="font-style:italic; margin-bottom:24px; text-transform:uppercase; font-size:2rem; letter-spacing:-1px;">Заявка</h2>
-      <p style="color:var(--dim); margin-bottom:32px;">Станьте частью закрытой системы BOX1V1.</p>
-      <button onclick="window.open('https://t.me/streetbox1v1')" style="width:100%; padding:24px; border-radius:20px; border:none; background:#000; color:#fff; font-weight:900; cursor:pointer; text-transform:uppercase;">Написать в Telegram</button>
+      <h2 style="font-style:italic; margin-bottom:12px; text-transform:uppercase;">Вступить</h2>
+      <p style="color:var(--dim); margin-bottom:24px;">Подай заявку через Telegram.</p>
+      <button onclick="window.open('https://t.me/streetbox1v1')" style="width:100%; padding:20px; border-radius:16px; border:none; background:#000; color:#fff; font-weight:800; cursor:pointer;">ПЕРЕЙТИ В TG</button>
     </div>
   </div>
 
@@ -319,7 +301,7 @@
     const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vREjbeB6jNrU01kw1npVtFTvqGdP134ERjmyROoOYeYXbzjgL0ZCNK6KwF0VTk3c1yxZEZEUsJjy2Ur/pub?output=csv';
     let playersData = {};
 
-    function triggerHaptic() { if (window.navigator && window.navigator.vibrate) window.navigator.vibrate(10); }
+    function triggerHaptic() { if (window.navigator.vibrate) window.navigator.vibrate(10); }
 
     async function loadPlayers() {
       try {
@@ -346,11 +328,7 @@
       } catch (e) { document.getElementById('preloader').classList.add('loaded'); }
     }
 
-    function getOvrClass(val) {
-        if (val >= 85) return 'gold';
-        if (val >= 75) return 'silver';
-        return '';
-    }
+    function getOvrClass(val) { return val >= 85 ? 'gold' : (val >= 75 ? 'silver' : ''); }
 
     function renderRoster(filter = 'Все') {
       const grid = document.getElementById('roster-grid');
@@ -365,13 +343,11 @@
         const p = playersData[name];
         return `
           <div class="bento-item" onclick="triggerHaptic(); openPlayerModal('${name.replace(/'/g, "\\'")}')">
-            ${p.status ? `<div class="status-tag">${p.status}</div>` : ''}
-            <div class="player-img-container" style="background-image: url('${p.photo || ''}')"></div>
+            <div class="player-img-container" style="background-image: url('${p.photo}')"></div>
             <span class="tag-ovr ${getOvrClass(p.r)}">OVR ${p.r}</span>
             <div class="card-content">
               <div class="role-text">${p.role}</div>
               <h3>${name}</h3>
-              <div class="badges">${p.badges.map(b => b ? `<span class="badge">${b}</span>` : '').join('')}</div>
             </div>
           </div>
         `;
@@ -387,9 +363,9 @@
           <td>
             <div class="td-player">
               <img src="${p.photo}" class="td-avatar">
-              <div class="td-info">
+              <div>
                 <span class="td-name">${name}</span>
-                <span class="td-role">${p.role}</span>
+                <span class="td-role-badge">${p.role}</span>
               </div>
             </div>
           </td>
@@ -403,19 +379,18 @@
       document.getElementById('m-name').innerText = name;
       document.getElementById('m-role').innerText = p.role;
       document.getElementById('m-photo').src = p.photo;
-      document.getElementById('m-badges-container').innerHTML = p.badges.map(b => b ? `<span class="badge">${b}</span>` : '').join('');
       
       const stats = [
-        {l:'Дриблинг', v:p.drib, d:'Техника владения мячом'}, {l:'Скорость', v:p.speed, d:'Резкость и рывок'},
-        {l:'Удар', v:p.shot, d:'Сила и точность'}, {l:'Физика', v:p.phys, d:'Борьба и выносливость'}
+        {l:'Дриблинг', v:p.drib, d:'Техника контроля мяча и финты'},
+        {l:'Скорость', v:p.speed, d:'Резкость движений и стартовый рывок'},
+        {l:'Удар', v:p.shot, d:'Сила и точность завершающего удара'},
+        {l:'Физика', v:p.phys, d:'Силовая борьба и выносливость в игре'}
       ];
 
       document.getElementById('m-stats').innerHTML = stats.map(s => `
-        <div class="stat-row">
-            <span>${s.l}<span class="info-hint" title="${s.d}">?</span></span>
-            <span>${s.v}</span>
-        </div>
+        <div class="stat-row"><span>${s.l}</span><span>${s.v}</span></div>
         <div class="bar"><div style="width:0%"></div></div>
+        <div class="stat-desc">${s.d}</div>
       `).join('');
       
       openModal('playerModal');
@@ -430,10 +405,8 @@
       document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
       document.querySelectorAll('.tab-item, .nav-links a').forEach(el => el.classList.remove('active'));
       document.getElementById(t).classList.add('active');
-      const tab = document.getElementById('tab-' + t);
-      const nav = document.getElementById('nav-' + t);
-      if(tab) tab.classList.add('active');
-      if(nav) nav.classList.add('active');
+      document.getElementById('tab-' + t)?.classList.add('active');
+      document.getElementById('nav-' + t)?.classList.add('active');
       window.scrollTo({top: 0, behavior: 'smooth'});
     }
 
@@ -453,7 +426,6 @@
         document.getElementById('days').innerText = String(Math.floor(diff / 864e5)).padStart(2,'0');
         document.getElementById('hours').innerText = String(Math.floor((diff % 864e5) / 36e5)).padStart(2,'0');
         document.getElementById('mins').innerText = String(Math.floor((diff % 36e5) / 6e4)).padStart(2,'0');
-        document.getElementById('secs').innerText = String(Math.floor((diff % 6e4) / 1e3)).padStart(2,'0');
       }
     }
 
