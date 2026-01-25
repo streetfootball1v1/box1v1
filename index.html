@@ -5,7 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
   <title>BOX1V1 | ЦИФРОВАЯ ЭКОСИСТЕМА</title>
   <meta name="description" content="BOX1V1 — закрытая экосистема для футболистов 1 на 1. Техника, медиа и скаутинг.">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
+
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://твой-сайт.рф/"> <meta property="og:title" content="BOX1V1 | ЦИФРОВАЯ ЭКОСИСТЕМА">
+  <meta property="og:description" content="Стань частью элитарного сообщества футболистов 1x1. Рейтинги, карточки и статистика.">
+  <meta property="og:image" content="https://imgur.com/your-main-preview.jpg"> <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:title" content="BOX1V1 | ЦИФРОВАЯ ЭКОСИСТЕМА">
+  <meta property="twitter:description" content="Элитарное сообщество футболистов 1 на 1.">
+  <meta property="twitter:image" content="https://imgur.com/your-main-preview.jpg"> <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
   
@@ -556,7 +563,8 @@
     }
 
     function closeModal(id) {
-      document.getElementById(id).classList.remove('active');
+      const modal = document.getElementById(id);
+      if(modal) modal.classList.remove('active');
       if(id === 'playerModal') {
         const currentTab = document.querySelector('section.active').id;
         window.history.replaceState(null, null, `#${currentTab}`);
@@ -618,12 +626,19 @@
     }
 
     function sharePlayer() {
+      const name = document.getElementById('m-name').innerText;
       const url = window.location.href;
+      const shareText = `Карточка игрока ${name} в системе BOX1V1! 🔥`;
+      
       if(navigator.share) {
-        navigator.share({ title: 'BOX1V1 Player', url: url });
+        navigator.share({
+          title: 'BOX1V1 | ' + name,
+          text: shareText,
+          url: url
+        }).catch(console.error);
       } else {
         navigator.clipboard.writeText(url);
-        alert('Ссылка скопирована');
+        alert('Ссылка на игрока ' + name + ' скопирована!');
       }
     }
 
@@ -631,4 +646,3 @@
   </script>
 </body>
 </html>
-
