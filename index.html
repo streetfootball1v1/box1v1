@@ -103,7 +103,7 @@
     }
     .video-modal.active { display: flex; }
     .video-container { width: 100%; height: 100%; max-width: 500px; position: relative; background: #000; }
-    .video-container iframe { width: 100%; height: 100%; border: none; }
+    .video-container iframe, .video-container video { width: 100%; height: 100%; border: none; }
     .close-video {
       position: absolute; top: 30px; right: 20px; z-index: 4001;
       width: 44px; height: 44px; background: rgba(255,255,255,0.2);
@@ -295,11 +295,29 @@
     const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vREjbeB6jNrU01kw1npVtFTvqGdP134ERjmyROoOYeYXbzjgL0ZCNK6KwF0VTk3c1yxZEZEUsJjy2Ur/pub?output=csv';
     let playersData = {};
 
-    // Данные для хайлайтов (Сюда вставляй ID видео YouTube)
+    // Данные для хайлайтов (Бесплатные видео для примера)
     const highlightsData = [
-      { id: 'dQw4w9WgXcQ', title: 'Лучший гол недели', tag: 'Top Goal', img: 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&q=80&w=800' },
-      { id: '368817554', title: 'Эластико в клетке', tag: 'Skills', img: 'https://images.unsplash.com/photo-1529900948632-58674ba19306?auto=format&fit=crop&q=80&w=800' },
-      { id: 'vibe-id', title: 'Атмосфера BOX1V1', tag: 'Vibe', img: 'https://images.unsplash.com/photo-1517466787929-bc90951d0974?auto=format&fit=crop&q=80&w=800' }
+      { 
+        id: 'https://videos.pexels.com/video-files/5653351/5653351-uhd_1440_2732_25fps.mp4', 
+        title: 'Техника в движении', 
+        tag: 'Skills', 
+        img: 'https://images.pexels.com/photos/5653351/pexels-photo-5653351.jpeg?auto=compress&cs=tinysrgb&w=800',
+        type: 'file' 
+      },
+      { 
+        id: 'https://videos.pexels.com/video-files/3823055/3823055-uhd_1440_2732_24fps.mp4', 
+        title: 'Атмосфера улиц', 
+        tag: 'Vibe', 
+        img: 'https://images.pexels.com/photos/3823055/pexels-photo-3823055.jpeg?auto=compress&cs=tinysrgb&w=800',
+        type: 'file'
+      },
+      { 
+        id: 'dQw4w9WgXcQ', 
+        title: 'YouTube Пример', 
+        tag: 'Classic', 
+        img: 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&q=80&w=800',
+        type: 'youtube'
+      }
     ];
 
     window.addEventListener('scroll', () => {
@@ -344,8 +362,19 @@
 
     function openVideo(id) {
       const container = document.getElementById('v-container');
-      const url = `https://www.youtube.com/embed/${id}?autoplay=1&rel=0&modestbranding=1`;
-      container.innerHTML = `<iframe src="${url}" allow="autoplay; fullscreen"></iframe>`;
+      const hItem = highlightsData.find(h => h.id === id);
+      
+      if (hItem && hItem.type === 'file') {
+        // Если это прямой видео-файл (mp4)
+        container.innerHTML = `
+          <video src="${id}" controls autoplay loop style="width:100%; height:100%; object-fit:contain;"></video>
+        `;
+      } else {
+        // Если это YouTube ID
+        const url = `https://www.youtube.com/embed/${id}?autoplay=1&rel=0&modestbranding=1`;
+        container.innerHTML = `<iframe src="${url}" allow="autoplay; fullscreen"></iframe>`;
+      }
+      
       document.getElementById('v-modal').classList.add('active');
       document.body.style.overflow = 'hidden';
     }
