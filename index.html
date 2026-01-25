@@ -7,12 +7,12 @@
   <meta name="description" content="BOX1V1 — закрытая экосистема для футболистов 1 на 1. Техника, медиа и скаутинг.">
 
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://твой-сайт.рф/"> <meta property="og:title" content="BOX1V1 | ЦИФРОВАЯ ЭКОСИСТЕМА">
+  <meta property="og:url" content="https://box1v1.ru/"> 
+  <meta property="og:title" content="BOX1V1 | ЦИФРОВАЯ ЭКОСИСТЕМА">
   <meta property="og:description" content="Стань частью элитарного сообщества футболистов 1x1. Рейтинги, карточки и статистика.">
-  <meta property="og:image" content="https://imgur.com/your-main-preview.jpg"> <meta property="twitter:card" content="summary_large_image">
-  <meta property="twitter:title" content="BOX1V1 | ЦИФРОВАЯ ЭКОСИСТЕМА">
-  <meta property="twitter:description" content="Элитарное сообщество футболистов 1 на 1.">
-  <meta property="twitter:image" content="https://imgur.com/your-main-preview.jpg"> <link rel="preconnect" href="https://fonts.googleapis.com">
+  <meta property="og:image" content="https://imgur.com/your-main-preview.jpg"> 
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
   
@@ -37,6 +37,7 @@
       --cubic: cubic-bezier(0.2, 0, 0, 1);
       --glass: rgba(255,255,255,0.8);
       --radius: 24px;
+      --radius-sm: 14px;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -74,6 +75,23 @@
     }
     #preloader.loaded { opacity: 0; visibility: hidden; }
 
+    /* TOASTS SYSTEM */
+    #toast-container {
+      position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%);
+      z-index: 10000; display: flex; flex-direction: column; gap: 10px;
+      pointer-events: none;
+    }
+    .toast {
+      background: #000; color: #fff; padding: 16px 24px; border-radius: 16px;
+      font-size: 13px; font-weight: 700; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      animation: toastIn 0.5s var(--cubic) forwards; pointer-events: auto;
+      display: flex; align-items: center; gap: 12px;
+    }
+    @keyframes toastIn {
+      from { transform: translateY(100px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
     /* NAVIGATION */
     nav { 
       position: fixed; top: 0; left: 0; width: 100%; height: 72px; 
@@ -89,23 +107,35 @@
       max-width: 1300px; margin: 0 auto; height: 100%; 
       display: flex; align-items: center; justify-content: space-between; padding: 0 32px; 
     }
-    .logo { font-size: 1.4rem; font-weight: 900; font-style: italic; letter-spacing: -1px; cursor: pointer; }
+    .logo { 
+      font-size: 1.4rem; font-weight: 900; font-style: italic; letter-spacing: -1px; cursor: pointer; 
+      transition: 0.3s;
+    }
+    .logo:hover { opacity: 0.7; }
+
     .nav-links { display: flex; gap: 8px; }
     .nav-links a { 
       text-decoration: none; font-size: 12px; font-weight: 700; 
       letter-spacing: 0.05em; text-transform: uppercase; color: var(--text-dim); 
-      padding: 10px 20px; border-radius: 14px; transition: 0.3s var(--cubic); 
+      padding: 10px 20px; border-radius: var(--radius-sm); transition: 0.3s var(--cubic); 
     }
     .nav-links a:hover { color: var(--text); background: var(--bg-alt); }
+    .nav-links a:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
     .nav-links a.active { color: #fff; background: var(--text); }
 
-    /* BURGER & DRAWER */
-    .burger { display: none; cursor: pointer; width: 48px; height: 48px; flex-direction: column; justify-content: center; align-items: center; gap: 6px; border-radius: 16px; background: var(--bg-alt); }
+    /* BURGER */
+    .burger { 
+      display: none; cursor: pointer; width: 48px; height: 48px; flex-direction: column; 
+      justify-content: center; align-items: center; gap: 6px; border-radius: 16px; 
+      background: var(--bg-alt); border: none; transition: 0.3s;
+    }
+    .burger:hover { background: #eee; }
     .burger span { width: 20px; height: 2px; background: var(--text); border-radius: 4px; transition: 0.3s var(--cubic); }
     .burger.open span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
     .burger.open span:nth-child(2) { opacity: 0; }
     .burger.open span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
 
+    /* DRAWER */
     .drawer-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.2); backdrop-filter: blur(8px); z-index: 1999; opacity: 0; visibility: hidden; transition: 0.4s; }
     .drawer-overlay.open { opacity: 1; visibility: visible; }
     .mobile-drawer { position: fixed; top: 0; right: -100%; width: 85%; max-width: 360px; height: 100%; background: #fff; z-index: 2000; padding: 100px 40px; display: flex; flex-direction: column; gap: 24px; transition: 0.5s var(--cubic); }
@@ -115,7 +145,7 @@
     /* MAIN CONTENT */
     .main-content { max-width: 1300px; margin: 0 auto; padding: 120px 32px 100px; min-height: 80vh; }
     section { display: none; opacity: 0; }
-    section.active { display: block; animation: fadeInUp 0.8s var(--cubic) forwards; animation-fill-mode: both; }
+    section.active { display: block; animation: fadeInUp 0.8s var(--cubic) forwards; }
 
     @keyframes fadeInUp { 
       from { opacity: 0; transform: translateY(30px); } 
@@ -123,7 +153,7 @@
     }
 
     .intro-block { padding: 40px 0 80px; text-align: center; max-width: 900px; margin: 0 auto; }
-    .intro-block h1 { font-size: clamp(3rem, 12vw, 9.5rem); margin-bottom: 24px; }
+    .intro-block h1 { font-size: clamp(3.5rem, 12vw, 9.5rem); margin-bottom: 24px; }
     .intro-block p { font-size: 1.25rem; max-width: 540px; margin: 0 auto 40px; }
 
     /* BUTTONS */
@@ -132,10 +162,13 @@
       text-transform: uppercase; font-size: 13px; letter-spacing: 0.05em;
       cursor: pointer; transition: 0.4s var(--cubic); border: none; 
       text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+      position: relative; overflow: hidden;
     }
+    .btn:active { transform: scale(0.96); }
     .btn-primary { background: var(--text); color: #fff; }
-    .btn-primary:hover { transform: translateY(-4px); box-shadow: 0 20px 30px rgba(0,0,0,0.1); }
+    .btn-primary:hover { transform: translateY(-4px); box-shadow: 0 20px 30px rgba(0,0,0,0.15); }
     .btn-outline { background: transparent; border: 1.5px solid var(--border); color: var(--text); }
+    .btn-outline:hover { background: var(--bg-alt); border-color: var(--text); }
 
     /* BENTO GRID */
     .bento-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-top: 40px; }
@@ -143,9 +176,9 @@
       background: var(--card); border-radius: var(--radius); border: 1px solid var(--border); 
       padding: 40px; position: relative; overflow: hidden; transition: 0.5s var(--cubic); 
       cursor: pointer; display: flex; flex-direction: column;
-      animation-fill-mode: both;
     }
     .card:hover { transform: translateY(-10px); border-color: rgba(0,0,0,0.15); box-shadow: var(--shadow-md); }
+    .card:focus-visible { outline: 3px solid var(--accent); }
 
     /* PLAYER CARD */
     .player-card { height: 480px; background: #000; color: #fff; border: none; padding: 32px; }
@@ -165,10 +198,12 @@
     }
 
     /* STATS TABLE */
-    .table-wrapper { background: #fff; border-radius: var(--radius); border: 1px solid var(--border); overflow-x: auto; }
-    table { width: 100%; border-collapse: collapse; min-width: 500px; }
+    .table-wrapper { background: #fff; border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; }
+    table { width: 100%; border-collapse: collapse; }
     th { text-align: left; padding: 24px; font-size: 11px; font-weight: 800; text-transform: uppercase; color: var(--text-dim); border-bottom: 1px solid var(--border); }
-    td { padding: 20px 24px; border-bottom: 1px solid var(--border); }
+    td { padding: 20px 24px; border-bottom: 1px solid var(--border); transition: 0.3s; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: var(--bg-alt); }
 
     /* MODAL */
     .modal-overlay { 
@@ -188,14 +223,38 @@
       position: absolute; top: 24px; right: 24px; width: 48px; height: 48px; 
       background: var(--bg-alt); border-radius: 50%; display: flex; 
       align-items: center; justify-content: center; cursor: pointer; z-index: 10;
+      border: none; transition: 0.3s var(--cubic);
     }
+    .modal-close:hover { transform: rotate(90deg); background: #eee; }
+
+    /* SEARCH & FILTER */
+    .search-input { 
+      padding: 18px 28px; border-radius: 20px; border: 1.5px solid var(--border); 
+      background: var(--bg-alt); width: 100%; max-width: 360px; font-family: inherit; 
+      font-weight: 600; transition: 0.3s;
+    }
+    .search-input:focus { outline: none; border-color: var(--text); background: #fff; box-shadow: 0 0 0 4px rgba(0,0,0,0.03); }
+    
+    .filter-btn { 
+      padding: 12px 20px; border-radius: 14px; border: 1px solid var(--border); 
+      background: #fff; font-size: 12px; font-weight: 800; cursor: pointer; 
+      text-transform: uppercase; white-space: nowrap; transition: 0.3s;
+    }
+    .filter-btn:hover { background: var(--bg-alt); }
+    .filter-btn.active { background: var(--text); color: #fff; border-color: var(--text); }
 
     /* TIMER */
     .timer-context { margin-top: 60px; padding: 32px 56px; background: var(--bg-alt); border-radius: 100px; display: inline-flex; align-items: center; gap: 40px; border: 1px solid var(--border); }
     .countdown { display: flex; gap: 24px; }
     .countdown-value { font-size: 2.5rem; font-weight: 900; letter-spacing: -2px; }
 
-    /* MOBILE ADAPTIVITY FIXES */
+    /* SCROLLBAR */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+    ::-webkit-scrollbar-thumb:hover { background: #ccc; }
+
+    /* MOBILE ADAPTIVITY */
     @media (max-width: 1024px) {
       .bento-grid { grid-template-columns: repeat(2, 1fr); }
     }
@@ -205,13 +264,10 @@
       .burger { display: flex; }
       .nav-inner { padding: 0 20px; }
       .main-content { padding: 100px 16px 60px; }
-      .intro-block h1 { font-size: 3.5rem; }
+      .intro-block h1 { font-size: 3.8rem; }
       .intro-block p { font-size: 1.1rem; }
       
-      .timer-context { 
-        border-radius: 32px; flex-direction: column; gap: 16px; 
-        width: 100%; padding: 24px 16px; margin-top: 40px;
-      }
+      .timer-context { border-radius: 32px; flex-direction: column; gap: 16px; width: 100%; padding: 24px 16px; margin-top: 40px; }
       .countdown { gap: 12px; }
       .countdown-value { font-size: 1.8rem; }
 
@@ -220,27 +276,19 @@
       .card[style*="grid-column: span 2"] { grid-column: span 1 !important; }
       .card h2 { font-size: 2.5rem !important; }
 
-      .modal-content { padding: 32px 20px; border-radius: 32px; width: 100%; }
-      .controls-row { flex-direction: column; align-items: stretch; }
+      .modal-content { padding: 32px 20px; border-radius: 32px; }
+      .controls-row { flex-direction: column; align-items: stretch !important; }
       .search-input { max-width: 100%; }
       .filter-bar { overflow-x: auto; padding-bottom: 8px; width: 100%; }
-      
       .player-card { height: 420px; }
     }
 
-    /* Additional UI */
-    .search-input { 
-      padding: 18px 28px; border-radius: 20px; border: 1.5px solid var(--border); 
-      background: var(--bg-alt); width: 100%; max-width: 360px; font-family: inherit; font-weight: 600;
-    }
-    .filter-btn { 
-      padding: 12px 20px; border-radius: 14px; border: 1px solid var(--border); 
-      background: #fff; font-size: 12px; font-weight: 800; cursor: pointer; text-transform: uppercase; white-space: nowrap;
-    }
-    .filter-btn.active { background: var(--text); color: #fff; border-color: var(--text); }
+    @keyframes load { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
   </style>
 </head>
 <body>
+
+  <div id="toast-container"></div>
 
   <div id="preloader" role="status" aria-label="Загрузка">
     <div style="text-align:center;">
@@ -259,7 +307,7 @@
         <a href="#roster" onclick="switchTab('roster')" id="btn-roster">Ростер</a>
         <a href="#stats" onclick="switchTab('stats')" id="btn-stats">Рейтинг</a>
       </div>
-      <button class="burger" id="burger" onclick="toggleMenu()" aria-label="Меню">
+      <button class="burger" id="burger" onclick="toggleMenu()" aria-label="Меню" aria-expanded="false">
         <span></span><span></span><span></span>
       </button>
     </div>
@@ -298,17 +346,17 @@
       </div>
 
       <div class="bento-grid">
-        <div class="card" style="grid-column: span 2; background: #fafafa;" onclick="openModal('rulesModal')">
+        <div class="card" style="grid-column: span 2; background: #fafafa;" onclick="openModal('rulesModal')" tabindex="0">
           <span style="font-size:11px; font-weight:800; color:var(--accent-dark); text-transform:uppercase; letter-spacing:0.1em;">Документация</span>
           <h2 style="font-size: 3.5rem; margin: 20px 0 15px;">РЕГЛАМЕНТ.</h2>
           <p>Полный свод правил проведения матчей в закрытой системе. Изучи, чтобы доминировать.</p>
           <div style="margin-top: auto; padding-top: 30px; font-weight: 800; font-size: 12px; text-transform: uppercase;">Изучить правила →</div>
         </div>
-        <div class="card" onclick="window.open('https://t.me/streetbox1v1')">
+        <div class="card" onclick="window.open('https://t.me/streetbox1v1')" tabindex="0">
           <h3 style="font-size: 1.8rem;">TELEGRAM</h3>
           <p style="font-size: 14px; margin-top: 8px;">Оперативные сводки и инсайды экосистемы.</p>
         </div>
-        <div class="card" onclick="window.open('https://instagram.com/box.1v1')">
+        <div class="card" onclick="window.open('https://instagram.com/box.1v1')" tabindex="0">
           <h3 style="font-size: 1.8rem;">INSTAGRAM</h3>
           <p style="font-size: 14px; margin-top: 8px;">Главный визуальный поток и хайлайты.</p>
         </div>
@@ -321,7 +369,7 @@
         <p style="font-size: 1.25rem;">Действующие активы системы BOX1V1.</p>
       </div>
       <div class="controls-row" style="margin-bottom: 40px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:20px;">
-        <input type="text" class="search-input" id="playerSearch" placeholder="Поиск по имени..." oninput="renderRoster()">
+        <input type="text" class="search-input" id="playerSearch" placeholder="Поиск по имени..." oninput="debouncedRender()">
         <div class="filter-bar" style="display:flex; gap:8px;">
           <button class="filter-btn active" data-role="Все" onclick="setRoleFilter('Все', this)">Все</button>
           <button class="filter-btn" data-role="Игрок" onclick="setRoleFilter('Игрок', this)">Полевые</button>
@@ -334,7 +382,7 @@
     <section id="stats">
       <h1 style="font-size: clamp(3rem, 10vw, 8rem); margin-bottom:40px;">РЕЙТИНГ.</h1>
       <div class="table-wrapper">
-        <table>
+        <table role="grid">
           <thead>
             <tr><th>Поз.</th><th>Атлет</th><th style="text-align:right;">OVR рейтинг</th></tr>
           </thead>
@@ -344,9 +392,9 @@
     </section>
   </main>
 
-  <div class="modal-overlay" id="playerModal" onclick="closeModal('playerModal')">
+  <div class="modal-overlay" id="playerModal" onclick="closeModal('playerModal')" role="dialog" aria-modal="true">
     <div class="modal-content" onclick="event.stopPropagation()">
-      <div class="modal-close" onclick="closeModal('playerModal')" aria-label="Закрыть">✕</div>
+      <button class="modal-close" onclick="closeModal('playerModal')" aria-label="Закрыть">✕</button>
       <div id="m-img-container" style="width:100%; height:320px; border-radius:24px; overflow:hidden; background:#f0f0f0; margin-bottom:32px;">
         <img id="m-img" src="" style="width:100%; height:100%; object-fit:cover;" alt="Фото игрока">
       </div>
@@ -366,67 +414,89 @@
     </div>
   </div>
 
-  <div class="modal-overlay" id="applyModal" onclick="closeModal('applyModal')">
+  <div class="modal-overlay" id="applyModal" onclick="closeModal('applyModal')" role="dialog" aria-modal="true">
     <div class="modal-content" onclick="event.stopPropagation()">
-      <div class="modal-close" onclick="closeModal('applyModal')">✕</div>
+      <button class="modal-close" onclick="closeModal('applyModal')">✕</button>
       <h2 style="font-size:2rem; margin-bottom:20px;">ВСТУПИТЬ В BOX1V1</h2>
       <p style="margin-bottom:32px;">Мы формируем закрытый пул игроков. Чтобы пройти отбор, пришлите видео ваших лучших моментов нашему куратору.</p>
       <button class="btn btn-primary" style="width:100%; padding:24px;" onclick="window.open('https://t.me/streetbox1v1')">Открыть Telegram</button>
     </div>
   </div>
 
-  <div class="modal-overlay" id="rulesModal" onclick="closeModal('rulesModal')">
+  <div class="modal-overlay" id="rulesModal" onclick="closeModal('rulesModal')" role="dialog" aria-modal="true">
     <div class="modal-content" style="max-width: 600px;" onclick="event.stopPropagation()">
-      <div class="modal-close" onclick="closeModal('rulesModal')">✕</div>
+      <button class="modal-close" onclick="closeModal('rulesModal')">✕</button>
       <h2 style="font-size:2rem; margin-bottom:32px;">РЕГЛАМЕНТ</h2>
       <div style="display:flex; flex-direction:column; gap:20px;">
         <div style="padding-bottom:15px; border-bottom:1px solid var(--border);">
-          <strong style="text-transform:uppercase; font-size:12px; display:block; margin-bottom:4px;">01. Формат</strong>
-          <p style="font-size:15px; color:var(--text);">Матчи 1 на 1 в коробке.</p>
+          <strong style="text-transform:uppercase; font-size:12px; display:block; margin-bottom:4px; color:var(--accent-dark)">01. Формат</strong>
+          <p style="font-size:15px; color:var(--text); font-weight:500;">Матчи 1 на 1 в коробке (пантна).</p>
         </div>
         <div style="padding-bottom:15px; border-bottom:1px solid var(--border);">
-          <strong style="text-transform:uppercase; font-size:12px; display:block; margin-bottom:4px;">02. Тайминг</strong>
-          <p style="font-size:15px; color:var(--text);">3 минуты чистого времени. Лимит на атаку — 20 секунд.</p>
+          <strong style="text-transform:uppercase; font-size:12px; display:block; margin-bottom:4px; color:var(--accent-dark)">02. Тайминг</strong>
+          <p style="font-size:15px; color:var(--text); font-weight:500;">3 минуты чистого времени. Лимит на атаку — 20 секунд.</p>
         </div>
         <div style="padding-bottom:15px; border-bottom:1px solid var(--border);">
-          <strong style="text-transform:uppercase; font-size:12px; display:block; margin-bottom:4px;">03. Физика</strong>
-          <p style="font-size:15px; color:var(--text);">Подкаты строго запрещены. Любая агрессия — бан.</p>
+          <strong style="text-transform:uppercase; font-size:12px; display:block; margin-bottom:4px; color:var(--accent-dark)">03. Физика</strong>
+          <p style="font-size:15px; color:var(--text); font-weight:500;">Подкаты строго запрещены. Любая агрессия — моментальный бан.</p>
         </div>
       </div>
     </div>
   </div>
 
-  <style>
-    @keyframes load { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
-  </style>
-
   <script>
+    /**
+     * CONFIG & STATE
+     */
     const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vREjbeB6jNrU01kw1npVtFTvqGdP134ERjmyROoOYeYXbzjgL0ZCNK6KwF0VTk3c1yxZEZEUsJjy2Ur/pub?output=csv';
     const TARGET_DATE = new Date("March 1, 2026 00:00:00").getTime();
     
     let allPlayers = [];
     let currentRoleFilter = 'Все';
+    let renderTimeout;
 
+    /**
+     * TOAST SYSTEM
+     */
+    function showToast(message) {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.innerHTML = `<span>${message}</span>`;
+      container.appendChild(toast);
+      
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(20px)';
+        setTimeout(() => toast.remove(), 500);
+      }, 3000);
+    }
+
+    /**
+     * INITIALIZATION
+     */
     async function init() {
       try {
         const res = await fetch(CSV_URL);
+        if (!res.ok) throw new Error("Network response was not ok");
         const text = await res.text();
         allPlayers = parseCSV(text);
         
-        // 1. Сначала рендер
+        if (allPlayers.length === 0) {
+          showToast("Ростер временно пуст");
+        }
+
         renderRoster();
         renderStats();
-        
-        // 2. Потом обработка URL (Deep links)
         handleHashAndDeepLink();
 
-        // 3. Запуск таймера
         setInterval(updateTimer, 1000);
         updateTimer();
         
         document.getElementById('preloader').classList.add('loaded');
       } catch (e) {
         console.error("Load Error", e);
+        showToast("Ошибка загрузки данных");
         document.getElementById('preloader').classList.add('loaded');
       }
     }
@@ -444,13 +514,16 @@
           speed: parseInt(c[4]) || 0,
           shot: parseInt(c[5]) || 0,
           phys: parseInt(c[6]) || 0,
-          photo: c[7] || '',
+          photo: c[7] || 'https://via.placeholder.com/400x600?text=No+Photo',
           status: c[8] || '',
           badges: c[9] ? c[9].split('|').map(b => b.trim()) : []
         };
       }).filter(p => p.name);
     }
 
+    /**
+     * NAVIGATION & HASH LOGIC
+     */
     function handleHashAndDeepLink() {
       const fullHash = window.location.hash;
       if (!fullHash) return;
@@ -458,22 +531,42 @@
       const [hashPart, queryPart] = fullHash.split('?');
       const cleanHash = hashPart.replace('#', '');
       
-      // Переключаем вкладку
-      if (cleanHash) switchTab(cleanHash);
+      if (cleanHash && ['home', 'roster', 'stats'].includes(cleanHash)) {
+        switchTab(cleanHash, false);
+      }
 
-      // Проверяем игрока
       if (queryPart) {
         const params = new URLSearchParams(queryPart);
         const pNameFromUrl = params.get('player');
         if (pNameFromUrl) {
           const pName = pNameFromUrl.replace(/-/g, ' ');
           const found = allPlayers.find(x => x.name.toLowerCase() === pName.toLowerCase());
-          if (found) {
-            // Небольшая задержка для плавности после загрузки
-            setTimeout(() => openPlayerModal(found.name), 100);
-          }
+          if (found) setTimeout(() => openPlayerModal(found.name), 200);
         }
       }
+    }
+
+    function switchTab(id, updateHash = true) {
+      const target = document.getElementById(id);
+      if(!target) return;
+
+      document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+      
+      target.classList.add('active');
+      const btn = document.getElementById('btn-' + id);
+      if(btn) btn.classList.add('active');
+      
+      if (updateHash) window.history.pushState(null, null, `#${id}`);
+      window.scrollTo({top:0, behavior:'smooth'});
+    }
+
+    /**
+     * RENDERING
+     */
+    function debouncedRender() {
+      clearTimeout(renderTimeout);
+      renderTimeout = setTimeout(renderRoster, 150);
     }
 
     function renderRoster() {
@@ -485,8 +578,19 @@
         return mSearch && mRole;
       });
 
+      if (filtered.length === 0) {
+        grid.innerHTML = `<div style="grid-column: 1/-1; padding: 40px; text-align: center; color: var(--text-dim);">Атлеты не найдены</div>`;
+        return;
+      }
+
       grid.innerHTML = filtered.map((p, i) => `
-        <div class="card player-card" style="animation: fadeInUp 0.6s var(--cubic) both ${i*0.05}s" onclick="openPlayerModal('${p.name}')">
+        <div class="card player-card" 
+             tabindex="0"
+             role="button"
+             aria-label="Игрок ${p.name}, рейтинг ${p.ovr}"
+             style="animation: fadeInUp 0.6s var(--cubic) both ${i*0.03}s" 
+             onclick="openPlayerModal('${p.name}')"
+             onkeydown="if(event.key==='Enter') openPlayerModal('${p.name}')">
           <div class="player-img" style="background-image: url('${p.photo}')"></div>
           ${p.status ? `<div style="position:absolute; top:32px; right:32px; z-index:3; background:var(--accent); color:#000; font-size:10px; font-weight:900; padding:6px 14px; border-radius:12px; text-transform:uppercase;">${p.status}</div>` : ''}
           <div class="player-info">
@@ -501,7 +605,7 @@
     function renderStats() {
       const sorted = [...allPlayers].sort((a, b) => b.ovr - a.ovr);
       document.getElementById('stats-body').innerHTML = sorted.map((p, i) => `
-        <tr onclick="openPlayerModal('${p.name}')" style="cursor:pointer">
+        <tr onclick="openPlayerModal('${p.name}')" style="cursor:pointer" tabindex="0" onkeydown="if(event.key==='Enter') openPlayerModal('${p.name}')">
           <td style="font-weight:900; color:var(--text-dim)">${(i+1).toString().padStart(2, '0')}</td>
           <td>
             <div style="display:flex; align-items:center; gap:16px;">
@@ -517,9 +621,70 @@
       `).join('');
     }
 
+    /**
+     * MODAL LOGIC & ACCESSIBILITY
+     */
+    let lastFocusedElement;
+
+    function openModal(id) {
+      lastFocusedElement = document.activeElement;
+      const modal = document.getElementById(id);
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+      
+      // Focus first button in modal
+      setTimeout(() => {
+        const firstInput = modal.querySelector('button, input, [tabindex="0"]');
+        if (firstInput) firstInput.focus();
+      }, 100);
+
+      // Focus trap listener
+      modal.addEventListener('keydown', trapFocus);
+    }
+
+    function closeModal(id) {
+      const modal = document.getElementById(id);
+      if(!modal) return;
+      
+      modal.classList.remove('active');
+      document.body.style.overflow = '';
+      modal.removeEventListener('keydown', trapFocus);
+      
+      if (id === 'playerModal') {
+        const currentTab = document.querySelector('section.active').id;
+        window.history.replaceState(null, null, `#${currentTab}`);
+      }
+      
+      if (lastFocusedElement) lastFocusedElement.focus();
+    }
+
+    function trapFocus(e) {
+      if (e.key !== 'Tab') return;
+      const focusableEls = this.querySelectorAll('button, [href], input, [tabindex="0"]');
+      const first = focusableEls[0];
+      const last = focusableEls[focusableEls.length - 1];
+
+      if (e.shiftKey) {
+        if (document.activeElement === first) { last.focus(); e.preventDefault(); }
+      } else {
+        if (document.activeElement === last) { first.focus(); e.preventDefault(); }
+      }
+    }
+
+    // Close on ESC
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        const activeModal = document.querySelector('.modal-overlay.active');
+        if (activeModal) closeModal(activeModal.id);
+      }
+    });
+
     function openPlayerModal(name) {
       const p = allPlayers.find(x => x.name.toLowerCase() === name.toLowerCase());
-      if(!p) return;
+      if(!p) {
+        showToast("Игрок не найден");
+        return;
+      }
 
       document.getElementById('m-name').innerText = p.name;
       document.getElementById('m-role').innerText = p.role;
@@ -534,19 +699,29 @@
             <span>${s.l}</span><span>${s.v}</span>
           </div>
           <div style="height:4px; background:var(--bg-alt); border-radius:2px; overflow:hidden;">
-            <div style="width:${s.v}%; height:100%; background:var(--text); transition:1s var(--cubic) 0.3s;"></div>
+            <div style="width:0%; height:100%; background:var(--text); transition:1.2s var(--cubic) 0.3s;" id="bar-${s.l}"></div>
           </div>
         </div>
       `).join('');
 
-      // Обновляем URL без перезагрузки
+      openModal('playerModal');
+      
+      // Анимация баров после открытия
+      setTimeout(() => {
+        stats.forEach(s => {
+          const bar = document.getElementById(`bar-${s.l}`);
+          if(bar) bar.style.width = s.v + '%';
+        });
+      }, 100);
+
       const currentTab = document.querySelector('section.active').id;
       const playerSlug = p.name.replace(/\s+/g, '-').toLowerCase();
       window.history.replaceState(null, null, `#${currentTab}?player=${playerSlug}`);
-      
-      openModal('playerModal');
     }
 
+    /**
+     * ACTIONS
+     */
     function setRoleFilter(role, btn) {
       currentRoleFilter = role;
       document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
@@ -554,43 +729,15 @@
       renderRoster();
     }
 
-    function openModal(id) {
-      const modal = document.getElementById(id);
-      modal.classList.add('active');
-      document.body.style.overflow = 'hidden';
-      // Accessibility: focus modal
-      modal.setAttribute('aria-hidden', 'false');
-    }
-
-    function closeModal(id) {
-      const modal = document.getElementById(id);
-      if(modal) modal.classList.remove('active');
-      if(id === 'playerModal') {
-        const currentTab = document.querySelector('section.active').id;
-        window.history.replaceState(null, null, `#${currentTab}`);
-      }
-      document.body.style.overflow = '';
-    }
-
-    function switchTab(id) {
-      const target = document.getElementById(id);
-      if(!target) return;
-
-      document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
-      document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
-      
-      target.classList.add('active');
-      const btn = document.getElementById('btn-' + id);
-      if(btn) btn.classList.add('active');
-      
-      window.location.hash = id;
-      window.scrollTo({top:0, behavior:'smooth'});
-    }
-
     function toggleMenu() {
-      document.getElementById('mobile-drawer').classList.toggle('open');
-      document.getElementById('drawer-overlay').classList.toggle('open');
-      document.getElementById('burger').classList.toggle('open');
+      const drawer = document.getElementById('mobile-drawer');
+      const overlay = document.getElementById('drawer-overlay');
+      const burger = document.getElementById('burger');
+      
+      const isOpen = drawer.classList.toggle('open');
+      overlay.classList.toggle('open');
+      burger.classList.toggle('open');
+      burger.setAttribute('aria-expanded', isOpen);
     }
 
     function handleMobileNav(id, isModal = false) {
@@ -598,13 +745,37 @@
       setTimeout(() => isModal ? openModal(id) : switchTab(id), 400);
     }
 
+    function copyPlayerID() {
+      const name = document.getElementById('m-name').innerText;
+      navigator.clipboard.writeText(name).then(() => {
+        showToast('ID игрока скопирован');
+      });
+    }
+
+    function sharePlayer() {
+      const name = document.getElementById('m-name').innerText;
+      const url = window.location.href;
+      
+      if(navigator.share) {
+        navigator.share({
+          title: 'BOX1V1 | ' + name,
+          text: `Карточка атлета ${name} в системе BOX1V1! 🔥`,
+          url: url
+        }).catch(() => {});
+      } else {
+        navigator.clipboard.writeText(url);
+        showToast('Ссылка скопирована в буфер');
+      }
+    }
+
     function updateTimer() {
       const now = Date.now();
       const diff = TARGET_DATE - now;
+      const timerEl = document.getElementById('timer');
       
       if(diff <= 0) {
         document.getElementById('timer-status').innerText = "Сезон открыт!";
-        document.getElementById('timer').style.display = 'none';
+        if(timerEl) timerEl.style.display = 'none';
         return;
       }
 
@@ -618,30 +789,7 @@
       document.body.classList.toggle('scrolled', window.scrollY > 50);
     });
 
-    function copyPlayerID() {
-      const name = document.getElementById('m-name').innerText;
-      navigator.clipboard.writeText(name).then(() => {
-        alert('ID ' + name + ' скопирован');
-      });
-    }
-
-    function sharePlayer() {
-      const name = document.getElementById('m-name').innerText;
-      const url = window.location.href;
-      const shareText = `Карточка игрока ${name} в системе BOX1V1! 🔥`;
-      
-      if(navigator.share) {
-        navigator.share({
-          title: 'BOX1V1 | ' + name,
-          text: shareText,
-          url: url
-        }).catch(console.error);
-      } else {
-        navigator.clipboard.writeText(url);
-        alert('Ссылка на игрока ' + name + ' скопирована!');
-      }
-    }
-
+    // Start
     window.onload = init;
   </script>
 </body>
