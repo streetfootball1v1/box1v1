@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
   <title>BOX1V1 | ЦИФРОВАЯ ЭКОСИСТЕМА</title>
+  <meta name="description" content="BOX1V1 — закрытая экосистема для футболистов 1 на 1. Техника, медиа и скаутинг.">
   <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,900&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -36,7 +37,7 @@
 
     /* NAVIGATION */
     nav { position: fixed; top: 0; left: 0; width: 100%; height: 64px; background: var(--glass); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); z-index: 1000; transition: 0.3s; border-bottom: 1px solid transparent; }
-    body.scrolled nav { border-bottom: 1px solid var(--border); box-shadow: var(--shadow-sm); }
+    body.scrolled nav { border-bottom: 1px solid var(--border); box-shadow: var(--shadow-sm); background: rgba(255,255,255,0.9); }
     .nav-inner { max-width: 1200px; margin: 0 auto; height: 100%; display:flex; align-items:center; justify-content:space-between; padding: 0 20px; }
     .logo { font-size: 1.2rem; font-weight: 900; font-style: italic; letter-spacing: -0.5px; cursor: pointer; }
     .nav-links { display:flex; gap: 4px; }
@@ -93,6 +94,10 @@
     .player-card::after { content:''; position:absolute; inset:0; background: linear-gradient(to top, #000 15%, transparent 70%); }
     .player-info { position: relative; z-index: 2; margin-top: auto; }
 
+    /* EMPTY STATE */
+    .empty-state { grid-column: 1 / -1; padding: 60px 20px; text-align: center; background: var(--bg-alt); border-radius: 32px; border: 2px dashed var(--border); }
+    .empty-state h3 { font-size: 1.5rem; margin-bottom: 15px; font-style: italic; }
+
     /* CONTROLS */
     .controls-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; gap: 12px; flex-wrap: wrap; }
     .search-input { padding: 16px 24px; border-radius: 16px; border: 1.5px solid var(--border); background: #fff; width: 100%; max-width: 320px; font-family: inherit; font-weight: 600; font-size: 15px; outline: none; transition: 0.3s; }
@@ -109,9 +114,9 @@
     tr:last-child td { border-bottom: none; }
     tr:hover td { background: var(--bg-alt); }
 
-    /* MODALS */
-    .modal-overlay { position: fixed; inset:0; background: rgba(0,0,0,0.3); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); z-index: 3000; display:none; padding: 15px; overflow-y: auto; opacity: 0; transition: 0.3s; }
-    .modal-overlay.active { display: flex; justify-content: center; align-items: center; opacity: 1; }
+    /* MODALS REFACTORED */
+    .modal-overlay { position: fixed; inset:0; background: rgba(0,0,0,0.3); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); z-index: 3000; display: flex; justify-content: center; align-items: center; padding: 15px; opacity: 0; pointer-events: none; transition: 0.3s; }
+    .modal-overlay.active { opacity: 1; pointer-events: auto; }
     .modal-content { background: #fff; width: 100%; max-width: 500px; border-radius: 35px; padding: 40px; position: relative; box-shadow: var(--shadow-md); transform: scale(0.95); transition: 0.4s var(--cubic); }
     .modal-overlay.active .modal-content { transform: scale(1); }
     .modal-close { position: absolute; top: 20px; right: 20px; width: 44px; height: 44px; background: #f5f5f5; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 14px; font-weight: 800; z-index: 10; }
@@ -247,7 +252,7 @@
     <div class="modal-content" onclick="event.stopPropagation()">
       <div class="modal-close" onclick="closeModal('playerModal')">✕</div>
       <div id="m-img-container" style="width:100%; height:280px; border-radius:24px; overflow:hidden; background:#f0f0f0; margin-bottom:24px;">
-        <img id="m-img" src="" style="width:100%; height:100%; object-fit:cover;">
+        <img id="m-img" src="" style="width:100%; height:100%; object-fit:cover;" alt="Фото игрока">
       </div>
       <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:15px;">
         <div>
@@ -255,11 +260,13 @@
           <h2 id="m-name" style="font-size: 2.8rem; font-style:italic; line-height:0.9; margin-top:12px; letter-spacing:-1.5px;">NAME</h2>
           <div id="m-badges" style="display:flex; gap:6px; margin-top:12px; flex-wrap:wrap;"></div>
         </div>
-        <div id="m-ovr" class="ovr-badge" style="font-size: 26px; padding: 18px; min-width:65px; text-align:center;">99</div>
+        <div id="m-ovr-container" class="ovr-badge" style="font-size: 26px; padding: 18px; min-width:65px; text-align:center;">
+            <span id="m-ovr">99</span>
+        </div>
       </div>
       <div id="m-stats" style="margin-top:30px; display:grid; grid-template-columns: 1fr 1fr; gap: 24px;"></div>
       <div style="margin-top:40px; display:flex; gap:12px;">
-        <button class="btn btn-primary" style="flex:1;" onclick="copyPlayerName()">Копировать ID</button>
+        <button class="btn btn-primary" style="flex:1;" onclick="copyPlayerID()">Копировать ID</button>
         <button class="btn btn-outline" style="flex:1;" onclick="sharePlayer()">Поделиться</button>
       </div>
     </div>
@@ -324,14 +331,32 @@
         renderRoster();
         renderStats();
 
+        // Improved Hash Handling
         const hash = window.location.hash.replace("#", "");
-        if(hash && document.getElementById(hash)) switchTab(hash);
+        // Check if hash is a valid section
+        if (hash) {
+            const section = document.getElementById(hash.split('?')[0]);
+            if (section && section.tagName === "SECTION") {
+                switchTab(section.id);
+            }
+        }
+
+        // Deep linking for players
+        const params = new URLSearchParams(window.location.hash.split('?')[1]);
+        if (params.has('player')) {
+            const playerName = params.get('player').replace(/-/g, ' ');
+            const p = allPlayers.find(x => x.name.toLowerCase() === playerName.toLowerCase());
+            if (p) openPlayerModal(p.name);
+        }
+
+        setInterval(updateTimer, 1000);
+        updateTimer();
 
         setTimeout(() => {
             document.getElementById('preloader').classList.add('loaded');
         }, 500);
       } catch (e) {
-        console.error("Data Load Error");
+        console.error("Data Load Error", e);
         document.getElementById('preloader').classList.add('loaded');
       }
     }
@@ -346,7 +371,12 @@
       });
 
       if (filtered.length === 0) {
-        grid.innerHTML = `<div class="empty-state"><h3>Активы не найдены</h3><button class="btn btn-outline" onclick="resetFilters()">Сбросить поиск</button></div>`;
+        grid.innerHTML = `
+            <div class="empty-state fade-in">
+                <h3>Активы не найдены</h3>
+                <p style="color:var(--dim); margin-bottom:20px;">Попробуйте изменить запрос или фильтр.</p>
+                <button class="btn btn-outline" onclick="resetFilters()">Сбросить поиск</button>
+            </div>`;
         return;
       }
 
@@ -371,7 +401,7 @@
           <td class="rank-num">${i + 1}</td>
           <td>
             <div style="display:flex; align-items:center; gap:14px;">
-              <img src="${p.photo}" style="width:40px; height:40px; border-radius:12px; object-fit:cover; background:#eee;" onerror="this.src='https://via.placeholder.com/40'">
+              <img src="${p.photo}" style="width:40px; height:40px; border-radius:12px; object-fit:cover; background:#eee;" alt="">
               <div>
                 <div style="font-weight:900; font-size:14px; font-style:italic; text-transform:uppercase; letter-spacing:-0.5px;">${p.name}</div>
                 <div style="font-size:9px; color:var(--dim); font-weight:800; text-transform:uppercase;">${p.role}</div>
@@ -412,6 +442,11 @@
         </div>
       `).join('');
 
+      // Update URL without reloading
+      const playerSlug = p.name.replace(/\s+/g, '-').toLowerCase();
+      const currentTab = document.querySelector('section.active').id;
+      window.history.replaceState(null, null, `#${currentTab}?player=${playerSlug}`);
+
       openModal('playerModal');
     }
 
@@ -426,25 +461,30 @@
       document.getElementById('playerSearch').value = '';
       currentRoleFilter = 'Все';
       document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-      document.querySelector('[data-role="Все"]').classList.add('active');
+      const allBtn = document.querySelector('[data-role="Все"]');
+      if(allBtn) allBtn.classList.add('active');
       renderRoster();
     }
 
-    // MODAL HELPERS
+    // STABLE MODAL HELPERS
     function openModal(id) {
       const m = document.getElementById(id);
-      m.style.display = 'flex';
-      setTimeout(() => m.classList.add('active'), 10);
+      m.classList.add('active');
       document.body.style.overflow = 'hidden';
     }
 
     function closeModal(id) {
       const m = document.getElementById(id);
       m.classList.remove('active');
-      setTimeout(() => {
-        m.style.display = 'none';
-        if(!document.querySelector('.modal-overlay.active')) document.body.style.overflow = '';
-      }, 300);
+      
+      // Remove player slug from URL when closing player modal
+      if (id === 'playerModal') {
+          const currentTab = document.querySelector('section.active').id;
+          window.history.replaceState(null, null, `#${currentTab}`);
+      }
+
+      const activeModals = document.querySelectorAll('.modal-overlay.active');
+      if(activeModals.length === 0) document.body.style.overflow = '';
     }
 
     // TABS & NAV
@@ -463,10 +503,15 @@
     }
 
     function toggleMenu() {
-      document.getElementById('mobile-drawer').classList.toggle('open');
-      document.getElementById('drawer-overlay').classList.toggle('open');
-      document.getElementById('burger').classList.toggle('open');
-      document.body.style.overflow = document.getElementById('mobile-drawer').classList.contains('open') ? 'hidden' : '';
+      const drawer = document.getElementById('mobile-drawer');
+      const overlay = document.getElementById('drawer-overlay');
+      const burger = document.getElementById('burger');
+      
+      drawer.classList.toggle('open');
+      overlay.classList.toggle('open');
+      burger.classList.toggle('open');
+      
+      document.body.style.overflow = drawer.classList.contains('open') ? 'hidden' : '';
     }
 
     function handleMobileNav(id, isModal = false) {
@@ -493,7 +538,11 @@
       const el = document.getElementById('timer');
 
       if (diff <= 0) {
-        el.innerHTML = "<div style='font-size:1.5rem; font-weight:900; font-style:italic;'>СЕЗОН ОТКРЫТ!</div>";
+        el.innerHTML = `
+            <div style='text-align:center;'>
+                <div style='font-size:1.5rem; font-weight:900; font-style:italic;'>СЕЗОН ОТКРЫТ!</div>
+                <div style='color:var(--dim); margin-top:8px; font-size:12px;'>Следующий сезон — скоро</div>
+            </div>`;
         return;
       }
 
@@ -508,24 +557,35 @@
       document.getElementById('backToTop').classList.toggle('visible', window.scrollY > 600);
     });
 
-    function copyPlayerName() {
-      navigator.clipboard.writeText(document.getElementById('m-name').innerText);
-      alert('ID скопирован!');
+    function copyPlayerID() {
+      const name = document.getElementById('m-name').innerText;
+      try {
+          navigator.clipboard.writeText(name).then(() => {
+              alert('ID игрока скопирован!');
+          }).catch(() => {
+              throw new Error();
+          });
+      } catch (e) {
+          alert('Не удалось скопировать автоматически. ID: ' + name);
+      }
     }
 
     function sharePlayer() {
       const name = document.getElementById('m-name').innerText;
       const url = window.location.href;
       if (navigator.share) {
-        navigator.share({ title: 'BOX1V1', text: `Игрок ${name} в BOX1V1`, url });
+        navigator.share({ title: 'BOX1V1 Player Card', text: `Смотри карточку игрока ${name} в системе BOX1V1`, url });
       } else {
-        navigator.clipboard.writeText(`Посмотри карточку ${name} в BOX1V1: ${url}`);
-        alert("Ссылка скопирована!");
+        try {
+            navigator.clipboard.writeText(url);
+            alert("Ссылка на игрока скопирована!");
+        } catch(e) {
+            alert("Скопируйте URL из адресной строки");
+        }
       }
     }
 
-    init();
-    setInterval(updateTimer, 1000);
+    window.onload = init;
   </script>
 </body>
 </html>
