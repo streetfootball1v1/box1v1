@@ -11,7 +11,6 @@
   
   <style>
     :root {
-      /* Palette */
       --bg: #ffffff;
       --bg-alt: #f8f8f8;
       --card: #ffffff;
@@ -21,13 +20,11 @@
       --accent: #22c55e;
       --accent-dark: #16a34a;
       
-      /* Typography System */
       --ls-tight: -0.04em;
       --ls-normal: -0.01em;
       --lh-tight: 1.1;
       --lh-base: 1.6;
       
-      /* Effects */
       --shadow-sm: 0 2px 8px rgba(0,0,0,0.04);
       --shadow-md: 0 20px 40px -12px rgba(0,0,0,0.08);
       --cubic: cubic-bezier(0.2, 0, 0, 1);
@@ -35,18 +32,12 @@
       --radius: 24px;
     }
 
-    * { 
-      margin: 0; 
-      padding: 0; 
-      box-sizing: border-box; 
-      -webkit-tap-highlight-color: transparent; 
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
     html { 
       scroll-behavior: smooth; 
       background: var(--bg); 
       -webkit-font-smoothing: antialiased; 
-      -moz-osx-font-smoothing: grayscale;
     }
 
     body { 
@@ -58,7 +49,6 @@
       letter-spacing: var(--ls-normal);
     }
 
-    /* TYPOGRAPHY REFINEMENT */
     h1, h2, h3 { 
       font-weight: 900; 
       font-style: italic; 
@@ -67,71 +57,37 @@
       text-transform: uppercase;
     }
 
-    p { 
-      font-size: 1rem; 
-      color: var(--text-dim); 
-      font-weight: 400; 
-    }
+    p { font-size: 1rem; color: var(--text-dim); }
 
     /* PRELOADER */
     #preloader { 
-      position: fixed; 
-      inset: 0; 
-      background: #fff; 
-      z-index: 9999; 
-      display: flex; 
-      justify-content: center; 
-      align-items: center; 
+      position: fixed; inset: 0; background: #fff; z-index: 9999; 
+      display: flex; justify-content: center; align-items: center; 
       transition: opacity 0.8s var(--cubic), visibility 0.8s; 
     }
     #preloader.loaded { opacity: 0; visibility: hidden; }
 
     /* NAVIGATION */
     nav { 
-      position: fixed; 
-      top: 0; 
-      left: 0; 
-      width: 100%; 
-      height: 72px; 
-      background: var(--glass); 
-      backdrop-filter: blur(24px); 
-      -webkit-backdrop-filter: blur(24px); 
-      z-index: 1000; 
-      transition: 0.4s var(--cubic); 
-      border-bottom: 1px solid transparent; 
+      position: fixed; top: 0; left: 0; width: 100%; height: 72px; 
+      background: var(--glass); backdrop-filter: blur(24px); 
+      -webkit-backdrop-filter: blur(24px); z-index: 1000; 
+      transition: 0.4s var(--cubic); border-bottom: 1px solid transparent; 
     }
     body.scrolled nav { 
       border-bottom: 1px solid var(--border); 
-      background: rgba(255,255,255,0.95);
-      height: 64px;
+      background: rgba(255,255,255,0.95); height: 64px;
     }
     .nav-inner { 
-      max-width: 1300px; 
-      margin: 0 auto; 
-      height: 100%; 
-      display: flex; 
-      align-items: center; 
-      justify-content: space-between; 
-      padding: 0 32px; 
+      max-width: 1300px; margin: 0 auto; height: 100%; 
+      display: flex; align-items: center; justify-content: space-between; padding: 0 32px; 
     }
-    .logo { 
-      font-size: 1.4rem; 
-      font-weight: 900; 
-      font-style: italic; 
-      letter-spacing: -1px; 
-      cursor: pointer; 
-    }
+    .logo { font-size: 1.4rem; font-weight: 900; font-style: italic; letter-spacing: -1px; cursor: pointer; }
     .nav-links { display: flex; gap: 8px; }
     .nav-links a { 
-      text-decoration: none; 
-      font-size: 12px; 
-      font-weight: 700; 
-      letter-spacing: 0.05em; 
-      text-transform: uppercase; 
-      color: var(--text-dim); 
-      padding: 10px 20px; 
-      border-radius: 14px; 
-      transition: 0.3s var(--cubic); 
+      text-decoration: none; font-size: 12px; font-weight: 700; 
+      letter-spacing: 0.05em; text-transform: uppercase; color: var(--text-dim); 
+      padding: 10px 20px; border-radius: 14px; transition: 0.3s var(--cubic); 
     }
     .nav-links a:hover { color: var(--text); background: var(--bg-alt); }
     .nav-links a.active { color: #fff; background: var(--text); }
@@ -150,9 +106,9 @@
     .mobile-drawer a { font-size: 2.5rem; font-weight: 900; text-decoration: none; color: var(--text); font-style: italic; text-transform: uppercase; letter-spacing: -2px; }
 
     /* MAIN CONTENT */
-    .main-content { max-width: 1300px; margin: 0 auto; padding: 120px 32px 100px; }
-    section { display: none; }
-    section.active { display: block; animation: fadeInUp 0.8s var(--cubic) forwards; }
+    .main-content { max-width: 1300px; margin: 0 auto; padding: 120px 32px 100px; min-height: 80vh; }
+    section { display: none; opacity: 0; }
+    section.active { display: block; animation: fadeInUp 0.8s var(--cubic) forwards; animation-fill-mode: both; }
 
     @keyframes fadeInUp { 
       from { opacity: 0; transform: translateY(30px); } 
@@ -160,148 +116,126 @@
     }
 
     .intro-block { padding: 40px 0 80px; text-align: center; max-width: 900px; margin: 0 auto; }
-    .intro-block h1 { font-size: clamp(3.5rem, 15vw, 9.5rem); margin-bottom: 24px; }
+    .intro-block h1 { font-size: clamp(3rem, 12vw, 9.5rem); margin-bottom: 24px; }
     .intro-block p { font-size: 1.25rem; max-width: 540px; margin: 0 auto 40px; }
 
     /* BUTTONS */
     .btn { 
-      padding: 20px 36px; 
-      border-radius: 20px; 
-      font-weight: 800; 
-      text-transform: uppercase; 
-      font-size: 13px; 
-      letter-spacing: 0.05em;
-      cursor: pointer; 
-      transition: 0.4s var(--cubic); 
-      border: none; 
-      text-decoration: none; 
-      display: inline-flex; 
-      align-items: center; 
-      justify-content: center;
-      gap: 10px;
+      padding: 20px 36px; border-radius: 20px; font-weight: 800; 
+      text-transform: uppercase; font-size: 13px; letter-spacing: 0.05em;
+      cursor: pointer; transition: 0.4s var(--cubic); border: none; 
+      text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 10px;
     }
     .btn-primary { background: var(--text); color: #fff; }
     .btn-primary:hover { transform: translateY(-4px); box-shadow: 0 20px 30px rgba(0,0,0,0.1); }
     .btn-outline { background: transparent; border: 1.5px solid var(--border); color: var(--text); }
-    .btn-outline:hover { background: var(--bg-alt); border-color: var(--text); }
 
     /* BENTO GRID */
     .bento-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-top: 40px; }
     .card { 
-      background: var(--card); 
-      border-radius: var(--radius); 
-      border: 1px solid var(--border); 
-      padding: 40px; 
-      position: relative; 
-      overflow: hidden; 
-      transition: 0.5s var(--cubic); 
-      cursor: pointer; 
-      display: flex;
-      flex-direction: column;
+      background: var(--card); border-radius: var(--radius); border: 1px solid var(--border); 
+      padding: 40px; position: relative; overflow: hidden; transition: 0.5s var(--cubic); 
+      cursor: pointer; display: flex; flex-direction: column;
+      animation-fill-mode: both;
     }
     .card:hover { transform: translateY(-10px); border-color: rgba(0,0,0,0.15); box-shadow: var(--shadow-md); }
 
-    /* PLAYER CARD REFINED */
+    /* PLAYER CARD */
     .player-card { height: 480px; background: #000; color: #fff; border: none; padding: 32px; }
     .player-img { 
-      position: absolute; 
-      inset: 0; 
-      background-size: cover; 
-      background-position: center top; 
-      filter: grayscale(1); 
-      opacity: 0.5; 
-      transition: 1s var(--cubic); 
+      position: absolute; inset: 0; background-size: cover; background-position: center top; 
+      filter: grayscale(1); opacity: 0.5; transition: 1s var(--cubic); 
     }
     .player-card:hover .player-img { filter: grayscale(0); opacity: 0.7; transform: scale(1.05); }
     .player-card::after { 
-      content: ''; 
-      position: absolute; 
-      inset: 0; 
-      background: linear-gradient(to top, #000 5%, rgba(0,0,0,0.4) 40%, transparent 90%); 
-      z-index: 1;
+      content: ''; position: absolute; inset: 0; 
+      background: linear-gradient(to top, #000 5%, rgba(0,0,0,0.4) 40%, transparent 90%); z-index: 1;
     }
     .player-info { position: relative; z-index: 2; margin-top: auto; }
     .ovr-badge { 
-      display: inline-block; 
-      padding: 6px 14px; 
-      background: var(--accent); 
-      color: #000; 
-      border-radius: 12px; 
-      font-weight: 900; 
-      font-size: 12px; 
-      margin-top: 12px;
+      display: inline-block; padding: 6px 14px; background: var(--accent); 
+      color: #000; border-radius: 12px; font-weight: 900; font-size: 12px; margin-top: 12px;
     }
 
     /* STATS TABLE */
-    .table-wrapper { background: #fff; border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; }
-    table { width: 100%; border-collapse: collapse; }
-    th { text-align: left; padding: 24px; font-size: 11px; font-weight: 800; text-transform: uppercase; color: var(--text-dim); letter-spacing: 0.1em; border-bottom: 1px solid var(--border); }
-    td { padding: 20px 24px; border-bottom: 1px solid var(--border); transition: 0.3s; }
-    tr:last-child td { border-bottom: none; }
-    tr:hover td { background: var(--bg-alt); }
+    .table-wrapper { background: #fff; border-radius: var(--radius); border: 1px solid var(--border); overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; min-width: 500px; }
+    th { text-align: left; padding: 24px; font-size: 11px; font-weight: 800; text-transform: uppercase; color: var(--text-dim); border-bottom: 1px solid var(--border); }
+    td { padding: 20px 24px; border-bottom: 1px solid var(--border); }
 
-    /* MODAL RE-DESIGN */
+    /* MODAL */
     .modal-overlay { 
-      position: fixed; inset: 0; 
-      background: rgba(255,255,255,0.7); 
+      position: fixed; inset: 0; background: rgba(255,255,255,0.7); 
       backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); 
       z-index: 3000; display: flex; justify-content: center; align-items: center; 
       padding: 20px; opacity: 0; pointer-events: none; transition: 0.4s var(--cubic); 
     }
     .modal-overlay.active { opacity: 1; pointer-events: auto; }
     .modal-content { 
-      background: #fff; width: 100%; max-width: 540px; 
-      border-radius: 40px; padding: 48px; position: relative; 
-      box-shadow: 0 40px 80px rgba(0,0,0,0.1); 
-      transform: translateY(40px) scale(0.95); transition: 0.6s var(--cubic); 
+      background: #fff; width: 100%; max-width: 540px; border-radius: 40px; 
+      padding: 48px; position: relative; max-height: 90vh; overflow-y: auto;
+      box-shadow: 0 40px 80px rgba(0,0,0,0.1); transform: translateY(40px) scale(0.95); transition: 0.6s var(--cubic); 
     }
     .modal-overlay.active .modal-content { transform: translateY(0) scale(1); }
     .modal-close { 
       position: absolute; top: 24px; right: 24px; width: 48px; height: 48px; 
       background: var(--bg-alt); border-radius: 50%; display: flex; 
-      align-items: center; justify-content: center; cursor: pointer; transition: 0.3s;
+      align-items: center; justify-content: center; cursor: pointer; z-index: 10;
     }
-    .modal-close:hover { transform: rotate(90deg); background: #eee; }
 
-    /* TIMER DESIGN */
+    /* TIMER */
     .timer-context { margin-top: 60px; padding: 32px 56px; background: var(--bg-alt); border-radius: 100px; display: inline-flex; align-items: center; gap: 40px; border: 1px solid var(--border); }
-    .timer-label { font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-dim); }
     .countdown { display: flex; gap: 24px; }
-    .countdown-value { font-size: 2.5rem; font-weight: 900; font-variant-numeric: tabular-nums; letter-spacing: -2px; }
-    .countdown-label { font-size: 10px; text-transform: uppercase; font-weight: 700; color: var(--text-dim); text-align: center; }
+    .countdown-value { font-size: 2.5rem; font-weight: 900; letter-spacing: -2px; }
 
-    /* CONTROLS */
-    .search-input { 
-      padding: 18px 28px; border-radius: 20px; border: 1.5px solid var(--border); 
-      background: var(--bg-alt); width: 100%; max-width: 360px; 
-      font-family: inherit; font-weight: 600; font-size: 16px; outline: none; transition: 0.3s; 
-    }
-    .search-input:focus { border-color: var(--text); background: #fff; box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
-
-    /* MOBILE OPTIMIZATION */
+    /* MOBILE ADAPTIVITY FIXES */
     @media (max-width: 1024px) {
       .bento-grid { grid-template-columns: repeat(2, 1fr); }
     }
+
     @media (max-width: 768px) {
       .nav-links { display: none; }
       .burger { display: flex; }
-      .main-content { padding: 100px 20px 60px; }
-      .intro-block h1 { font-size: 4.5rem; }
-      .timer-context { border-radius: 32px; flex-direction: column; gap: 20px; width: 100%; padding: 32px 20px; }
+      .nav-inner { padding: 0 20px; }
+      .main-content { padding: 100px 16px 60px; }
+      .intro-block h1 { font-size: 3.5rem; }
+      .intro-block p { font-size: 1.1rem; }
+      
+      .timer-context { 
+        border-radius: 32px; flex-direction: column; gap: 16px; 
+        width: 100%; padding: 24px 16px; margin-top: 40px;
+      }
+      .countdown { gap: 12px; }
+      .countdown-value { font-size: 1.8rem; }
+
       .bento-grid { grid-template-columns: 1fr; gap: 16px; }
-      .modal-content { padding: 40px 24px; border-radius: 32px; }
+      .card { padding: 30px 24px; }
+      .card[style*="grid-column: span 2"] { grid-column: span 1 !important; }
+      .card h2 { font-size: 2.5rem !important; }
+
+      .modal-content { padding: 32px 20px; border-radius: 32px; width: 100%; }
+      .controls-row { flex-direction: column; align-items: stretch; }
+      .search-input { max-width: 100%; }
+      .filter-bar { overflow-x: auto; padding-bottom: 8px; width: 100%; }
+      
+      .player-card { height: 420px; }
     }
 
-    /* SCROLLBAR */
-    ::-webkit-scrollbar { width: 8px; }
-    ::-webkit-scrollbar-track { background: #fff; }
-    ::-webkit-scrollbar-thumb { background: #eee; border-radius: 10px; }
-    ::-webkit-scrollbar-thumb:hover { background: #ddd; }
+    /* Additional UI */
+    .search-input { 
+      padding: 18px 28px; border-radius: 20px; border: 1.5px solid var(--border); 
+      background: var(--bg-alt); width: 100%; max-width: 360px; font-family: inherit; font-weight: 600;
+    }
+    .filter-btn { 
+      padding: 12px 20px; border-radius: 14px; border: 1px solid var(--border); 
+      background: #fff; font-size: 12px; font-weight: 800; cursor: pointer; text-transform: uppercase; white-space: nowrap;
+    }
+    .filter-btn.active { background: var(--text); color: #fff; border-color: var(--text); }
   </style>
 </head>
 <body>
 
-  <div id="preloader">
+  <div id="preloader" role="status" aria-label="Загрузка">
     <div style="text-align:center;">
       <h2 style="font-size:3rem; margin-bottom:10px;">BOX<span style="color:var(--accent)">1</span>V1</h2>
       <div style="width:140px; height:2px; background:var(--bg-alt); margin:0 auto; position:relative; overflow:hidden;">
@@ -312,15 +246,15 @@
 
   <nav id="navbar">
     <div class="nav-inner">
-      <div class="logo" onclick="switchTab('home')">BOX<span style="color:var(--accent)">1</span>V1</div>
-      <div class="nav-links">
+      <div class="logo" onclick="switchTab('home')" aria-label="На главную">BOX<span style="color:var(--accent)">1</span>V1</div>
+      <div class="nav-links" role="navigation">
         <a href="#home" onclick="switchTab('home')" class="active" id="btn-home">Главная</a>
         <a href="#roster" onclick="switchTab('roster')" id="btn-roster">Ростер</a>
         <a href="#stats" onclick="switchTab('stats')" id="btn-stats">Рейтинг</a>
       </div>
-      <div class="burger" id="burger" onclick="toggleMenu()">
+      <button class="burger" id="burger" onclick="toggleMenu()" aria-label="Меню">
         <span></span><span></span><span></span>
-      </div>
+      </button>
     </div>
   </nav>
 
@@ -345,8 +279,8 @@
           <button class="btn btn-outline" onclick="openModal('applyModal')">Подать заявку</button>
         </div>
 
-        <div class="timer-context">
-          <span class="timer-label">До старта сезона:</span>
+        <div class="timer-context" id="timer-container">
+          <span class="timer-label" id="timer-status">До старта сезона:</span>
           <div class="countdown" id="timer">
             <div><div class="countdown-value" id="days">00</div><div class="countdown-label">дн</div></div>
             <div><div class="countdown-value" id="hours">00</div><div class="countdown-label">чс</div></div>
@@ -376,7 +310,7 @@
 
     <section id="roster">
       <div style="margin-bottom: 60px;">
-        <h1 style="font-size: clamp(3.5rem, 10vw, 8rem);">РОСТЕР.</h1>
+        <h1 style="font-size: clamp(3rem, 10vw, 8rem);">РОСТЕР.</h1>
         <p style="font-size: 1.25rem;">Действующие активы системы BOX1V1.</p>
       </div>
       <div class="controls-row" style="margin-bottom: 40px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:20px;">
@@ -387,16 +321,11 @@
           <button class="filter-btn" data-role="Вратарь" onclick="setRoleFilter('Вратарь', this)">Вратари</button>
         </div>
       </div>
-      <div class="bento-grid" id="roster-grid">
-        <div style="height:480px; background:#eee; border-radius:var(--radius);"></div>
-        <div style="height:480px; background:#eee; border-radius:var(--radius);"></div>
-        <div style="height:480px; background:#eee; border-radius:var(--radius);"></div>
-        <div style="height:480px; background:#eee; border-radius:var(--radius);"></div>
-      </div>
+      <div class="bento-grid" id="roster-grid"></div>
     </section>
 
     <section id="stats">
-      <h1 style="font-size: clamp(3.5rem, 10vw, 8rem); margin-bottom:40px;">РЕЙТИНГ.</h1>
+      <h1 style="font-size: clamp(3rem, 10vw, 8rem); margin-bottom:40px;">РЕЙТИНГ.</h1>
       <div class="table-wrapper">
         <table>
           <thead>
@@ -410,22 +339,22 @@
 
   <div class="modal-overlay" id="playerModal" onclick="closeModal('playerModal')">
     <div class="modal-content" onclick="event.stopPropagation()">
-      <div class="modal-close" onclick="closeModal('playerModal')">✕</div>
+      <div class="modal-close" onclick="closeModal('playerModal')" aria-label="Закрыть">✕</div>
       <div id="m-img-container" style="width:100%; height:320px; border-radius:24px; overflow:hidden; background:#f0f0f0; margin-bottom:32px;">
-        <img id="m-img" src="" style="width:100%; height:100%; object-fit:cover;" alt="">
+        <img id="m-img" src="" style="width:100%; height:100%; object-fit:cover;" alt="Фото игрока">
       </div>
       <div style="display:flex; justify-content:space-between; align-items:flex-start;">
         <div>
           <span id="m-role" style="font-size:11px; font-weight:800; text-transform:uppercase; color:var(--accent-dark); background:rgba(34,197,94,0.1); padding:6px 12px; border-radius:10px;">ROLE</span>
-          <h2 id="m-name" style="font-size: 3rem; margin-top:12px;">NAME</h2>
+          <h2 id="m-name" style="font-size: 2.5rem; margin-top:12px;">NAME</h2>
           <div id="m-badges" style="display:flex; gap:8px; margin-top:16px; flex-wrap:wrap;"></div>
         </div>
-        <div id="m-ovr" style="font-size: 3.5rem; font-weight:900; font-style:italic; line-height:1; letter-spacing:-3px;">99</div>
+        <div id="m-ovr" style="font-size: 3rem; font-weight:900; font-style:italic; line-height:1; letter-spacing:-3px;">99</div>
       </div>
       <div id="m-stats" style="margin-top:40px; display:grid; grid-template-columns: 1fr 1fr; gap: 32px;"></div>
-      <div style="margin-top:48px; display:flex; gap:12px;">
-        <button class="btn btn-primary" style="flex:1;" onclick="copyPlayerID()">Копировать ID</button>
-        <button class="btn btn-outline" style="flex:1;" onclick="sharePlayer()">Поделиться</button>
+      <div style="margin-top:48px; display:flex; gap:12px; flex-wrap:wrap;">
+        <button class="btn btn-primary" style="flex:1; min-width:140px;" onclick="copyPlayerID()">Копировать ID</button>
+        <button class="btn btn-outline" style="flex:1; min-width:140px;" onclick="sharePlayer()">Поделиться</button>
       </div>
     </div>
   </div>
@@ -433,7 +362,7 @@
   <div class="modal-overlay" id="applyModal" onclick="closeModal('applyModal')">
     <div class="modal-content" onclick="event.stopPropagation()">
       <div class="modal-close" onclick="closeModal('applyModal')">✕</div>
-      <h2 style="font-size:2.5rem; margin-bottom:20px;">ВСТУПИТЬ В BOX1V1</h2>
+      <h2 style="font-size:2rem; margin-bottom:20px;">ВСТУПИТЬ В BOX1V1</h2>
       <p style="margin-bottom:32px;">Мы формируем закрытый пул игроков. Чтобы пройти отбор, пришлите видео ваших лучших моментов нашему куратору.</p>
       <button class="btn btn-primary" style="width:100%; padding:24px;" onclick="window.open('https://t.me/streetbox1v1')">Открыть Telegram</button>
     </div>
@@ -442,7 +371,7 @@
   <div class="modal-overlay" id="rulesModal" onclick="closeModal('rulesModal')">
     <div class="modal-content" style="max-width: 600px;" onclick="event.stopPropagation()">
       <div class="modal-close" onclick="closeModal('rulesModal')">✕</div>
-      <h2 style="font-size:2.5rem; margin-bottom:32px;">РЕГЛАМЕНТ</h2>
+      <h2 style="font-size:2rem; margin-bottom:32px;">РЕГЛАМЕНТ</h2>
       <div style="display:flex; flex-direction:column; gap:20px;">
         <div style="padding-bottom:15px; border-bottom:1px solid var(--border);">
           <strong style="text-transform:uppercase; font-size:12px; display:block; margin-bottom:4px;">01. Формат</strong>
@@ -462,16 +391,12 @@
 
   <style>
     @keyframes load { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
-    .filter-btn { 
-      padding: 12px 20px; border-radius: 14px; border: 1px solid var(--border); 
-      background: #fff; font-size: 12px; font-weight: 800; cursor: pointer; 
-      transition: 0.3s; text-transform: uppercase; 
-    }
-    .filter-btn.active { background: var(--text); color: #fff; border-color: var(--text); }
   </style>
 
   <script>
     const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vREjbeB6jNrU01kw1npVtFTvqGdP134ERjmyROoOYeYXbzjgL0ZCNK6KwF0VTk3c1yxZEZEUsJjy2Ur/pub?output=csv';
+    const TARGET_DATE = new Date("March 1, 2026 00:00:00").getTime();
+    
     let allPlayers = [];
     let currentRoleFilter = 'Все';
 
@@ -480,23 +405,18 @@
         const res = await fetch(CSV_URL);
         const text = await res.text();
         allPlayers = parseCSV(text);
+        
+        // 1. Сначала рендер
         renderRoster();
         renderStats();
         
-        // Handle deep links
-        const hash = window.location.hash.split('?')[0];
-        if (hash) switchTab(hash.replace('#', ''));
-        
-        const params = new URLSearchParams(window.location.hash.split('?')[1]);
-        if (params.has('player')) {
-          const pName = params.get('player').replace(/-/g, ' ');
-          if(allPlayers.some(x => x.name.toLowerCase() === pName.toLowerCase())) {
-            openPlayerModal(allPlayers.find(x => x.name.toLowerCase() === pName.toLowerCase()).name);
-          }
-        }
+        // 2. Потом обработка URL (Deep links)
+        handleHashAndDeepLink();
 
+        // 3. Запуск таймера
         setInterval(updateTimer, 1000);
         updateTimer();
+        
         document.getElementById('preloader').classList.add('loaded');
       } catch (e) {
         console.error("Load Error", e);
@@ -522,6 +442,31 @@
           badges: c[9] ? c[9].split('|').map(b => b.trim()) : []
         };
       }).filter(p => p.name);
+    }
+
+    function handleHashAndDeepLink() {
+      const fullHash = window.location.hash;
+      if (!fullHash) return;
+
+      const [hashPart, queryPart] = fullHash.split('?');
+      const cleanHash = hashPart.replace('#', '');
+      
+      // Переключаем вкладку
+      if (cleanHash) switchTab(cleanHash);
+
+      // Проверяем игрока
+      if (queryPart) {
+        const params = new URLSearchParams(queryPart);
+        const pNameFromUrl = params.get('player');
+        if (pNameFromUrl) {
+          const pName = pNameFromUrl.replace(/-/g, ' ');
+          const found = allPlayers.find(x => x.name.toLowerCase() === pName.toLowerCase());
+          if (found) {
+            // Небольшая задержка для плавности после загрузки
+            setTimeout(() => openPlayerModal(found.name), 100);
+          }
+        }
+      }
     }
 
     function renderRoster() {
@@ -553,7 +498,7 @@
           <td style="font-weight:900; color:var(--text-dim)">${(i+1).toString().padStart(2, '0')}</td>
           <td>
             <div style="display:flex; align-items:center; gap:16px;">
-              <img src="${p.photo}" style="width:48px; height:48px; border-radius:14px; object-fit:cover;">
+              <img src="${p.photo}" style="width:48px; height:48px; border-radius:14px; object-fit:cover;" alt="">
               <div>
                 <div style="font-weight:900; text-transform:uppercase; font-style:italic;">${p.name}</div>
                 <div style="font-size:10px; font-weight:700; color:var(--text-dim); text-transform:uppercase;">${p.role}</div>
@@ -566,7 +511,7 @@
     }
 
     function openPlayerModal(name) {
-      const p = allPlayers.find(x => x.name === name);
+      const p = allPlayers.find(x => x.name.toLowerCase() === name.toLowerCase());
       if(!p) return;
 
       document.getElementById('m-name').innerText = p.name;
@@ -587,7 +532,11 @@
         </div>
       `).join('');
 
-      window.history.replaceState(null, null, `#${document.querySelector('section.active').id}?player=${p.name.replace(/\s+/g, '-').toLowerCase()}`);
+      // Обновляем URL без перезагрузки
+      const currentTab = document.querySelector('section.active').id;
+      const playerSlug = p.name.replace(/\s+/g, '-').toLowerCase();
+      window.history.replaceState(null, null, `#${currentTab}?player=${playerSlug}`);
+      
       openModal('playerModal');
     }
 
@@ -599,25 +548,33 @@
     }
 
     function openModal(id) {
-      document.getElementById(id).classList.add('active');
+      const modal = document.getElementById(id);
+      modal.classList.add('active');
       document.body.style.overflow = 'hidden';
+      // Accessibility: focus modal
+      modal.setAttribute('aria-hidden', 'false');
     }
 
     function closeModal(id) {
       document.getElementById(id).classList.remove('active');
       if(id === 'playerModal') {
-        window.history.replaceState(null, null, `#${document.querySelector('section.active').id}`);
+        const currentTab = document.querySelector('section.active').id;
+        window.history.replaceState(null, null, `#${currentTab}`);
       }
       document.body.style.overflow = '';
     }
 
     function switchTab(id) {
+      const target = document.getElementById(id);
+      if(!target) return;
+
       document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
       document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
-      const target = document.getElementById(id);
-      if(target) target.classList.add('active');
+      
+      target.classList.add('active');
       const btn = document.getElementById('btn-' + id);
       if(btn) btn.classList.add('active');
+      
       window.location.hash = id;
       window.scrollTo({top:0, behavior:'smooth'});
     }
@@ -634,8 +591,15 @@
     }
 
     function updateTimer() {
-      const diff = new Date("March 1, 2026 00:00:00").getTime() - new Date().getTime();
-      if(diff <= 0) return;
+      const now = Date.now();
+      const diff = TARGET_DATE - now;
+      
+      if(diff <= 0) {
+        document.getElementById('timer-status').innerText = "Сезон открыт!";
+        document.getElementById('timer').style.display = 'none';
+        return;
+      }
+
       document.getElementById('days').innerText = Math.floor(diff / 864e5).toString().padStart(2, '0');
       document.getElementById('hours').innerText = Math.floor((diff % 864e5) / 36e5).toString().padStart(2, '0');
       document.getElementById('mins').innerText = Math.floor((diff % 36e5) / 6e4).toString().padStart(2, '0');
@@ -647,15 +611,18 @@
     });
 
     function copyPlayerID() {
-      navigator.clipboard.writeText(document.getElementById('m-name').innerText);
-      alert('ID скопирован');
+      const name = document.getElementById('m-name').innerText;
+      navigator.clipboard.writeText(name).then(() => {
+        alert('ID ' + name + ' скопирован');
+      });
     }
 
     function sharePlayer() {
+      const url = window.location.href;
       if(navigator.share) {
-        navigator.share({ title: 'BOX1V1', url: window.location.href });
+        navigator.share({ title: 'BOX1V1 Player', url: url });
       } else {
-        navigator.clipboard.writeText(window.location.href);
+        navigator.clipboard.writeText(url);
         alert('Ссылка скопирована');
       }
     }
