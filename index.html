@@ -650,12 +650,14 @@ async function init() {
     console.log('Проверяем Supabase...');
     
     // 1. Проверяем что библиотека Supabase загрузилась
-    if (typeof supabase === 'undefined') {
-      console.error('❌ Библиотека Supabase не загрузилась!');
-      showToast('Ошибка загрузки библиотеки Supabase');
-      document.getElementById('preloader').classList.add('loaded');
-      return;
-    }
+if (typeof window.supabase === 'undefined') {
+  console.error('❌ Библиотека Supabase не загрузилась!');
+  showToast('Ошибка загрузки библиотеки Supabase');
+  document.getElementById('preloader').classList.add('loaded');
+  return;
+}
+
+console.log('✅ Библиотека Supabase загружена');
     
     console.log('✅ Библиотека Supabase загружена');
     
@@ -1349,3 +1351,4 @@ window.onload = init;
 </script>
 </body>
 </html>
+
