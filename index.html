@@ -19,7 +19,7 @@
 --bg-alt: #f8f8f8;
 --card: #ffffff;
 --text: #0a0a0a;
---text-dim: #6b7280;
+--text-dim: #4b5563; /* ADDED: Улучшенный контраст */
 --border: rgba(0,0,0,0.06);
 --accent: #22c55e;
 --accent-dark: #16a34a;
@@ -54,8 +54,16 @@ font-style: italic;
 letter-spacing: var(--ls-tight);
 line-height: var(--lh-tight);
 text-transform: uppercase;
+font-feature-settings: "ss01", "ss02", "cv01"; /* ADDED: Альтернативные глифы */
+font-variation-settings: "wght" 900, "slnt" -10; /* ADDED: Variable font настройки */
 }
 p { font-size: 1rem; color: var(--text-dim); }
+
+/* ADDED: Анимация появления текста */
+@keyframes fadeUpType {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 
 /* UX TOOLTIPS STYLES */
 .stat-item { position: relative; }
@@ -71,12 +79,10 @@ p { font-size: 1rem; color: var(--text-dim); }
 .stat-header::after {
   content: attr(data-tip);
   position: absolute; bottom: calc(100% + 10px); left: 0;
-  background: #000; color: #fff; padding: 10px 14px;
-  border-radius: 12px;
+  background: #000; color: #fff; padding: 10px 14px; border-radius: 12px;
   font-size: 11px; font-weight: 500; width: 200px; line-height: 1.4;
   opacity: 0; visibility: hidden; transform: translateY(10px);
-  transition: 0.4s var(--cubic);
-  z-index: 100; pointer-events: none;
+  transition: 0.4s var(--cubic); z-index: 100; pointer-events: none;
   box-shadow: 0 10px 30px rgba(0,0,0,0.15); text-transform: none; font-style: normal;
 }
 .stat-header:hover::after { opacity: 1; visibility: visible; transform: translateY(0); }
@@ -88,27 +94,22 @@ display: flex; justify-content: center; align-items: center;
 transition: opacity 0.8s var(--cubic), visibility 0.8s;
 }
 #preloader.loaded { opacity: 0; visibility: hidden; }
-
 /* TOASTS SYSTEM */
 #toast-container {
-position: fixed; bottom: 32px;
-left: 50%; transform: translateX(-50%);
+position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%);
 z-index: 10000; display: flex; flex-direction: column; gap: 10px;
 pointer-events: none;
 }
 .toast {
-background: #000; color: #fff;
-padding: 16px 24px; border-radius: 16px;
+background: #000; color: #fff; padding: 16px 24px; border-radius: 16px;
 font-size: 13px; font-weight: 700; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-animation: toastIn 0.5s var(--cubic) forwards;
-pointer-events: auto;
+animation: toastIn 0.5s var(--cubic) forwards; pointer-events: auto;
 display: flex; align-items: center; gap: 12px;
 }
 @keyframes toastIn {
 from { transform: translateY(100px); opacity: 0; }
 to { transform: translateY(0); opacity: 1; }
 }
-
 /* NAVIGATION */
 nav {
 position: fixed; top: 0; left: 0; width: 100%; height: 72px;
@@ -118,8 +119,7 @@ transition: 0.4s var(--cubic); border-bottom: 1px solid transparent;
 }
 body.scrolled nav {
 border-bottom: 1px solid var(--border);
-background: rgba(255,255,255,0.95);
-height: 64px;
+background: rgba(255,255,255,0.95); height: 64px;
 }
 .nav-inner {
 max-width: 1300px; margin: 0 auto; height: 100%;
@@ -127,9 +127,9 @@ display: flex; align-items: center; justify-content: space-between; padding: 0 3
 }
 .logo {
 font-size: 1.4rem; font-weight: 900; font-style: italic; letter-spacing: -1px; cursor: pointer;
-transition: 0.3s;
+transition: transform 0.4s var(--cubic); /* ADDED: Анимация лого */
 }
-.logo:hover { opacity: 0.7; }
+.logo:hover { transform: scale(1.05); } /* ADDED: Интерактивность лого */
 .nav-links { display: flex; gap: 8px; }
 .nav-links a {
 text-decoration: none; font-size: 12px; font-weight: 700;
@@ -139,85 +139,70 @@ padding: 10px 20px; border-radius: var(--radius-sm); transition: 0.3s var(--cubi
 .nav-links a:hover { color: var(--text); background: var(--bg-alt); }
 .nav-links a:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
 .nav-links a.active { color: #fff; background: var(--text); }
-
 /* BURGER */
 .burger {
 display: none; cursor: pointer; width: 48px; height: 48px; flex-direction: column;
-justify-content: center; align-items: center; gap: 6px;
-border-radius: 16px;
+justify-content: center; align-items: center; gap: 6px; border-radius: 16px;
 background: var(--bg-alt); border: none; transition: 0.3s;
 }
 .burger:hover { background: #eee; }
-.burger span { width: 20px; height: 2px;
-background: var(--text); border-radius: 4px; transition: 0.3s var(--cubic); }
+.burger span { width: 20px; height: 2px; background: var(--text); border-radius: 4px; transition: 0.3s var(--cubic); }
 .burger.open span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
 .burger.open span:nth-child(2) { opacity: 0; }
 .burger.open span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
-
 /* DRAWER */
-.drawer-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.2); backdrop-filter: blur(8px); z-index: 1999;
-opacity: 0; visibility: hidden; transition: 0.4s; }
+.drawer-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.2); backdrop-filter: blur(8px); z-index: 1999; opacity: 0; visibility: hidden; transition: 0.4s; }
 .drawer-overlay.open { opacity: 1; visibility: visible; }
-.mobile-drawer { position: fixed; top: 0; right: -100%;
-width: 85%; max-width: 360px; height: 100%; background: #fff; z-index: 2000; padding: 100px 40px; display: flex; flex-direction: column; gap: 24px;
-transition: 0.5s var(--cubic); }
+.mobile-drawer { position: fixed; top: 0; right: -100%; width: 85%; max-width: 360px; height: 100%; background: #fff; z-index: 2000; padding: 100px 40px; display: flex; flex-direction: column; gap: 24px; transition: 0.5s var(--cubic); }
 .mobile-drawer.open { right: 0; box-shadow: -40px 0 80px rgba(0,0,0,0.1); }
-.mobile-drawer a { font-size: 2.5rem; font-weight: 900;
-text-decoration: none; color: var(--text); font-style: italic; text-transform: uppercase; letter-spacing: -2px; }
-
+.mobile-drawer a { font-size: 2.5rem; font-weight: 900; text-decoration: none; color: var(--text); font-style: italic; text-transform: uppercase; letter-spacing: -2px; }
 /* MAIN CONTENT */
-.main-content { max-width: 1300px; margin: 0 auto;
-padding: 120px 32px 100px; min-height: 80vh; }
+.main-content { max-width: 1300px; margin: 0 auto; padding: 120px 32px 100px; min-height: 80vh; }
 section { display: none; opacity: 0; }
-section.active { display: block;
-animation: fadeInUp 0.8s var(--cubic) forwards; }
+section.active { display: block; animation: fadeInUp 0.8s var(--cubic) forwards; }
 @keyframes fadeInUp {
 from { opacity: 0; transform: translateY(30px); }
 to { opacity: 1; transform: translateY(0); }
 }
 .intro-block { padding: 40px 0 80px; text-align: center; max-width: 900px; margin: 0 auto; }
-.intro-block h1 { font-size: clamp(3.5rem, 12vw, 9.5rem);
-margin-bottom: 24px; }
-.intro-block p { font-size: 1.25rem; max-width: 540px; margin: 0 auto 40px; }
-
+.intro-block h1 { font-size: clamp(3.5rem, 12vw, 9.5rem); margin-bottom: 24px; }
+.intro-block p { 
+  font-size: 1.25rem; max-width: 540px; margin: 0 auto 40px;
+  animation: fadeUpType 0.8s var(--cubic) 0.2s both; /* ADDED: Анимация текста */
+}
 /* BUTTONS */
 .btn {
-padding: 20px 36px;
-border-radius: 20px; font-weight: 800;
+padding: 20px 36px; border-radius: 20px; font-weight: 800;
 text-transform: uppercase; font-size: 13px; letter-spacing: 0.05em;
 cursor: pointer; transition: 0.4s var(--cubic); border: none;
-text-decoration: none;
-display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 10px;
 position: relative; overflow: hidden;
 }
 .btn:active { transform: scale(0.96); }
-.btn-primary { background: var(--text);
-color: #fff; }
+.btn-primary { background: var(--text); color: #fff; }
 .btn-primary:hover { transform: translateY(-4px); box-shadow: 0 20px 30px rgba(0,0,0,0.15); }
-.btn-outline { background: transparent; border: 1.5px solid var(--border);
-color: var(--text); }
+.btn-outline { background: transparent; border: 1.5px solid var(--border); color: var(--text); }
 .btn-outline:hover { background: var(--bg-alt); border-color: var(--text); }
-
 /* BENTO GRID */
-.bento-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px;
-margin-top: 40px; }
+.bento-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-top: 40px; }
 .card {
 background: var(--card); border-radius: var(--radius); border: 1px solid var(--border);
 padding: 40px; position: relative; overflow: hidden; transition: 0.5s var(--cubic);
 cursor: pointer; display: flex; flex-direction: column;
 }
 .card:hover { transform: translateY(-10px); border-color: rgba(0,0,0,0.15); box-shadow: var(--shadow-md); }
-.card:focus-visible { outline: 3px solid var(--accent); }
-
+.card:focus-visible { 
+  outline: 3px solid var(--accent); 
+  outline-offset: 4px; /* ADDED: Улучшенный focus */
+  transform: translateY(-4px); /* ADDED: Сочетание с hover */
+}
 /* PLAYER CARD */
 .player-card { height: 480px; background: #000; color: #fff; border: none; padding: 32px; }
 .player-img {
-position: absolute; inset: 0;
-background-size: cover; background-position: center top;
+position: absolute; inset: 0; background-size: cover; background-position: center top;
 filter: grayscale(1); opacity: 0.5; transition: 1s var(--cubic);
 }
-.player-card:hover .player-img { filter: grayscale(0); opacity: 0.7;
-transform: scale(1.05); }
+.player-card:hover .player-img { filter: grayscale(0); opacity: 0.7; transform: scale(1.05); }
 .player-card::after {
 content: ''; position: absolute; inset: 0;
 background: linear-gradient(to top, #000 5%, rgba(0,0,0,0.4) 40%, transparent 90%); z-index: 1;
@@ -225,31 +210,27 @@ background: linear-gradient(to top, #000 5%, rgba(0,0,0,0.4) 40%, transparent 90
 .player-info { position: relative; z-index: 2; margin-top: auto; }
 .ovr-badge {
 display: inline-block; padding: 6px 14px; background: var(--accent);
-color: #000; border-radius: 12px;
-font-weight: 900; font-size: 12px; margin-top: 12px;
+color: #000; border-radius: 12px; font-weight: 900; font-size: 12px; margin-top: 12px;
 }
-
 /* STATS TABLE */
-.table-wrapper { background: #fff; border-radius: var(--radius); border: 1px solid var(--border);
-overflow: hidden; }
+.table-wrapper { background: #fff; border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; }
 table { width: 100%; border-collapse: collapse; }
-th { text-align: left; padding: 24px; font-size: 11px; font-weight: 800; text-transform: uppercase;
-color: var(--text-dim); border-bottom: 1px solid var(--border); }
-td { padding: 20px 24px; border-bottom: 1px solid var(--border); transition: 0.3s; }
+th { text-align: left; padding: 24px; font-size: 11px; font-weight: 800; text-transform: uppercase; color: var(--text-dim); border-bottom: 1px solid var(--border); }
+td { 
+  padding: 20px 24px; border-bottom: 1px solid var(--border); transition: 0.3s;
+  font-size: 0.95rem; font-weight: 500; /* ADDED: Оптимальный текст таблиц */
+}
 tr:last-child td { border-bottom: none; }
 tr:hover td {
   background: rgba(0,0,0,0.02);
   transition: background 0.2s ease;
 }
-
 /* MODAL */
 .modal-overlay {
-position: fixed;
-inset: 0; background: rgba(255,255,255,0.7);
+position: fixed; inset: 0; background: rgba(255,255,255,0.7);
 backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
 z-index: 3000; display: flex; justify-content: center; align-items: center;
-padding: 20px; opacity: 0;
-pointer-events: none; transition: 0.4s var(--cubic);
+padding: 20px; opacity: 0; pointer-events: none; transition: 0.4s var(--cubic);
 }
 .modal-overlay.active { opacity: 1; pointer-events: auto; }
 .modal-content {
@@ -260,12 +241,17 @@ box-shadow: 0 40px 80px rgba(0,0,0,0.1); transform: translateY(40px) scale(0.95)
 .modal-overlay.active .modal-content { transform: translateY(0) scale(1); }
 .modal-close {
 position: absolute; top: 24px; right: 24px; width: 48px; height: 48px;
-background: var(--bg-alt);
-border-radius: 50%; display: flex;
+background: var(--bg-alt); border-radius: 50%; display: flex;
 align-items: center; justify-content: center; cursor: pointer; z-index: 10;
 border: none; transition: 0.3s var(--cubic);
 }
 .modal-close:hover { transform: rotate(90deg); background: #eee; }
+
+/* ADDED: Оптимальные строки для модалок */
+.modal-content p {
+  line-height: 1.7;
+  max-width: 65ch; /* Оптимальная длина строки для чтения */
+}
 
 /* SEARCH & FILTER */
 .search-input {
@@ -273,30 +259,23 @@ padding: 18px 28px; border-radius: 20px; border: 1.5px solid var(--border);
 background: var(--bg-alt); width: 100%; max-width: 360px; font-family: inherit;
 font-weight: 600; transition: 0.3s;
 }
-.search-input:focus { outline: none; border-color: var(--text); background: #fff;
-box-shadow: 0 0 0 4px rgba(0,0,0,0.03); }
+.search-input:focus { outline: none; border-color: var(--text); background: #fff; box-shadow: 0 0 0 4px rgba(0,0,0,0.03); }
 .filter-btn {
 padding: 12px 20px; border-radius: 14px; border: 1px solid var(--border);
-background: #fff; font-size: 12px;
-font-weight: 800; cursor: pointer;
+background: #fff; font-size: 12px; font-weight: 800; cursor: pointer;
 text-transform: uppercase; white-space: nowrap; transition: 0.3s;
 }
 .filter-btn:hover { background: var(--bg-alt); }
-.filter-btn.active { background: var(--text); color: #fff;
-border-color: var(--text); }
-
+.filter-btn.active { background: var(--text); color: #fff; border-color: var(--text); }
 /* TIMER */
-.timer-context { margin-top: 60px; padding: 32px 56px; background: var(--bg-alt); border-radius: 100px; display: inline-flex; align-items: center;
-gap: 40px; border: 1px solid var(--border); }
+.timer-context { margin-top: 60px; padding: 32px 56px; background: var(--bg-alt); border-radius: 100px; display: inline-flex; align-items: center; gap: 40px; border: 1px solid var(--border); }
 .countdown { display: flex; gap: 24px; }
 .countdown-value { font-size: 2.5rem; font-weight: 900; letter-spacing: -2px; }
-
 /* SCROLLBAR */
 ::-webkit-scrollbar { width: 8px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
 ::-webkit-scrollbar-thumb:hover { background: #ccc; }
-
 /* MOBILE ADAPTIVITY */
 @media (max-width: 1024px) {
 .bento-grid { grid-template-columns: repeat(2, 1fr); }
@@ -315,17 +294,48 @@ gap: 40px; border: 1px solid var(--border); }
 .card { padding: 30px 24px; }
 .card[style*="grid-column: span 2"] { grid-column: span 1 !important; }
 .card h2 { font-size: 2.5rem !important; }
-.modal-content { padding: 32px 20px;
-border-radius: 32px; }
+.modal-content { padding: 32px 20px; border-radius: 32px; }
 .controls-row { flex-direction: column; align-items: stretch !important; }
 .search-input { max-width: 100%; }
-.filter-bar { overflow-x: auto; padding-bottom: 8px;
-width: 100%; }
+.filter-bar { overflow-x: auto; padding-bottom: 8px; width: 100%; }
 .player-card { height: 420px; }
-/* Hide tooltips on mobile by default, show on click if needed */
-.stat-header:hover::after { display: none; }
-.stat-header:active::after { display: block; opacity: 1; visibility: visible; }
+  
+  /* ADDED: Мобильные тултипы через touch */
+  .stat-header:hover::after { display: none; }
+  .stat-header.touch-active::after {
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: translateY(0) !important;
+  }
 }
+
+/* ADDED: Дополнительные медиа-запросы для маленьких экранов */
+@media (max-width: 480px) {
+  .intro-block h1 {
+    font-size: 2.8rem;
+    line-height: 1;
+  }
+  
+  .player-card h3 {
+    font-size: 1.6rem !important;
+  }
+  
+  .modal-content h2 {
+    font-size: 1.5rem;
+  }
+  
+  .modal-content p {
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+  
+  .btn {
+    padding: 18px 24px;
+    font-size: 12px;
+  }
+}
+
 @keyframes load { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
 </style>
 </head>
@@ -344,7 +354,6 @@ width: 100%; }
 <div class="logo" onclick="switchTab('home')" aria-label="На главную">BOX<span style="color:var(--accent)">1</span>V1</div>
 <div class="nav-links" role="navigation">
 <a href="#home" onclick="switchTab('home')" class="active" id="btn-home">Главная</a>
-<a href="#news" onclick="switchTab('news')" id="btn-news">Новости</a>
 <a href="#roster" onclick="switchTab('roster')" id="btn-roster">УЧАСТНИКИ</a>
 <a href="#stats" onclick="switchTab('stats')" id="btn-stats">Рейтинг</a>
 </div>
@@ -356,7 +365,6 @@ width: 100%; }
 <div class="drawer-overlay" id="drawer-overlay" onclick="toggleMenu()"></div>
 <div class="mobile-drawer" id="mobile-drawer">
 <a href="#home" onclick="handleMobileNav('home')">Главная</a>
-<a href="#news" onclick="handleMobileNav('news')">Новости</a>
 <a href="#roster" onclick="handleMobileNav('roster')">Список</a>
 <a href="#stats" onclick="handleMobileNav('stats')">Рейтинг</a>
 <div style="margin-top:auto;">
@@ -366,12 +374,10 @@ width: 100%; }
 <main class="main-content">
 <section id="home" class="active">
 <div class="intro-block">
-<span style="font-size:12px;
-font-weight:800; text-transform:uppercase; letter-spacing:0.4em; color:var(--accent-dark); display:block; margin-bottom:20px;">The Next Gen Football</span>
+<span style="font-size:12px; font-weight:800; text-transform:uppercase; letter-spacing:0.4em; color:var(--accent-dark); display:block; margin-bottom:20px;">The Next Gen Football</span>
 <h1>BOX1V1.</h1>
 <p>Решает не команда.<br>Решаешь ты.</p>
-<div class="btn-group" style="display:flex; gap:16px; justify-content:center;
-flex-wrap:wrap;">
+<div class="btn-group" style="display:flex; gap:16px; justify-content:center; flex-wrap:wrap;">
 <button class="btn btn-primary" onclick="switchTab('roster')">Участники</button>
 <button class="btn btn-outline" onclick="openModal('applyModal')">Подать заявку</button>
 </div>
@@ -386,47 +392,30 @@ flex-wrap:wrap;">
 </div>
 </div>
 <div class="bento-grid">
-<div class="card" style="grid-column: span 2;
-background: #fafafa;" onclick="openModal('rulesModal')" tabindex="0">
+<div class="card" style="grid-column: span 2; background: #fafafa;" onclick="openModal('rulesModal')" tabindex="0">
 <span style="font-size:11px; font-weight:800; color:var(--accent-dark); text-transform:uppercase; letter-spacing:0.1em;">Документация</span>
 <h2 style="font-size: 3.5rem; margin: 20px 0 15px;">РЕГЛАМЕНТ.</h2>
 <p>Свод правил проведения матчей.</p>
-<div style="margin-top: auto;
-padding-top: 30px; font-weight: 800; font-size: 12px; text-transform: uppercase;">Изучить правила →</div>
+<div style="margin-top: auto; padding-top: 30px; font-weight: 800; font-size: 12px; text-transform: uppercase;">Изучить правила →</div>
 </div>
 <div class="card" onclick="window.open('https://t.me/streetbox1v1')" tabindex="0">
 <h3 style="font-size: 1.8rem;">TELEGRAM</h3>
-<p style="font-size: 14px;
-margin-top: 8px;">Свежие новости и актуальная информация.</p>
+<p style="font-size: 14px; margin-top: 8px;">Свежие новости и актуальная информация.</p>
 </div>
 <div class="card" onclick="window.open('https://instagram.com/box.1v1')" tabindex="0">
 <h3 style="font-size: 1.8rem;">INSTAGRAM</h3>
-<p style="font-size: 14px;
-margin-top: 8px;">Главные новости в медиа формате.</p>
+<p style="font-size: 14px; margin-top: 8px;">Главные новости в медиа формате.</p>
 </div>
 </div>
 </section>
-
-<section id="news">
-    <div style="margin-bottom: 60px;">
-        <h1 style="font-size: clamp(3rem, 10vw, 8rem);">НОВОСТИ.</h1>
-        <p style="font-size: 1.25rem;">События и обновления экосистемы BOX1V1.</p>
-    </div>
-    <div id="news-list" style="display: grid; grid-template-columns: 1fr; gap: 24px;">
-        <p>Загрузка ленты из Telegram...</p>
-    </div>
-</section>
-
 <section id="roster">
 <div style="margin-bottom: 60px;">
 <h1 style="font-size: clamp(3rem, 10vw, 8rem);">УЧАСТНИКИ.</h1>
 <p style="font-size: 1.25rem;">Действующие участники BOX1V1.</p>
 </div>
-<div class="controls-row" style="margin-bottom: 40px;
-display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:20px;">
+<div class="controls-row" style="margin-bottom: 40px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:20px;">
 <input type="text" class="search-input" id="playerSearch" placeholder="Поиск по имени..." oninput="debouncedRender()">
-<div class="filter-bar" style="display:flex;
-gap:8px;">
+<div class="filter-bar" style="display:flex; gap:8px;">
 <button class="filter-btn active" data-role="Все" onclick="setRoleFilter('Все', this)">Все</button>
 <button class="filter-btn" data-role="Игрок" onclick="setRoleFilter('Игрок', this)">Полевые</button>
 <button class="filter-btn" data-role="Вратарь" onclick="setRoleFilter('Вратарь', this)">Вратари</button>
@@ -435,8 +424,7 @@ gap:8px;">
 <div class="bento-grid" id="roster-grid"></div>
 </section>
 <section id="stats">
-<h1 style="font-size: clamp(3rem, 10vw, 8rem);
-margin-bottom:40px;">РЕЙТИНГ.</h1>
+<h1 style="font-size: clamp(3rem, 10vw, 8rem); margin-bottom:40px;">РЕЙТИНГ.</h1>
 <div class="table-wrapper">
 <table role="grid">
 <thead>
@@ -450,24 +438,20 @@ margin-bottom:40px;">РЕЙТИНГ.</h1>
 <div class="modal-overlay" id="playerModal" onclick="closeModal('playerModal')" role="dialog" aria-modal="true">
 <div class="modal-content" onclick="event.stopPropagation()">
 <button class="modal-close" onclick="closeModal('playerModal')" aria-label="Закрыть">✕</button>
-<div id="m-img-container" style="width:100%; height:320px; border-radius:24px;
-overflow:hidden; background:#f0f0f0; margin-bottom:32px;">
+<div id="m-img-container" style="width:100%; height:320px; border-radius:24px; overflow:hidden; background:#f0f0f0; margin-bottom:32px;">
 <img id="m-img" src="" style="width:100%; height:100%; object-fit:cover;" alt="Фото игрока">
 </div>
 <div style="display:flex; justify-content:space-between; align-items:flex-start;">
 <div>
-<span id="m-role" style="font-size:11px; font-weight:800; text-transform:uppercase; color:var(--accent-dark); background:rgba(34,197,94,0.1);
-padding:6px 12px; border-radius:10px;">ROLE</span>
+<span id="m-role" style="font-size:11px; font-weight:800; text-transform:uppercase; color:var(--accent-dark); background:rgba(34,197,94,0.1); padding:6px 12px; border-radius:10px;">ROLE</span>
 <h2 id="m-name" style="font-size: 2.5rem; margin-top:12px;">NAME</h2>
 <div id="m-badges" style="display:flex; gap:8px; margin-top:16px; flex-wrap:wrap;"></div>
 </div>
-<div id="m-ovr" style="font-size: 3rem; font-weight:900; font-style:italic; line-height:1;
-letter-spacing:-3px;">99</div>
+<div id="m-ovr" style="font-size: 3rem; font-weight:900; font-style:italic; line-height:1; letter-spacing:-3px;">99</div>
 </div>
 <div id="m-stats" style="margin-top:40px; display:grid; grid-template-columns: 1fr 1fr; gap: 32px;"></div>
 <div style="margin-top:48px; display:flex; gap:12px; flex-wrap:wrap;">
-<button class="btn btn-primary" style="flex:1;
-min-width:140px;" onclick="copyPlayerID()">Копировать ID</button>
+<button class="btn btn-primary" style="flex:1; min-width:140px;" onclick="copyPlayerID()">Копировать ID</button>
 <button class="btn btn-outline" style="flex:1; min-width:140px;" onclick="sharePlayer()">Поделиться</button>
 </div>
 </div>
@@ -475,11 +459,9 @@ min-width:140px;" onclick="copyPlayerID()">Копировать ID</button>
 <div class="modal-overlay" id="applyModal" onclick="closeModal('applyModal')" role="dialog" aria-modal="true">
 <div class="modal-content" onclick="event.stopPropagation()">
 <button class="modal-close" onclick="closeModal('applyModal')">✕</button>
-<h2 style="font-size:2rem;
-margin-bottom:20px;">ВСТУПИТЬ В BOX1V1</h2>
+<h2 style="font-size:2rem; margin-bottom:20px;">ВСТУПИТЬ В BOX1V1</h2>
 <p style="margin-bottom:32px;">Чтобы оформить заявку, оставь комментарий под любым постом с хештегом #BOXУЧАСТВОВАТЬ.</p>
-<button class="btn btn-primary" style="width:100%;
-padding:24px;" onclick="window.open('https://t.me/streetbox1v1')">Открыть Telegram</button>
+<button class="btn btn-primary" style="width:100%; padding:24px;" onclick="window.open('https://t.me/streetbox1v1')">Открыть Telegram</button>
 </div>
 </div>
 <div class="modal-overlay" id="rulesModal" onclick="closeModal('rulesModal')" role="dialog" aria-modal="true">
@@ -487,21 +469,17 @@ padding:24px;" onclick="window.open('https://t.me/streetbox1v1')">Открыть
 <button class="modal-close" onclick="closeModal('rulesModal')">✕</button>
 <h2 style="font-size:2rem; margin-bottom:32px;">РЕГЛАМЕНТ</h2>
 <div style="display:flex; flex-direction:column; gap:20px;">
-<div style="padding-bottom:15px;
-border-bottom:1px solid var(--border);">
+<div style="padding-bottom:15px; border-bottom:1px solid var(--border);">
 <strong style="text-transform:uppercase; font-size:12px; display:block; margin-bottom:4px; color:var(--accent-dark)">01. Формат</strong>
 <p style="font-size:15px; color:var(--text); font-weight:500;">Матчи 1 на 1 с участием независимого вратаря.</p>
 </div>
-<div style="padding-bottom:15px;
-border-bottom:1px solid var(--border);">
+<div style="padding-bottom:15px; border-bottom:1px solid var(--border);">
 <strong style="text-transform:uppercase; font-size:12px; display:block; margin-bottom:4px; color:var(--accent-dark)">02. Тайминг</strong>
 <p style="font-size:15px; color:var(--text); font-weight:500;">Лимит на атаку — 20 секунд.</p>
 </div>
-<div style="padding-bottom:15px;
-border-bottom:1px solid var(--border);">
+<div style="padding-bottom:15px; border-bottom:1px solid var(--border);">
 <strong style="text-transform:uppercase; font-size:12px; display:block; margin-bottom:4px; color:var(--accent-dark)">03. Результат</strong>
-<p style="font-size:15px; color:var(--text);
-font-weight:500;">Продолжительность игры до двух голов, без ничьи.</p>
+<p style="font-size:15px; color:var(--text); font-weight:500;">Продолжительность игры до двух голов, без ничьи.</p>
 </div>
 </div>
 </div>
@@ -531,8 +509,8 @@ const statDefs = {
 };
 
 /**
- * TOAST SYSTEM
- */
+* TOAST SYSTEM
+*/
 function showToast(message) {
 const container = document.getElementById('toast-container');
 const toast = document.createElement('div');
@@ -547,8 +525,39 @@ setTimeout(() => toast.remove(), 500);
 }
 
 /**
- * INITIALIZATION
- */
+* ADDED: Мобильные тултипы через touch
+*/
+function initTouchTooltips() {
+  if ('ontouchstart' in window) {
+    document.addEventListener('touchstart', function(e) {
+      const statHeader = e.target.closest('.stat-header');
+      if (!statHeader) return;
+      
+      // Удаляем active класс у всех
+      document.querySelectorAll('.stat-header.touch-active').forEach(el => {
+        el.classList.remove('touch-active');
+      });
+      
+      // Добавляем текущему
+      statHeader.classList.add('touch-active');
+      
+      // Закрываем при тапе вне
+      setTimeout(() => {
+        const closeHandler = function(evt) {
+          if (!evt.target.closest('.stat-header')) {
+            statHeader.classList.remove('touch-active');
+            document.removeEventListener('touchstart', closeHandler);
+          }
+        };
+        document.addEventListener('touchstart', closeHandler);
+      }, 10);
+    }, { passive: true });
+  }
+}
+
+/**
+* INITIALIZATION
+*/
 async function init() {
 try {
 const res = await fetch(CSV_URL);
@@ -561,17 +570,19 @@ showToast("Ростер временно пуст");
 renderRoster();
 renderStats();
 handleHashAndDeepLink();
-loadFullNews(); // Инициализация новостей
 setInterval(updateTimer, 1000);
 updateTimer();
 document.getElementById('preloader').classList.add('loaded');
+
+// ADDED: Инициализация тултипов для мобильных
+initTouchTooltips();
+
 } catch (e) {
 console.error("Load Error", e);
 showToast("Ошибка загрузки данных");
 document.getElementById('preloader').classList.add('loaded');
 }
 }
-
 function parseCSV(text) {
 const rows = text.replace(/\r/g, '').split('\n').filter(r => r.trim());
 return rows.slice(1).map(row => {
@@ -591,66 +602,217 @@ badges: c[9] ? c[9].split('|').map(b => b.trim()) : []
 };
 }).filter(p => p.name);
 }
-
 /**
- * NAVIGATION & HASH LOGIC
- */
+* NAVIGATION & HASH LOGIC
+*/
 function handleHashAndDeepLink() {
 const fullHash = window.location.hash;
 if (!fullHash) return;
 const [hashPart, queryPart] = fullHash.split('?');
 const cleanHash = hashPart.replace('#', '');
-
-// Добавлена 'news' в список разрешенных
-if (cleanHash && ['home', 'roster', 'stats', 'news'].includes(cleanHash)) {
-switchTab(cleanHash);
+if (cleanHash && ['home', 'roster', 'stats'].includes(cleanHash)) {
+switchTab(cleanHash, false);
+}
 if (queryPart) {
 const params = new URLSearchParams(queryPart);
-const playerID = params.get('player');
-if (playerID) {
-setTimeout(() => openModal('playerModal', decodeURIComponent(playerID)), 500);
+const pNameFromUrl = params.get('player');
+if (pNameFromUrl) {
+const pName = pNameFromUrl.replace(/-/g, ' ');
+const found = allPlayers.find(x => x.name.toLowerCase() === pName.toLowerCase());
+if (found) setTimeout(() => openPlayerModal(found.name), 200);
 }
 }
 }
+function switchTab(id, updateHash = true) {
+const target = document.getElementById(id);
+if(!target) return;
+document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+target.classList.add('active');
+const btn = document.getElementById('btn-' + id);
+if(btn) btn.classList.add('active');
+if (updateHash) window.history.pushState(null, null, `#${id}`);
+window.scrollTo({top:0, behavior:'smooth'});
+}
+/**
+* RENDERING
+*/
+function debouncedRender() {
+clearTimeout(renderTimeout);
+renderTimeout = setTimeout(renderRoster, 150);
+}
+function renderRoster() {
+const grid = document.getElementById('roster-grid');
+const search = document.getElementById('playerSearch').value.toLowerCase();
+const filtered = allPlayers.filter(p => {
+const mSearch = p.name.toLowerCase().includes(search);
+const mRole = currentRoleFilter === 'Все' || p.role === currentRoleFilter;
+return mSearch && mRole;
+});
+if (filtered.length === 0) {
+grid.innerHTML = `<div style="grid-column: 1/-1; padding: 40px; text-align: center; color: var(--text-dim);">Атлеты не найдены</div>`;
+return;
+}
+grid.innerHTML = filtered.map((p, i) => `
+<div class="card player-card"
+tabindex="0"
+role="button"
+aria-label="Профиль игрока ${p.name}, рейтинг ${p.ovr}, роль ${p.role}${p.badges[0] ? ', ' + p.badges[0] : ''}"
+style="animation: fadeInUp 0.6s var(--cubic) both ${i*0.03}s"
+onclick="openPlayerModal('${p.name}')"
+onkeydown="if(event.key==='Enter') openPlayerModal('${p.name}')">
+<div class="player-img" style="background-image: url('${p.photo}')"></div>
+${p.status ? `<div style="position:absolute; top:32px; right:32px; z-index:3; background:var(--accent); color:#000; font-size:10px; font-weight:900; padding:6px 14px; border-radius:12px; text-transform:uppercase;">${p.status}</div>` : ''}
+<div class="player-info">
+<span style="font-size:11px; font-weight:800; text-transform:uppercase; color:var(--accent); letter-spacing:0.1em;">${p.role}</span>
+<h3 style="font-size:2.2rem; margin: 8px 0;">${p.name}</h3>
+${p.badges.length > 0 ? `<div style="font-size:10px; color:rgba(255,255,255,0.7); margin-top:4px;">${p.badges[0]}</div>` : ''}
+<div class="ovr-badge">OVR ${p.ovr}</div>
+</div>
+</div>
+`).join('');
+}
+function renderStats() {
+const sorted = [...allPlayers].sort((a, b) => b.ovr - a.ovr);
+document.getElementById('stats-body').innerHTML = sorted.map((p, i) => `
+<tr onclick="openPlayerModal('${p.name}')" style="cursor:pointer" tabindex="0" onkeydown="if(event.key==='Enter') openPlayerModal('${p.name}')" aria-label="Рейтинг ${p.ovr}, ${p.name}, ${p.role}${p.badges[0] ? ', ' + p.badges[0] : ''}">
+<td style="font-weight:900; color:var(--text-dim)">${(i+1).toString().padStart(2, '0')}</td>
+<td>
+<div style="display:flex; align-items:center; gap:16px;">
+<img src="${p.photo}" style="width:48px; height:48px; border-radius:14px; object-fit:cover;" alt="">
+<div>
+<div style="font-weight:900; text-transform:uppercase; font-style:italic;">${p.name}</div>
+<div style="font-size:10px; font-weight:700; color:var(--text-dim); text-transform:uppercase;">${p.role}</div>
+</div>
+</div>
+</td>
+<td style="text-align:right;"><span class="ovr-badge">${p.ovr}</span></td>
+</tr>
+`).join('');
+}
+/**
+* MODAL LOGIC & ACCESSIBILITY
+*/
+let lastFocusedElement;
+function openModal(id) {
+lastFocusedElement = document.activeElement;
+const modal = document.getElementById(id);
+modal.classList.add('active');
+document.body.style.overflow = 'hidden';
+setTimeout(() => {
+const firstInput = modal.querySelector('button, input, [tabindex="0"]');
+if (firstInput) firstInput.focus();
+}, 100);
+modal.addEventListener('keydown', trapFocus);
+}
+function closeModal(id) {
+const modal = document.getElementById(id);
+if(!modal) return;
+modal.classList.remove('active');
+document.body.style.overflow = '';
+modal.removeEventListener('keydown', trapFocus);
+if (id === 'playerModal') {
+const currentTab = document.querySelector('section.active').id;
+window.history.replaceState(null, null, `#${currentTab}`);
+}
+if (lastFocusedElement) lastFocusedElement.focus();
+}
+function trapFocus(e) {
+if (e.key !== 'Tab') return;
+const focusableEls = this.querySelectorAll('button, [href], input, [tabindex="0"]');
+const first = focusableEls[0];
+const last = focusableEls[focusableEls.length - 1];
+if (e.shiftKey) {
+if (document.activeElement === first) { last.focus(); e.preventDefault(); }
+} else {
+if (document.activeElement === last) { first.focus(); e.preventDefault(); }
+}
+}
+window.addEventListener('keydown', (e) => {
+if (e.key === 'Escape') {
+const activeModal = document.querySelector('.modal-overlay.active');
+if (activeModal) closeModal(activeModal.id);
+}
+});
+
+function openPlayerModal(name) {
+  const p = allPlayers.find(x => x.name.toLowerCase() === name.toLowerCase());
+  if(!p) {
+    showToast("Игрок не найден");
+    return;
+  }
+
+  document.getElementById('m-name').innerText = p.name;
+  document.getElementById('m-role').innerText = p.role;
+  document.getElementById('m-ovr').innerText = p.ovr;
+  document.getElementById('m-img').src = p.photo;
+  document.getElementById('m-badges').innerHTML = p.badges.map(b => `<span style="font-size:10px; background:#000; color:#fff; padding:4px 10px; border-radius:8px; font-weight:800;">${b}</span>`).join('');
+
+  const isGK = p.role === 'Вратарь';
+  const stats = [
+    { l: isGK ? 'REF' : 'DRI', v: p.drib },
+    { l: isGK ? 'DIV' : 'SPD', v: p.speed },
+    { l: isGK ? 'HAN' : 'SHT', v: p.shot },
+    { l: isGK ? 'POS' : 'PHY', v: p.phys }
+  ];
+
+  document.getElementById('m-stats').innerHTML = stats.map(s => `
+    <div class="stat-item">
+      <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
+        <div class="stat-header" data-tip="${statDefs[s.l]}" aria-label="${s.l}: ${statDefs[s.l]}">
+          <span style="font-size:12px; font-weight:900;">${s.l}</span>
+          <i class="info-icon">?</i>
+        </div>
+        <span style="font-size:12px; font-weight:900;">${s.v}</span>
+      </div>
+      <div style="height:4px; background:var(--bg-alt); border-radius:2px; overflow:hidden;">
+        <div style="width:0%; height:100%; background:var(--text); transition:1.2s var(--cubic) 0.3s;" id="bar-${s.l}"></div>
+      </div>
+    </div>
+  `).join('');
+
+  openModal('playerModal');
+
+  setTimeout(() => {
+    stats.forEach(s => {
+      const bar = document.getElementById(`bar-${s.l}`);
+      if(bar) bar.style.width = s.v + '%';
+    });
+  }, 100);
+
+  const currentTab = document.querySelector('section.active').id;
+  const playerSlug = p.name.replace(/\s+/g, '-').toLowerCase();
+  window.history.replaceState(null, null, `#${currentTab}?player=${playerSlug}`);
 }
 
-function switchTab(id) {
-document.querySelectorAll('section').forEach(s => {
-s.classList.remove('active');
-s.style.display = 'none';
-});
-const activeSection = document.getElementById(id);
-activeSection.style.display = 'block';
-setTimeout(() => activeSection.classList.add('active'), 10);
-document.querySelectorAll('.nav-links a').forEach(a => {
-a.classList.remove('active');
-if (a.id === `btn-${id}`) a.classList.add('active');
-});
-window.scrollTo({ top: 0, behavior: 'smooth' });
+/**
+* ACTIONS
+*/
+function setRoleFilter(role, btn) {
+currentRoleFilter = role;
+document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+btn.classList.add('active');
+renderRoster();
 }
-
 function toggleMenu() {
-const burger = document.getElementById('burger');
 const drawer = document.getElementById('mobile-drawer');
 const overlay = document.getElementById('drawer-overlay');
-const isOpen = burger.classList.toggle('open');
-drawer.classList.toggle('open', isOpen);
-overlay.classList.toggle('open', isOpen);
+const burger = document.getElementById('burger');
+const isOpen = drawer.classList.toggle('open');
+overlay.classList.toggle('open');
+burger.classList.toggle('open');
 burger.setAttribute('aria-expanded', isOpen);
 }
-
 function handleMobileNav(id, isModal = false) {
 toggleMenu();
 setTimeout(() => isModal ? openModal(id) : switchTab(id), 400);
 }
-
 function copyPlayerID() {
 const name = document.getElementById('m-name').innerText;
 navigator.clipboard.writeText(name).then(() => {
 showToast('ID игрока скопирован');
 });
 }
-
 function sharePlayer() {
 const name = document.getElementById('m-name').innerText;
 const url = window.location.href;
@@ -665,7 +827,6 @@ navigator.clipboard.writeText(url);
 showToast('Ссылка скопирована в буфер');
 }
 }
-
 function updateTimer() {
 const now = Date.now();
 const diff = TARGET_DATE - now;
@@ -680,150 +841,10 @@ document.getElementById('hours').innerText = Math.floor((diff % 864e5) / 36e5).t
 document.getElementById('mins').innerText = Math.floor((diff % 36e5) / 6e4).toString().padStart(2, '0');
 document.getElementById('secs').innerText = Math.floor((diff % 6e4) / 1000).toString().padStart(2, '0');
 }
-
-/**
- * ROSTER LOGIC
- */
-function debouncedRender() {
-clearTimeout(renderTimeout);
-renderTimeout = setTimeout(renderRoster, 300);
-}
-
-function setRoleFilter(role, btn) {
-currentRoleFilter = role;
-document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-btn.classList.add('active');
-renderRoster();
-}
-
-function renderRoster() {
-const grid = document.getElementById('roster-grid');
-const search = document.getElementById('playerSearch').value.toLowerCase();
-const filtered = allPlayers.filter(p => {
-const matchesRole = currentRoleFilter === 'Все' || p.role === currentRoleFilter;
-const matchesSearch = p.name.toLowerCase().includes(search);
-return matchesRole && matchesSearch;
-});
-grid.innerHTML = filtered.map(p => `
-<div class="card player-card" onclick="openModal('playerModal', '${p.name}')" tabindex="0">
-<div class="player-img" style="background-image: url('${p.photo}')"></div>
-<div class="player-info">
-<span style="font-size:11px; font-weight:800; text-transform:uppercase; opacity:0.8;">${p.role}</span>
-<h3 style="font-size: 1.8rem; margin: 4px 0;">${p.name}</h3>
-<div class="ovr-badge">OVR ${p.ovr}</div>
-</div>
-</div>
-`).join('');
-}
-
-/**
- * STATS LOGIC
- */
-function renderStats() {
-const body = document.getElementById('stats-body');
-const sorted = [...allPlayers].sort((a, b) => b.ovr - a.ovr);
-body.innerHTML = sorted.map((p, i) => `
-<tr onclick="openModal('playerModal', '${p.name}')" style="cursor:pointer">
-<td>${(i + 1).toString().padStart(2, '0')}.</td>
-<td style="font-weight:700;">${p.name}</td>
-<td style="text-align:right; font-weight:900; font-style:italic;">${p.ovr}</td>
-</tr>
-`).join('');
-}
-
-/**
- * MODAL LOGIC
- */
-function openModal(id, playerName) {
-const modal = document.getElementById(id);
-modal.classList.add('active');
-if (id === 'playerModal' && playerName) {
-const p = allPlayers.find(x => x.name === playerName);
-if (p) {
-document.getElementById('m-name').innerText = p.name;
-document.getElementById('m-ovr').innerText = p.ovr;
-document.getElementById('m-role').innerText = p.role;
-document.getElementById('m-img').src = p.photo;
-const badges = document.getElementById('m-badges');
-badges.innerHTML = p.badges.map(b => `<span style="font-size:10px; font-weight:700; background:#eee; padding:4px 8px; border-radius:6px;">${b}</span>`).join('');
-const stats = document.getElementById('m-stats');
-const sData = p.role === 'Вратарь' ? 
-[ {l:'REF', v:p.speed}, {l:'DIV', v:p.drib}, {l:'HAN', v:p.shot}, {l:'POS', v:p.phys} ] :
-[ {l:'DRI', v:p.drib}, {l:'SPD', v:p.speed}, {l:'SHT', v:p.shot}, {l:'PHY', v:p.phys} ];
-stats.innerHTML = sData.map(s => `
-<div class="stat-item">
-<div class="stat-header" data-tip="${statDefs[s.l] || ''}">
-<span style="font-size:12px; font-weight:800;">${s.l}</span>
-<div class="info-icon">i</div>
-</div>
-<div style="font-size:1.8rem; font-weight:900; font-style:italic; margin-top:4px;">${s.v}</div>
-<div style="height:4px; background:#f0f0f0; border-radius:2px; margin-top:8px;">
-<div style="width:${s.v}%; height:100%; background:var(--text); border-radius:2px;"></div>
-</div>
-</div>
-`).join('');
-const url = new URL(window.location);
-url.hash = `roster?player=${encodeURIComponent(p.name)}`;
-window.history.replaceState(null, '', url);
-}
-}
-}
-
-function closeModal(id) {
-document.getElementById(id).classList.remove('active');
-if (id === 'playerModal') {
-const url = new URL(window.location);
-url.hash = 'roster';
-window.history.replaceState(null, '', url);
-}
-}
-
-/**
- * НОВАЯ ФУНКЦИЯ ЗАГРУЗКИ НОВОСТЕЙ
- */
-async function loadFullNews() {
-    const container = document.getElementById('news-list');
-    const channelName = 'streetbox1v1';
-    // Прокси для обхода CORS
-    const url = `https://api.allorigins.win/get?url=${encodeURIComponent('https://t.me/s/' + channelName)}`;
-
-    try {
-        const response = await fetch(url);
-        const data = await response.json();
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(data.contents, 'text/html');
-        
-        // Получаем последние сообщения из ленты
-        const messages = Array.from(doc.querySelectorAll('.tgme_widget_message_wrap')).reverse().slice(0, 10);
-        
-        if (messages.length > 0) {
-            container.innerHTML = messages.map(msg => {
-                const text = msg.querySelector('.tgme_widget_message_text')?.innerHTML || 'Медиа-контент (фото/видео)';
-                const date = msg.querySelector('.time')?.innerText || 'Сегодня';
-                
-                return `
-                    <div class="card" style="cursor: default;">
-                        <span style="font-size: 11px; font-weight: 800; color: var(--accent-dark); text-transform: uppercase;">${date}</span>
-                        <div style="margin-top: 15px; font-size: 1rem; color: var(--text); line-height: 1.6;">
-                            ${text}
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        } else {
-            container.innerHTML = '<p>В канале пока нет записей.</p>';
-        }
-    } catch (e) {
-        console.error('Ошибка загрузки TG:', e);
-        container.innerHTML = '<p>Не удалось загрузить новости. <a href="https://t.me/streetbox1v1" target="_blank">Перейти в Telegram</a></p>';
-    }
-}
-
 window.addEventListener('scroll', () => {
 document.body.classList.toggle('scrolled', window.scrollY > 50);
 });
-
-document.addEventListener('DOMContentLoaded', init);
+window.onload = init;
 </script>
 </body>
 </html>
