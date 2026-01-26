@@ -360,16 +360,21 @@ class SupabaseService {
     console.log('URL:', SUPABASE_CONFIG.url);
     console.log('Key первые 10 символов:', SUPABASE_CONFIG.publishableKey.substring(0, 10) + '...');
     
- try {
-  this.client = window.supabase.createClient(
-    SUPABASE_CONFIG.url,
-    SUPABASE_CONFIG.publishableKey,
-    {
-      auth: {
-        persistSession: false
-      }
+    // Проверяем, что библиотека загрузилась
+    if (typeof window.supabase === 'undefined') {
+      throw new Error('Supabase библиотека не загрузилась!');
     }
-  );
+    
+    try {
+      this.client = window.supabase.createClient(
+        SUPABASE_CONFIG.url,
+        SUPABASE_CONFIG.publishableKey,
+        {
+          auth: {
+            persistSession: false
+          }
+        }
+      );
       console.log('✅ Supabase клиент создан');
     } catch (error) {
       console.error('❌ Ошибка создания клиента:', error);
@@ -650,14 +655,12 @@ async function init() {
     console.log('Проверяем Supabase...');
     
     // 1. Проверяем что библиотека Supabase загрузилась
-if (typeof window.supabase === 'undefined') {
-  console.error('❌ Библиотека Supabase не загрузилась!');
-  showToast('Ошибка загрузки библиотеки Supabase');
-  document.getElementById('preloader').classList.add('loaded');
-  return;
-}
-
-console.log('✅ Библиотека Supabase загружена');
+    if (typeof window.supabase === 'undefined') {
+      console.error('❌ Библиотека Supabase не загрузилась!');
+      showToast('Ошибка загрузки библиотеки Supabase');
+      document.getElementById('preloader').classList.add('loaded');
+      return;
+    }
     
     console.log('✅ Библиотека Supabase загружена');
     
@@ -729,6 +732,369 @@ console.log('✅ Библиотека Supabase загружена');
     document.getElementById('preloader').classList.add('loaded');
   }
 }
+
+// ========== ГЛАВНЫЕ ФУНКЦИИ ПРИЛОЖЕНИЯ ==========
+const TARGET_DATE = new Date("March 1, 2026 00:00:00").getTime();
+let currentRoleFilter = 'Все';
+let renderTimeout;
+
+const statDefs = {
+  'DRI': 'Техника контроля мяча и ведения дриблинга',
+  'SPD': 'Стартовый рывок и скорость перемещения',
+  'SHT': 'Мощность и точность завершающего удара',
+  'PHY': 'Физическая мощь, борьба и атлетизм',
+  'REF': 'Молниеносная реакция на удары в упор',
+  'DIV': 'Дальность прыжка и охват створа ворот',
+  'HAN': 'Надежность фиксации и отражения мяча',
+  'POS': 'Грамотный выбор позиции в створе ворот'
+};
+
+function showToast(message) {
+  const container = document.getElementById('toast-container');
+  const toast = document.createElement('div');
+  toast.className = 'toast';
+  toast.innerHTML = `<span>${message}</span>`;
+  container.appendChild(toast);
+  setTimeout(() => {
+    toast.style.opacity = '0';
+    toast.style.transform = 'translateY(20px)';
+    setTimeout(() => toast.remove(), 500);
+  }, 3000);
+}
+
+function initTouchTooltips() {
+  if ('ontouchstart' in window) {
+    document.addEventListener('touchstart', function(e) {
+      const statHeader = e.target.closest('.stat-header');
+      if (!statHeader) return;
+      
+      document.querySelectorAll('.stat-header.touch-active').forEach(el => {
+        el.classList.remove('touch-active');
+      });
+      
+      statHeader.classList.add('touch-active');
+      
+      setTimeout(() => {
+        const closeHandler = function(evt) {
+          if (!evt.target.closest('.stat-header')) {
+            statHeader.classList.remove('touch-active');
+            document.removeEventListener('touchstart', closeHandler);
+          }
+        };
+        document.addEventListener('touchstart', closeHandler);
+      }, 10);
+    }, { passive: true });
+  }
+}
+
+async function renderLeaderboard() {
+  const tbody = document.getElementById('leaderboard-body');
+  if (!tbody) return;
+  
+  tbody.innerHTML = allPlayers.map((player, index) => `
+    <tr onclick="openPlayerModalFromId('${player.id}')" style="cursor:pointer">
+      <td style="font-weight:900; color:var(--text-dim); width:60px;">${index + 1}</td>
+      <td>
+        <div style="display:flex; align-items:center; gap:12px;">
+          ${player.avatar_url ? 
+            `<img src="${player.avatar_url}" style="width:36px; height:36px; border-radius:50%; object-fit:cover;">` : 
+            `<div style="width:36px; height:36px; border-radius:50%; background:var(--bg-alt); display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:900;">${player.nickname.charAt(0)}</div>`
+          }
+          <div>
+            <div style="font-weight:900; text-transform:uppercase; font-style:italic;">${player.nickname}</div>
+            ${player.telegram ? `<div style="font-size:10px; color:var(--text-dim);">${player.telegram}</div>` : ''}
+          </div>
+        </div>
+      </td>
+      <td style="text-align:right; font-weight:900; font-size:1.2rem;">${player.elo_rating}</td>
+      <td style="text-align:right; color:var(--accent); font-weight:800;">+0</td>
+      <td style="text-align:right; font-size:0.9rem; color:var(--text-dim);">
+        ${player.wins || 0}/${player.losses || 0}
+      </td>
+    </tr>
+  `).join('');
+}
+
+async function openPlayerModalFromId(playerId) {
+  const player = allPlayers.find(p => p.id === playerId);
+  if (!player) {
+    showToast("Игрок не найден");
+    return;
+  }
+  
+  openPlayerModal(player);
+}
+
+function openPlayerModal(player) {
+  document.getElementById('m-name').innerText = player.nickname;
+  document.getElementById('m-role').innerText = 'Игрок';
+  document.getElementById('m-ovr').innerText = player.elo_rating;
+  document.getElementById('m-img').src = player.avatar_url || 'https://via.placeholder.com/400x600?text=No+Photo';
+  document.getElementById('m-badges').innerHTML = '';
+  
+  openModal('playerModal');
+}
+
+function handleHashAndDeepLink() {
+const fullHash = window.location.hash;
+if (!fullHash) return;
+const [hashPart, queryPart] = fullHash.split('?');
+const cleanHash = hashPart.replace('#', '');
+if (cleanHash && ['home', 'roster', 'stats'].includes(cleanHash)) {
+switchTab(cleanHash, false);
+}
+if (queryPart) {
+const params = new URLSearchParams(queryPart);
+const pNameFromUrl = params.get('player');
+if (pNameFromUrl) {
+const pName = pNameFromUrl.replace(/-/g, ' ');
+const found = allPlayers.find(x => x.name.toLowerCase() === pName.toLowerCase());
+if (found) setTimeout(() => openPlayerModal(found.name), 200);
+}
+}
+}
+
+function switchTab(id, updateHash = true) {
+const target = document.getElementById(id);
+if(!target) return;
+document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+target.classList.add('active');
+const btn = document.getElementById('btn-' + id);
+if(btn) btn.classList.add('active');
+if (updateHash) window.history.pushState(null, null, `#${id}`);
+window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function debouncedRender() {
+clearTimeout(renderTimeout);
+renderTimeout = setTimeout(renderRoster, 150);
+}
+
+function renderRoster() {
+const grid = document.getElementById('roster-grid');
+const search = document.getElementById('playerSearch').value.toLowerCase();
+
+const filtered = allPlayers.filter(p => {
+const mSearch = p.nickname?.toLowerCase().includes(search) || p.name?.toLowerCase().includes(search);
+const mRole = currentRoleFilter === 'Все' || (p.role === currentRoleFilter);
+return mSearch && mRole;
+});
+
+if (filtered.length === 0) {
+grid.innerHTML = `<div style="grid-column: 1/-1; padding: 40px; text-align: center; color: var(--text-dim);">Атлеты не найдены</div>`;
+return;
+}
+
+grid.innerHTML = filtered.map((p, i) => `
+<div class="card player-card"
+tabindex="0"
+role="button"
+aria-label="Профиль игрока ${p.nickname || p.name}, рейтинг ${p.elo_rating || p.ovr}"
+style="animation: fadeInUp 0.6s var(--cubic) both ${i*0.03}s"
+onclick="openPlayerModalFromId('${p.id}')"
+onkeydown="if(event.key==='Enter') openPlayerModalFromId('${p.id}')">
+<div class="player-img" style="background-image: url('${p.avatar_url || 'https://via.placeholder.com/400x600?text=No+Photo'}')"></div>
+<div class="player-info">
+<span style="font-size:11px; font-weight:800; text-transform:uppercase; color:var(--accent); letter-spacing:0.1em;">Игрок</span>
+<h3 style="font-size:2.2rem; margin: 8px 0;">${p.nickname}</h3>
+<div class="ovr-badge">ELO ${p.elo_rating}</div>
+</div>
+</div>
+`).join('');
+}
+
+async function renderStats() {
+const tbody = document.getElementById('stats-body');
+if (!tbody) return;
+
+const sorted = allPlayers.sort((a, b) => b.elo_rating - a.elo_rating);
+
+tbody.innerHTML = sorted.map((p, i) => `
+<tr onclick="openPlayerModalFromId('${p.id}')" style="cursor:pointer" tabindex="0">
+<td style="font-weight:900; color:var(--text-dim)">${(i+1).toString().padStart(2, '0')}</td>
+<td>
+<div style="display:flex; align-items:center; gap:16px;">
+<img src="${p.avatar_url || 'https://via.placeholder.com/150x150?text=No+Photo'}" 
+     style="width:48px; height:48px; border-radius:14px; object-fit:cover;" 
+     alt="${p.nickname}">
+<div>
+<div style="font-weight:900; text-transform:uppercase; font-style:italic;">${p.nickname}</div>
+<div style="font-size:10px; font-weight:700; color:var(--text-dim); text-transform:uppercase;">
+  ${p.total_matches || 0} матчей
+</div>
+</div>
+</div>
+</td>
+<td style="text-align:right;">
+<span class="ovr-badge">${p.elo_rating}</span>
+</td>
+</tr>
+`).join('');
+}
+
+let lastFocusedElement;
+function openModal(id) {
+lastFocusedElement = document.activeElement;
+const modal = document.getElementById(id);
+modal.classList.add('active');
+document.body.style.overflow = 'hidden';
+setTimeout(() => {
+const firstInput = modal.querySelector('button, input, [tabindex="0"]');
+if (firstInput) firstInput.focus();
+}, 100);
+modal.addEventListener('keydown', trapFocus);
+}
+function closeModal(id) {
+const modal = document.getElementById(id);
+if(!modal) return;
+modal.classList.remove('active');
+document.body.style.overflow = '';
+modal.removeEventListener('keydown', trapFocus);
+if (id === 'playerModal') {
+const currentTab = document.querySelector('section.active').id;
+window.history.replaceState(null, null, `#${currentTab}`);
+}
+if (lastFocusedElement) lastFocusedElement.focus();
+}
+function trapFocus(e) {
+if (e.key !== 'Tab') return;
+const focusableEls = this.querySelectorAll('button, [href], input, [tabindex="0"]');
+const first = focusableEls[0];
+const last = focusableEls[focusableEls.length - 1];
+if (e.shiftKey) {
+if (document.activeElement === first) { last.focus(); e.preventDefault(); }
+} else {
+if (document.activeElement === last) { first.focus(); e.preventDefault(); }
+}
+}
+window.addEventListener('keydown', (e) => {
+if (e.key === 'Escape') {
+const activeModal = document.querySelector('.modal-overlay.active');
+if (activeModal) closeModal(activeModal.id);
+}
+});
+
+function setRoleFilter(role, btn) {
+currentRoleFilter = role;
+document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+btn.classList.add('active');
+renderRoster();
+}
+
+function toggleMenu() {
+const drawer = document.getElementById('mobile-drawer');
+const overlay = document.getElementById('drawer-overlay');
+const burger = document.getElementById('burger');
+const isOpen = drawer.classList.toggle('open');
+overlay.classList.toggle('open');
+burger.classList.toggle('open');
+burger.setAttribute('aria-expanded', isOpen);
+}
+
+function handleMobileNav(id, isModal = false) {
+toggleMenu();
+setTimeout(() => isModal ? openModal(id) : switchTab(id), 400);
+}
+
+function copyPlayerID() {
+const name = document.getElementById('m-name').innerText;
+navigator.clipboard.writeText(name).then(() => {
+showToast('ID игрока скопирован');
+});
+}
+
+function sharePlayer() {
+const name = document.getElementById('m-name').innerText;
+const url = window.location.href;
+if(navigator.share) {
+navigator.share({
+title: 'BOX1V1 | ' + name,
+text: `Карточка атлета ${name} в системе BOX1V1! 🔥`,
+url: url
+}).catch(() => {});
+} else {
+navigator.clipboard.writeText(url);
+showToast('Ссылка скопирована в буфер');
+}
+}
+
+function updateTimer() {
+const now = Date.now();
+const diff = TARGET_DATE - now;
+const timerEl = document.getElementById('timer');
+if(diff <= 0) {
+document.getElementById('timer-status').innerText = "Сезон открыт!";
+if(timerEl) timerEl.style.display = 'none';
+return;
+}
+document.getElementById('days').innerText = Math.floor(diff / 864e5).toString().padStart(2, '0');
+document.getElementById('hours').innerText = Math.floor((diff % 864e5) / 36e5).toString().padStart(2, '0');
+document.getElementById('mins').innerText = Math.floor((diff % 36e5) / 6e4).toString().padStart(2, '0');
+document.getElementById('secs').innerText = Math.floor((diff % 6e4) / 1000).toString().padStart(2, '0');
+}
+
+function checkUserSession() {
+const savedUser = localStorage.getItem('box1v1_user');
+if (savedUser) {
+try {
+currentUser = JSON.parse(savedUser);
+} catch (e) {
+localStorage.removeItem('box1v1_user');
+}
+}
+}
+
+async function submitProfile() {
+const nickname = document.getElementById('profile-nickname').value.trim();
+const telegram = document.getElementById('profile-telegram').value.trim();
+  
+if (!nickname) {
+showToast('Введите никнейм');
+return;
+}
+  
+if (!db) {
+showToast('База данных не загружена. Обновите страницу.');
+return;
+}
+  
+const result = await db.createPlayer(nickname, telegram || null, null);
+  
+if (result.success) {
+showToast(result.message);
+closeModal('createProfileModal');
+allPlayers = await db.getAllPlayers();
+renderLeaderboard();
+renderRoster();
+renderStats();
+} else {
+showToast(result.error);
+}
+}
+
+async function testSupabase() {
+if (!db) {
+alert('База данных не загружена');
+return;
+}
+  
+const result = await db.testConnection();
+alert(result.message);
+  
+const players = await db.getAllPlayers();
+alert(`Игроков в базе: ${players.length}`);
+  
+if (players.length > 0) {
+console.log('Игроки:', players);
+}
+}
+
+window.addEventListener('scroll', () => {
+document.body.classList.toggle('scrolled', window.scrollY > 50);
+});
+
+window.addEventListener('DOMContentLoaded', init);
 </script>
 <!-- КОНЕЦ ДОБАВЛЕННОГО КОДА -->
 
@@ -964,392 +1330,5 @@ console.log('✅ Библиотека Supabase загружена');
 </div>
 <!-- КОНЕЦ ДОБАВЛЕННОЙ МОДАЛКИ СОЗДАНИЯ ПРОФИЛЯ -->
 
-<script>
-// НАЧАЛО ОБНОВЛЁННОГО JAVASCRIPT
-const TARGET_DATE = new Date("March 1, 2026 00:00:00").getTime();
-let currentRoleFilter = 'Все';
-let renderTimeout;
-
-const statDefs = {
-  'DRI': 'Техника контроля мяча и ведения дриблинга',
-  'SPD': 'Стартовый рывок и скорость перемещения',
-  'SHT': 'Мощность и точность завершающего удара',
-  'PHY': 'Физическая мощь, борьба и атлетизм',
-  'REF': 'Молниеносная реакция на удары в упор',
-  'DIV': 'Дальность прыжка и охват створа ворот',
-  'HAN': 'Надежность фиксации и отражения мяча',
-  'POS': 'Грамотный выбор позиции в створе ворот'
-};
-
-function showToast(message) {
-  const container = document.getElementById('toast-container');
-  const toast = document.createElement('div');
-  toast.className = 'toast';
-  toast.innerHTML = `<span>${message}</span>`;
-  container.appendChild(toast);
-  setTimeout(() => {
-    toast.style.opacity = '0';
-    toast.style.transform = 'translateY(20px)';
-    setTimeout(() => toast.remove(), 500);
-  }, 3000);
-}
-
-function initTouchTooltips() {
-  if ('ontouchstart' in window) {
-    document.addEventListener('touchstart', function(e) {
-      const statHeader = e.target.closest('.stat-header');
-      if (!statHeader) return;
-      
-      document.querySelectorAll('.stat-header.touch-active').forEach(el => {
-        el.classList.remove('touch-active');
-      });
-      
-      statHeader.classList.add('touch-active');
-      
-      setTimeout(() => {
-        const closeHandler = function(evt) {
-          if (!evt.target.closest('.stat-header')) {
-            statHeader.classList.remove('touch-active');
-            document.removeEventListener('touchstart', closeHandler);
-          }
-        };
-        document.addEventListener('touchstart', closeHandler);
-      }, 10);
-    }, { passive: true });
-  }
-}
-
-async function renderLeaderboard() {
-  const tbody = document.getElementById('leaderboard-body');
-  if (!tbody) return;
-  
-  tbody.innerHTML = allPlayers.map((player, index) => `
-    <tr onclick="openPlayerModalFromId('${player.id}')" style="cursor:pointer">
-      <td style="font-weight:900; color:var(--text-dim); width:60px;">${index + 1}</td>
-      <td>
-        <div style="display:flex; align-items:center; gap:12px;">
-          ${player.avatar_url ? 
-            `<img src="${player.avatar_url}" style="width:36px; height:36px; border-radius:50%; object-fit:cover;">` : 
-            `<div style="width:36px; height:36px; border-radius:50%; background:var(--bg-alt); display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:900;">${player.nickname.charAt(0)}</div>`
-          }
-          <div>
-            <div style="font-weight:900; text-transform:uppercase; font-style:italic;">${player.nickname}</div>
-            ${player.telegram ? `<div style="font-size:10px; color:var(--text-dim);">${player.telegram}</div>` : ''}
-          </div>
-        </div>
-      </td>
-      <td style="text-align:right; font-weight:900; font-size:1.2rem;">${player.elo_rating}</td>
-      <td style="text-align:right; color:var(--accent); font-weight:800;">+0</td>
-      <td style="text-align:right; font-size:0.9rem; color:var(--text-dim);">
-        ${player.wins || 0}/${player.losses || 0}
-      </td>
-    </tr>
-  `).join('');
-}
-
-async function openPlayerModalFromId(playerId) {
-  const player = allPlayers.find(p => p.id === playerId);
-  if (!player) {
-    showToast("Игрок не найден");
-    return;
-  }
-  
-  openPlayerModal(player);
-}
-
-function openPlayerModal(player) {
-  document.getElementById('m-name').innerText = player.nickname;
-  document.getElementById('m-role').innerText = 'Игрок';
-  document.getElementById('m-ovr').innerText = player.elo_rating;
-  document.getElementById('m-img').src = player.avatar_url || 'https://via.placeholder.com/400x600?text=No+Photo';
-  document.getElementById('m-badges').innerHTML = '';
-  
-  openModal('playerModal');
-}
-
-function parseCSV(text) {
-const rows = text.replace(/\r/g, '').split('\n').filter(r => r.trim());
-return rows.slice(1).map(row => {
-const matches = row.match(/(".*?"|[^",\n]+)(?=\s*,|\s*$)/g);
-const c = matches ? matches.map(m => m.replace(/^"|"$/g, '').trim()) : [];
-return {
-name: c[0] || '',
-ovr: parseInt(c[1]) || 0,
-role: c[2] || 'Игрок',
-drib: parseInt(c[3]) || 0,
-speed: parseInt(c[4]) || 0,
-shot: parseInt(c[5]) || 0,
-phys: parseInt(c[6]) || 0,
-photo: c[7] || 'https://via.placeholder.com/400x600?text=No+Photo',
-status: c[8] || '',
-badges: c[9] ? c[9].split('|').map(b => b.trim()) : []
-};
-}).filter(p => p.name);
-}
-
-function handleHashAndDeepLink() {
-const fullHash = window.location.hash;
-if (!fullHash) return;
-const [hashPart, queryPart] = fullHash.split('?');
-const cleanHash = hashPart.replace('#', '');
-if (cleanHash && ['home', 'roster', 'stats'].includes(cleanHash)) {
-switchTab(cleanHash, false);
-}
-if (queryPart) {
-const params = new URLSearchParams(queryPart);
-const pNameFromUrl = params.get('player');
-if (pNameFromUrl) {
-const pName = pNameFromUrl.replace(/-/g, ' ');
-const found = allPlayers.find(x => x.name.toLowerCase() === pName.toLowerCase());
-if (found) setTimeout(() => openPlayerModal(found.name), 200);
-}
-}
-}
-
-function switchTab(id, updateHash = true) {
-const target = document.getElementById(id);
-if(!target) return;
-document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
-document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
-target.classList.add('active');
-const btn = document.getElementById('btn-' + id);
-if(btn) btn.classList.add('active');
-if (updateHash) window.history.pushState(null, null, `#${id}`);
-window.scrollTo({top:0, behavior:'smooth'});
-}
-
-function debouncedRender() {
-clearTimeout(renderTimeout);
-renderTimeout = setTimeout(renderRoster, 150);
-}
-
-function renderRoster() {
-const grid = document.getElementById('roster-grid');
-const search = document.getElementById('playerSearch').value.toLowerCase();
-
-const filtered = allPlayers.filter(p => {
-const mSearch = p.nickname?.toLowerCase().includes(search) || p.name?.toLowerCase().includes(search);
-const mRole = currentRoleFilter === 'Все' || (p.role === currentRoleFilter);
-return mSearch && mRole;
-});
-
-if (filtered.length === 0) {
-grid.innerHTML = `<div style="grid-column: 1/-1; padding: 40px; text-align: center; color: var(--text-dim);">Атлеты не найдены</div>`;
-return;
-}
-
-grid.innerHTML = filtered.map((p, i) => `
-<div class="card player-card"
-tabindex="0"
-role="button"
-aria-label="Профиль игрока ${p.nickname || p.name}, рейтинг ${p.elo_rating || p.ovr}"
-style="animation: fadeInUp 0.6s var(--cubic) both ${i*0.03}s"
-onclick="openPlayerModalFromId('${p.id}')"
-onkeydown="if(event.key==='Enter') openPlayerModalFromId('${p.id}')">
-<div class="player-img" style="background-image: url('${p.avatar_url || p.photo || 'https://via.placeholder.com/400x600?text=No+Photo'}')"></div>
-<div class="player-info">
-<span style="font-size:11px; font-weight:800; text-transform:uppercase; color:var(--accent); letter-spacing:0.1em;">${p.role || 'Игрок'}</span>
-<h3 style="font-size:2.2rem; margin: 8px 0;">${p.nickname || p.name}</h3>
-<div class="ovr-badge">ELO ${p.elo_rating || p.ovr * 15}</div>
-</div>
-</div>
-`).join('');
-}
-
-async function renderStats() {
-const tbody = document.getElementById('stats-body');
-if (!tbody) return;
-
-const sorted = allPlayers.sort((a, b) => b.elo_rating - a.elo_rating);
-
-tbody.innerHTML = sorted.map((p, i) => `
-<tr onclick="openPlayerModalFromId('${p.id}')" style="cursor:pointer" tabindex="0">
-<td style="font-weight:900; color:var(--text-dim)">${(i+1).toString().padStart(2, '0')}</td>
-<td>
-<div style="display:flex; align-items:center; gap:16px;">
-<img src="${p.avatar_url || p.photo || 'https://via.placeholder.com/150x150?text=No+Photo'}" 
-     style="width:48px; height:48px; border-radius:14px; object-fit:cover;" 
-     alt="${p.nickname}">
-<div>
-<div style="font-weight:900; text-transform:uppercase; font-style:italic;">${p.nickname || p.name}</div>
-<div style="font-size:10px; font-weight:700; color:var(--text-dim); text-transform:uppercase;">
-  ${p.total_matches || 0} матчей
-</div>
-</div>
-</div>
-</td>
-<td style="text-align:right;">
-<span class="ovr-badge">${p.elo_rating || p.ovr}</span>
-</td>
-</tr>
-`).join('');
-}
-
-let lastFocusedElement;
-function openModal(id) {
-lastFocusedElement = document.activeElement;
-const modal = document.getElementById(id);
-modal.classList.add('active');
-document.body.style.overflow = 'hidden';
-setTimeout(() => {
-const firstInput = modal.querySelector('button, input, [tabindex="0"]');
-if (firstInput) firstInput.focus();
-}, 100);
-modal.addEventListener('keydown', trapFocus);
-}
-function closeModal(id) {
-const modal = document.getElementById(id);
-if(!modal) return;
-modal.classList.remove('active');
-document.body.style.overflow = '';
-modal.removeEventListener('keydown', trapFocus);
-if (id === 'playerModal') {
-const currentTab = document.querySelector('section.active').id;
-window.history.replaceState(null, null, `#${currentTab}`);
-}
-if (lastFocusedElement) lastFocusedElement.focus();
-}
-function trapFocus(e) {
-if (e.key !== 'Tab') return;
-const focusableEls = this.querySelectorAll('button, [href], input, [tabindex="0"]');
-const first = focusableEls[0];
-const last = focusableEls[focusableEls.length - 1];
-if (e.shiftKey) {
-if (document.activeElement === first) { last.focus(); e.preventDefault(); }
-} else {
-if (document.activeElement === last) { first.focus(); e.preventDefault(); }
-}
-}
-window.addEventListener('keydown', (e) => {
-if (e.key === 'Escape') {
-const activeModal = document.querySelector('.modal-overlay.active');
-if (activeModal) closeModal(activeModal.id);
-}
-});
-
-function setRoleFilter(role, btn) {
-currentRoleFilter = role;
-document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-btn.classList.add('active');
-renderRoster();
-}
-
-function toggleMenu() {
-const drawer = document.getElementById('mobile-drawer');
-const overlay = document.getElementById('drawer-overlay');
-const burger = document.getElementById('burger');
-const isOpen = drawer.classList.toggle('open');
-overlay.classList.toggle('open');
-burger.classList.toggle('open');
-burger.setAttribute('aria-expanded', isOpen);
-}
-
-function handleMobileNav(id, isModal = false) {
-toggleMenu();
-setTimeout(() => isModal ? openModal(id) : switchTab(id), 400);
-}
-
-function copyPlayerID() {
-const name = document.getElementById('m-name').innerText;
-navigator.clipboard.writeText(name).then(() => {
-showToast('ID игрока скопирован');
-});
-}
-
-function sharePlayer() {
-const name = document.getElementById('m-name').innerText;
-const url = window.location.href;
-if(navigator.share) {
-navigator.share({
-title: 'BOX1V1 | ' + name,
-text: `Карточка атлета ${name} в системе BOX1V1! 🔥`,
-url: url
-}).catch(() => {});
-} else {
-navigator.clipboard.writeText(url);
-showToast('Ссылка скопирована в буфер');
-}
-}
-
-function updateTimer() {
-const now = Date.now();
-const diff = TARGET_DATE - now;
-const timerEl = document.getElementById('timer');
-if(diff <= 0) {
-document.getElementById('timer-status').innerText = "Сезон открыт!";
-if(timerEl) timerEl.style.display = 'none';
-return;
-}
-document.getElementById('days').innerText = Math.floor(diff / 864e5).toString().padStart(2, '0');
-document.getElementById('hours').innerText = Math.floor((diff % 864e5) / 36e5).toString().padStart(2, '0');
-document.getElementById('mins').innerText = Math.floor((diff % 36e5) / 6e4).toString().padStart(2, '0');
-document.getElementById('secs').innerText = Math.floor((diff % 6e4) / 1000).toString().padStart(2, '0');
-}
-
-function checkUserSession() {
-const savedUser = localStorage.getItem('box1v1_user');
-if (savedUser) {
-try {
-currentUser = JSON.parse(savedUser);
-} catch (e) {
-localStorage.removeItem('box1v1_user');
-}
-}
-}
-
-async function submitProfile() {
-const nickname = document.getElementById('profile-nickname').value.trim();
-const telegram = document.getElementById('profile-telegram').value.trim();
-  
-if (!nickname) {
-showToast('Введите никнейм');
-return;
-}
-  
-if (!db) {
-showToast('База данных не загружена. Обновите страницу.');
-return;
-}
-  
-const result = await db.createPlayer(nickname, telegram || null, null);
-  
-if (result.success) {
-showToast(result.message);
-closeModal('createProfileModal');
-allPlayers = await db.getAllPlayers();
-renderLeaderboard();
-renderRoster();
-renderStats();
-} else {
-showToast(result.error);
-}
-}
-
-async function testSupabase() {
-if (!db) {
-alert('База данных не загружена');
-return;
-}
-  
-const result = await db.testConnection();
-alert(result.message);
-  
-const players = await db.getAllPlayers();
-alert(`Игроков в базе: ${players.length}`);
-  
-if (players.length > 0) {
-console.log('Игроки:', players);
-}
-}
-
-window.addEventListener('scroll', () => {
-document.body.classList.toggle('scrolled', window.scrollY > 50);
-});
-
-window.onload = init;
-// КОНЕЦ ОБНОВЛЁННОГО JAVASCRIPT
-</script>
 </body>
 </html>
-
-
