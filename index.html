@@ -13,6 +13,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+<!-- Подключаем необходимые библиотеки -->
+<script src="https://unpkg.com/lucide@latest"></script>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <style>
 :root {
 --bg: #ffffff;
@@ -78,6 +81,70 @@ p { font-size: 1rem; color: var(--text-dim); }
   box-shadow: 0 10px 30px rgba(0,0,0,0.15); text-transform: none; font-style: normal;
 }
 .stat-header:hover::after { opacity: 1; visibility: visible; transform: translateY(0); }
+
+/* ИКОНКИ ДЛЯ МОДАЛЬНОГО ОКНА */
+.icon-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--glass);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: 0.25s var(--cubic);
+}
+
+.icon-btn svg {
+  width: 18px;
+  height: 18px;
+  stroke: var(--text);
+  stroke-width: 2;
+}
+
+.icon-btn:hover {
+  background: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+}
+
+.icon-btn:active {
+  transform: scale(0.95);
+}
+
+/* СТИЛИ ДЛЯ БЕЙДЖЕЙ */
+.badge-mvp {
+  background: linear-gradient(135deg, #7c3aed, #ec4899) !important;
+  color: #fff !important;
+}
+
+.badge-gold {
+  background: linear-gradient(135deg, #facc15, #f59e0b) !important;
+  color: #000 !important;
+}
+
+.badge-speedster {
+  background: linear-gradient(135deg, #22c55e, #4ade80) !important;
+  color: #000 !important;
+}
+
+.badge-defender {
+  background: linear-gradient(135deg, #0ea5e9, #38bdf8) !important;
+  color: #fff !important;
+}
+
+.badge-legend {
+  background: linear-gradient(135deg, #000, #444) !important;
+  color: #fff !important;
+}
+
+.badge-default {
+  background: #000 !important;
+  color: #fff !important;
+}
 
 /* PRELOADER */
 #preloader {
@@ -378,10 +445,19 @@ text-transform: uppercase; white-space: nowrap; transition: 0.3s;
 </section>
 </main>
 <div class="modal-overlay" id="playerModal" onclick="closeModal('playerModal')" role="dialog" aria-modal="true">
-<div class="modal-content" onclick="event.stopPropagation()">
+<div class="modal-content" onclick="event.stopPropagation()" id="player-card-export">
+<!-- Контейнер с иконками действий -->
+<div style="position:absolute; top:24px; left:24px; display:flex; gap:8px; z-index:20;">
+  <button class="icon-btn" onclick="shareCard()" aria-label="Поделиться">
+    <i data-lucide="share-2"></i>
+  </button>
+  <button class="icon-btn" onclick="downloadCard()" aria-label="Скачать">
+    <i data-lucide="download"></i>
+  </button>
+</div>
 <button class="modal-close" onclick="closeModal('playerModal')" aria-label="Закрыть">✕</button>
 <div id="m-img-container" style="width:100%; height:320px; border-radius:24px; overflow:hidden; background:#f0f0f0; margin-bottom:32px;">
-<img id="m-img" src="" style="width:100%; height:100%; object-fit:cover;" alt="Фото игрока">
+<img id="m-img" src="" style="width:100%; height:100%; object-fit:cover;" alt="Фото игрока" crossorigin="anonymous">
 </div>
 <div style="display:flex; justify-content:space-between; align-items:flex-start;">
 <div>
@@ -392,10 +468,6 @@ text-transform: uppercase; white-space: nowrap; transition: 0.3s;
 <div id="m-ovr" style="font-size: 3rem; font-weight:900; font-style:italic; line-height:1; letter-spacing:-3px;">99</div>
 </div>
 <div id="m-stats" style="margin-top:40px; display:grid; grid-template-columns: 1fr 1fr; gap: 32px;"></div>
-<div style="margin-top:48px; display:flex; gap:12px; flex-wrap:wrap;">
-<button class="btn btn-primary" style="flex:1; min-width:140px;" onclick="copyPlayerID()">Копировать ID</button>
-<button class="btn btn-outline" style="flex:1; min-width:140px;" onclick="sharePlayer()">Поделиться</button>
-</div>
 </div>
 </div>
 <div class="modal-overlay" id="applyModal" onclick="closeModal('applyModal')" role="dialog" aria-modal="true">
@@ -451,6 +523,77 @@ const statDefs = {
 };
 
 /**
+ * ФУНКЦИИ ДЛЯ РАБОТЫ С ИКОНКАМИ И КАРТОЧКАМИ
+ */
+async function downloadCard() {
+  try {
+    const card = document.getElementById('player-card-export');
+    const canvas = await html2canvas(card, {
+      useCORS: true,
+      allowTaint: true,
+      backgroundColor: null,
+      scale: 2,
+      logging: false
+    });
+
+    const link = document.createElement("a");
+    link.download = `BOX1V1-${document.getElementById('m-name').innerText.replace(/\s+/g, '-')}.png`;
+    link.href = canvas.toDataURL("image/png");
+    link.click();
+    showToast("Карточка сохранена");
+  } catch (error) {
+    console.error("Ошибка при сохранении карточки:", error);
+    showToast("Ошибка при сохранении");
+  }
+}
+
+async function shareCard() {
+  try {
+    const card = document.getElementById('player-card-export');
+    const canvas = await html2canvas(card, {
+      useCORS: true,
+      allowTaint: true,
+      backgroundColor: null,
+      scale: 2,
+      logging: false
+    });
+
+    canvas.toBlob(async (blob) => {
+      const file = new File([blob], "player-card.png", { type: "image/png" });
+
+      if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+        await navigator.share({
+          title: `BOX1V1 - ${document.getElementById('m-name').innerText}`,
+          text: 'Карточка игрока из BOX1V1',
+          files: [file]
+        });
+      } else {
+        // Fallback: копируем ссылку на изображение
+        const dataUrl = canvas.toDataURL("image/png");
+        await navigator.clipboard.writeText(dataUrl);
+        showToast("Изображение скопировано в буфер");
+      }
+    }, 'image/png');
+  } catch (error) {
+    console.error("Ошибка при шаринге:", error);
+    showToast("Ошибка при отправке");
+  }
+}
+
+/**
+ * ФУНКЦИЯ ДЛЯ ПОЛУЧЕНИЯ КЛАССА БЕЙДЖА
+ */
+function getBadgeClass(badgeName) {
+  const name = badgeName.toLowerCase();
+  if (name.includes('mvp')) return 'badge-mvp';
+  if (name.includes('gold')) return 'badge-gold';
+  if (name.includes('speedster') || name.includes('скорость')) return 'badge-speedster';
+  if (name.includes('defender') || name.includes('защита')) return 'badge-defender';
+  if (name.includes('legend') || name.includes('легенда')) return 'badge-legend';
+  return 'badge-default';
+}
+
+/**
 * TOAST SYSTEM
 */
 function showToast(message) {
@@ -482,6 +625,10 @@ renderStats();
 handleHashAndDeepLink();
 setInterval(updateTimer, 1000);
 updateTimer();
+
+// Инициализируем Lucide иконки
+lucide.createIcons();
+
 document.getElementById('preloader').classList.add('loaded');
 } catch (e) {
 console.error("Load Error", e);
@@ -652,7 +799,13 @@ function openPlayerModal(name) {
   document.getElementById('m-role').innerText = p.role;
   document.getElementById('m-ovr').innerText = p.ovr;
   document.getElementById('m-img').src = p.photo;
-  document.getElementById('m-badges').innerHTML = p.badges.map(b => `<span style="font-size:10px; background:#000; color:#fff; padding:4px 10px; border-radius:8px; font-weight:800;">${b}</span>`).join('');
+  
+  // Обновляем бейджи с цветными классами
+  const badgesHtml = p.badges.map(b => {
+    const badgeClass = getBadgeClass(b);
+    return `<span class="${badgeClass}" style="font-size:10px; padding:4px 10px; border-radius:8px; font-weight:800;">${b}</span>`;
+  }).join('');
+  document.getElementById('m-badges').innerHTML = badgesHtml;
 
   const isGK = p.role === 'Вратарь';
   const stats = [
@@ -686,6 +839,11 @@ function openPlayerModal(name) {
     });
   }, 100);
 
+  // Обновляем иконки после открытия модального окна
+  setTimeout(() => {
+    lucide.createIcons();
+  }, 50);
+
   const currentTab = document.querySelector('section.active').id;
   const playerSlug = p.name.replace(/\s+/g, '-').toLowerCase();
   window.history.replaceState(null, null, `#${currentTab}?player=${playerSlug}`);
@@ -713,26 +871,6 @@ function handleMobileNav(id, isModal = false) {
 toggleMenu();
 setTimeout(() => isModal ? openModal(id) : switchTab(id), 400);
 }
-function copyPlayerID() {
-const name = document.getElementById('m-name').innerText;
-navigator.clipboard.writeText(name).then(() => {
-showToast('ID игрока скопирован');
-});
-}
-function sharePlayer() {
-const name = document.getElementById('m-name').innerText;
-const url = window.location.href;
-if(navigator.share) {
-navigator.share({
-title: 'BOX1V1 | ' + name,
-text: `Карточка атлета ${name} в системе BOX1V1! 🔥`,
-url: url
-}).catch(() => {});
-} else {
-navigator.clipboard.writeText(url);
-showToast('Ссылка скопирована в буфер');
-}
-}
 function updateTimer() {
 const now = Date.now();
 const diff = TARGET_DATE - now;
@@ -754,4 +892,3 @@ window.onload = init;
 </script>
 </body>
 </html>
-
