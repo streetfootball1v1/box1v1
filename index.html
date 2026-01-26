@@ -14,12 +14,13 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
 <style>
+/* Ваши стили остаются без изменений */
 :root {
 --bg: #ffffff;
 --bg-alt: #f8f8f8;
 --card: #ffffff;
 --text: #0a0a0a;
---text-dim: #6b7280;
+--text-dim: #4b5563;
 --border: rgba(0,0,0,0.06);
 --accent: #22c55e;
 --accent-dark: #16a34a;
@@ -54,8 +55,15 @@ font-style: italic;
 letter-spacing: var(--ls-tight);
 line-height: var(--lh-tight);
 text-transform: uppercase;
+font-feature-settings: "ss01", "ss02", "cv01";
+font-variation-settings: "wght" 900, "slnt" -10;
 }
 p { font-size: 1rem; color: var(--text-dim); }
+
+@keyframes fadeUpType {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 
 /* UX TOOLTIPS STYLES */
 .stat-item { position: relative; }
@@ -119,9 +127,9 @@ display: flex; align-items: center; justify-content: space-between; padding: 0 3
 }
 .logo {
 font-size: 1.4rem; font-weight: 900; font-style: italic; letter-spacing: -1px; cursor: pointer;
-transition: 0.3s;
+transition: transform 0.4s var(--cubic);
 }
-.logo:hover { opacity: 0.7; }
+.logo:hover { transform: scale(1.05); }
 .nav-links { display: flex; gap: 8px; }
 .nav-links a {
 text-decoration: none; font-size: 12px; font-weight: 700;
@@ -158,7 +166,10 @@ to { opacity: 1; transform: translateY(0); }
 }
 .intro-block { padding: 40px 0 80px; text-align: center; max-width: 900px; margin: 0 auto; }
 .intro-block h1 { font-size: clamp(3.5rem, 12vw, 9.5rem); margin-bottom: 24px; }
-.intro-block p { font-size: 1.25rem; max-width: 540px; margin: 0 auto 40px; }
+.intro-block p { 
+  font-size: 1.25rem; max-width: 540px; margin: 0 auto 40px;
+  animation: fadeUpType 0.8s var(--cubic) 0.2s both;
+}
 /* BUTTONS */
 .btn {
 padding: 20px 36px; border-radius: 20px; font-weight: 800;
@@ -180,7 +191,11 @@ padding: 40px; position: relative; overflow: hidden; transition: 0.5s var(--cubi
 cursor: pointer; display: flex; flex-direction: column;
 }
 .card:hover { transform: translateY(-10px); border-color: rgba(0,0,0,0.15); box-shadow: var(--shadow-md); }
-.card:focus-visible { outline: 3px solid var(--accent); }
+.card:focus-visible { 
+  outline: 3px solid var(--accent); 
+  outline-offset: 4px;
+  transform: translateY(-4px);
+}
 /* PLAYER CARD */
 .player-card { height: 480px; background: #000; color: #fff; border: none; padding: 32px; }
 .player-img {
@@ -201,7 +216,10 @@ color: #000; border-radius: 12px; font-weight: 900; font-size: 12px; margin-top:
 .table-wrapper { background: #fff; border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; }
 table { width: 100%; border-collapse: collapse; }
 th { text-align: left; padding: 24px; font-size: 11px; font-weight: 800; text-transform: uppercase; color: var(--text-dim); border-bottom: 1px solid var(--border); }
-td { padding: 20px 24px; border-bottom: 1px solid var(--border); transition: 0.3s; }
+td { 
+  padding: 20px 24px; border-bottom: 1px solid var(--border); transition: 0.3s;
+  font-size: 0.95rem; font-weight: 500;
+}
 tr:last-child td { border-bottom: none; }
 tr:hover td {
   background: rgba(0,0,0,0.02);
@@ -228,6 +246,12 @@ align-items: center; justify-content: center; cursor: pointer; z-index: 10;
 border: none; transition: 0.3s var(--cubic);
 }
 .modal-close:hover { transform: rotate(90deg); background: #eee; }
+
+.modal-content p {
+  line-height: 1.7;
+  max-width: 65ch;
+}
+
 /* SEARCH & FILTER */
 .search-input {
 padding: 18px 28px; border-radius: 20px; border: 1.5px solid var(--border);
@@ -274,12 +298,47 @@ text-transform: uppercase; white-space: nowrap; transition: 0.3s;
 .search-input { max-width: 100%; }
 .filter-bar { overflow-x: auto; padding-bottom: 8px; width: 100%; }
 .player-card { height: 420px; }
-/* Hide tooltips on mobile by default, show on click if needed */
-.stat-header:hover::after { display: none; }
-.stat-header:active::after { display: block; opacity: 1; visibility: visible; }
+  
+  .stat-header:hover::after { display: none; }
+  .stat-header.touch-active::after {
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: translateY(0) !important;
+  }
 }
+
+@media (max-width: 480px) {
+  .intro-block h1 {
+    font-size: 2.8rem;
+    line-height: 1;
+  }
+  
+  .player-card h3 {
+    font-size: 1.6rem !important;
+  }
+  
+  .modal-content h2 {
+    font-size: 1.5rem;
+  }
+  
+  .modal-content p {
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+  
+  .btn {
+    padding: 18px 24px;
+    font-size: 12px;
+  }
+}
+
 @keyframes load { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
 </style>
+
+<!-- ПРОБУЕМ РАЗНЫЕ ИСТОЧНИКИ SUPABASE -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+
 </head>
 <body>
 <div id="toast-container"></div>
@@ -332,6 +391,37 @@ text-transform: uppercase; white-space: nowrap; transition: 0.3s;
 <div><div class="countdown-value" id="secs">00</div><div class="countdown-label">сек</div></div>
 </div>
 </div>
+
+<div style="margin-top: 80px;">
+  <h2 style="font-size: clamp(2.5rem, 8vw, 6rem);">РЕЙТИНГ СЕЗОНА.</h2>
+  <p style="margin-bottom: 40px; max-width: 600px; margin-left: auto; margin-right: auto;">
+    Актуальный ELO-рейтинг участников BOX1V1. Обновляется после каждого турнира.
+  </p>
+  
+  <div class="table-wrapper">
+    <table style="width: 100%;">
+      <thead>
+        <tr>
+          <th style="width: 60px;">#</th>
+          <th>ИГРОК</th>
+          <th style="text-align: right;">ELO</th>
+          <th style="text-align: right;">Δ</th>
+          <th style="text-align: right;">В/П</th>
+        </tr>
+      </thead>
+      <tbody id="leaderboard-body">
+        <!-- Заполнится динамически -->
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div style="text-align: center; margin-top: 60px;">
+  <button class="btn btn-primary" onclick="openModal('createProfileModal')" style="padding: 20px 48px;">
+    СОЗДАТЬ ПРОФИЛЬ
+  </button>
+</div>
+
 </div>
 <div class="bento-grid">
 <div class="card" style="grid-column: span 2; background: #fafafa;" onclick="openModal('rulesModal')" tabindex="0">
@@ -426,91 +516,201 @@ text-transform: uppercase; white-space: nowrap; transition: 0.3s;
 </div>
 </div>
 </div>
+
+<div class="modal-overlay" id="createProfileModal">
+  <div class="modal-content" style="max-width: 500px;">
+    <button class="modal-close" onclick="closeModal('createProfileModal')">✕</button>
+    
+    <h2 style="font-size: 2rem; margin-bottom: 10px;">СОЗДАТЬ ПРОФИЛЬ.</h2>
+    <p style="margin-bottom: 32px; color: var(--text-dim);">
+      После создания профиль будет отправлен на подтверждение организатору.
+    </p>
+    
+    <div style="text-align: center; margin-bottom: 32px;">
+      <div id="avatar-upload-area" 
+           style="width: 120px; height: 120px; border-radius: 50%; background: var(--bg-alt); 
+                  margin: 0 auto; border: 2px dashed var(--border); display: flex; align-items: center; 
+                  justify-content: center; cursor: pointer; overflow: hidden;">
+        <div id="avatar-placeholder" style="text-align: center;">
+          <div style="font-size: 36px; color: var(--text-dim);">+</div>
+          <div style="font-size: 11px; color: var(--text-dim); margin-top: 8px;">ФОТО</div>
+        </div>
+        <img id="avatar-preview" src="" style="display: none; width: 100%; height: 100%; object-fit: cover;">
+      </div>
+      <input type="file" id="avatar-input" accept="image/*" style="display: none;">
+    </div>
+    
+    <div style="margin-bottom: 24px;">
+      <div style="font-size: 11px; font-weight: 800; color: var(--text-dim); margin-bottom: 8px; text-transform: uppercase;">НИКНЕЙМ</div>
+      <input type="text" id="profile-nickname" class="search-input" placeholder="Введите ваш никнейм" style="width: 100%;">
+      <div style="font-size: 11px; color: var(--text-dim); margin-top: 8px;">Будет отображаться в рейтинге</div>
+    </div>
+    
+    <div style="margin-bottom: 32px;">
+      <div style="font-size: 11px; font-weight: 800; color: var(--text-dim); margin-bottom: 8px; text-transform: uppercase;">TELEGRAM (@ник)</div>
+      <input type="text" id="profile-telegram" class="search-input" placeholder="@username (опционально)" style="width: 100%;">
+      <div style="font-size: 11px; color: var(--text-dim); margin-top: 8px;">Для связи с организатором</div>
+    </div>
+    
+    <button class="btn btn-primary" onclick="submitProfile()" style="width: 100%; padding: 20px;">
+      СОЗДАТЬ ПРОФИЛЬ
+    </button>
+  </div>
+</div>
+
+<div style="position: fixed; bottom: 10px; right: 10px; z-index: 9999;">
+  <button onclick="testSupabase()" 
+          style="background: var(--accent); color: white; border: none; 
+                 padding: 8px 12px; border-radius: 8px; font-size: 11px;
+                 cursor: pointer; font-weight: bold;">
+    Тест DB
+  </button>
+</div>
+
 <script>
-/**
-* CONFIG & STATE
-*/
-const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vREjbeB6jNrU01kw1npVtFTvqGdP134ERjmyROoOYeYXbzjgL0ZCNK6KwF0VTk3c1yxZEZEUsJjy2Ur/pub?output=csv';
-const TARGET_DATE = new Date("March 1, 2026 00:00:00").getTime();
+// ========== КОНФИГУРАЦИЯ ==========
+const SUPABASE_CONFIG = {
+  url: 'https://zbxxoucsqaddxlpqoacz.supabase.co',
+  publishableKey: 'sb_publishable_MafkBIouwdQFoaRVvWr9rQ_tGdBLt0n'
+};
+
+// Убираем объявление переменной supabase здесь, так как она создаётся библиотекой
+let currentUser = null;
 let allPlayers = [];
+let db = null;
+
+// ========== ОСНОВНЫЕ ФУНКЦИИ ==========
+const TARGET_DATE = new Date("March 1, 2026 00:00:00").getTime();
 let currentRoleFilter = 'Все';
 let renderTimeout;
 
-/**
- * DICTIONARY FOR UX
- */
-const statDefs = {
-  'DRI': 'Техника контроля мяча и ведения дриблинга',
-  'SPD': 'Стартовый рывок и скорость перемещения',
-  'SHT': 'Мощность и точность завершающего удара',
-  'PHY': 'Физическая мощь, борьба и атлетизм',
-  'REF': 'Молниеносная реакция на удары в упор',
-  'DIV': 'Дальность прыжка и охват створа ворот',
-  'HAN': 'Надежность фиксации и отражения мяча',
-  'POS': 'Грамотный выбор позиции в створе ворот'
-};
+// Тестовые данные для демонстрации
+const mockPlayers = [
+  {
+    id: '1',
+    nickname: 'Игрок 1',
+    elo_rating: 1650,
+    wins: 5,
+    losses: 2,
+    total_matches: 7,
+    avatar_url: 'https://via.placeholder.com/150x150?text=Player1',
+    telegram: '@player1',
+    role: 'Игрок'
+  },
+  {
+    id: '2',
+    nickname: 'Игрок 2',
+    elo_rating: 1580,
+    wins: 4,
+    losses: 3,
+    total_matches: 7,
+    avatar_url: 'https://via.placeholder.com/150x150?text=Player2',
+    telegram: '@player2',
+    role: 'Игрок'
+  },
+  {
+    id: '3',
+    nickname: 'Вратарь 1',
+    elo_rating: 1720,
+    wins: 6,
+    losses: 1,
+    total_matches: 7,
+    avatar_url: 'https://via.placeholder.com/150x150?text=Goalkeeper1',
+    telegram: '@gk1',
+    role: 'Вратарь'
+  }
+];
 
-/**
-* TOAST SYSTEM
-*/
 function showToast(message) {
-const container = document.getElementById('toast-container');
-const toast = document.createElement('div');
-toast.className = 'toast';
-toast.innerHTML = `<span>${message}</span>`;
-container.appendChild(toast);
-setTimeout(() => {
-toast.style.opacity = '0';
-toast.style.transform = 'translateY(20px)';
-setTimeout(() => toast.remove(), 500);
-}, 3000);
+  const container = document.getElementById('toast-container');
+  const toast = document.createElement('div');
+  toast.className = 'toast';
+  toast.innerHTML = `<span>${message}</span>`;
+  container.appendChild(toast);
+  setTimeout(() => {
+    toast.style.opacity = '0';
+    toast.style.transform = 'translateY(20px)';
+    setTimeout(() => toast.remove(), 500);
+  }, 3000);
 }
-/**
-* INITIALIZATION
-*/
-async function init() {
-try {
-const res = await fetch(CSV_URL);
-if (!res.ok) throw new Error("Network response was not ok");
-const text = await res.text();
-allPlayers = parseCSV(text);
-if (allPlayers.length === 0) {
-showToast("Ростер временно пуст");
+
+function initTouchTooltips() {
+  if ('ontouchstart' in window) {
+    document.addEventListener('touchstart', function(e) {
+      const statHeader = e.target.closest('.stat-header');
+      if (!statHeader) return;
+      
+      document.querySelectorAll('.stat-header.touch-active').forEach(el => {
+        el.classList.remove('touch-active');
+      });
+      
+      statHeader.classList.add('touch-active');
+      
+      setTimeout(() => {
+        const closeHandler = function(evt) {
+          if (!evt.target.closest('.stat-header')) {
+            statHeader.classList.remove('touch-active');
+            document.removeEventListener('touchstart', closeHandler);
+          }
+        };
+        document.addEventListener('touchstart', closeHandler);
+      }, 10);
+    }, { passive: true });
+  }
 }
-renderRoster();
-renderStats();
-handleHashAndDeepLink();
-setInterval(updateTimer, 1000);
-updateTimer();
-document.getElementById('preloader').classList.add('loaded');
-} catch (e) {
-console.error("Load Error", e);
-showToast("Ошибка загрузки данных");
-document.getElementById('preloader').classList.add('loaded');
+
+async function renderLeaderboard() {
+  const tbody = document.getElementById('leaderboard-body');
+  if (!tbody) return;
+  
+  // Используем реальные данные или моковые
+  const playersToShow = allPlayers.length > 0 ? allPlayers : mockPlayers;
+  
+  tbody.innerHTML = playersToShow.map((player, index) => `
+    <tr onclick="openPlayerModalFromId('${player.id}')" style="cursor:pointer">
+      <td style="font-weight:900; color:var(--text-dim); width:60px;">${index + 1}</td>
+      <td>
+        <div style="display:flex; align-items:center; gap:12px;">
+          ${player.avatar_url ? 
+            `<img src="${player.avatar_url}" style="width:36px; height:36px; border-radius:50%; object-fit:cover;">` : 
+            `<div style="width:36px; height:36px; border-radius:50%; background:var(--bg-alt); display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:900;">${player.nickname.charAt(0)}</div>`
+          }
+          <div>
+            <div style="font-weight:900; text-transform:uppercase; font-style:italic;">${player.nickname}</div>
+            ${player.telegram ? `<div style="font-size:10px; color:var(--text-dim);">${player.telegram}</div>` : ''}
+          </div>
+        </div>
+      </td>
+      <td style="text-align:right; font-weight:900; font-size:1.2rem;">${player.elo_rating}</td>
+      <td style="text-align:right; color:var(--accent); font-weight:800;">+0</td>
+      <td style="text-align:right; font-size:0.9rem; color:var(--text-dim);">
+        ${player.wins || 0}/${player.losses || 0}
+      </td>
+    </tr>
+  `).join('');
 }
+
+async function openPlayerModalFromId(playerId) {
+  const playersToShow = allPlayers.length > 0 ? allPlayers : mockPlayers;
+  const player = playersToShow.find(p => p.id === playerId);
+  if (!player) {
+    showToast("Игрок не найден");
+    return;
+  }
+  
+  openPlayerModal(player);
 }
-function parseCSV(text) {
-const rows = text.replace(/\r/g, '').split('\n').filter(r => r.trim());
-return rows.slice(1).map(row => {
-const matches = row.match(/(".*?"|[^",\n]+)(?=\s*,|\s*$)/g);
-const c = matches ? matches.map(m => m.replace(/^"|"$/g, '').trim()) : [];
-return {
-name: c[0] || '',
-ovr: parseInt(c[1]) || 0,
-role: c[2] || 'Игрок',
-drib: parseInt(c[3]) || 0,
-speed: parseInt(c[4]) || 0,
-shot: parseInt(c[5]) || 0,
-phys: parseInt(c[6]) || 0,
-photo: c[7] || 'https://via.placeholder.com/400x600?text=No+Photo',
-status: c[8] || '',
-badges: c[9] ? c[9].split('|').map(b => b.trim()) : []
-};
-}).filter(p => p.name);
+
+function openPlayerModal(player) {
+  document.getElementById('m-name').innerText = player.nickname;
+  document.getElementById('m-role').innerText = player.role || 'Игрок';
+  document.getElementById('m-ovr').innerText = player.elo_rating;
+  document.getElementById('m-img').src = player.avatar_url || 'https://via.placeholder.com/400x600?text=No+Photo';
+  document.getElementById('m-badges').innerHTML = '';
+  
+  openModal('playerModal');
 }
-/**
-* NAVIGATION & HASH LOGIC
-*/
+
 function handleHashAndDeepLink() {
 const fullHash = window.location.hash;
 if (!fullHash) return;
@@ -524,11 +724,13 @@ const params = new URLSearchParams(queryPart);
 const pNameFromUrl = params.get('player');
 if (pNameFromUrl) {
 const pName = pNameFromUrl.replace(/-/g, ' ');
-const found = allPlayers.find(x => x.name.toLowerCase() === pName.toLowerCase());
-if (found) setTimeout(() => openPlayerModal(found.name), 200);
+const playersToShow = allPlayers.length > 0 ? allPlayers : mockPlayers;
+const found = playersToShow.find(x => x.nickname.toLowerCase() === pName.toLowerCase());
+if (found) setTimeout(() => openPlayerModal(found), 200);
 }
 }
 }
+
 function switchTab(id, updateHash = true) {
 const target = document.getElementById(id);
 if(!target) return;
@@ -540,65 +742,80 @@ if(btn) btn.classList.add('active');
 if (updateHash) window.history.pushState(null, null, `#${id}`);
 window.scrollTo({top:0, behavior:'smooth'});
 }
-/**
-* RENDERING
-*/
+
 function debouncedRender() {
 clearTimeout(renderTimeout);
 renderTimeout = setTimeout(renderRoster, 150);
 }
+
 function renderRoster() {
 const grid = document.getElementById('roster-grid');
 const search = document.getElementById('playerSearch').value.toLowerCase();
-const filtered = allPlayers.filter(p => {
-const mSearch = p.name.toLowerCase().includes(search);
-const mRole = currentRoleFilter === 'Все' || p.role === currentRoleFilter;
+
+// Используем реальные данные или моковые
+const playersToShow = allPlayers.length > 0 ? allPlayers : mockPlayers;
+
+const filtered = playersToShow.filter(p => {
+const mSearch = p.nickname?.toLowerCase().includes(search);
+const mRole = currentRoleFilter === 'Все' || (p.role === currentRoleFilter);
 return mSearch && mRole;
 });
+
 if (filtered.length === 0) {
 grid.innerHTML = `<div style="grid-column: 1/-1; padding: 40px; text-align: center; color: var(--text-dim);">Атлеты не найдены</div>`;
 return;
 }
+
 grid.innerHTML = filtered.map((p, i) => `
 <div class="card player-card"
 tabindex="0"
 role="button"
-aria-label="Профиль игрока ${p.name}, рейтинг ${p.ovr}, роль ${p.role}${p.badges[0] ? ', ' + p.badges[0] : ''}"
+aria-label="Профиль игрока ${p.nickname}, рейтинг ${p.elo_rating}"
 style="animation: fadeInUp 0.6s var(--cubic) both ${i*0.03}s"
-onclick="openPlayerModal('${p.name}')"
-onkeydown="if(event.key==='Enter') openPlayerModal('${p.name}')">
-<div class="player-img" style="background-image: url('${p.photo}')"></div>
-${p.status ? `<div style="position:absolute; top:32px; right:32px; z-index:3; background:var(--accent); color:#000; font-size:10px; font-weight:900; padding:6px 14px; border-radius:12px; text-transform:uppercase;">${p.status}</div>` : ''}
+onclick="openPlayerModalFromId('${p.id}')"
+onkeydown="if(event.key==='Enter') openPlayerModalFromId('${p.id}')">
+<div class="player-img" style="background-image: url('${p.avatar_url || 'https://via.placeholder.com/400x600?text=No+Photo'}')"></div>
 <div class="player-info">
-<span style="font-size:11px; font-weight:800; text-transform:uppercase; color:var(--accent); letter-spacing:0.1em;">${p.role}</span>
-<h3 style="font-size:2.2rem; margin: 8px 0;">${p.name}</h3>
-${p.badges.length > 0 ? `<div style="font-size:10px; color:rgba(255,255,255,0.7); margin-top:4px;">${p.badges[0]}</div>` : ''}
-<div class="ovr-badge">OVR ${p.ovr}</div>
+<span style="font-size:11px; font-weight:800; text-transform:uppercase; color:var(--accent); letter-spacing:0.1em;">${p.role || 'Игрок'}</span>
+<h3 style="font-size:2.2rem; margin: 8px 0;">${p.nickname}</h3>
+<div class="ovr-badge">ELO ${p.elo_rating}</div>
 </div>
 </div>
 `).join('');
 }
-function renderStats() {
-const sorted = [...allPlayers].sort((a, b) => b.ovr - a.ovr);
-document.getElementById('stats-body').innerHTML = sorted.map((p, i) => `
-<tr onclick="openPlayerModal('${p.name}')" style="cursor:pointer" tabindex="0" onkeydown="if(event.key==='Enter') openPlayerModal('${p.name}')" aria-label="Рейтинг ${p.ovr}, ${p.name}, ${p.role}${p.badges[0] ? ', ' + p.badges[0] : ''}">
+
+async function renderStats() {
+const tbody = document.getElementById('stats-body');
+if (!tbody) return;
+
+// Используем реальные данные или моковые
+const playersToShow = allPlayers.length > 0 ? allPlayers : mockPlayers;
+
+const sorted = playersToShow.sort((a, b) => b.elo_rating - a.elo_rating);
+
+tbody.innerHTML = sorted.map((p, i) => `
+<tr onclick="openPlayerModalFromId('${p.id}')" style="cursor:pointer" tabindex="0">
 <td style="font-weight:900; color:var(--text-dim)">${(i+1).toString().padStart(2, '0')}</td>
 <td>
 <div style="display:flex; align-items:center; gap:16px;">
-<img src="${p.photo}" style="width:48px; height:48px; border-radius:14px; object-fit:cover;" alt="">
+<img src="${p.avatar_url || 'https://via.placeholder.com/150x150?text=No+Photo'}" 
+     style="width:48px; height:48px; border-radius:14px; object-fit:cover;" 
+     alt="${p.nickname}">
 <div>
-<div style="font-weight:900; text-transform:uppercase; font-style:italic;">${p.name}</div>
-<div style="font-size:10px; font-weight:700; color:var(--text-dim); text-transform:uppercase;">${p.role}</div>
+<div style="font-weight:900; text-transform:uppercase; font-style:italic;">${p.nickname}</div>
+<div style="font-size:10px; font-weight:700; color:var(--text-dim); text-transform:uppercase;">
+  ${p.total_matches || 0} матчей
+</div>
 </div>
 </div>
 </td>
-<td style="text-align:right;"><span class="ovr-badge">${p.ovr}</span></td>
+<td style="text-align:right;">
+<span class="ovr-badge">${p.elo_rating}</span>
+</td>
 </tr>
 `).join('');
 }
-/**
-* MODAL LOGIC & ACCESSIBILITY
-*/
+
 let lastFocusedElement;
 function openModal(id) {
 lastFocusedElement = document.activeElement;
@@ -641,65 +858,13 @@ if (activeModal) closeModal(activeModal.id);
 }
 });
 
-function openPlayerModal(name) {
-  const p = allPlayers.find(x => x.name.toLowerCase() === name.toLowerCase());
-  if(!p) {
-    showToast("Игрок не найден");
-    return;
-  }
-
-  document.getElementById('m-name').innerText = p.name;
-  document.getElementById('m-role').innerText = p.role;
-  document.getElementById('m-ovr').innerText = p.ovr;
-  document.getElementById('m-img').src = p.photo;
-  document.getElementById('m-badges').innerHTML = p.badges.map(b => `<span style="font-size:10px; background:#000; color:#fff; padding:4px 10px; border-radius:8px; font-weight:800;">${b}</span>`).join('');
-
-  const isGK = p.role === 'Вратарь';
-  const stats = [
-    { l: isGK ? 'REF' : 'DRI', v: p.drib },
-    { l: isGK ? 'DIV' : 'SPD', v: p.speed },
-    { l: isGK ? 'HAN' : 'SHT', v: p.shot },
-    { l: isGK ? 'POS' : 'PHY', v: p.phys }
-  ];
-
-  document.getElementById('m-stats').innerHTML = stats.map(s => `
-    <div class="stat-item">
-      <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
-        <div class="stat-header" data-tip="${statDefs[s.l]}">
-          <span style="font-size:12px; font-weight:900;">${s.l}</span>
-          <i class="info-icon">?</i>
-        </div>
-        <span style="font-size:12px; font-weight:900;">${s.v}</span>
-      </div>
-      <div style="height:4px; background:var(--bg-alt); border-radius:2px; overflow:hidden;">
-        <div style="width:0%; height:100%; background:var(--text); transition:1.2s var(--cubic) 0.3s;" id="bar-${s.l}"></div>
-      </div>
-    </div>
-  `).join('');
-
-  openModal('playerModal');
-
-  setTimeout(() => {
-    stats.forEach(s => {
-      const bar = document.getElementById(`bar-${s.l}`);
-      if(bar) bar.style.width = s.v + '%';
-    });
-  }, 100);
-
-  const currentTab = document.querySelector('section.active').id;
-  const playerSlug = p.name.replace(/\s+/g, '-').toLowerCase();
-  window.history.replaceState(null, null, `#${currentTab}?player=${playerSlug}`);
-}
-
-/**
-* ACTIONS
-*/
 function setRoleFilter(role, btn) {
 currentRoleFilter = role;
 document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
 btn.classList.add('active');
 renderRoster();
 }
+
 function toggleMenu() {
 const drawer = document.getElementById('mobile-drawer');
 const overlay = document.getElementById('drawer-overlay');
@@ -709,16 +874,19 @@ overlay.classList.toggle('open');
 burger.classList.toggle('open');
 burger.setAttribute('aria-expanded', isOpen);
 }
+
 function handleMobileNav(id, isModal = false) {
 toggleMenu();
 setTimeout(() => isModal ? openModal(id) : switchTab(id), 400);
 }
+
 function copyPlayerID() {
 const name = document.getElementById('m-name').innerText;
 navigator.clipboard.writeText(name).then(() => {
 showToast('ID игрока скопирован');
 });
 }
+
 function sharePlayer() {
 const name = document.getElementById('m-name').innerText;
 const url = window.location.href;
@@ -733,6 +901,7 @@ navigator.clipboard.writeText(url);
 showToast('Ссылка скопирована в буфер');
 }
 }
+
 function updateTimer() {
 const now = Date.now();
 const diff = TARGET_DATE - now;
@@ -747,11 +916,313 @@ document.getElementById('hours').innerText = Math.floor((diff % 864e5) / 36e5).t
 document.getElementById('mins').innerText = Math.floor((diff % 36e5) / 6e4).toString().padStart(2, '0');
 document.getElementById('secs').innerText = Math.floor((diff % 6e4) / 1000).toString().padStart(2, '0');
 }
+
+function checkUserSession() {
+const savedUser = localStorage.getItem('box1v1_user');
+if (savedUser) {
+try {
+currentUser = JSON.parse(savedUser);
+} catch (e) {
+localStorage.removeItem('box1v1_user');
+}
+}
+}
+
+async function submitProfile() {
+const nickname = document.getElementById('profile-nickname').value.trim();
+const telegram = document.getElementById('profile-telegram').value.trim();
+  
+if (!nickname) {
+showToast('Введите никнейм');
+return;
+}
+  
+if (!db) {
+showToast('База данных не загружена. Используются демо-данные.');
+return;
+}
+  
+const result = await db.createPlayer(nickname, telegram || null, null);
+  
+if (result.success) {
+showToast(result.message);
+closeModal('createProfileModal');
+allPlayers = await db.getAllPlayers();
+renderLeaderboard();
+renderRoster();
+renderStats();
+} else {
+showToast(result.error);
+}
+}
+
+// ========== SUPABASE SERVICE ==========
+class SupabaseService {
+  constructor() {
+    console.log('🔧 Создаём Supabase клиент...');
+    console.log('URL:', SUPABASE_CONFIG.url);
+    console.log('Supabase доступен?', typeof window.supabase !== 'undefined');
+    
+    if (typeof window.supabase === 'undefined') {
+      throw new Error('Supabase библиотека не загрузилась');
+    }
+    
+    try {
+      this.client = window.supabase.createClient(
+        SUPABASE_CONFIG.url,
+        SUPABASE_CONFIG.publishableKey,
+        {
+          auth: {
+            persistSession: false
+          }
+        }
+      );
+      console.log('✅ Supabase клиент создан');
+    } catch (error) {
+      console.error('❌ Ошибка создания клиента:', error);
+      throw error;
+    }
+  }
+
+  async testConnection() {
+    try {
+      console.log('🔍 Тестируем подключение к Supabase...');
+      const { data, error } = await this.client
+        .from('players')
+        .select('count', { count: 'exact', head: true });
+      
+      if (error) {
+        console.error('Ошибка запроса:', error);
+        throw error;
+      }
+      
+      console.log('✅ Подключение успешно, данные:', data);
+      return { success: true, message: 'Подключение успешно' };
+    } catch (error) {
+      console.error('❌ Ошибка подключения:', error);
+      return { success: false, message: error.message };
+    }
+  }
+
+  async getAllPlayers() {
+    try {
+      console.log('📥 Загружаем игроков...');
+      const { data, error } = await this.client
+        .from('players')
+        .select('*')
+        .eq('active', true)
+        .order('elo_rating', { ascending: false });
+      
+      if (error) {
+        console.error('Ошибка загрузки игроков:', error);
+        return [];
+      }
+      
+      console.log(`✅ Загружено ${data?.length || 0} игроков`);
+      return data || [];
+    } catch (error) {
+      console.error('Ошибка получения игроков:', error);
+      return [];
+    }
+  }
+
+  async createPlayer(nickname, telegram = null, avatarUrl = null) {
+    try {
+      const { data: existingPlayer } = await this.client
+        .from('players')
+        .select('id')
+        .eq('nickname', nickname)
+        .single();
+      
+      if (existingPlayer) {
+        return { 
+          success: false, 
+          error: 'Игрок с таким никнеймом уже существует' 
+        };
+      }
+      
+      const { data, error } = await this.client
+        .from('players')
+        .insert([{
+          nickname: nickname.trim(),
+          telegram: telegram ? telegram.trim() : null,
+          avatar_url: avatarUrl,
+          elo_rating: 1500,
+          total_matches: 0,
+          wins: 0,
+          losses: 0,
+          current_streak: 0,
+          best_streak: 0,
+          verified: false,
+          active: true
+        }])
+        .select()
+        .single();
+      
+      if (error) throw error;
+      
+      return { 
+        success: true, 
+        player: data,
+        message: 'Профиль создан! Ожидайте подтверждения организатора.'
+      };
+    } catch (error) {
+      console.error('Ошибка создания игрока:', error);
+      return { 
+        success: false, 
+        error: error.message || 'Ошибка создания профиля' 
+      };
+    }
+  }
+
+  calculateElo(playerElo, opponentElo, kFactor = 32) {
+    const expectedScore = 1 / (1 + Math.pow(10, (opponentElo - playerElo) / 400));
+    const eloChange = Math.round(kFactor * (1 - expectedScore));
+    
+    return {
+      winnerNewElo: playerElo + eloChange,
+      loserNewElo: opponentElo - eloChange,
+      eloChange: eloChange
+    };
+  }
+}
+
+// ========== ИНИЦИАЛИЗАЦИЯ ПРИЛОЖЕНИЯ ==========
+async function initApp() {
+  try {
+    console.log('🚀 Инициализация BOX1V1...');
+    
+    // Сначала показываем демо-данные
+    console.log('📊 Используем демо-данные для отображения');
+    renderRoster();
+    renderStats();
+    renderLeaderboard();
+    
+    // Пытаемся подключиться к базе
+    if (typeof window.supabase !== 'undefined') {
+      console.log('✅ Библиотека Supabase найдена');
+      
+      // Проверяем конфиг
+      if (!SUPABASE_CONFIG || !SUPABASE_CONFIG.url || !SUPABASE_CONFIG.publishableKey) {
+        console.error('❌ Конфигурация Supabase не настроена');
+        showToast('Конфигурация базы данных не настроена');
+      } else {
+        // Создаём подключение к базе
+        try {
+          db = new SupabaseService();
+          console.log('✅ База данных инициализирована');
+          
+          // Тестируем подключение
+          console.log('🔍 Тестируем подключение...');
+          const connectionTest = await db.testConnection();
+          if (!connectionTest.success) {
+            console.warn('⚠️ Подключение не удалось:', connectionTest.message);
+            showToast('Есть проблемы с подключением к базе данных');
+          } else {
+            console.log('✅ Подключение к базе успешно');
+            
+            // Загружаем реальных игроков
+            console.log('📥 Загружаем игроков из базы...');
+            allPlayers = await db.getAllPlayers();
+            console.log(`✅ Загружено ${allPlayers.length} игроков`);
+            
+            if (allPlayers.length === 0) {
+              showToast("База игроков пуста. Создайте первый профиль!");
+            }
+            
+            // Обновляем данные на реальные
+            renderRoster();
+            renderStats();
+            renderLeaderboard();
+          }
+        } catch (error) {
+          console.error('❌ Ошибка подключения к базе:', error);
+          showToast('Ошибка подключения к базе данных');
+        }
+      }
+    } else {
+      console.warn('⚠️ Supabase не загружен. Используем демо-режим.');
+      showToast('Работаем в демо-режиме. База данных временно недоступна.');
+    }
+    
+    // Остальные функции
+    handleHashAndDeepLink();
+    
+    setInterval(updateTimer, 1000);
+    updateTimer();
+    
+    checkUserSession();
+    
+    document.getElementById('preloader').classList.add('loaded');
+    
+    initTouchTooltips();
+    
+    console.log('✅ BOX1V1 успешно инициализирован');
+    
+  } catch (e) {
+    console.error("💥 Критическая ошибка инициализации:", e);
+    showToast("Ошибка загрузки приложения. Используем демо-режим.");
+    document.getElementById('preloader').classList.add('loaded');
+  }
+}
+
+// Функция для теста подключения
+async function testSupabase() {
+  console.log('🔍 Тестируем подключение к Supabase...');
+  
+  if (typeof window.supabase === 'undefined') {
+    alert('❌ Библиотека Supabase не загрузилась!');
+    console.error('Supabase не загружен');
+    return;
+  }
+  
+  if (!SUPABASE_CONFIG.url || !SUPABASE_CONFIG.publishableKey) {
+    alert('❌ Конфигурация не настроена');
+    return;
+  }
+  
+  try {
+    // Пробуем создать тестового клиента
+    const testClient = window.supabase.createClient(
+      SUPABASE_CONFIG.url,
+      SUPABASE_CONFIG.publishableKey,
+      { auth: { persistSession: false } }
+    );
+    
+    // Тестовый запрос
+    const { data, error } = await testClient
+      .from('players')
+      .select('count', { count: 'exact', head: true });
+    
+    if (error) {
+      alert(`❌ Ошибка подключения: ${error.message}`);
+      console.error('Ошибка:', error);
+    } else {
+      alert(`✅ Подключение успешно!`);
+      console.log('Тест подключения успешен:', data);
+      
+      // Если подключение успешно, перезагружаем данные
+      if (db) {
+        allPlayers = await db.getAllPlayers();
+        renderRoster();
+        renderStats();
+        renderLeaderboard();
+        showToast('Данные обновлены с сервера');
+      }
+    }
+  } catch (error) {
+    alert(`❌ Критическая ошибка: ${error.message}`);
+    console.error('Критическая ошибка:', error);
+  }
+}
+
 window.addEventListener('scroll', () => {
-document.body.classList.toggle('scrolled', window.scrollY > 50);
+  document.body.classList.toggle('scrolled', window.scrollY > 50);
 });
-window.onload = init;
+
+// Запускаем инициализацию когда всё загрузится
+window.addEventListener('DOMContentLoaded', initApp);
 </script>
+
 </body>
 </html>
-
