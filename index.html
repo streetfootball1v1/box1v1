@@ -1010,7 +1010,7 @@ class SupabaseService {
       const { data, error } = await this.client
         .from('players')
         .select('*')
-        .eq('active', true)
+        .eq('is_active', true)
         .order('elo_rating', { ascending: false });
       
       if (error) {
@@ -1054,7 +1054,7 @@ class SupabaseService {
           current_streak: 0,
           best_streak: 0,
           verified: false,
-          active: true
+          is_active: true
         }])
         .select()
         .single();
@@ -1226,3 +1226,4 @@ window.addEventListener('DOMContentLoaded', initApp);
 
 </body>
 </html>
+
