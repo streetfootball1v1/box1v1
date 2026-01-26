@@ -644,44 +644,66 @@ function initTouchTooltips() {
 }
 
 async function init() {
-try {
-console.log('🚀 Инициализация BOX1V1...');
-
-const connectionTest = await db.testConnection();
-if (!connectionTest.success) {
-  showToast('Ошибка подключения к базе данных');
-  console.error('Подключение не удалось:', connectionTest.message);
-}
-
-allPlayers = await db.getAllPlayers();
-console.log(`📊 Загружено ${allPlayers.length} игроков`);
-
-if (allPlayers.length === 0) {
-  showToast("База игроков пуста. Создайте первый профиль!");
-}
-
-renderRoster();
-renderStats();
-renderLeaderboard();
-
-handleHashAndDeepLink();
-
-setInterval(updateTimer, 1000);
-updateTimer();
-
-checkUserSession();
-
-document.getElementById('preloader').classList.add('loaded');
-
-initTouchTooltips();
-
-console.log('✅ BOX1V1 успешно инициализирован');
-
-} catch (e) {
-console.error("Критическая ошибка инициализации:", e);
-showToast("Ошибка загрузки приложения");
-document.getElementById('preloader').classList.add('loaded');
-}
+  try {
+    console.log('🚀 Инициализация BOX1V1...');
+    
+    // Ждём пока загрузится база данных
+    let attempts = 0;
+    const maxAttempts = 20;
+    
+    while (attempts < maxAttempts) {
+      if (window.getDatabase && window.getDatabase()) {
+        db = window.getDatabase();
+        break;
+      }
+      await new Promise(resolve => setTimeout(resolve, 100));
+      attempts++;
+    }
+    
+    if (!db) {
+      console.error('❌ База данных не загрузилась');
+      showToast('Ошибка подключения к базе данных. Попробуйте обновить страницу.');
+      document.getElementById('preloader').classList.add('loaded');
+      return;
+    }
+    
+    console.log('✅ База данных подключена');
+    
+    const connectionTest = await db.testConnection();
+    if (!connectionTest.success) {
+      console.error('Подключение не удалось:', connectionTest.message);
+      showToast('База данных подключена, но есть проблемы с доступом');
+    }
+    
+    allPlayers = await db.getAllPlayers();
+    console.log(`📊 Загружено ${allPlayers.length} игроков`);
+    
+    if (allPlayers.length === 0) {
+      showToast("База игроков пуста. Создайте первый профиль!");
+    }
+    
+    renderRoster();
+    renderStats();
+    renderLeaderboard();
+    
+    handleHashAndDeepLink();
+    
+    setInterval(updateTimer, 1000);
+    updateTimer();
+    
+    checkUserSession();
+    
+    document.getElementById('preloader').classList.add('loaded');
+    
+    initTouchTooltips();
+    
+    console.log('✅ BOX1V1 успешно инициализирован');
+    
+  } catch (e) {
+    console.error("Критическая ошибка инициализации:", e);
+    showToast("Ошибка загрузки приложения. Проверьте консоль браузера.");
+    document.getElementById('preloader').classList.add('loaded');
+  }
 }
 
 async function renderLeaderboard() {
@@ -1006,3 +1028,4 @@ window.onload = init;
 </script>
 </body>
 </html>
+
