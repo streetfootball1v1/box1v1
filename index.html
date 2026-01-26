@@ -33,10 +33,6 @@
 --glass: rgba(255,255,255,0.8);
 --radius: 24px;
 --radius-sm: 14px;
---gold: linear-gradient(135deg, #FFD700 0%, #FFAA00 100%);
---silver: linear-gradient(135deg, #C0C0C0 0%, #A0A0A0 100%);
---bronze: linear-gradient(135deg, #CD7F32 0%, #A0522D 100%);
---elite: linear-gradient(135deg, #000000 0%, #333333 100%);
 }
 * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 html {
@@ -59,12 +55,7 @@ letter-spacing: var(--ls-tight);
 line-height: var(--lh-tight);
 text-transform: uppercase;
 }
-p { font-size: 1rem; color: var(--text-dim); line-height: 1.6; }
-
-/* УВЕЛИЧИЛИ МЕЖСТРОЧНЫЙ ИНТЕРВАЛ ДЛЯ ВСЕХ ТЕКСТОВЫХ БЛОКОВ */
-.description-block p, .modal-content p, .card p, .intro-block p {
-  line-height: 1.6 !important;
-}
+p { font-size: 1rem; color: var(--text-dim); }
 
 /* UX TOOLTIPS STYLES */
 .stat-item { position: relative; }
@@ -131,7 +122,7 @@ font-size: 1.4rem; font-weight: 900; font-style: italic; letter-spacing: -1px; c
 transition: 0.3s;
 }
 .logo:hover { opacity: 0.7; }
-.nav-links { display: flex; gap: 8px; align-items: center; }
+.nav-links { display: flex; gap: 8px; }
 .nav-links a {
 text-decoration: none; font-size: 12px; font-weight: 700;
 letter-spacing: 0.05em; text-transform: uppercase; color: var(--text-dim);
@@ -140,36 +131,6 @@ padding: 10px 20px; border-radius: var(--radius-sm); transition: 0.3s var(--cubi
 .nav-links a:hover { color: var(--text); background: var(--bg-alt); }
 .nav-links a:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
 .nav-links a.active { color: #fff; background: var(--text); }
-
-/* НОВЫЙ ВИДЖЕТ БЛИЖАЙШЕГО МАТЧА */
-.next-match-widget {
-  background: linear-gradient(135deg, #000000 0%, #333333 100%);
-  color: white;
-  padding: 16px 24px;
-  border-radius: 16px;
-  font-size: 11px;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-left: 16px;
-  transition: 0.3s var(--cubic);
-  cursor: pointer;
-}
-.next-match-widget:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-}
-.next-match-widget .match-icon {
-  font-size: 16px;
-}
-.next-match-widget .match-date {
-  color: var(--accent);
-  font-weight: 900;
-}
-
 /* BURGER */
 .burger {
 display: none; cursor: pointer; width: 48px; height: 48px; flex-direction: column;
@@ -197,7 +158,7 @@ to { opacity: 1; transform: translateY(0); }
 }
 .intro-block { padding: 40px 0 80px; text-align: center; max-width: 900px; margin: 0 auto; }
 .intro-block h1 { font-size: clamp(3.5rem, 12vw, 9.5rem); margin-bottom: 24px; }
-.intro-block p { font-size: 1.25rem; max-width: 540px; margin: 0 auto 40px; line-height: 1.6; }
+.intro-block p { font-size: 1.25rem; max-width: 540px; margin: 0 auto 40px; }
 /* BUTTONS */
 .btn {
 padding: 20px 36px; border-radius: 20px; font-weight: 800;
@@ -220,38 +181,8 @@ cursor: pointer; display: flex; flex-direction: column;
 }
 .card:hover { transform: translateY(-10px); border-color: rgba(0,0,0,0.15); box-shadow: var(--shadow-md); }
 .card:focus-visible { outline: 3px solid var(--accent); }
-
-/* НОВЫЙ ДИЗАЙН КАРТОЧКИ ИГРОКА С КЛЮЧЕВЫМИ ПАРАМЕТРАМИ */
-.player-card { 
-  height: 520px; 
-  background: #000; 
-  color: #fff; 
-  border: none; 
-  padding: 32px; 
-  position: relative;
-  overflow: hidden;
-}
-
-/* ИЕРАРХИЯ ИМЕН: ФАМИЛИЯ ВЕРХНИМ РЕГИСТРОМ */
-.player-name {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-.player-first-name {
-  font-size: 1.8rem;
-  font-weight: 600;
-  text-transform: none;
-  font-style: normal;
-}
-.player-last-name {
-  font-size: 2.2rem;
-  font-weight: 900;
-  font-style: italic;
-  text-transform: uppercase;
-  letter-spacing: var(--ls-tight);
-}
-
+/* PLAYER CARD */
+.player-card { height: 480px; background: #000; color: #fff; border: none; padding: 32px; }
 .player-img {
 position: absolute; inset: 0; background-size: cover; background-position: center top;
 filter: grayscale(1); opacity: 0.5; transition: 1s var(--cubic);
@@ -262,259 +193,24 @@ content: ''; position: absolute; inset: 0;
 background: linear-gradient(to top, #000 5%, rgba(0,0,0,0.4) 40%, transparent 90%); z-index: 1;
 }
 .player-info { position: relative; z-index: 2; margin-top: auto; }
-
-/* УСИЛЕННЫЙ АКЦЕНТ НА OVR РЕЙТИНГЕ */
 .ovr-badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 12px 20px;
-  background: #000;
-  color: #fff;
-  border-radius: 16px;
-  font-weight: 900;
-  font-size: 20px;
-  margin-top: 20px;
-  width: fit-content;
-  min-width: 120px;
-  border: 2px solid rgba(255,255,255,0.2);
-  position: relative;
-  overflow: hidden;
-  z-index: 2;
+display: inline-block; padding: 6px 14px; background: var(--accent);
+color: #000; border-radius: 12px; font-weight: 900; font-size: 12px; margin-top: 12px;
 }
-.ovr-badge::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 100%;
-  background: var(--accent);
-  opacity: 0.3;
-  z-index: -1;
-}
-.ovr-badge .ovr-value {
-  font-size: 24px;
-  font-weight: 900;
-  margin-right: 4px;
-}
-.ovr-badge .ovr-label {
-  font-size: 10px;
-  opacity: 0.8;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-}
-
-/* ИНДИКАТОРЫ ИЗМЕНЕНИЯ РЕЙТИНГА */
-.rating-change {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  margin-left: 8px;
-  font-size: 12px;
-  font-weight: 800;
-  padding: 4px 8px;
-  border-radius: 8px;
-}
-.rating-change.up {
-  color: #22c55e;
-  background: rgba(34, 197, 94, 0.1);
-}
-.rating-change.down {
-  color: #ef4444;
-  background: rgba(239, 68, 68, 0.1);
-}
-.rating-change.neutral {
-  color: #6b7280;
-  background: rgba(107, 114, 128, 0.1);
-}
-
-/* КЛЮЧЕВЫЕ ПАРАМЕТРЫ НА КАРТОЧКЕ */
-.player-key-stats {
-  display: flex;
-  gap: 16px;
-  margin-top: 20px;
-  z-index: 2;
-  position: relative;
-}
-.key-stat {
-  background: rgba(255,255,255,0.1);
-  backdrop-filter: blur(10px);
-  border-radius: 12px;
-  padding: 12px;
-  min-width: 80px;
-}
-.key-stat-label {
-  font-size: 10px;
-  text-transform: uppercase;
-  opacity: 0.7;
-  font-weight: 800;
-  letter-spacing: 0.05em;
-  margin-bottom: 4px;
-}
-.key-stat-value {
-  font-size: 20px;
-  font-weight: 900;
-}
-
-/* СКЕЛЕТНЫЕ КАРТОЧКИ */
-.skeleton {
-  animation: skeleton-loading 1.5s infinite ease-in-out;
-  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-  background-size: 200% 100%;
-}
-@keyframes skeleton-loading {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
-}
-.skeleton-card {
-  height: 480px;
-  border-radius: var(--radius);
-  overflow: hidden;
-}
-.skeleton-avatar {
-  width: 100%;
-  height: 60%;
-  background: #f0f0f0;
-}
-.skeleton-text {
-  height: 20px;
-  background: #f0f0f0;
-  margin: 16px;
-  border-radius: 4px;
-}
-.skeleton-text.short {
-  width: 40%;
-}
-
-/* РАДАР НАВЫКОВ В МОДАЛЬНОМ ОКНЕ */
-.radar-container {
-  width: 100%;
-  height: 300px;
-  position: relative;
-  margin: 32px 0;
-}
-.radar-chart {
-  width: 100%;
-  height: 100%;
-}
-
-/* СРАВНИТЕЛЬНАЯ ТАБЛИЦА В ТОПЕ */
-.leaderboard-table {
-  background: #fff;
-  border-radius: var(--radius);
-  border: 1px solid var(--border);
-  overflow: hidden;
-  margin-top: 40px;
-}
-.leaderboard-header {
-  display: grid;
-  grid-template-columns: 60px 1fr 100px 120px;
-  padding: 24px;
-  background: var(--bg-alt);
-  border-bottom: 1px solid var(--border);
-}
-.leaderboard-row {
-  display: grid;
-  grid-template-columns: 60px 1fr 100px 120px;
-  padding: 20px 24px;
-  border-bottom: 1px solid var(--border);
-  align-items: center;
-  transition: 0.3s;
-}
-.leaderboard-row:hover {
+/* STATS TABLE */
+.table-wrapper { background: #fff; border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; }
+table { width: 100%; border-collapse: collapse; }
+th { text-align: left; padding: 24px; font-size: 11px; font-weight: 800; text-transform: uppercase; color: var(--text-dim); border-bottom: 1px solid var(--border); }
+td { padding: 20px 24px; border-bottom: 1px solid var(--border); transition: 0.3s; }
+tr:last-child td { border-bottom: none; }
+tr:hover td {
   background: rgba(0,0,0,0.02);
+  transition: background 0.2s ease;
 }
-.leaderboard-row:last-child {
-  border-bottom: none;
-}
-.rank-cell {
-  font-size: 1.5rem;
-  font-weight: 900;
-  font-style: italic;
-  color: var(--text-dim);
-}
-.rank-cell.top-1 { color: #FFD700; }
-.rank-cell.top-2 { color: #C0C0C0; }
-.rank-cell.top-3 { color: #CD7F32; }
-
-/* БЫСТРЫЕ ФИЛЬТРЫ-ЧИПСЫ */
-.chips-container {
-  display: flex;
-  gap: 8px;
-  overflow-x: auto;
-  padding: 8px 0 16px 0;
-  margin: 0 0 24px 0;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-.chips-container::-webkit-scrollbar {
-  display: none;
-}
-.chip {
-  padding: 12px 20px;
-  border-radius: 50px;
-  border: 1px solid var(--border);
-  background: #fff;
-  font-size: 12px;
-  font-weight: 800;
-  cursor: pointer;
-  text-transform: uppercase;
-  white-space: nowrap;
-  transition: 0.3s var(--cubic);
-  flex-shrink: 0;
-}
-.chip:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-sm);
-}
-.chip.active {
-  background: var(--text);
-  color: #fff;
-  border-color: var(--text);
-}
-
-/* STICKY ПОИСК */
-.sticky-search {
-  position: sticky;
-  top: 72px;
-  z-index: 100;
-  background: var(--bg);
-  padding: 20px 0;
-  margin: -20px 0 20px 0;
-  border-bottom: 1px solid var(--border);
-  transition: 0.3s var(--cubic);
-}
-body.scrolled .sticky-search {
-  top: 64px;
-}
-
-/* ЦВЕТОВОЕ КОДИРОВАНИЕ РЕЙТИНГА */
-.player-card[data-rating-tier="elite"] {
-  border: 2px solid #FFD700;
-}
-.player-card[data-rating-tier="gold"] .ovr-badge {
-  background: var(--gold);
-  color: #000;
-}
-.player-card[data-rating-tier="silver"] .ovr-badge {
-  background: var(--silver);
-  color: #000;
-}
-.player-card[data-rating-tier="bronze"] .ovr-badge {
-  background: var(--bronze);
-  color: #fff;
-}
-.player-card[data-rating-tier="elite"] .ovr-badge {
-  background: var(--elite);
-  color: #fff;
-  border: 2px solid #FFD700;
-}
-
-/* ОБНОВЛЕННОЕ МОДАЛЬНОЕ ОКНО */
+/* MODAL */
 .modal-overlay {
-position: fixed; inset: 0; background: rgba(255,255,255,0.95);
-backdrop-filter: blur(40px); -webkit-backdrop-filter: blur(40px);
+position: fixed; inset: 0; background: rgba(255,255,255,0.7);
+backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
 z-index: 3000; display: flex; justify-content: center; align-items: center;
 padding: 20px; opacity: 0; pointer-events: none; transition: 0.4s var(--cubic);
 }
@@ -522,7 +218,7 @@ padding: 20px; opacity: 0; pointer-events: none; transition: 0.4s var(--cubic);
 .modal-content {
 background: #fff; width: 100%; max-width: 540px; border-radius: 40px;
 padding: 48px; position: relative; max-height: 90vh; overflow-y: auto;
-box-shadow: 0 40px 80px rgba(0,0,0,0.08); transform: translateY(40px) scale(0.95); transition: 0.6s var(--cubic);
+box-shadow: 0 40px 80px rgba(0,0,0,0.1); transform: translateY(40px) scale(0.95); transition: 0.6s var(--cubic);
 }
 .modal-overlay.active .modal-content { transform: translateY(0) scale(1); }
 .modal-close {
@@ -532,15 +228,13 @@ align-items: center; justify-content: center; cursor: pointer; z-index: 10;
 border: none; transition: 0.3s var(--cubic);
 }
 .modal-close:hover { transform: rotate(90deg); background: #eee; }
-
-/* УЛУЧШЕННЫЙ ПОИСК */
+/* SEARCH & FILTER */
 .search-input {
 padding: 18px 28px; border-radius: 20px; border: 1.5px solid var(--border);
 background: var(--bg-alt); width: 100%; max-width: 360px; font-family: inherit;
 font-weight: 600; transition: 0.3s;
 }
 .search-input:focus { outline: none; border-color: var(--text); background: #fff; box-shadow: 0 0 0 4px rgba(0,0,0,0.03); }
-
 .filter-btn {
 padding: 12px 20px; border-radius: 14px; border: 1px solid var(--border);
 background: #fff; font-size: 12px; font-weight: 800; cursor: pointer;
@@ -563,12 +257,11 @@ text-transform: uppercase; white-space: nowrap; transition: 0.3s;
 }
 @media (max-width: 768px) {
 .nav-links { display: none; }
-.next-match-widget { display: none; }
 .burger { display: flex; }
 .nav-inner { padding: 0 20px; }
 .main-content { padding: 100px 16px 60px; }
 .intro-block h1 { font-size: 3.8rem; }
-.intro-block p { font-size: 1.1rem; line-height: 1.6; }
+.intro-block p { font-size: 1.1rem; }
 .timer-context { border-radius: 32px; flex-direction: column; gap: 16px; width: 100%; padding: 24px 16px; margin-top: 40px; }
 .countdown { gap: 12px; }
 .countdown-value { font-size: 1.8rem; }
@@ -580,17 +273,10 @@ text-transform: uppercase; white-space: nowrap; transition: 0.3s;
 .controls-row { flex-direction: column; align-items: stretch !important; }
 .search-input { max-width: 100%; }
 .filter-bar { overflow-x: auto; padding-bottom: 8px; width: 100%; }
-.player-card { height: 480px; }
-.player-key-stats { gap: 8px; }
-.key-stat { min-width: 70px; padding: 10px; }
-.key-stat-value { font-size: 16px; }
-.leaderboard-header, .leaderboard-row { grid-template-columns: 50px 1fr 80px; }
-.leaderboard-header > :nth-child(4), .leaderboard-row > :nth-child(4) { display: none; }
-.sticky-search { top: 64px; }
-.ovr-badge { min-width: 100px; padding: 10px 16px; }
-.ovr-badge .ovr-value { font-size: 20px; }
-.player-first-name { font-size: 1.5rem; }
-.player-last-name { font-size: 1.8rem; }
+.player-card { height: 420px; }
+/* Hide tooltips on mobile by default, show on click if needed */
+.stat-header:hover::after { display: none; }
+.stat-header:active::after { display: block; opacity: 1; visibility: visible; }
 }
 @keyframes load { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
 </style>
@@ -612,12 +298,6 @@ text-transform: uppercase; white-space: nowrap; transition: 0.3s;
 <a href="#home" onclick="switchTab('home')" class="active" id="btn-home">Главная</a>
 <a href="#roster" onclick="switchTab('roster')" id="btn-roster">УЧАСТНИКИ</a>
 <a href="#stats" onclick="switchTab('stats')" id="btn-stats">Рейтинг</a>
-<a href="#" onclick="openModal('applyModal')" id="btn-apply" style="background: var(--accent); color: #000;">Подать заявку</a>
-<div class="next-match-widget" onclick="openModal('nextMatchModal')">
-  <span class="match-icon">⚽</span>
-  <span>Следующий матч:</span>
-  <span class="match-date">15.03.2026</span>
-</div>
 </div>
 <button class="burger" id="burger" onclick="toggleMenu()" aria-label="Меню" aria-expanded="false">
 <span></span><span></span><span></span>
@@ -629,11 +309,8 @@ text-transform: uppercase; white-space: nowrap; transition: 0.3s;
 <a href="#home" onclick="handleMobileNav('home')">Главная</a>
 <a href="#roster" onclick="handleMobileNav('roster')">Список</a>
 <a href="#stats" onclick="handleMobileNav('stats')">Рейтинг</a>
-<a href="#" onclick="handleMobileNav('applyModal', true)">Подать заявку</a>
-<div class="next-match-widget" onclick="handleMobileNav('nextMatchModal', true)" style="margin-top: 20px; justify-content: center;">
-  <span class="match-icon">⚽</span>
-  <span>Следующий матч:</span>
-  <span class="match-date">15.03.2026</span>
+<div style="margin-top:auto;">
+<button class="btn btn-primary" style="width:100%" onclick="handleMobileNav('applyModal', true)">Стать частью</button>
 </div>
 </div>
 <main class="main-content">
@@ -660,80 +337,59 @@ text-transform: uppercase; white-space: nowrap; transition: 0.3s;
 <div class="card" style="grid-column: span 2; background: #fafafa;" onclick="openModal('rulesModal')" tabindex="0">
 <span style="font-size:11px; font-weight:800; color:var(--accent-dark); text-transform:uppercase; letter-spacing:0.1em;">Документация</span>
 <h2 style="font-size: 3.5rem; margin: 20px 0 15px;">РЕГЛАМЕНТ.</h2>
-<p style="line-height: 1.6;">Свод правил проведения матчей. Изучите все детали формата 1 на 1, тайминг, систему подсчета очков и требования к участникам.</p>
+<p>Свод правил проведения матчей.</p>
 <div style="margin-top: auto; padding-top: 30px; font-weight: 800; font-size: 12px; text-transform: uppercase;">Изучить правила →</div>
 </div>
 <div class="card" onclick="window.open('https://t.me/streetbox1v1')" tabindex="0">
 <h3 style="font-size: 1.8rem;">TELEGRAM</h3>
-<p style="font-size: 14px; margin-top: 8px; line-height: 1.6;">Свежие новости и актуальная информация. Будьте в курсе всех событий и общайтесь с сообществом.</p>
+<p style="font-size: 14px; margin-top: 8px;">Свежие новости и актуальная информация.</p>
 </div>
 <div class="card" onclick="window.open('https://instagram.com/box.1v1')" tabindex="0">
 <h3 style="font-size: 1.8rem;">INSTAGRAM</h3>
-<p style="font-size: 14px; margin-top: 8px; line-height: 1.6;">Главные новости в медиа формате. Лучшие моменты матчей и эксклюзивный контент.</p>
+<p style="font-size: 14px; margin-top: 8px;">Главные новости в медиа формате.</p>
 </div>
 </div>
 </section>
 <section id="roster">
 <div style="margin-bottom: 60px;">
 <h1 style="font-size: clamp(3rem, 10vw, 8rem);">УЧАСТНИКИ.</h1>
-<p style="font-size: 1.25rem; line-height: 1.6;">Действующие участники BOX1V1. Найдите своего фаворита или откройте нового чемпиона.</p>
+<p style="font-size: 1.25rem;">Действующие участники BOX1V1.</p>
 </div>
-<div class="sticky-search" id="stickySearch">
-<div class="controls-row" style="margin-bottom: 20px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:20px;">
-<input type="text" class="search-input" id="playerSearch" placeholder="Поиск по имени..." oninput="debouncedRender()" aria-label="Поиск игроков">
-</div>
-<div class="chips-container" id="chipsContainer">
-<button class="chip active" data-role="Все" onclick="setRoleFilter('Все', this)">Все</button>
-<button class="chip" data-role="Топ-10" onclick="setRoleFilter('Топ-10', this)">Топ-10</button>
-<button class="chip" data-role="Игрок" onclick="setRoleFilter('Игрок', this)">Полевые</button>
-<button class="chip" data-role="Вратарь" onclick="setRoleFilter('Вратарь', this)">Вратари</button>
-<button class="chip" data-role="Новичок" onclick="setRoleFilter('Новичок', this)">Новички</button>
-<button class="chip" data-role="Ветеран" onclick="setRoleFilter('Ветеран', this)">Ветераны</button>
+<div class="controls-row" style="margin-bottom: 40px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:20px;">
+<input type="text" class="search-input" id="playerSearch" placeholder="Поиск по имени..." oninput="debouncedRender()">
+<div class="filter-bar" style="display:flex; gap:8px;">
+<button class="filter-btn active" data-role="Все" onclick="setRoleFilter('Все', this)">Все</button>
+<button class="filter-btn" data-role="Игрок" onclick="setRoleFilter('Игрок', this)">Полевые</button>
+<button class="filter-btn" data-role="Вратарь" onclick="setRoleFilter('Вратарь', this)">Вратари</button>
 </div>
 </div>
 <div class="bento-grid" id="roster-grid"></div>
 </section>
 <section id="stats">
 <h1 style="font-size: clamp(3rem, 10vw, 8rem); margin-bottom:40px;">РЕЙТИНГ.</h1>
-<p style="font-size: 1.25rem; margin-bottom: 40px; line-height: 1.6;">Таблица лидеров сезона. Следите за прогрессом лучших атлетов.</p>
-<div class="leaderboard-table">
-<div class="leaderboard-header">
-<div>#</div>
-<div>Игрок</div>
-<div>OVR</div>
-<div>Изменение</div>
-</div>
-<div id="leaderboard-body"></div>
+<div class="table-wrapper">
+<table role="grid">
+<thead>
+<tr><th>#.</th><th>Игрок</th><th style="text-align:right;">OVR рейтинг</th></tr>
+</thead>
+<tbody id="stats-body"></tbody>
+</table>
 </div>
 </section>
 </main>
 <div class="modal-overlay" id="playerModal" onclick="closeModal('playerModal')" role="dialog" aria-modal="true">
-<div class="modal-content" onclick="event.stopPropagation()" style="max-width: 600px;">
+<div class="modal-content" onclick="event.stopPropagation()">
 <button class="modal-close" onclick="closeModal('playerModal')" aria-label="Закрыть">✕</button>
-<div id="m-img-container" style="width:100%; height:320px; border-radius:24px; overflow:hidden; background:#f0f0f0; margin-bottom:32px; position: relative;">
+<div id="m-img-container" style="width:100%; height:320px; border-radius:24px; overflow:hidden; background:#f0f0f0; margin-bottom:32px;">
 <img id="m-img" src="" style="width:100%; height:100%; object-fit:cover;" alt="Фото игрока">
-<div style="position: absolute; top: 20px; right: 20px; z-index: 2;">
-<span id="m-rating-tier" style="font-size:11px; font-weight:800; text-transform:uppercase; color:#000; background:#FFD700; padding:8px 16px; border-radius:10px;">ELITE</span>
-</div>
 </div>
 <div style="display:flex; justify-content:space-between; align-items:flex-start;">
-<div style="flex: 1;">
-<div class="player-name">
-<div id="m-first-name" style="font-size: 1.5rem; font-weight: 600; text-transform: none; font-style: normal;">Имя</div>
-<div id="m-last-name" style="font-size: 2.5rem; font-weight: 900; font-style: italic; text-transform: uppercase; letter-spacing: var(--ls-tight);">ФАМИЛИЯ</div>
-</div>
+<div>
+<span id="m-role" style="font-size:11px; font-weight:800; text-transform:uppercase; color:var(--accent-dark); background:rgba(34,197,94,0.1); padding:6px 12px; border-radius:10px;">ROLE</span>
+<h2 id="m-name" style="font-size: 2.5rem; margin-top:12px;">NAME</h2>
 <div id="m-badges" style="display:flex; gap:8px; margin-top:16px; flex-wrap:wrap;"></div>
 </div>
-<div style="display: flex; flex-direction: column; align-items: flex-end;">
-<div id="m-ovr-container" style="display: flex; align-items: center; gap: 12px;">
-<div id="m-ovr" style="font-size: 3.5rem; font-weight:900; font-style:italic; line-height:1; letter-spacing:-3px;">99</div>
-<div id="m-rating-change" class="rating-change up">↑+2</div>
-</div>
-<div id="m-role" style="font-size:11px; font-weight:800; text-transform:uppercase; color:var(--accent-dark); margin-top: 8px;">ROLE</div>
-</div>
-</div>
-<div class="radar-container" id="radarContainer">
-<canvas id="radarChart"></canvas>
+<div id="m-ovr" style="font-size: 3rem; font-weight:900; font-style:italic; line-height:1; letter-spacing:-3px;">99</div>
 </div>
 <div id="m-stats" style="margin-top:40px; display:grid; grid-template-columns: 1fr 1fr; gap: 32px;"></div>
 <div style="margin-top:48px; display:flex; gap:12px; flex-wrap:wrap;">
@@ -746,7 +402,7 @@ text-transform: uppercase; white-space: nowrap; transition: 0.3s;
 <div class="modal-content" onclick="event.stopPropagation()">
 <button class="modal-close" onclick="closeModal('applyModal')">✕</button>
 <h2 style="font-size:2rem; margin-bottom:20px;">ВСТУПИТЬ В BOX1V1</h2>
-<p style="margin-bottom:32px; line-height: 1.6;">Чтобы оформить заявку, оставь комментарий под любым постом с хештегом #BOXУЧАСТВОВАТЬ. После проверки мы свяжемся с тобой для деталей.</p>
+<p style="margin-bottom:32px;">Чтобы оформить заявку, оставь комментарий под любым постом с хештегом #BOXУЧАСТВОВАТЬ.</p>
 <button class="btn btn-primary" style="width:100%; padding:24px;" onclick="window.open('https://t.me/streetbox1v1')">Открыть Telegram</button>
 </div>
 </div>
@@ -757,33 +413,16 @@ text-transform: uppercase; white-space: nowrap; transition: 0.3s;
 <div style="display:flex; flex-direction:column; gap:20px;">
 <div style="padding-bottom:15px; border-bottom:1px solid var(--border);">
 <strong style="text-transform:uppercase; font-size:12px; display:block; margin-bottom:4px; color:var(--accent-dark)">01. Формат</strong>
-<p style="font-size:15px; color:var(--text); font-weight:500; line-height: 1.6;">Матчи 1 на 1 с участием независимого вратаря. Каждый участник имеет 3 атаки по 20 секунд.</p>
+<p style="font-size:15px; color:var(--text); font-weight:500;">Матчи 1 на 1 с участием независимого вратаря.</p>
 </div>
 <div style="padding-bottom:15px; border-bottom:1px solid var(--border);">
 <strong style="text-transform:uppercase; font-size:12px; display:block; margin-bottom:4px; color:var(--accent-dark)">02. Тайминг</strong>
-<p style="font-size:15px; color:var(--text); font-weight:500; line-height: 1.6;">Лимит на атаку — 20 секунд. Перерыв между атаками — 60 секунд.</p>
+<p style="font-size:15px; color:var(--text); font-weight:500;">Лимит на атаку — 20 секунд.</p>
 </div>
 <div style="padding-bottom:15px; border-bottom:1px solid var(--border);">
 <strong style="text-transform:uppercase; font-size:12px; display:block; margin-bottom:4px; color:var(--accent-dark)">03. Результат</strong>
-<p style="font-size:15px; color:var(--text); font-weight:500; line-height: 1.6;">Продолжительность игры до двух голов, без ничьи. В случае ничьи назначаются пенальти.</p>
+<p style="font-size:15px; color:var(--text); font-weight:500;">Продолжительность игры до двух голов, без ничьи.</p>
 </div>
-<div style="padding-bottom:15px; border-bottom:1px solid var(--border);">
-<strong style="text-transform:uppercase; font-size:12px; display:block; margin-bottom:4px; color:var(--accent-dark)">04. Рейтинг</strong>
-<p style="font-size:15px; color:var(--text); font-weight:500; line-height: 1.6;">Система ELO рейтинга. За победу над более высокорейтинговым соперником бонусные очки.</p>
-</div>
-</div>
-</div>
-</div>
-<div class="modal-overlay" id="nextMatchModal" onclick="closeModal('nextMatchModal')" role="dialog" aria-modal="true">
-<div class="modal-content" onclick="event.stopPropagation()" style="max-width: 500px;">
-<button class="modal-close" onclick="closeModal('nextMatchModal')">✕</button>
-<h2 style="font-size:2rem; margin-bottom:20px;">БЛИЖАЙШИЙ МАТЧ</h2>
-<div style="text-align: center; padding: 40px 0;">
-<div style="font-size: 5rem; margin-bottom: 20px;">⚽</div>
-<h3 style="font-size: 1.8rem; margin-bottom: 10px;">Кубок Весны 2026</h3>
-<p style="font-size: 1.2rem; color: var(--accent-dark); font-weight: 800; margin-bottom: 30px;">15 МАРТА 2026</p>
-<p style="margin-bottom: 32px; line-height: 1.6;">Турнир на выбывание с участием 16 лучших атлетов сезона. Призовой фонд: 500,000₽.</p>
-<button class="btn btn-primary" style="width:100%; padding:20px;" onclick="window.open('https://t.me/streetbox1v1')">Узнать подробности</button>
 </div>
 </div>
 </div>
@@ -796,7 +435,6 @@ const TARGET_DATE = new Date("March 1, 2026 00:00:00").getTime();
 let allPlayers = [];
 let currentRoleFilter = 'Все';
 let renderTimeout;
-let radarChart = null;
 
 /**
  * DICTIONARY FOR UX
@@ -832,8 +470,6 @@ setTimeout(() => toast.remove(), 500);
 */
 async function init() {
 try {
-// Показываем скелетоны во время загрузки
-showSkeletons();
 const res = await fetch(CSV_URL);
 if (!res.ok) throw new Error("Network response was not ok");
 const text = await res.text();
@@ -843,7 +479,6 @@ showToast("Ростер временно пуст");
 }
 renderRoster();
 renderStats();
-renderLeaderboard();
 handleHashAndDeepLink();
 setInterval(updateTimer, 1000);
 updateTimer();
@@ -854,28 +489,11 @@ showToast("Ошибка загрузки данных");
 document.getElementById('preloader').classList.add('loaded');
 }
 }
-
-function showSkeletons() {
-  const grid = document.getElementById('roster-grid');
-  const skeletonHtml = Array(8).fill(0).map(() => `
-    <div class="skeleton-card skeleton">
-      <div class="skeleton-avatar"></div>
-      <div class="skeleton-text"></div>
-      <div class="skeleton-text short"></div>
-    </div>
-  `).join('');
-  grid.innerHTML = skeletonHtml;
-}
-
 function parseCSV(text) {
 const rows = text.replace(/\r/g, '').split('\n').filter(r => r.trim());
 return rows.slice(1).map(row => {
 const matches = row.match(/(".*?"|[^",\n]+)(?=\s*,|\s*$)/g);
 const c = matches ? matches.map(m => m.replace(/^"|"$/g, '').trim()) : [];
-// Добавляем симуляцию изменения рейтинга для демонстрации
-const ratingChange = Math.floor(Math.random() * 7) - 3; // от -3 до +3
-const changeType = ratingChange > 0 ? 'up' : ratingChange < 0 ? 'down' : 'neutral';
-  
 return {
 name: c[0] || '',
 ovr: parseInt(c[1]) || 0,
@@ -886,21 +504,10 @@ shot: parseInt(c[5]) || 0,
 phys: parseInt(c[6]) || 0,
 photo: c[7] || 'https://via.placeholder.com/400x600?text=No+Photo',
 status: c[8] || '',
-badges: c[9] ? c[9].split('|').map(b => b.trim()) : [],
-ratingChange: ratingChange,
-changeType: changeType,
-ratingTier: getRatingTier(parseInt(c[1]) || 0)
+badges: c[9] ? c[9].split('|').map(b => b.trim()) : []
 };
 }).filter(p => p.name);
 }
-
-function getRatingTier(ovr) {
-  if (ovr >= 90) return 'elite';
-  if (ovr >= 85) return 'gold';
-  if (ovr >= 75) return 'silver';
-  return 'bronze';
-}
-
 /**
 * NAVIGATION & HASH LOGIC
 */
@@ -940,82 +547,37 @@ function debouncedRender() {
 clearTimeout(renderTimeout);
 renderTimeout = setTimeout(renderRoster, 150);
 }
-
 function renderRoster() {
 const grid = document.getElementById('roster-grid');
 const search = document.getElementById('playerSearch').value.toLowerCase();
-let filtered = allPlayers.filter(p => {
+const filtered = allPlayers.filter(p => {
 const mSearch = p.name.toLowerCase().includes(search);
-const mRole = currentRoleFilter === 'Все' || 
-               (currentRoleFilter === 'Топ-10' ? p.ovr >= 80 : 
-                currentRoleFilter === 'Новичок' ? p.ovr < 70 :
-                currentRoleFilter === 'Ветеран' ? p.ovr >= 80 && p.role === 'Игрок' :
-                p.role === currentRoleFilter);
+const mRole = currentRoleFilter === 'Все' || p.role === currentRoleFilter;
 return mSearch && mRole;
 });
-
-// Для Топ-10 сортируем по рейтингу
-if (currentRoleFilter === 'Топ-10') {
-  filtered = filtered.sort((a, b) => b.ovr - a.ovr).slice(0, 10);
-}
-
 if (filtered.length === 0) {
 grid.innerHTML = `<div style="grid-column: 1/-1; padding: 40px; text-align: center; color: var(--text-dim);">Атлеты не найдены</div>`;
 return;
 }
-
-grid.innerHTML = filtered.map((p, i) => {
-  const nameParts = p.name.split(' ');
-  const firstName = nameParts.slice(0, -1).join(' ');
-  const lastName = nameParts[nameParts.length - 1];
-  const isGK = p.role === 'Вратарь';
-  
-  return `
+grid.innerHTML = filtered.map((p, i) => `
 <div class="card player-card"
-  tabindex="0"
-  role="button"
-  aria-label="Профиль игрока ${p.name}, рейтинг ${p.ovr}, роль ${p.role}${p.badges[0] ? ', ' + p.badges[0] : ''}"
-  style="animation: fadeInUp 0.6s var(--cubic) both ${i*0.03}s"
-  onclick="openPlayerModal('${p.name}')"
-  onkeydown="if(event.key==='Enter') openPlayerModal('${p.name}')"
-  data-rating-tier="${p.ratingTier}">
+tabindex="0"
+role="button"
+aria-label="Профиль игрока ${p.name}, рейтинг ${p.ovr}, роль ${p.role}${p.badges[0] ? ', ' + p.badges[0] : ''}"
+style="animation: fadeInUp 0.6s var(--cubic) both ${i*0.03}s"
+onclick="openPlayerModal('${p.name}')"
+onkeydown="if(event.key==='Enter') openPlayerModal('${p.name}')">
 <div class="player-img" style="background-image: url('${p.photo}')"></div>
 ${p.status ? `<div style="position:absolute; top:32px; right:32px; z-index:3; background:var(--accent); color:#000; font-size:10px; font-weight:900; padding:6px 14px; border-radius:12px; text-transform:uppercase;">${p.status}</div>` : ''}
 <div class="player-info">
-  <span style="font-size:11px; font-weight:800; text-transform:uppercase; color:var(--accent); letter-spacing:0.1em;">${p.role}</span>
-  <div class="player-name" style="margin: 8px 0;">
-    <div class="player-first-name">${firstName}</div>
-    <div class="player-last-name">${lastName}</div>
-  </div>
-  ${p.badges.length > 0 ? `<div style="font-size:10px; color:rgba(255,255,255,0.7); margin-top:4px;">${p.badges[0]}</div>` : ''}
-  <div class="player-key-stats">
-    <div class="key-stat">
-      <div class="key-stat-label">${isGK ? 'REF' : 'DRI'}</div>
-      <div class="key-stat-value">${isGK ? p.drib : p.drib}</div>
-    </div>
-    <div class="key-stat">
-      <div class="key-stat-label">${isGK ? 'DIV' : 'SPD'}</div>
-      <div class="key-stat-value">${isGK ? p.speed : p.speed}</div>
-    </div>
-    <div class="key-stat">
-      <div class="key-stat-label">${isGK ? 'HAN' : 'SHT'}</div>
-      <div class="key-stat-value">${isGK ? p.shot : p.shot}</div>
-    </div>
-  </div>
-  <div class="ovr-badge">
-    <span class="ovr-value">${p.ovr}</span>
-    <span class="ovr-label">OVR</span>
-    ${p.ratingChange !== 0 ? `
-      <div class="rating-change ${p.changeType}" style="margin-left: 8px; font-size: 10px; padding: 2px 6px;">
-        ${p.ratingChange > 0 ? '↑' : '↓'}${Math.abs(p.ratingChange)}
-      </div>
-    ` : ''}
-  </div>
+<span style="font-size:11px; font-weight:800; text-transform:uppercase; color:var(--accent); letter-spacing:0.1em;">${p.role}</span>
+<h3 style="font-size:2.2rem; margin: 8px 0;">${p.name}</h3>
+${p.badges.length > 0 ? `<div style="font-size:10px; color:rgba(255,255,255,0.7); margin-top:4px;">${p.badges[0]}</div>` : ''}
+<div class="ovr-badge">OVR ${p.ovr}</div>
 </div>
 </div>
-`}).join('');
+`).join('');
 }
-
 function renderStats() {
 const sorted = [...allPlayers].sort((a, b) => b.ovr - a.ovr);
 document.getElementById('stats-body').innerHTML = sorted.map((p, i) => `
@@ -1034,43 +596,6 @@ document.getElementById('stats-body').innerHTML = sorted.map((p, i) => `
 </tr>
 `).join('');
 }
-
-function renderLeaderboard() {
-  const sorted = [...allPlayers].sort((a, b) => b.ovr - a.ovr);
-  const leaderboardBody = document.getElementById('leaderboard-body');
-  leaderboardBody.innerHTML = sorted.map((p, i) => {
-    const nameParts = p.name.split(' ');
-    const firstName = nameParts.slice(0, -1).join(' ');
-    const lastName = nameParts[nameParts.length - 1];
-    
-    return `
-      <div class="leaderboard-row" onclick="openPlayerModal('${p.name}')" style="cursor:pointer" tabindex="0" onkeydown="if(event.key==='Enter') openPlayerModal('${p.name}')">
-        <div class="rank-cell ${i < 3 ? `top-${i+1}` : ''}">${(i+1).toString().padStart(2, '0')}</div>
-        <div>
-          <div style="display:flex; align-items:center; gap:12px;">
-            <img src="${p.photo}" style="width:40px; height:40px; border-radius:12px; object-fit:cover;" alt="${p.name}">
-            <div>
-              <div style="font-weight:900; font-size: 14px; display: flex; flex-direction: column;">
-                <span style="font-weight: 600; text-transform: none; font-style: normal;">${firstName}</span>
-                <span style="font-weight: 900; font-style: italic; text-transform: uppercase;">${lastName}</span>
-              </div>
-              <div style="font-size:10px; font-weight:700; color:var(--text-dim); text-transform:uppercase;">${p.role}</div>
-            </div>
-          </div>
-        </div>
-        <div style="font-weight:900; font-size: 1.2rem;">${p.ovr}</div>
-        <div>
-          ${p.ratingChange !== 0 ? `
-            <div class="rating-change ${p.changeType}" style="display: inline-flex; align-items: center; gap: 4px;">
-              ${p.ratingChange > 0 ? '↑' : '↓'} ${Math.abs(p.ratingChange)}
-            </div>
-          ` : '<span style="color: var(--text-dim); font-size: 12px;">—</span>'}
-        </div>
-      </div>
-    `;
-  }).join('');
-}
-
 /**
 * MODAL LOGIC & ACCESSIBILITY
 */
@@ -1123,33 +648,13 @@ function openPlayerModal(name) {
     return;
   }
 
-  const nameParts = p.name.split(' ');
-  const firstName = nameParts.slice(0, -1).join(' ');
-  const lastName = nameParts[nameParts.length - 1];
-  const isGK = p.role === 'Вратарь';
-
-  document.getElementById('m-first-name').innerText = firstName;
-  document.getElementById('m-last-name').innerText = lastName.toUpperCase();
+  document.getElementById('m-name').innerText = p.name;
   document.getElementById('m-role').innerText = p.role;
   document.getElementById('m-ovr').innerText = p.ovr;
   document.getElementById('m-img').src = p.photo;
-  document.getElementById('m-rating-tier').innerText = p.ratingTier.toUpperCase();
-  document.getElementById('m-rating-tier').style.background = 
-    p.ratingTier === 'elite' ? '#FFD700' :
-    p.ratingTier === 'gold' ? 'linear-gradient(135deg, #FFD700 0%, #FFAA00 100%)' :
-    p.ratingTier === 'silver' ? 'linear-gradient(135deg, #C0C0C0 0%, #A0A0A0 100%)' :
-    'linear-gradient(135deg, #CD7F32 0%, #A0522D 100%)';
-  
   document.getElementById('m-badges').innerHTML = p.badges.map(b => `<span style="font-size:10px; background:#000; color:#fff; padding:4px 10px; border-radius:8px; font-weight:800;">${b}</span>`).join('');
 
-  // Обновление индикатора изменения рейтинга
-  const ratingChangeEl = document.getElementById('m-rating-change');
-  ratingChangeEl.className = `rating-change ${p.changeType}`;
-  ratingChangeEl.innerHTML = `${p.ratingChange > 0 ? '↑' : '↓'}${Math.abs(p.ratingChange)}`;
-
-  // Создание радара навыков
-  createRadarChart(p, isGK);
-
+  const isGK = p.role === 'Вратарь';
   const stats = [
     { l: isGK ? 'REF' : 'DRI', v: p.drib },
     { l: isGK ? 'DIV' : 'SPD', v: p.speed },
@@ -1186,126 +691,12 @@ function openPlayerModal(name) {
   window.history.replaceState(null, null, `#${currentTab}?player=${playerSlug}`);
 }
 
-function createRadarChart(player, isGK) {
-  const canvas = document.getElementById('radarChart');
-  const ctx = canvas.getContext('2d');
-  
-  // Устанавливаем размеры canvas
-  canvas.width = canvas.offsetWidth;
-  canvas.height = canvas.offsetHeight;
-  
-  // Очищаем предыдущий график
-  if (radarChart) {
-    radarChart.destroy();
-  }
-  
-  const labels = isGK ? ['Реакция', 'Прыжок', 'Хватка', 'Позиция'] : ['Дриблинг', 'Скорость', 'Удар', 'Физика'];
-  const data = isGK ? [player.drib, player.speed, player.shot, player.phys] : [player.drib, player.speed, player.shot, player.phys];
-  
-  // Рисуем радарную диаграмму
-  const centerX = canvas.width / 2;
-  const centerY = canvas.height / 2;
-  const radius = Math.min(centerX, centerY) - 40;
-  const numPoints = labels.length;
-  const angleStep = (Math.PI * 2) / numPoints;
-  
-  // Очищаем canvas
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  
-  // Рисуем сетку
-  ctx.strokeStyle = 'rgba(0,0,0,0.1)';
-  ctx.lineWidth = 1;
-  
-  // Концентрические круги
-  for (let i = 1; i <= 5; i++) {
-    const r = radius * (i / 5);
-    ctx.beginPath();
-    for (let j = 0; j <= numPoints; j++) {
-      const angle = angleStep * j - Math.PI / 2;
-      const x = centerX + Math.cos(angle) * r;
-      const y = centerY + Math.sin(angle) * r;
-      
-      if (j === 0) {
-        ctx.moveTo(x, y);
-      } else {
-        ctx.lineTo(x, y);
-      }
-    }
-    ctx.closePath();
-    ctx.stroke();
-  }
-  
-  // Линии от центра к вершинам
-  for (let i = 0; i < numPoints; i++) {
-    const angle = angleStep * i - Math.PI / 2;
-    const x = centerX + Math.cos(angle) * radius;
-    const y = centerY + Math.sin(angle) * radius;
-    
-    ctx.beginPath();
-    ctx.moveTo(centerX, centerY);
-    ctx.lineTo(x, y);
-    ctx.stroke();
-    
-    // Подписи
-    const labelX = centerX + Math.cos(angle) * (radius + 20);
-    const labelY = centerY + Math.sin(angle) * (radius + 20);
-    
-    ctx.save();
-    ctx.font = '12px Inter';
-    ctx.fillStyle = 'var(--text)';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(labels[i], labelX, labelY);
-    ctx.restore();
-  }
-  
-  // Рисуем многоугольник данных
-  ctx.beginPath();
-  for (let i = 0; i < numPoints; i++) {
-    const angle = angleStep * i - Math.PI / 2;
-    const value = data[i] / 100;
-    const r = radius * value;
-    const x = centerX + Math.cos(angle) * r;
-    const y = centerY + Math.sin(angle) * r;
-    
-    if (i === 0) {
-      ctx.moveTo(x, y);
-    } else {
-      ctx.lineTo(x, y);
-    }
-  }
-  ctx.closePath();
-  
-  // Заливка многоугольника
-  ctx.fillStyle = 'rgba(34, 197, 94, 0.2)';
-  ctx.fill();
-  
-  // Обводка многоугольника
-  ctx.strokeStyle = 'var(--accent)';
-  ctx.lineWidth = 2;
-  ctx.stroke();
-  
-  // Точки на вершинах
-  for (let i = 0; i < numPoints; i++) {
-    const angle = angleStep * i - Math.PI / 2;
-    const value = data[i] / 100;
-    const r = radius * value;
-    const x = centerX + Math.cos(angle) * r;
-    const y = centerY + Math.sin(angle) * r;
-    
-    ctx.beginPath();
-    ctx.arc(x, y, 4, 0, Math.PI * 2);
-    ctx.fillStyle = 'var(--accent)';
-    ctx.fill();
-  }
-}
-
 /**
 * ACTIONS
 */
 function setRoleFilter(role, btn) {
 currentRoleFilter = role;
-document.querySelectorAll('.chip').forEach(b => b.classList.remove('active'));
+document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
 btn.classList.add('active');
 renderRoster();
 }
@@ -1363,3 +754,4 @@ window.onload = init;
 </script>
 </body>
 </html>
+
