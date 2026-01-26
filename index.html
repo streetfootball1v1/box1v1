@@ -360,16 +360,16 @@ class SupabaseService {
     console.log('URL:', SUPABASE_CONFIG.url);
     console.log('Key первые 10 символов:', SUPABASE_CONFIG.publishableKey.substring(0, 10) + '...');
     
-    try {
-      this.client = supabase.createClient(
-        SUPABASE_CONFIG.url,
-        SUPABASE_CONFIG.publishableKey,
-        {
-          auth: {
-            persistSession: false
-          }
-        }
-      );
+ try {
+  this.client = window.supabase.createClient(
+    SUPABASE_CONFIG.url,
+    SUPABASE_CONFIG.publishableKey,
+    {
+      auth: {
+        persistSession: false
+      }
+    }
+  );
       console.log('✅ Supabase клиент создан');
     } catch (error) {
       console.error('❌ Ошибка создания клиента:', error);
@@ -1351,4 +1351,5 @@ window.onload = init;
 </script>
 </body>
 </html>
+
 
