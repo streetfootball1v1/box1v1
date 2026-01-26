@@ -336,6 +336,9 @@ text-transform: uppercase; white-space: nowrap; transition: 0.3s;
 @keyframes load { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
 </style>
 
+<!-- ДОБАВИМ СКРИПТ СУПАБЕЙС В HEAD ДЛЯ ГАРАНТИРОВАННОЙ ЗАГРУЗКИ -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js" defer></script>
+
 <script>
 // ========== КОНФИГУРАЦИЯ ==========
 const SUPABASE_CONFIG = {
@@ -347,11 +350,49 @@ let supabase;
 let currentUser = null;
 let allPlayers = [];
 let db = null;
+let isSupabaseLoaded = false;
 
 // ========== ОСНОВНЫЕ ФУНКЦИИ ==========
 const TARGET_DATE = new Date("March 1, 2026 00:00:00").getTime();
 let currentRoleFilter = 'Все';
 let renderTimeout;
+
+// Тестовые данные для демонстрации
+const mockPlayers = [
+  {
+    id: '1',
+    nickname: 'Игрок 1',
+    elo_rating: 1650,
+    wins: 5,
+    losses: 2,
+    total_matches: 7,
+    avatar_url: 'https://via.placeholder.com/150x150?text=Player1',
+    telegram: '@player1',
+    role: 'Игрок'
+  },
+  {
+    id: '2',
+    nickname: 'Игрок 2',
+    elo_rating: 1580,
+    wins: 4,
+    losses: 3,
+    total_matches: 7,
+    avatar_url: 'https://via.placeholder.com/150x150?text=Player2',
+    telegram: '@player2',
+    role: 'Игрок'
+  },
+  {
+    id: '3',
+    nickname: 'Вратарь 1',
+    elo_rating: 1720,
+    wins: 6,
+    losses: 1,
+    total_matches: 7,
+    avatar_url: 'https://via.placeholder.com/150x150?text=Goalkeeper1',
+    telegram: '@gk1',
+    role: 'Вратарь'
+  }
+];
 
 function showToast(message) {
   const container = document.getElementById('toast-container');
@@ -395,7 +436,10 @@ async function renderLeaderboard() {
   const tbody = document.getElementById('leaderboard-body');
   if (!tbody) return;
   
-  tbody.innerHTML = allPlayers.map((player, index) => `
+  // Используем реальные данные или моковые
+  const playersToShow = allPlayers.length > 0 ? allPlayers : mockPlayers;
+  
+  tbody.innerHTML = playersToShow.map((player, index) => `
     <tr onclick="openPlayerModalFromId('${player.id}')" style="cursor:pointer">
       <td style="font-weight:900; color:var(--text-dim); width:60px;">${index + 1}</td>
       <td>
@@ -420,7 +464,8 @@ async function renderLeaderboard() {
 }
 
 async function openPlayerModalFromId(playerId) {
-  const player = allPlayers.find(p => p.id === playerId);
+  const playersToShow = allPlayers.length > 0 ? allPlayers : mockPlayers;
+  const player = playersToShow.find(p => p.id === playerId);
   if (!player) {
     showToast("Игрок не найден");
     return;
@@ -431,7 +476,7 @@ async function openPlayerModalFromId(playerId) {
 
 function openPlayerModal(player) {
   document.getElementById('m-name').innerText = player.nickname;
-  document.getElementById('m-role').innerText = 'Игрок';
+  document.getElementById('m-role').innerText = player.role || 'Игрок';
   document.getElementById('m-ovr').innerText = player.elo_rating;
   document.getElementById('m-img').src = player.avatar_url || 'https://via.placeholder.com/400x600?text=No+Photo';
   document.getElementById('m-badges').innerHTML = '';
@@ -452,8 +497,9 @@ const params = new URLSearchParams(queryPart);
 const pNameFromUrl = params.get('player');
 if (pNameFromUrl) {
 const pName = pNameFromUrl.replace(/-/g, ' ');
-const found = allPlayers.find(x => x.name.toLowerCase() === pName.toLowerCase());
-if (found) setTimeout(() => openPlayerModal(found.name), 200);
+const playersToShow = allPlayers.length > 0 ? allPlayers : mockPlayers;
+const found = playersToShow.find(x => x.nickname.toLowerCase() === pName.toLowerCase());
+if (found) setTimeout(() => openPlayerModal(found), 200);
 }
 }
 }
@@ -479,7 +525,10 @@ function renderRoster() {
 const grid = document.getElementById('roster-grid');
 const search = document.getElementById('playerSearch').value.toLowerCase();
 
-const filtered = allPlayers.filter(p => {
+// Используем реальные данные или моковые
+const playersToShow = allPlayers.length > 0 ? allPlayers : mockPlayers;
+
+const filtered = playersToShow.filter(p => {
 const mSearch = p.nickname?.toLowerCase().includes(search);
 const mRole = currentRoleFilter === 'Все' || (p.role === currentRoleFilter);
 return mSearch && mRole;
@@ -500,7 +549,7 @@ onclick="openPlayerModalFromId('${p.id}')"
 onkeydown="if(event.key==='Enter') openPlayerModalFromId('${p.id}')">
 <div class="player-img" style="background-image: url('${p.avatar_url || 'https://via.placeholder.com/400x600?text=No+Photo'}')"></div>
 <div class="player-info">
-<span style="font-size:11px; font-weight:800; text-transform:uppercase; color:var(--accent); letter-spacing:0.1em;">Игрок</span>
+<span style="font-size:11px; font-weight:800; text-transform:uppercase; color:var(--accent); letter-spacing:0.1em;">${p.role || 'Игрок'}</span>
 <h3 style="font-size:2.2rem; margin: 8px 0;">${p.nickname}</h3>
 <div class="ovr-badge">ELO ${p.elo_rating}</div>
 </div>
@@ -512,7 +561,10 @@ async function renderStats() {
 const tbody = document.getElementById('stats-body');
 if (!tbody) return;
 
-const sorted = allPlayers.sort((a, b) => b.elo_rating - a.elo_rating);
+// Используем реальные данные или моковые
+const playersToShow = allPlayers.length > 0 ? allPlayers : mockPlayers;
+
+const sorted = playersToShow.sort((a, b) => b.elo_rating - a.elo_rating);
 
 tbody.innerHTML = sorted.map((p, i) => `
 <tr onclick="openPlayerModalFromId('${p.id}')" style="cursor:pointer" tabindex="0">
@@ -659,7 +711,7 @@ return;
 }
   
 if (!db) {
-showToast('База данных не загружена. Обновите страницу.');
+showToast('База данных не загружена. Используются демо-данные.');
 return;
 }
   
@@ -679,7 +731,7 @@ showToast(result.error);
 
 async function testSupabase() {
 if (!db) {
-alert('База данных не загружена');
+alert('База данных не загружена. Используются демо-данные.');
 return;
 }
   
@@ -763,23 +815,6 @@ class SupabaseService {
     }
   }
 
-  async getPlayerByNickname(nickname) {
-    try {
-      const { data, error } = await this.client
-        .from('players')
-        .select('*')
-        .eq('nickname', nickname)
-        .eq('active', true)
-        .single();
-      
-      if (error) throw error;
-      return data;
-    } catch (error) {
-      console.error('Ошибка получения игрока:', error);
-      return null;
-    }
-  }
-
   async createPlayer(nickname, telegram = null, avatarUrl = null) {
     try {
       const { data: existingPlayer } = await this.client
@@ -846,73 +881,58 @@ async function init() {
   try {
     console.log('🚀 Инициализация BOX1V1...');
     
-    // Проверяем что библиотека Supabase загрузилась
-    if (typeof window.supabase === 'undefined') {
-      console.error('❌ Библиотека Supabase не загрузилась!');
-      showToast('Ошибка загрузки библиотеки Supabase');
-      
-      // Пробуем динамически загрузить
-      console.log('🔄 Пробуем динамически загрузить Supabase...');
-      await loadSupabaseLibrary();
-      
-      // Проверяем снова
-      if (typeof window.supabase === 'undefined') {
-        console.error('❌ Не удалось загрузить Supabase');
-        showToast('Не удалось подключиться к базе данных');
-        document.getElementById('preloader').classList.add('loaded');
-        return;
-      }
-    }
-    
-    console.log('✅ Библиотека Supabase загружена');
-    
-    // Проверяем конфиг
-    if (!SUPABASE_CONFIG || !SUPABASE_CONFIG.url || !SUPABASE_CONFIG.publishableKey) {
-      console.error('❌ Конфигурация Supabase не настроена');
-      showToast('Конфигурация базы данных не настроена');
-      document.getElementById('preloader').classList.add('loaded');
-      return;
-    }
-    
-    console.log('✅ Конфигурация найдена');
-    
-    // Создаём подключение к базе
-    try {
-      db = new SupabaseService();
-      console.log('✅ База данных инициализирована');
-      
-      // Добавляем глобальный доступ для отладки
-      window.getDatabase = () => db;
-    } catch (error) {
-      console.error('❌ Ошибка создания базы данных:', error);
-      showToast('Ошибка подключения к базе данных');
-      document.getElementById('preloader').classList.add('loaded');
-      return;
-    }
-    
-    // Тестируем подключение
-    console.log('🔍 Тестируем подключение...');
-    const connectionTest = await db.testConnection();
-    if (!connectionTest.success) {
-      console.warn('⚠️ Подключение не удалось:', connectionTest.message);
-      showToast('Есть проблемы с подключением к базе данных');
-    } else {
-      console.log('✅ Подключение к базе успешно');
-    }
-    
-    // Загружаем игроков
-    console.log('📥 Загружаем игроков из базы...');
-    allPlayers = await db.getAllPlayers();
-    console.log(`✅ Загружено ${allPlayers.length} игроков`);
-    
-    if (allPlayers.length === 0) {
-      showToast("База игроков пуста. Создайте первый профиль!");
-    }
-    
-    // Рендерим данные
+    // Сначала показываем демо-данные
+    console.log('📊 Используем демо-данные для отображения');
     renderRoster();
     renderStats();
     renderLeaderboard();
+    
+    // Пытаемся подключиться к базе
+    if (typeof window.supabase !== 'undefined') {
+      console.log('✅ Библиотека Supabase найдена');
+      
+      // Проверяем конфиг
+      if (!SUPABASE_CONFIG || !SUPABASE_CONFIG.url || !SUPABASE_CONFIG.publishableKey) {
+        console.error('❌ Конфигурация Supabase не настроена');
+        showToast('Конфигурация базы данных не настроена');
+      } else {
+        // Создаём подключение к базе
+        try {
+          db = new SupabaseService();
+          console.log('✅ База данных инициализирована');
+          
+          // Тестируем подключение
+          console.log('🔍 Тестируем подключение...');
+          const connectionTest = await db.testConnection();
+          if (!connectionTest.success) {
+            console.warn('⚠️ Подключение не удалось:', connectionTest.message);
+            showToast('Есть проблемы с подключением к базе данных');
+          } else {
+            console.log('✅ Подключение к базе успешно');
+            
+            // Загружаем реальных игроков
+            console.log('📥 Загружаем игроков из базы...');
+            allPlayers = await db.getAllPlayers();
+            console.log(`✅ Загружено ${allPlayers.length} игроков`);
+            
+            if (allPlayers.length === 0) {
+              showToast("База игроков пуста. Создайте первый профиль!");
+            }
+            
+            // Обновляем данные на реальные
+            renderRoster();
+            renderStats();
+            renderLeaderboard();
+          }
+        } catch (error) {
+          console.error('❌ Ошибка подключения к базе:', error);
+          showToast('Ошибка подключения к базе данных');
+        }
+      }
+    } else {
+      console.warn('⚠️ Supabase не загружен. Используем демо-режим.');
+      showToast('Работаем в демо-режиме. База данных временно недоступна.');
+    }
     
     // Остальные функции
     handleHashAndDeepLink();
@@ -930,56 +950,13 @@ async function init() {
     
   } catch (e) {
     console.error("💥 Критическая ошибка инициализации:", e);
-    showToast("Ошибка загрузки приложения. Проверьте консоль.");
+    showToast("Ошибка загрузки приложения. Используем демо-режим.");
     document.getElementById('preloader').classList.add('loaded');
   }
 }
 
-// Функция для динамической загрузки Supabase
-async function loadSupabaseLibrary() {
-  return new Promise((resolve) => {
-    const script = document.createElement('script');
-    script.src = 'https://unpkg.com/@supabase/supabase-js@2.38.4/dist/umd/supabase.min.js';
-    script.onload = () => {
-      console.log('✅ Supabase загружен динамически');
-      resolve();
-    };
-    script.onerror = () => {
-      console.error('❌ Ошибка загрузки Supabase');
-      resolve();
-    };
-    document.head.appendChild(script);
-  });
-}
-
-// Ждём полной загрузки страницы и библиотеки Supabase
-window.addEventListener('DOMContentLoaded', () => {
-  console.log('📄 DOM загружен');
-  
-  // Проверяем, загрузилась ли библиотека Supabase
-  if (typeof window.supabase !== 'undefined') {
-    console.log('✅ Supabase уже загружен');
-    init();
-  } else {
-    console.log('⏳ Ждём загрузки Supabase...');
-    // Проверяем каждые 500мс в течение 5 секунд
-    let attempts = 0;
-    const checkSupabase = setInterval(() => {
-      attempts++;
-      if (typeof window.supabase !== 'undefined') {
-        clearInterval(checkSupabase);
-        console.log('✅ Supabase загружен после ожидания');
-        init();
-      } else if (attempts > 10) { // 5 секунд (10 * 500мс)
-        clearInterval(checkSupabase);
-        console.error('❌ Supabase не загрузился за 5 секунд');
-        // Пробуем запустить без базы данных
-        document.getElementById('preloader').classList.add('loaded');
-        showToast('База данных временно недоступна');
-      }
-    }, 500);
-  }
-});
+// Запускаем инициализацию когда DOM загружен
+window.addEventListener('DOMContentLoaded', init);
 </script>
 
 </head>
@@ -1201,7 +1178,7 @@ window.addEventListener('DOMContentLoaded', () => {
   </div>
 </div>
 
-<div style="position: fixed; bottom: 10px; right: 10px; z-index: 9999; display: none;">
+<div style="position: fixed; bottom: 10px; right: 10px; z-index: 9999;">
   <button onclick="testSupabase()" 
           style="background: var(--accent); color: white; border: none; 
                  padding: 8px 12px; border-radius: 8px; font-size: 11px;
