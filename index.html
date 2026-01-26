@@ -207,7 +207,7 @@ tr:hover td {
   background: rgba(0,0,0,0.02);
   transition: background 0.2s ease;
 }
-/* MODAL */
+/* MODAL - УМЕНЬШЕННЫЕ РАЗМЕРЫ */
 .modal-overlay {
 position: fixed; inset: 0; background: rgba(255,255,255,0.7);
 backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
@@ -216,13 +216,15 @@ padding: 20px; opacity: 0; pointer-events: none; transition: 0.4s var(--cubic);
 }
 .modal-overlay.active { opacity: 1; pointer-events: auto; }
 .modal-content {
-background: #fff; width: 100%; max-width: 540px; border-radius: 40px;
-padding: 48px; position: relative; max-height: 90vh; overflow-y: auto;
+background: #fff; width: 100%; max-width: 500px; /* Уменьшено с 540px */
+border-radius: 32px; /* Уменьшено с 40px */
+padding: 36px; /* Уменьшено с 48px */
+position: relative;
 box-shadow: 0 40px 80px rgba(0,0,0,0.1); transform: translateY(40px) scale(0.95); transition: 0.6s var(--cubic);
 }
 .modal-overlay.active .modal-content { transform: translateY(0) scale(1); }
 .modal-close {
-position: absolute; top: 24px; right: 24px; width: 48px; height: 48px;
+position: absolute; top: 20px; right: 20px; width: 40px; height: 40px; /* Уменьшено */
 background: var(--bg-alt); border-radius: 50%; display: flex;
 align-items: center; justify-content: center; cursor: pointer; z-index: 10;
 border: none; transition: 0.3s var(--cubic);
@@ -297,9 +299,9 @@ text-transform: uppercase; white-space: nowrap; transition: 0.3s;
 
 /* Модальные окна */
 .modal-content { 
-  padding: 32px 20px; 
-  border-radius: 32px;
-  max-height: 85vh;
+  padding: 28px 20px; 
+  border-radius: 28px;
+  max-width: 90%;
 }
 
 /* Поиск и фильтры */
@@ -318,7 +320,7 @@ text-transform: uppercase; white-space: nowrap; transition: 0.3s;
 
 /* Карточки игроков */
 .player-card { 
-  height: 420px; 
+  height: 380px; /* Уменьшено с 420px */
   padding: 24px;
 }
 
@@ -335,30 +337,34 @@ table {
 
 /* Модальное окно игрока на мобильных */
 #m-img-container {
-  height: 280px;
+  height: 240px; /* Уменьшено с 280px */
 }
 
 #m-name {
-  font-size: 2rem !important;
+  font-size: 1.8rem !important; /* Уменьшено */
+  margin-top: 8px !important;
 }
 
 #m-ovr {
-  font-size: 2.5rem !important;
+  font-size: 2.2rem !important; /* Уменьшено */
 }
 
 #m-stats {
   grid-template-columns: 1fr !important;
-  gap: 24px !important;
+  gap: 20px !important; /* Уменьшено */
+  margin-top: 30px !important; /* Уменьшено */
 }
 
 .modal-content > div:last-child {
   flex-direction: column;
   gap: 12px;
+  margin-top: 36px !important; /* Уменьшено */
 }
 
 .modal-content > div:last-child .btn {
   width: 100%;
   min-width: auto;
+  padding: 16px 24px !important; /* Уменьшено */
 }
 }
 
@@ -368,11 +374,11 @@ table {
 .nav-inner { padding: 0 16px; }
 .timer-context { padding: 20px 12px; }
 .countdown-value { font-size: 1.5rem; }
-.player-card { height: 360px; padding: 20px; }
-#m-img-container { height: 240px; }
+.player-card { height: 320px; padding: 20px; } /* Уменьшено */
+#m-img-container { height: 200px; } /* Уменьшено */
 .modal-content { padding: 24px 16px; }
-#m-name { font-size: 1.8rem !important; }
-#m-ovr { font-size: 2rem !important; }
+#m-name { font-size: 1.6rem !important; } /* Уменьшено */
+#m-ovr { font-size: 1.8rem !important; } /* Уменьшено */
 }
 
 @keyframes load { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
@@ -382,10 +388,10 @@ table {
   position: fixed;
   top: -9999px;
   left: -9999px;
-  width: 540px;
+  width: 500px;
   background: #fff;
-  border-radius: 40px;
-  padding: 48px;
+  border-radius: 32px;
+  padding: 36px;
   box-shadow: 0 40px 80px rgba(0,0,0,0.1);
   z-index: 99999;
   visibility: hidden;
@@ -394,8 +400,8 @@ table {
 @media (max-width: 768px) {
   #download-card {
     width: 90%;
-    padding: 32px 20px;
-    border-radius: 32px;
+    padding: 28px 20px;
+    border-radius: 28px;
   }
 }
 </style>
@@ -497,27 +503,25 @@ table {
 </section>
 </main>
 
-<!-- ОРИГИНАЛЬНОЕ МОДАЛЬНОЕ ОКНО (НЕ ИЗМЕНЯЛОСЬ) -->
+<!-- ОРИГИНАЛЬНОЕ МОДАЛЬНОЕ ОКНО (УМЕНЬШЕННЫЕ РАЗМЕРЫ) -->
 <div class="modal-overlay" id="playerModal" onclick="closeModal('playerModal')" role="dialog" aria-modal="true">
 <div class="modal-content" onclick="event.stopPropagation()">
 <button class="modal-close" onclick="closeModal('playerModal')" aria-label="Закрыть">✕</button>
-<div id="m-img-container" style="width:100%; height:320px; border-radius:24px; overflow:hidden; background:#f0f0f0; margin-bottom:32px;">
+<div id="m-img-container" style="width:100%; height:280px; border-radius:20px; overflow:hidden; background:#f0f0f0; margin-bottom:24px;">
 <img id="m-img" src="" style="width:100%; height:100%; object-fit:cover;" alt="Фото игрока">
 </div>
 <div style="display:flex; justify-content:space-between; align-items:flex-start;">
 <div>
 <span id="m-role" style="font-size:11px; font-weight:800; text-transform:uppercase; color:var(--accent-dark); background:rgba(34,197,94,0.1); padding:6px 12px; border-radius:10px;">ROLE</span>
-<h2 id="m-name" style="font-size: 2.5rem; margin-top:12px;">NAME</h2>
-<div id="m-badges" style="display:flex; gap:8px; margin-top:16px; flex-wrap:wrap;"></div>
+<h2 id="m-name" style="font-size: 2rem; margin-top:10px;">NAME</h2>
+<div id="m-badges" style="display:flex; gap:8px; margin-top:12px; flex-wrap:wrap;"></div>
 </div>
-<div id="m-ovr" style="font-size: 3rem; font-weight:900; font-style:italic; line-height:1; letter-spacing:-3px;">99</div>
+<div id="m-ovr" style="font-size: 2.5rem; font-weight:900; font-style:italic; line-height:1; letter-spacing:-2px;">99</div>
 </div>
-<div id="m-stats" style="margin-top:40px; display:grid; grid-template-columns: 1fr 1fr; gap: 32px;"></div>
-<div style="margin-top:48px; display:flex; gap:12px; flex-wrap:wrap;">
-<button class="btn btn-primary" style="flex:1; min-width:140px;" onclick="copyPlayerID()">Копировать ID</button>
-<button class="btn btn-outline" style="flex:1; min-width:140px;" onclick="sharePlayer()">Поделиться</button>
-<!-- КНОПКА СКАЧИВАНИЯ -->
-<button class="btn btn-outline" style="flex:1; min-width:140px; background:var(--accent); color:#000; border-color:var(--accent);" onclick="downloadPlayerCard()">
+<div id="m-stats" style="margin-top:32px; display:grid; grid-template-columns: 1fr 1fr; gap: 24px;"></div>
+<div style="margin-top:36px; display:flex; gap:12px; flex-wrap:wrap;">
+<!-- КНОПКА СКАЧИВАНИЯ (на месте Копировать ID) -->
+<button class="btn btn-outline" style="flex:1; min-width:140px; background:#f0f0f0; color:#000; border-color:#ddd;" onclick="downloadPlayerCard()">
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right:8px;">
         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
         <polyline points="7 10 12 15 17 10"></polyline>
@@ -525,6 +529,8 @@ table {
     </svg>
     Скачать карточку
 </button>
+<!-- ОСТАВЛЕНА КНОПКА ПОДЕЛИТЬСЯ -->
+<button class="btn btn-primary" style="flex:1; min-width:140px;" onclick="sharePlayer()">Поделиться</button>
 </div>
 </div>
 </div>
@@ -532,7 +538,7 @@ table {
 <!-- НЕВИДИМАЯ КАРТОЧКА ДЛЯ СКАЧИВАНИЯ -->
 <div id="download-card">
     <!-- Фото игрока -->
-    <div style="width:100%; height:320px; border-radius:24px; overflow:hidden; background:#f0f0f0; margin-bottom:32px;">
+    <div style="width:100%; height:280px; border-radius:20px; overflow:hidden; background:#f0f0f0; margin-bottom:24px;">
         <img id="dc-img" src="" style="width:100%; height:100%; object-fit:cover;" alt="Фото игрока">
     </div>
     
@@ -540,19 +546,19 @@ table {
     <div style="display:flex; justify-content:space-between; align-items:flex-start;">
         <div>
             <span id="dc-role" style="font-size:11px; font-weight:800; text-transform:uppercase; color:var(--accent-dark); background:rgba(34,197,94,0.1); padding:6px 12px; border-radius:10px;">ROLE</span>
-            <h2 id="dc-name" style="font-size: 2.5rem; margin-top:12px;">NAME</h2>
-            <div id="dc-badges" style="display:flex; gap:8px; margin-top:16px; flex-wrap:wrap;"></div>
+            <h2 id="dc-name" style="font-size: 2rem; margin-top:10px;">NAME</h2>
+            <div id="dc-badges" style="display:flex; gap:8px; margin-top:12px; flex-wrap:wrap;"></div>
         </div>
-        <div id="dc-ovr" style="font-size: 3rem; font-weight:900; font-style:italic; line-height:1; letter-spacing:-3px;">99</div>
+        <div id="dc-ovr" style="font-size: 2.5rem; font-weight:900; font-style:italic; line-height:1; letter-spacing:-2px;">99</div>
     </div>
     
     <!-- Статистика -->
-    <div id="dc-stats" style="margin-top:40px; display:grid; grid-template-columns: 1fr 1fr; gap: 32px;"></div>
+    <div id="dc-stats" style="margin-top:32px; display:grid; grid-template-columns: 1fr 1fr; gap: 24px;"></div>
     
     <!-- Логотип внизу -->
-    <div style="margin-top:48px; text-align:center; padding-top:32px; border-top:1px solid var(--border);">
+    <div style="margin-top:36px; text-align:center; padding-top:24px; border-top:1px solid var(--border);">
         <div style="font-size:1.4rem; font-weight:900; font-style:italic; letter-spacing:-1px;">BOX<span style="color:var(--accent)">1</span>V1</div>
-        <div style="font-size:11px; color:var(--text-dim); margin-top:8px;">ЦИФРОВАЯ ЭКОСИСТЕМА</div>
+        <div style="font-size:11px; color:var(--text-dim); margin-top:6px;">ЦИФРОВАЯ ЭКОСИСТЕМА</div>
     </div>
 </div>
 
@@ -823,7 +829,7 @@ function openPlayerModal(name) {
 
   document.getElementById('m-stats').innerHTML = stats.map(s => `
     <div class="stat-item">
-      <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
+      <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
         <div class="stat-header" data-tip="${statDefs[s.l]}">
           <span style="font-size:12px; font-weight:900;">${s.l}</span>
           <i class="info-icon">?</i>
@@ -871,12 +877,6 @@ burger.setAttribute('aria-expanded', isOpen);
 function handleMobileNav(id, isModal = false) {
 toggleMenu();
 setTimeout(() => isModal ? openModal(id) : switchTab(id), 400);
-}
-function copyPlayerID() {
-const name = document.getElementById('m-name').innerText;
-navigator.clipboard.writeText(name).then(() => {
-showToast('ID игрока скопирован');
-});
 }
 function sharePlayer() {
 const name = document.getElementById('m-name').innerText;
@@ -938,39 +938,64 @@ async function downloadPlayerCard() {
     const downloadCard = document.getElementById('download-card');
     const dcImg = document.getElementById('dc-img');
     
+    // Создаем новый Image элемент для предзагрузки фото
+    const tempImg = new Image();
+    tempImg.crossOrigin = 'anonymous';
+    
     try {
-        // Показываем карточку временно для рендеринга
-        downloadCard.style.position = 'fixed';
-        downloadCard.style.top = '0';
-        downloadCard.style.left = '0';
-        downloadCard.style.visibility = 'visible';
-        downloadCard.style.zIndex = '99999';
+        // Загружаем фото через прокси CORS если нужно
+        const photoUrl = imgSrc;
+        tempImg.src = photoUrl;
         
-        // Ждем загрузки изображения
-        await new Promise((resolve) => {
-            dcImg.onload = resolve;
-            dcImg.src = imgSrc;
-            // Если изображение уже загружено
-            if (dcImg.complete) resolve();
+        await new Promise((resolve, reject) => {
+            tempImg.onload = resolve;
+            tempImg.onerror = () => {
+                console.log('Ошибка загрузки фото, пробуем альтернативный метод');
+                // Пробуем загрузить через no-cors режим
+                dcImg.src = photoUrl;
+                resolve();
+            };
         });
         
-        // Даем время для отрисовки
-        await new Promise(resolve => setTimeout(resolve, 100));
+        // Устанавливаем фото в карточку для скачивания
+        dcImg.src = tempImg.src;
         
-        // Создаем скриншот
+        // Показываем карточку временно для рендеринга
+        downloadCard.style.position = 'fixed';
+        downloadCard.style.top = '50%';
+        downloadCard.style.left = '50%';
+        downloadCard.style.transform = 'translate(-50%, -50%)';
+        downloadCard.style.visibility = 'visible';
+        downloadCard.style.zIndex = '99999';
+        downloadCard.style.maxHeight = '90vh';
+        downloadCard.style.overflow = 'visible';
+        
+        // Даем время для отрисовки
+        await new Promise(resolve => setTimeout(resolve, 300));
+        
+        // Создаем скриншот с правильными настройками для изображений
         const canvas = await html2canvas(downloadCard, {
             useCORS: true,
             scale: 2,
             backgroundColor: "#ffffff",
             allowTaint: true,
             logging: false,
+            imageTimeout: 10000,
             onclone: (clonedDoc) => {
                 // Убираем анимации в клонированном документе
                 const clonedCard = clonedDoc.getElementById('download-card');
                 if (clonedCard) {
-                    clonedCard.style.transform = 'none';
+                    clonedCard.style.transform = 'translate(-50%, -50%)';
                     clonedCard.style.animation = 'none';
                     clonedCard.style.boxShadow = 'none';
+                    clonedCard.style.maxHeight = 'none';
+                    clonedCard.style.overflow = 'visible';
+                }
+                
+                // Клонируем изображение с тем же src
+                const clonedImg = clonedDoc.getElementById('dc-img');
+                if (clonedImg) {
+                    clonedImg.crossOrigin = 'anonymous';
                 }
             }
         });
@@ -979,33 +1004,70 @@ async function downloadPlayerCard() {
         const link = document.createElement('a');
         link.download = `BOX1V1_${name.replace(/\s+/g, '_')}.png`;
         link.href = canvas.toDataURL("image/png");
+        document.body.appendChild(link);
         link.click();
+        document.body.removeChild(link);
         
         showToast("Карточка сохранена!");
         
     } catch (err) {
         console.error("Download error:", err);
-        showToast("Ошибка при создании карточки");
         
-        // Пробуем альтернативный метод
+        // Пробуем альтернативный метод - скачивание через iframe
         try {
-            const modalContent = document.querySelector('#playerModal .modal-content');
-            const canvas = await html2canvas(modalContent, {
-                useCORS: true,
-                scale: 2,
-                backgroundColor: "#ffffff",
-                allowTaint: true,
-                logging: false
-            });
+            const tempIframe = document.createElement('iframe');
+            tempIframe.style.display = 'none';
+            document.body.appendChild(tempIframe);
             
-            const link = document.createElement('a');
-            link.download = `BOX1V1_${name.replace(/\s+/g, '_')}_alt.png`;
-            link.href = canvas.toDataURL("image/png");
-            link.click();
+            const iframeDoc = tempIframe.contentDocument || tempIframe.contentWindow.document;
+            iframeDoc.open();
+            iframeDoc.write(`
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <style>
+                        body { margin: 0; padding: 20px; background: #fff; font-family: 'Inter', sans-serif; }
+                        .card { max-width: 500px; margin: 0 auto; }
+                        .card img { width: 100%; height: 280px; object-fit: cover; border-radius: 20px; }
+                    </style>
+                </head>
+                <body>
+                    <div class="card">
+                        <img src="${imgSrc}" onerror="this.src='https://via.placeholder.com/500x280?text=Фото+игрока'" alt="${name}">
+                        <h1>${name}</h1>
+                        <p>${role} | OVR: ${ovr}</p>
+                        <div>${badges}</div>
+                        <div>${statsHTML}</div>
+                        <div style="text-align:center; margin-top:30px; color:#666; font-size:12px;">
+                            BOX1V1 | ЦИФРОВАЯ ЭКОСИСТЕМА
+                        </div>
+                    </div>
+                </body>
+                </html>
+            `);
+            iframeDoc.close();
             
-            showToast("Карточка сохранена (альтернативный метод)");
+            setTimeout(() => {
+                html2canvas(iframeDoc.body, {
+                    scale: 2,
+                    backgroundColor: "#ffffff",
+                    logging: false
+                }).then(canvas => {
+                    const link = document.createElement('a');
+                    link.download = `BOX1V1_${name.replace(/\s+/g, '_')}_2.png`;
+                    link.href = canvas.toDataURL("image/png");
+                    link.click();
+                    showToast("Карточка сохранена (альтернативный метод)");
+                }).catch(e => {
+                    console.error("Iframe method error:", e);
+                    showToast("Не удалось создать изображение");
+                }).finally(() => {
+                    document.body.removeChild(tempIframe);
+                });
+            }, 500);
+            
         } catch (err2) {
-            console.error("Alternative download error:", err2);
+            console.error("Iframe creation error:", err2);
             showToast("Не удалось создать изображение");
         }
         
@@ -1014,7 +1076,9 @@ async function downloadPlayerCard() {
         downloadCard.style.position = 'fixed';
         downloadCard.style.top = '-9999px';
         downloadCard.style.left = '-9999px';
+        downloadCard.style.transform = 'none';
         downloadCard.style.visibility = 'hidden';
+        downloadCard.style.zIndex = '-1';
     }
 }
 
