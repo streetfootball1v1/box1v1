@@ -214,8 +214,8 @@ function renderRealContent() {
         <h1>BOX1V1.</h1>
         <p>Решает не команда.<br>Решаешь ты.</p>
         <div class="btn-group" style="display:flex; gap:16px; justify-content:center; flex-wrap:wrap;">
-          <button class="btn btn-primary" onclick="switchTab('roster')">Участники</button>
-          <button class="btn btn-outline" onclick="openModal('applyModal')">Подать заявку</button>
+          <button class="btn btn-primary" onclick="window.switchTab('roster')">Участники</button>
+          <button class="btn btn-outline" onclick="window.openModal('applyModal')">Подать заявку</button>
         </div>
         <div class="timer-context" id="timer-container">
           <span class="timer-label" id="timer-status">До старта сезона:</span>
@@ -228,7 +228,7 @@ function renderRealContent() {
         </div>
       </div>
       <div class="bento-grid">
-        <div class="card" style="grid-column: span 2; background: var(--bg-alt);" onclick="openModal('rulesModal')" tabindex="0" role="button">
+        <div class="card" style="grid-column: span 2; background: var(--bg-alt);" onclick="window.openModal('rulesModal')" tabindex="0" role="button">
           <span style="font-size:11px; font-weight:800; color:var(--accent); text-transform:uppercase; letter-spacing:0.1em;">Документация</span>
           <h2 style="font-size: 3.5rem; margin: 20px 0 15px; color: var(--text);">РЕГЛАМЕНТ.</h2>
           <p>Свод правил проведения матчей.</p>
@@ -332,8 +332,7 @@ function renderRoster() {
          role="button"
          aria-label="Профиль игрока ${p.name}, рейтинг ${p.ovr}, роль ${p.role}${p.badges[0] ? ', ' + p.badges[0] : ''}"
          style="animation: fadeInUp 0.6s var(--cubic) both ${i * 0.03}s"
-         onclick="openPlayerModal('${p.name.replace(/'/g, "\\'")}')"
-         onkeydown="if(event.key==='Enter' || event.key===' ') openPlayerModal('${p.name.replace(/'/g, "\\'")}')">
+         data-player-name="${p.name.replace(/"/g, '&quot;')}">
       <div class="player-img" style="background-image: url('${p.photo}')" aria-hidden="true"></div>
       ${p.status ? `<div style="position:absolute; top:32px; right:32px; z-index:3; background:var(--accent-light); color:#000; font-size:10px; font-weight:900; padding:6px 14px; border-radius:12px; text-transform:uppercase;">${p.status}</div>` : ''}
       <div class="player-info">
@@ -344,6 +343,18 @@ function renderRoster() {
       </div>
     </div>
   `).join('');
+  
+  // Добавляем обработчики кликов для карточек
+  DOM.rosterGrid.querySelectorAll('.player-card').forEach(card => {
+    const playerName = card.getAttribute('data-player-name');
+    card.addEventListener('click', () => openPlayerModal(playerName));
+    card.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        openPlayerModal(playerName);
+      }
+    });
+  });
   
   APP_STATE.isRosterLoading = false;
 }
@@ -374,10 +385,8 @@ function renderStats() {
     const rank = sortedPlayers.findIndex(player => player.name === p.name) + 1;
     
     return `
-      <tr onclick="openPlayerModal('${p.name.replace(/'/g, "\\'")}')" 
-          style="cursor:pointer" 
-          tabindex="0" 
-          onkeydown="if(event.key==='Enter' || event.key===' ') openPlayerModal('${p.name.replace(/'/g, "\\'")}')" 
+      <tr tabindex="0" 
+          data-player-name="${p.name.replace(/"/g, '&quot;')}"
           aria-label="Рейтинг ${p.ovr}, ${p.name}, ${p.role}${p.badges[0] ? ', ' + p.badges[0] : ''}">
         <td style="font-weight:900; color:var(--text-dim)" aria-label="Место">${rank.toString().padStart(2, '0')}</td>
         <td>
@@ -398,6 +407,18 @@ function renderStats() {
       </tr>
     `;
   }).join('');
+  
+  // Добавляем обработчики кликов для строк таблицы
+  DOM.statsBody.querySelectorAll('tr').forEach(row => {
+    const playerName = row.getAttribute('data-player-name');
+    row.addEventListener('click', () => openPlayerModal(playerName));
+    row.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        openPlayerModal(playerName);
+      }
+    });
+  });
   
   // Обновляем заголовки сортировки
   updateSortHeaders();
@@ -421,7 +442,7 @@ function updateSortHeaders() {
 }
 
 // Сортировка таблицы
-export function sortTable(column) {
+function sortTable(column) {
   if (APP_STATE.isStatsLoading) return;
   
   if (APP_STATE.currentSort.column === column) {
@@ -464,7 +485,7 @@ function initNavigation() {
 }
 
 // Переключение вкладок
-export function switchTab(id, updateHash = true) {
+function switchTab(id, updateHash = true) {
   if (APP_STATE.isLoading) return;
   
   const target = document.getElementById(id);
@@ -557,7 +578,7 @@ function initSearchAndFilters() {
 }
 
 // Установка фильтра по роли
-export function setRoleFilter(role, btn) {
+function setRoleFilter(role, btn) {
   if (APP_STATE.isRosterLoading) return;
   
   APP_STATE.currentRoleFilter = role;
@@ -574,7 +595,7 @@ export function setRoleFilter(role, btn) {
 }
 
 // Открытие модального окна игрока
-export function openPlayerModal(name) {
+function openPlayerModal(name) {
   const p = APP_STATE.allPlayers.find(x => 
     x.name.toLowerCase() === name.toLowerCase()
   );
@@ -599,29 +620,33 @@ export function openPlayerModal(name) {
   const imgContainer = document.getElementById('m-img-container');
   
   // Показываем скелетон пока грузится изображение
-  img.style.display = 'none';
-  imgContainer.classList.add('skeleton');
-  
-  img.src = p.photo;
-  img.alt = `Фото игрока ${p.name}`;
-  
-  img.onload = () => {
-    img.style.display = 'block';
-    imgContainer.classList.remove('skeleton');
-    imgContainer.style.backgroundImage = 'none';
-  };
-  
-  img.onerror = () => {
-    imgContainer.classList.remove('skeleton');
-    imgContainer.style.background = 'var(--bg-alt)';
-    imgContainer.innerHTML = '<div style="display: flex; align-items: center; justify-content: center; height: 100%; color: var(--text-dim);">Фото недоступно</div>';
-  };
+  if (img) {
+    img.style.display = 'none';
+    imgContainer.classList.add('skeleton');
+    
+    img.src = p.photo;
+    img.alt = `Фото игрока ${p.name}`;
+    
+    img.onload = () => {
+      img.style.display = 'block';
+      imgContainer.classList.remove('skeleton');
+      imgContainer.style.backgroundImage = 'none';
+    };
+    
+    img.onerror = () => {
+      imgContainer.classList.remove('skeleton');
+      imgContainer.style.background = 'var(--bg-alt)';
+      imgContainer.innerHTML = '<div style="display: flex; align-items: center; justify-content: center; height: 100%; color: var(--text-dim);">Фото недоступно</div>';
+    };
+  }
   
   // Бейджи
   const badgesContainer = document.getElementById('m-badges');
-  badgesContainer.innerHTML = p.badges.map(b => 
-    `<span style="font-size:10px; background:var(--text); color:var(--bg); padding:4px 10px; border-radius:8px; font-weight:800;">${b}</span>`
-  ).join('');
+  if (badgesContainer) {
+    badgesContainer.innerHTML = p.badges.map(b => 
+      `<span style="font-size:10px; background:var(--text); color:var(--bg); padding:4px 10px; border-radius:8px; font-weight:800;">${b}</span>`
+    ).join('');
+  }
   
   // Статистика
   const isGK = p.role === 'Вратарь';
@@ -633,22 +658,24 @@ export function openPlayerModal(name) {
   ];
   
   const statsContainer = document.getElementById('m-stats');
-  statsContainer.innerHTML = stats.map(s => `
-    <div class="stat-item">
-      <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
-        <div class="stat-header" data-tip="${STAT_DEFS[s.l]}" aria-describedby="tooltip-${s.l}">
-          <span style="font-size:12px; font-weight:900; color: var(--text);">${s.l}</span>
-          <i class="info-icon" aria-hidden="true">?</i>
+  if (statsContainer) {
+    statsContainer.innerHTML = stats.map(s => `
+      <div class="stat-item">
+        <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
+          <div class="stat-header" data-tip="${STAT_DEFS[s.l]}" aria-describedby="tooltip-${s.l}">
+            <span style="font-size:12px; font-weight:900; color: var(--text);">${s.l}</span>
+            <i class="info-icon" aria-hidden="true">?</i>
+          </div>
+          <span style="font-size:12px; font-weight:900; color: var(--text);">${s.v}</span>
         </div>
-        <span style="font-size:12px; font-weight:900; color: var(--text);">${s.v}</span>
+        <div style="height:4px; background:var(--bg-alt); border-radius:2px; overflow:hidden;" aria-hidden="true">
+          <div style="width:0%; height:100%; background:var(--accent); transition:1.2s var(--cubic) 0.3s;" 
+               id="bar-${s.l}" 
+               aria-label="${s.l}: ${s.v}%"></div>
+        </div>
       </div>
-      <div style="height:4px; background:var(--bg-alt); border-radius:2px; overflow:hidden;" aria-hidden="true">
-        <div style="width:0%; height:100%; background:var(--accent); transition:1.2s var(--cubic) 0.3s;" 
-             id="bar-${s.l}" 
-             aria-label="${s.l}: ${s.v}%"></div>
-      </div>
-    </div>
-  `).join('');
+    `).join('');
+  }
   
   // Открываем модальное окно
   openModal('playerModal');
@@ -670,7 +697,7 @@ export function openPlayerModal(name) {
 }
 
 // Открытие модального окна
-export function openModal(id) {
+function openModal(id) {
   const lastFocusedElement = document.activeElement;
   const modal = document.getElementById(id);
   
@@ -694,7 +721,7 @@ export function openModal(id) {
 }
 
 // Закрытие модального окна
-export function closeModal(id) {
+function closeModal(id) {
   const modal = document.getElementById(id);
   if (!modal) return;
   
@@ -739,7 +766,7 @@ function trapFocus(e) {
 }
 
 // Обработчик мобильной навигации
-export function toggleMenu() {
+function toggleMenu() {
   const drawer = document.getElementById('mobile-drawer');
   const overlay = document.getElementById('drawer-overlay');
   const burger = document.getElementById('burger');
@@ -756,7 +783,7 @@ export function toggleMenu() {
   }
 }
 
-export function handleMobileNav(id, isModal = false) {
+function handleMobileNav(id, isModal = false) {
   toggleMenu();
   setTimeout(() => {
     if (isModal) {
@@ -768,7 +795,7 @@ export function handleMobileNav(id, isModal = false) {
 }
 
 // Копирование ID игрока
-export function copyPlayerID() {
+function copyPlayerID() {
   const name = document.getElementById('m-name').innerText;
   navigator.clipboard.writeText(name).then(() => {
     showToast('ID игрока скопирован', 'success');
@@ -778,7 +805,7 @@ export function copyPlayerID() {
 }
 
 // Поделиться игроком
-export function sharePlayer() {
+function sharePlayer() {
   const name = document.getElementById('m-name').innerText;
   const url = window.location.href;
   
@@ -800,7 +827,7 @@ export function sharePlayer() {
 }
 
 // Система уведомлений
-export function showToast(message, type = 'info') {
+function showToast(message, type = 'info') {
   const container = DOM.toastContainer;
   if (!container) return;
   
@@ -1001,7 +1028,7 @@ function renderErrorState() {
 
 // Дебаунс для рендеринга
 let renderTimeout;
-export function debouncedRender() {
+function debouncedRender() {
   clearTimeout(renderTimeout);
   renderTimeout = setTimeout(() => {
     renderRoster();
