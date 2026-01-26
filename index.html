@@ -338,6 +338,24 @@ text-transform: uppercase; white-space: nowrap; transition: 0.3s;
 
 @keyframes load { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
 </style>
+
+<!-- НАЧАЛО ДОБАВЛЕННОГО КОДА -->
+<script src="https://unpkg.com/@supabase/supabase-js@2.38.4/dist/umd/supabase.min.js"></script>
+
+<script>
+const SUPABASE_CONFIG = {
+  url: 'https://zbxxoucsqaddxlpqoacz.supabase.co',
+  publishableKey: 'sb_publishable_MafkBIouwdQFoaRVvWr9rQ_tGdBLt0n'
+};
+
+let supabase;
+let currentUser = null;
+let allPlayers = [];
+</script>
+
+<script src="supabase.js"></script>
+<!-- КОНЕЦ ДОБАВЛЕННОГО КОДА -->
+
 </head>
 <body>
 <div id="toast-container"></div>
@@ -390,6 +408,39 @@ text-transform: uppercase; white-space: nowrap; transition: 0.3s;
 <div><div class="countdown-value" id="secs">00</div><div class="countdown-label">сек</div></div>
 </div>
 </div>
+
+<!-- НАЧАЛО ДОБАВЛЕННОГО БЛОКА РЕЙТИНГА -->
+<div style="margin-top: 80px;">
+  <h2 style="font-size: clamp(2.5rem, 8vw, 6rem);">РЕЙТИНГ СЕЗОНА.</h2>
+  <p style="margin-bottom: 40px; max-width: 600px; margin-left: auto; margin-right: auto;">
+    Актуальный ELO-рейтинг участников BOX1V1. Обновляется после каждого турнира.
+  </p>
+  
+  <div class="table-wrapper">
+    <table style="width: 100%;">
+      <thead>
+        <tr>
+          <th style="width: 60px;">#</th>
+          <th>ИГРОК</th>
+          <th style="text-align: right;">ELO</th>
+          <th style="text-align: right;">Δ</th>
+          <th style="text-align: right;">В/П</th>
+        </tr>
+      </thead>
+      <tbody id="leaderboard-body">
+        <!-- Заполнится динамически -->
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div style="text-align: center; margin-top: 60px;">
+  <button class="btn btn-primary" onclick="openModal('createProfileModal')" style="padding: 20px 48px;">
+    СОЗДАТЬ ПРОФИЛЬ
+  </button>
+</div>
+<!-- КОНЕЦ ДОБАВЛЕННОГО БЛОКА РЕЙТИНГА -->
+
 </div>
 <div class="bento-grid">
 <div class="card" style="grid-column: span 2; background: #fafafa;" onclick="openModal('rulesModal')" tabindex="0">
@@ -484,19 +535,65 @@ text-transform: uppercase; white-space: nowrap; transition: 0.3s;
 </div>
 </div>
 </div>
+
+<!-- НАЧАЛО ДОБАВЛЕННОЙ МОДАЛКИ СОЗДАНИЯ ПРОФИЛЯ -->
+<div class="modal-overlay" id="createProfileModal">
+  <div class="modal-content" style="max-width: 500px;">
+    <button class="modal-close" onclick="closeModal('createProfileModal')">✕</button>
+    
+    <h2 style="font-size: 2rem; margin-bottom: 10px;">СОЗДАТЬ ПРОФИЛЬ.</h2>
+    <p style="margin-bottom: 32px; color: var(--text-dim);">
+      После создания профиль будет отправлен на подтверждение организатору.
+    </p>
+    
+    <div style="text-align: center; margin-bottom: 32px;">
+      <div id="avatar-upload-area" 
+           style="width: 120px; height: 120px; border-radius: 50%; background: var(--bg-alt); 
+                  margin: 0 auto; border: 2px dashed var(--border); display: flex; align-items: center; 
+                  justify-content: center; cursor: pointer; overflow: hidden;">
+        <div id="avatar-placeholder" style="text-align: center;">
+          <div style="font-size: 36px; color: var(--text-dim);">+</div>
+          <div style="font-size: 11px; color: var(--text-dim); margin-top: 8px;">ФОТО</div>
+        </div>
+        <img id="avatar-preview" src="" style="display: none; width: 100%; height: 100%; object-fit: cover;">
+      </div>
+      <input type="file" id="avatar-input" accept="image/*" style="display: none;">
+    </div>
+    
+    <div style="margin-bottom: 24px;">
+      <div style="font-size: 11px; font-weight: 800; color: var(--text-dim); margin-bottom: 8px; text-transform: uppercase;">НИКНЕЙМ</div>
+      <input type="text" id="profile-nickname" class="search-input" placeholder="Введите ваш никнейм" style="width: 100%;">
+      <div style="font-size: 11px; color: var(--text-dim); margin-top: 8px;">Будет отображаться в рейтинге</div>
+    </div>
+    
+    <div style="margin-bottom: 32px;">
+      <div style="font-size: 11px; font-weight: 800; color: var(--text-dim); margin-bottom: 8px; text-transform: uppercase;">TELEGRAM (@ник)</div>
+      <input type="text" id="profile-telegram" class="search-input" placeholder="@username (опционально)" style="width: 100%;">
+      <div style="font-size: 11px; color: var(--text-dim); margin-top: 8px;">Для связи с организатором</div>
+    </div>
+    
+    <button class="btn btn-primary" onclick="submitProfile()" style="width: 100%; padding: 20px;">
+      СОЗДАТЬ ПРОФИЛЬ
+    </button>
+  </div>
+</div>
+
+<div style="position: fixed; bottom: 10px; right: 10px; z-index: 9999; display: none;">
+  <button onclick="testSupabase()" 
+          style="background: var(--accent); color: white; border: none; 
+                 padding: 8px 12px; border-radius: 8px; font-size: 11px;
+                 cursor: pointer; font-weight: bold;">
+    Тест DB
+  </button>
+</div>
+<!-- КОНЕЦ ДОБАВЛЕННОЙ МОДАЛКИ СОЗДАНИЯ ПРОФИЛЯ -->
+
 <script>
-/**
-* CONFIG & STATE
-*/
-const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vREjbeB6jNrU01kw1npVtFTvqGdP134ERjmyROoOYeYXbzjgL0ZCNK6KwF0VTk3c1yxZEZEUsJjy2Ur/pub?output=csv';
+// НАЧАЛО ОБНОВЛЁННОГО JAVASCRIPT
 const TARGET_DATE = new Date("March 1, 2026 00:00:00").getTime();
-let allPlayers = [];
 let currentRoleFilter = 'Все';
 let renderTimeout;
 
-/**
- * DICTIONARY FOR UX
- */
 const statDefs = {
   'DRI': 'Техника контроля мяча и ведения дриблинга',
   'SPD': 'Стартовый рывок и скорость перемещения',
@@ -508,40 +605,31 @@ const statDefs = {
   'POS': 'Грамотный выбор позиции в створе ворот'
 };
 
-/**
-* TOAST SYSTEM
-*/
 function showToast(message) {
-const container = document.getElementById('toast-container');
-const toast = document.createElement('div');
-toast.className = 'toast';
-toast.innerHTML = `<span>${message}</span>`;
-container.appendChild(toast);
-setTimeout(() => {
-toast.style.opacity = '0';
-toast.style.transform = 'translateY(20px)';
-setTimeout(() => toast.remove(), 500);
-}, 3000);
+  const container = document.getElementById('toast-container');
+  const toast = document.createElement('div');
+  toast.className = 'toast';
+  toast.innerHTML = `<span>${message}</span>`;
+  container.appendChild(toast);
+  setTimeout(() => {
+    toast.style.opacity = '0';
+    toast.style.transform = 'translateY(20px)';
+    setTimeout(() => toast.remove(), 500);
+  }, 3000);
 }
 
-/**
-* ADDED: Мобильные тултипы через touch
-*/
 function initTouchTooltips() {
   if ('ontouchstart' in window) {
     document.addEventListener('touchstart', function(e) {
       const statHeader = e.target.closest('.stat-header');
       if (!statHeader) return;
       
-      // Удаляем active класс у всех
       document.querySelectorAll('.stat-header.touch-active').forEach(el => {
         el.classList.remove('touch-active');
       });
       
-      // Добавляем текущему
       statHeader.classList.add('touch-active');
       
-      // Закрываем при тапе вне
       setTimeout(() => {
         const closeHandler = function(evt) {
           if (!evt.target.closest('.stat-header')) {
@@ -555,34 +643,95 @@ function initTouchTooltips() {
   }
 }
 
-/**
-* INITIALIZATION
-*/
 async function init() {
 try {
-const res = await fetch(CSV_URL);
-if (!res.ok) throw new Error("Network response was not ok");
-const text = await res.text();
-allPlayers = parseCSV(text);
-if (allPlayers.length === 0) {
-showToast("Ростер временно пуст");
+console.log('🚀 Инициализация BOX1V1...');
+
+const connectionTest = await db.testConnection();
+if (!connectionTest.success) {
+  showToast('Ошибка подключения к базе данных');
+  console.error('Подключение не удалось:', connectionTest.message);
 }
+
+allPlayers = await db.getAllPlayers();
+console.log(`📊 Загружено ${allPlayers.length} игроков`);
+
+if (allPlayers.length === 0) {
+  showToast("База игроков пуста. Создайте первый профиль!");
+}
+
 renderRoster();
 renderStats();
+renderLeaderboard();
+
 handleHashAndDeepLink();
+
 setInterval(updateTimer, 1000);
 updateTimer();
+
+checkUserSession();
+
 document.getElementById('preloader').classList.add('loaded');
 
-// ADDED: Инициализация тултипов для мобильных
 initTouchTooltips();
 
+console.log('✅ BOX1V1 успешно инициализирован');
+
 } catch (e) {
-console.error("Load Error", e);
-showToast("Ошибка загрузки данных");
+console.error("Критическая ошибка инициализации:", e);
+showToast("Ошибка загрузки приложения");
 document.getElementById('preloader').classList.add('loaded');
 }
 }
+
+async function renderLeaderboard() {
+  const tbody = document.getElementById('leaderboard-body');
+  if (!tbody) return;
+  
+  tbody.innerHTML = allPlayers.map((player, index) => `
+    <tr onclick="openPlayerModalFromId('${player.id}')" style="cursor:pointer">
+      <td style="font-weight:900; color:var(--text-dim); width:60px;">${index + 1}</td>
+      <td>
+        <div style="display:flex; align-items:center; gap:12px;">
+          ${player.avatar_url ? 
+            `<img src="${player.avatar_url}" style="width:36px; height:36px; border-radius:50%; object-fit:cover;">` : 
+            `<div style="width:36px; height:36px; border-radius:50%; background:var(--bg-alt); display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:900;">${player.nickname.charAt(0)}</div>`
+          }
+          <div>
+            <div style="font-weight:900; text-transform:uppercase; font-style:italic;">${player.nickname}</div>
+            ${player.telegram ? `<div style="font-size:10px; color:var(--text-dim);">${player.telegram}</div>` : ''}
+          </div>
+        </div>
+      </td>
+      <td style="text-align:right; font-weight:900; font-size:1.2rem;">${player.elo_rating}</td>
+      <td style="text-align:right; color:var(--accent); font-weight:800;">+0</td>
+      <td style="text-align:right; font-size:0.9rem; color:var(--text-dim);">
+        ${player.wins || 0}/${player.losses || 0}
+      </td>
+    </tr>
+  `).join('');
+}
+
+async function openPlayerModalFromId(playerId) {
+  const player = allPlayers.find(p => p.id === playerId);
+  if (!player) {
+    showToast("Игрок не найден");
+    return;
+  }
+  
+  openPlayerModal(player);
+}
+
+function openPlayerModal(player) {
+  document.getElementById('m-name').innerText = player.nickname;
+  document.getElementById('m-role').innerText = 'Игрок';
+  document.getElementById('m-ovr').innerText = player.elo_rating;
+  document.getElementById('m-img').src = player.avatar_url || 'https://via.placeholder.com/400x600?text=No+Photo';
+  document.getElementById('m-badges').innerHTML = '';
+  
+  openModal('playerModal');
+}
+
 function parseCSV(text) {
 const rows = text.replace(/\r/g, '').split('\n').filter(r => r.trim());
 return rows.slice(1).map(row => {
@@ -602,9 +751,7 @@ badges: c[9] ? c[9].split('|').map(b => b.trim()) : []
 };
 }).filter(p => p.name);
 }
-/**
-* NAVIGATION & HASH LOGIC
-*/
+
 function handleHashAndDeepLink() {
 const fullHash = window.location.hash;
 if (!fullHash) return;
@@ -623,6 +770,7 @@ if (found) setTimeout(() => openPlayerModal(found.name), 200);
 }
 }
 }
+
 function switchTab(id, updateHash = true) {
 const target = document.getElementById(id);
 if(!target) return;
@@ -634,65 +782,74 @@ if(btn) btn.classList.add('active');
 if (updateHash) window.history.pushState(null, null, `#${id}`);
 window.scrollTo({top:0, behavior:'smooth'});
 }
-/**
-* RENDERING
-*/
+
 function debouncedRender() {
 clearTimeout(renderTimeout);
 renderTimeout = setTimeout(renderRoster, 150);
 }
+
 function renderRoster() {
 const grid = document.getElementById('roster-grid');
 const search = document.getElementById('playerSearch').value.toLowerCase();
+
 const filtered = allPlayers.filter(p => {
-const mSearch = p.name.toLowerCase().includes(search);
-const mRole = currentRoleFilter === 'Все' || p.role === currentRoleFilter;
+const mSearch = p.nickname?.toLowerCase().includes(search) || p.name?.toLowerCase().includes(search);
+const mRole = currentRoleFilter === 'Все' || (p.role === currentRoleFilter);
 return mSearch && mRole;
 });
+
 if (filtered.length === 0) {
 grid.innerHTML = `<div style="grid-column: 1/-1; padding: 40px; text-align: center; color: var(--text-dim);">Атлеты не найдены</div>`;
 return;
 }
+
 grid.innerHTML = filtered.map((p, i) => `
 <div class="card player-card"
 tabindex="0"
 role="button"
-aria-label="Профиль игрока ${p.name}, рейтинг ${p.ovr}, роль ${p.role}${p.badges[0] ? ', ' + p.badges[0] : ''}"
+aria-label="Профиль игрока ${p.nickname || p.name}, рейтинг ${p.elo_rating || p.ovr}"
 style="animation: fadeInUp 0.6s var(--cubic) both ${i*0.03}s"
-onclick="openPlayerModal('${p.name}')"
-onkeydown="if(event.key==='Enter') openPlayerModal('${p.name}')">
-<div class="player-img" style="background-image: url('${p.photo}')"></div>
-${p.status ? `<div style="position:absolute; top:32px; right:32px; z-index:3; background:var(--accent); color:#000; font-size:10px; font-weight:900; padding:6px 14px; border-radius:12px; text-transform:uppercase;">${p.status}</div>` : ''}
+onclick="openPlayerModalFromId('${p.id}')"
+onkeydown="if(event.key==='Enter') openPlayerModalFromId('${p.id}')">
+<div class="player-img" style="background-image: url('${p.avatar_url || p.photo || 'https://via.placeholder.com/400x600?text=No+Photo'}')"></div>
 <div class="player-info">
-<span style="font-size:11px; font-weight:800; text-transform:uppercase; color:var(--accent); letter-spacing:0.1em;">${p.role}</span>
-<h3 style="font-size:2.2rem; margin: 8px 0;">${p.name}</h3>
-${p.badges.length > 0 ? `<div style="font-size:10px; color:rgba(255,255,255,0.7); margin-top:4px;">${p.badges[0]}</div>` : ''}
-<div class="ovr-badge">OVR ${p.ovr}</div>
+<span style="font-size:11px; font-weight:800; text-transform:uppercase; color:var(--accent); letter-spacing:0.1em;">${p.role || 'Игрок'}</span>
+<h3 style="font-size:2.2rem; margin: 8px 0;">${p.nickname || p.name}</h3>
+<div class="ovr-badge">ELO ${p.elo_rating || p.ovr * 15}</div>
 </div>
 </div>
 `).join('');
 }
-function renderStats() {
-const sorted = [...allPlayers].sort((a, b) => b.ovr - a.ovr);
-document.getElementById('stats-body').innerHTML = sorted.map((p, i) => `
-<tr onclick="openPlayerModal('${p.name}')" style="cursor:pointer" tabindex="0" onkeydown="if(event.key==='Enter') openPlayerModal('${p.name}')" aria-label="Рейтинг ${p.ovr}, ${p.name}, ${p.role}${p.badges[0] ? ', ' + p.badges[0] : ''}">
+
+async function renderStats() {
+const tbody = document.getElementById('stats-body');
+if (!tbody) return;
+
+const sorted = allPlayers.sort((a, b) => b.elo_rating - a.elo_rating);
+
+tbody.innerHTML = sorted.map((p, i) => `
+<tr onclick="openPlayerModalFromId('${p.id}')" style="cursor:pointer" tabindex="0">
 <td style="font-weight:900; color:var(--text-dim)">${(i+1).toString().padStart(2, '0')}</td>
 <td>
 <div style="display:flex; align-items:center; gap:16px;">
-<img src="${p.photo}" style="width:48px; height:48px; border-radius:14px; object-fit:cover;" alt="">
+<img src="${p.avatar_url || p.photo || 'https://via.placeholder.com/150x150?text=No+Photo'}" 
+     style="width:48px; height:48px; border-radius:14px; object-fit:cover;" 
+     alt="${p.nickname}">
 <div>
-<div style="font-weight:900; text-transform:uppercase; font-style:italic;">${p.name}</div>
-<div style="font-size:10px; font-weight:700; color:var(--text-dim); text-transform:uppercase;">${p.role}</div>
+<div style="font-weight:900; text-transform:uppercase; font-style:italic;">${p.nickname || p.name}</div>
+<div style="font-size:10px; font-weight:700; color:var(--text-dim); text-transform:uppercase;">
+  ${p.total_matches || 0} матчей
+</div>
 </div>
 </div>
 </td>
-<td style="text-align:right;"><span class="ovr-badge">${p.ovr}</span></td>
+<td style="text-align:right;">
+<span class="ovr-badge">${p.elo_rating || p.ovr}</span>
+</td>
 </tr>
 `).join('');
 }
-/**
-* MODAL LOGIC & ACCESSIBILITY
-*/
+
 let lastFocusedElement;
 function openModal(id) {
 lastFocusedElement = document.activeElement;
@@ -735,65 +892,13 @@ if (activeModal) closeModal(activeModal.id);
 }
 });
 
-function openPlayerModal(name) {
-  const p = allPlayers.find(x => x.name.toLowerCase() === name.toLowerCase());
-  if(!p) {
-    showToast("Игрок не найден");
-    return;
-  }
-
-  document.getElementById('m-name').innerText = p.name;
-  document.getElementById('m-role').innerText = p.role;
-  document.getElementById('m-ovr').innerText = p.ovr;
-  document.getElementById('m-img').src = p.photo;
-  document.getElementById('m-badges').innerHTML = p.badges.map(b => `<span style="font-size:10px; background:#000; color:#fff; padding:4px 10px; border-radius:8px; font-weight:800;">${b}</span>`).join('');
-
-  const isGK = p.role === 'Вратарь';
-  const stats = [
-    { l: isGK ? 'REF' : 'DRI', v: p.drib },
-    { l: isGK ? 'DIV' : 'SPD', v: p.speed },
-    { l: isGK ? 'HAN' : 'SHT', v: p.shot },
-    { l: isGK ? 'POS' : 'PHY', v: p.phys }
-  ];
-
-  document.getElementById('m-stats').innerHTML = stats.map(s => `
-    <div class="stat-item">
-      <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
-        <div class="stat-header" data-tip="${statDefs[s.l]}" aria-label="${s.l}: ${statDefs[s.l]}">
-          <span style="font-size:12px; font-weight:900;">${s.l}</span>
-          <i class="info-icon">?</i>
-        </div>
-        <span style="font-size:12px; font-weight:900;">${s.v}</span>
-      </div>
-      <div style="height:4px; background:var(--bg-alt); border-radius:2px; overflow:hidden;">
-        <div style="width:0%; height:100%; background:var(--text); transition:1.2s var(--cubic) 0.3s;" id="bar-${s.l}"></div>
-      </div>
-    </div>
-  `).join('');
-
-  openModal('playerModal');
-
-  setTimeout(() => {
-    stats.forEach(s => {
-      const bar = document.getElementById(`bar-${s.l}`);
-      if(bar) bar.style.width = s.v + '%';
-    });
-  }, 100);
-
-  const currentTab = document.querySelector('section.active').id;
-  const playerSlug = p.name.replace(/\s+/g, '-').toLowerCase();
-  window.history.replaceState(null, null, `#${currentTab}?player=${playerSlug}`);
-}
-
-/**
-* ACTIONS
-*/
 function setRoleFilter(role, btn) {
 currentRoleFilter = role;
 document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
 btn.classList.add('active');
 renderRoster();
 }
+
 function toggleMenu() {
 const drawer = document.getElementById('mobile-drawer');
 const overlay = document.getElementById('drawer-overlay');
@@ -803,16 +908,19 @@ overlay.classList.toggle('open');
 burger.classList.toggle('open');
 burger.setAttribute('aria-expanded', isOpen);
 }
+
 function handleMobileNav(id, isModal = false) {
 toggleMenu();
 setTimeout(() => isModal ? openModal(id) : switchTab(id), 400);
 }
+
 function copyPlayerID() {
 const name = document.getElementById('m-name').innerText;
 navigator.clipboard.writeText(name).then(() => {
 showToast('ID игрока скопирован');
 });
 }
+
 function sharePlayer() {
 const name = document.getElementById('m-name').innerText;
 const url = window.location.href;
@@ -827,6 +935,7 @@ navigator.clipboard.writeText(url);
 showToast('Ссылка скопирована в буфер');
 }
 }
+
 function updateTimer() {
 const now = Date.now();
 const diff = TARGET_DATE - now;
@@ -841,10 +950,59 @@ document.getElementById('hours').innerText = Math.floor((diff % 864e5) / 36e5).t
 document.getElementById('mins').innerText = Math.floor((diff % 36e5) / 6e4).toString().padStart(2, '0');
 document.getElementById('secs').innerText = Math.floor((diff % 6e4) / 1000).toString().padStart(2, '0');
 }
+
+function checkUserSession() {
+const savedUser = localStorage.getItem('box1v1_user');
+if (savedUser) {
+try {
+currentUser = JSON.parse(savedUser);
+} catch (e) {
+localStorage.removeItem('box1v1_user');
+}
+}
+}
+
+async function submitProfile() {
+const nickname = document.getElementById('profile-nickname').value.trim();
+const telegram = document.getElementById('profile-telegram').value.trim();
+  
+if (!nickname) {
+showToast('Введите никнейм');
+return;
+}
+  
+const result = await db.createPlayer(nickname, telegram || null, null);
+  
+if (result.success) {
+showToast(result.message);
+closeModal('createProfileModal');
+allPlayers = await db.getAllPlayers();
+renderLeaderboard();
+renderRoster();
+renderStats();
+} else {
+showToast(result.error);
+}
+}
+
+async function testSupabase() {
+const result = await db.testConnection();
+alert(result.message);
+  
+const players = await db.getAllPlayers();
+alert(`Игроков в базе: ${players.length}`);
+  
+if (players.length > 0) {
+console.log('Игроки:', players);
+}
+}
+
 window.addEventListener('scroll', () => {
 document.body.classList.toggle('scrolled', window.scrollY > 50);
 });
+
 window.onload = init;
+// КОНЕЦ ОБНОВЛЁННОГО JAVASCRIPT
 </script>
 </body>
 </html>
