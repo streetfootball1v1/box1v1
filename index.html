@@ -14,12 +14,13 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
 <style>
+/* Ваши стили остаются без изменений */
 :root {
 --bg: #ffffff;
 --bg-alt: #f8f8f8;
 --card: #ffffff;
 --text: #0a0a0a;
---text-dim: #4b5563; /* ADDED: Улучшенный контраст */
+--text-dim: #4b5563;
 --border: rgba(0,0,0,0.06);
 --accent: #22c55e;
 --accent-dark: #16a34a;
@@ -54,12 +55,11 @@ font-style: italic;
 letter-spacing: var(--ls-tight);
 line-height: var(--lh-tight);
 text-transform: uppercase;
-font-feature-settings: "ss01", "ss02", "cv01"; /* ADDED: Альтернативные глифы */
-font-variation-settings: "wght" 900, "slnt" -10; /* ADDED: Variable font настройки */
+font-feature-settings: "ss01", "ss02", "cv01";
+font-variation-settings: "wght" 900, "slnt" -10;
 }
 p { font-size: 1rem; color: var(--text-dim); }
 
-/* ADDED: Анимация появления текста */
 @keyframes fadeUpType {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
@@ -127,9 +127,9 @@ display: flex; align-items: center; justify-content: space-between; padding: 0 3
 }
 .logo {
 font-size: 1.4rem; font-weight: 900; font-style: italic; letter-spacing: -1px; cursor: pointer;
-transition: transform 0.4s var(--cubic); /* ADDED: Анимация лого */
+transition: transform 0.4s var(--cubic);
 }
-.logo:hover { transform: scale(1.05); } /* ADDED: Интерактивность лого */
+.logo:hover { transform: scale(1.05); }
 .nav-links { display: flex; gap: 8px; }
 .nav-links a {
 text-decoration: none; font-size: 12px; font-weight: 700;
@@ -168,7 +168,7 @@ to { opacity: 1; transform: translateY(0); }
 .intro-block h1 { font-size: clamp(3.5rem, 12vw, 9.5rem); margin-bottom: 24px; }
 .intro-block p { 
   font-size: 1.25rem; max-width: 540px; margin: 0 auto 40px;
-  animation: fadeUpType 0.8s var(--cubic) 0.2s both; /* ADDED: Анимация текста */
+  animation: fadeUpType 0.8s var(--cubic) 0.2s both;
 }
 /* BUTTONS */
 .btn {
@@ -193,8 +193,8 @@ cursor: pointer; display: flex; flex-direction: column;
 .card:hover { transform: translateY(-10px); border-color: rgba(0,0,0,0.15); box-shadow: var(--shadow-md); }
 .card:focus-visible { 
   outline: 3px solid var(--accent); 
-  outline-offset: 4px; /* ADDED: Улучшенный focus */
-  transform: translateY(-4px); /* ADDED: Сочетание с hover */
+  outline-offset: 4px;
+  transform: translateY(-4px);
 }
 /* PLAYER CARD */
 .player-card { height: 480px; background: #000; color: #fff; border: none; padding: 32px; }
@@ -218,7 +218,7 @@ table { width: 100%; border-collapse: collapse; }
 th { text-align: left; padding: 24px; font-size: 11px; font-weight: 800; text-transform: uppercase; color: var(--text-dim); border-bottom: 1px solid var(--border); }
 td { 
   padding: 20px 24px; border-bottom: 1px solid var(--border); transition: 0.3s;
-  font-size: 0.95rem; font-weight: 500; /* ADDED: Оптимальный текст таблиц */
+  font-size: 0.95rem; font-weight: 500;
 }
 tr:last-child td { border-bottom: none; }
 tr:hover td {
@@ -247,10 +247,9 @@ border: none; transition: 0.3s var(--cubic);
 }
 .modal-close:hover { transform: rotate(90deg); background: #eee; }
 
-/* ADDED: Оптимальные строки для модалок */
 .modal-content p {
   line-height: 1.7;
-  max-width: 65ch; /* Оптимальная длина строки для чтения */
+  max-width: 65ch;
 }
 
 /* SEARCH & FILTER */
@@ -300,7 +299,6 @@ text-transform: uppercase; white-space: nowrap; transition: 0.3s;
 .filter-bar { overflow-x: auto; padding-bottom: 8px; width: 100%; }
 .player-card { height: 420px; }
   
-  /* ADDED: Мобильные тултипы через touch */
   .stat-header:hover::after { display: none; }
   .stat-header.touch-active::after {
     display: block !important;
@@ -310,7 +308,6 @@ text-transform: uppercase; white-space: nowrap; transition: 0.3s;
   }
 }
 
-/* ADDED: Дополнительные медиа-запросы для маленьких экранов */
 @media (max-width: 480px) {
   .intro-block h1 {
     font-size: 2.8rem;
@@ -339,10 +336,8 @@ text-transform: uppercase; white-space: nowrap; transition: 0.3s;
 @keyframes load { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
 </style>
 
-<!-- НАЧАЛО ДОБАВЛЕННОГО КОДА -->
-<script src="https://unpkg.com/@supabase/supabase-js@2.38.4/dist/umd/supabase.min.js"></script>
-
 <script>
+// ========== КОНФИГУРАЦИЯ ==========
 const SUPABASE_CONFIG = {
   url: 'https://zbxxoucsqaddxlpqoacz.supabase.co',
   publishableKey: 'sb_publishable_MafkBIouwdQFoaRVvWr9rQ_tGdBLt0n'
@@ -353,401 +348,10 @@ let currentUser = null;
 let allPlayers = [];
 let db = null;
 
-// ========== SUPABASE SERVICE (встроенный в HTML) ==========
-class SupabaseService {
-  constructor() {
-    console.log('🔧 Создаём Supabase клиент...');
-    console.log('URL:', SUPABASE_CONFIG.url);
-    console.log('Key первые 10 символов:', SUPABASE_CONFIG.publishableKey.substring(0, 10) + '...');
-    
-    // Проверяем, что библиотека загрузилась
-    if (typeof window.supabase === 'undefined') {
-      throw new Error('Supabase библиотека не загрузилась!');
-    }
-    
-    try {
-      this.client = window.supabase.createClient(
-        SUPABASE_CONFIG.url,
-        SUPABASE_CONFIG.publishableKey,
-        {
-          auth: {
-            persistSession: false
-          }
-        }
-      );
-      console.log('✅ Supabase клиент создан');
-    } catch (error) {
-      console.error('❌ Ошибка создания клиента:', error);
-      throw error;
-    }
-  }
-
-  async testConnection() {
-    try {
-      console.log('🔍 Тестируем подключение к Supabase...');
-      const { data, error } = await this.client
-        .from('players')
-        .select('count', { count: 'exact', head: true });
-      
-      if (error) {
-        console.error('Ошибка запроса:', error);
-        throw error;
-      }
-      
-      console.log('✅ Подключение успешно, данные:', data);
-      return { success: true, message: 'Подключение успешно' };
-    } catch (error) {
-      console.error('❌ Ошибка подключения:', error);
-      return { success: false, message: error.message };
-    }
-  }
-
-  async getAllPlayers() {
-    try {
-      console.log('📥 Загружаем игроков...');
-      const { data, error } = await this.client
-        .from('players')
-        .select('*')
-        .eq('active', true)
-        .order('elo_rating', { ascending: false });
-      
-      if (error) {
-        console.error('Ошибка загрузки игроков:', error);
-        return [];
-      }
-      
-      console.log(`✅ Загружено ${data?.length || 0} игроков`);
-      return data || [];
-    } catch (error) {
-      console.error('Ошибка получения игроков:', error);
-      return [];
-    }
-  }
-
-  async getPlayerByNickname(nickname) {
-    try {
-      const { data, error } = await this.client
-        .from('players')
-        .select('*')
-        .eq('nickname', nickname)
-        .eq('active', true)
-        .single();
-      
-      if (error) throw error;
-      return data;
-    } catch (error) {
-      console.error('Ошибка получения игрока:', error);
-      return null;
-    }
-  }
-
-  async createPlayer(nickname, telegram = null, avatarUrl = null) {
-    try {
-      const { data: existingPlayer } = await this.client
-        .from('players')
-        .select('id')
-        .eq('nickname', nickname)
-        .single();
-      
-      if (existingPlayer) {
-        return { 
-          success: false, 
-          error: 'Игрок с таким никнеймом уже существует' 
-        };
-      }
-      
-      const { data, error } = await this.client
-        .from('players')
-        .insert([{
-          nickname: nickname.trim(),
-          telegram: telegram ? telegram.trim() : null,
-          avatar_url: avatarUrl,
-          elo_rating: 1500,
-          total_matches: 0,
-          wins: 0,
-          losses: 0,
-          current_streak: 0,
-          best_streak: 0,
-          verified: false,
-          active: true
-        }])
-        .select()
-        .single();
-      
-      if (error) throw error;
-      
-      return { 
-        success: true, 
-        player: data,
-        message: 'Профиль создан! Ожидайте подтверждения организатора.'
-      };
-    } catch (error) {
-      console.error('Ошибка создания игрока:', error);
-      return { 
-        success: false, 
-        error: error.message || 'Ошибка создания профиля' 
-      };
-    }
-  }
-
-  async createMatch(winnerNickname, loserNickname, score) {
-    try {
-      const { data: players, error: playersError } = await this.client
-        .from('players')
-        .select('*')
-        .in('nickname', [winnerNickname, loserNickname]);
-      
-      if (playersError) throw playersError;
-      
-      if (players.length !== 2) {
-        return { 
-          success: false, 
-          error: 'Не удалось найти одного из игроков' 
-        };
-      }
-      
-      const winner = players.find(p => p.nickname === winnerNickname);
-      const loser = players.find(p => p.nickname === loserNickname);
-      
-      const eloResult = this.calculateElo(winner.elo_rating, loser.elo_rating);
-      
-      const { data: match, error: matchError } = await this.client
-        .from('matches')
-        .insert([{
-          winner_id: winner.id,
-          loser_id: loser.id,
-          winner_elo_before: winner.elo_rating,
-          loser_elo_before: loser.elo_rating,
-          winner_elo_after: eloResult.winnerNewElo,
-          loser_elo_after: eloResult.loserNewElo,
-          elo_change: eloResult.eloChange,
-          score: score,
-          match_time: new Date().toISOString(),
-          confirmed_by_admin: true,
-          notes: 'Турнирный матч'
-        }])
-        .select()
-        .single();
-      
-      if (matchError) throw matchError;
-      
-      await this.updatePlayerStats(winner.id, true);
-      await this.updatePlayerStats(loser.id, false);
-      
-      return { 
-        success: true, 
-        match: match,
-        message: `Матч сохранён! ${winnerNickname} победил ${loserNickname}`
-      };
-    } catch (error) {
-      console.error('Ошибка создания матча:', error);
-      return { 
-        success: false, 
-        error: error.message || 'Ошибка сохранения матча' 
-      };
-    }
-  }
-
-  async updatePlayerStats(playerId, isWinner) {
-    try {
-      const { data: player, error } = await this.client
-        .from('players')
-        .select('*')
-        .eq('id', playerId)
-        .single();
-      
-      if (error) throw error;
-      
-      const updates = {
-        total_matches: player.total_matches + 1,
-        last_match_at: new Date().toISOString()
-      };
-      
-      if (isWinner) {
-        updates.wins = player.wins + 1;
-        updates.current_streak = player.current_streak + 1;
-        updates.best_streak = Math.max(player.best_streak, player.current_streak + 1);
-      } else {
-        updates.losses = player.losses + 1;
-        updates.current_streak = 0;
-      }
-      
-      await this.client
-        .from('players')
-        .update(updates)
-        .eq('id', playerId);
-        
-    } catch (error) {
-      console.error('Ошибка обновления статистики:', error);
-    }
-  }
-
-  async getRecentMatches(limit = 10) {
-    try {
-      const { data, error } = await this.client
-        .from('matches')
-        .select(`
-          *,
-          winner:players!winner_id(nickname, avatar_url),
-          loser:players!loser_id(nickname, avatar_url)
-        `)
-        .order('match_time', { ascending: false })
-        .limit(limit);
-      
-      if (error) throw error;
-      return data || [];
-    } catch (error) {
-      console.error('Ошибка получения матчей:', error);
-      return [];
-    }
-  }
-
-  calculateElo(playerElo, opponentElo, kFactor = 32) {
-    const expectedScore = 1 / (1 + Math.pow(10, (opponentElo - playerElo) / 400));
-    const eloChange = Math.round(kFactor * (1 - expectedScore));
-    
-    return {
-      winnerNewElo: playerElo + eloChange,
-      loserNewElo: opponentElo - eloChange,
-      eloChange: eloChange
-    };
-  }
-
-  async getUnverifiedPlayers() {
-    try {
-      const { data, error } = await this.client
-        .from('players')
-        .select('*')
-        .eq('verified', false)
-        .eq('active', true)
-        .order('created_at', { ascending: true });
-      
-      if (error) throw error;
-      return data || [];
-    } catch (error) {
-      console.error('Ошибка получения неподтверждённых игроков:', error);
-      return [];
-    }
-  }
-
-  async verifyPlayer(playerId) {
-    try {
-      const { data, error } = await this.client
-        .from('players')
-        .update({ verified: true })
-        .eq('id', playerId)
-        .select()
-        .single();
-      
-      if (error) throw error;
-      return { success: true, player: data };
-    } catch (error) {
-      console.error('Ошибка подтверждения игрока:', error);
-      return { success: false, error: error.message };
-    }
-  }
-}
-
-// ========== ИНИЦИАЛИЗАЦИЯ ==========
-async function init() {
-  try {
-    console.log('🚀 Инициализация BOX1V1...');
-    console.log('Проверяем Supabase...');
-    
-    // 1. Проверяем что библиотека Supabase загрузилась
-    if (typeof window.supabase === 'undefined') {
-      console.error('❌ Библиотека Supabase не загрузилась!');
-      showToast('Ошибка загрузки библиотеки Supabase');
-      document.getElementById('preloader').classList.add('loaded');
-      return;
-    }
-    
-    console.log('✅ Библиотека Supabase загружена');
-    
-    // 2. Проверяем конфиг
-    if (!SUPABASE_CONFIG || !SUPABASE_CONFIG.url || !SUPABASE_CONFIG.publishableKey) {
-      console.error('❌ Конфигурация Supabase не настроена');
-      showToast('Конфигурация базы данных не настроена');
-      document.getElementById('preloader').classList.add('loaded');
-      return;
-    }
-    
-    console.log('✅ Конфигурация найдена');
-    
-    // 3. Создаём подключение к базе
-    try {
-      db = new SupabaseService();
-      console.log('✅ База данных инициализирована');
-      
-      // Добавляем глобальный доступ для отладки
-      window.getDatabase = () => db;
-    } catch (error) {
-      console.error('❌ Ошибка создания базы данных:', error);
-      showToast('Ошибка подключения к базе данных');
-      document.getElementById('preloader').classList.add('loaded');
-      return;
-    }
-    
-    // 4. Тестируем подключение
-    console.log('🔍 Тестируем подключение...');
-    const connectionTest = await db.testConnection();
-    if (!connectionTest.success) {
-      console.warn('⚠️ Подключение не удалось:', connectionTest.message);
-      showToast('Есть проблемы с подключением к базе данных');
-    } else {
-      console.log('✅ Подключение к базе успешно');
-    }
-    
-    // 5. Загружаем игроков
-    console.log('📥 Загружаем игроков из базы...');
-    allPlayers = await db.getAllPlayers();
-    console.log(`✅ Загружено ${allPlayers.length} игроков`);
-    
-    if (allPlayers.length === 0) {
-      showToast("База игроков пуста. Создайте первый профиль!");
-    }
-    
-    // 6. Рендерим данные
-    renderRoster();
-    renderStats();
-    renderLeaderboard();
-    
-    // 7. Остальные функции
-    handleHashAndDeepLink();
-    
-    setInterval(updateTimer, 1000);
-    updateTimer();
-    
-    checkUserSession();
-    
-    document.getElementById('preloader').classList.add('loaded');
-    
-    initTouchTooltips();
-    
-    console.log('✅ BOX1V1 успешно инициализирован');
-    
-  } catch (e) {
-    console.error("💥 Критическая ошибка инициализации:", e);
-    showToast("Ошибка загрузки приложения. Проверьте консоль.");
-    document.getElementById('preloader').classList.add('loaded');
-  }
-}
-
-// ========== ГЛАВНЫЕ ФУНКЦИИ ПРИЛОЖЕНИЯ ==========
+// ========== ОСНОВНЫЕ ФУНКЦИИ ==========
 const TARGET_DATE = new Date("March 1, 2026 00:00:00").getTime();
 let currentRoleFilter = 'Все';
 let renderTimeout;
-
-const statDefs = {
-  'DRI': 'Техника контроля мяча и ведения дриблинга',
-  'SPD': 'Стартовый рывок и скорость перемещения',
-  'SHT': 'Мощность и точность завершающего удара',
-  'PHY': 'Физическая мощь, борьба и атлетизм',
-  'REF': 'Молниеносная реакция на удары в упор',
-  'DIV': 'Дальность прыжка и охват створа ворот',
-  'HAN': 'Надежность фиксации и отражения мяча',
-  'POS': 'Грамотный выбор позиции в створе ворот'
-};
 
 function showToast(message) {
   const container = document.getElementById('toast-container');
@@ -876,7 +480,7 @@ const grid = document.getElementById('roster-grid');
 const search = document.getElementById('playerSearch').value.toLowerCase();
 
 const filtered = allPlayers.filter(p => {
-const mSearch = p.nickname?.toLowerCase().includes(search) || p.name?.toLowerCase().includes(search);
+const mSearch = p.nickname?.toLowerCase().includes(search);
 const mRole = currentRoleFilter === 'Все' || (p.role === currentRoleFilter);
 return mSearch && mRole;
 });
@@ -890,7 +494,7 @@ grid.innerHTML = filtered.map((p, i) => `
 <div class="card player-card"
 tabindex="0"
 role="button"
-aria-label="Профиль игрока ${p.nickname || p.name}, рейтинг ${p.elo_rating || p.ovr}"
+aria-label="Профиль игрока ${p.nickname}, рейтинг ${p.elo_rating}"
 style="animation: fadeInUp 0.6s var(--cubic) both ${i*0.03}s"
 onclick="openPlayerModalFromId('${p.id}')"
 onkeydown="if(event.key==='Enter') openPlayerModalFromId('${p.id}')">
@@ -1094,9 +698,289 @@ window.addEventListener('scroll', () => {
 document.body.classList.toggle('scrolled', window.scrollY > 50);
 });
 
-window.addEventListener('DOMContentLoaded', init);
+// ========== SUPABASE SERVICE ==========
+class SupabaseService {
+  constructor() {
+    console.log('🔧 Создаём Supabase клиент...');
+    console.log('URL:', SUPABASE_CONFIG.url);
+    
+    try {
+      this.client = window.supabase.createClient(
+        SUPABASE_CONFIG.url,
+        SUPABASE_CONFIG.publishableKey,
+        {
+          auth: {
+            persistSession: false
+          }
+        }
+      );
+      console.log('✅ Supabase клиент создан');
+    } catch (error) {
+      console.error('❌ Ошибка создания клиента:', error);
+      throw error;
+    }
+  }
+
+  async testConnection() {
+    try {
+      console.log('🔍 Тестируем подключение к Supabase...');
+      const { data, error } = await this.client
+        .from('players')
+        .select('count', { count: 'exact', head: true });
+      
+      if (error) {
+        console.error('Ошибка запроса:', error);
+        throw error;
+      }
+      
+      console.log('✅ Подключение успешно, данные:', data);
+      return { success: true, message: 'Подключение успешно' };
+    } catch (error) {
+      console.error('❌ Ошибка подключения:', error);
+      return { success: false, message: error.message };
+    }
+  }
+
+  async getAllPlayers() {
+    try {
+      console.log('📥 Загружаем игроков...');
+      const { data, error } = await this.client
+        .from('players')
+        .select('*')
+        .eq('active', true)
+        .order('elo_rating', { ascending: false });
+      
+      if (error) {
+        console.error('Ошибка загрузки игроков:', error);
+        return [];
+      }
+      
+      console.log(`✅ Загружено ${data?.length || 0} игроков`);
+      return data || [];
+    } catch (error) {
+      console.error('Ошибка получения игроков:', error);
+      return [];
+    }
+  }
+
+  async getPlayerByNickname(nickname) {
+    try {
+      const { data, error } = await this.client
+        .from('players')
+        .select('*')
+        .eq('nickname', nickname)
+        .eq('active', true)
+        .single();
+      
+      if (error) throw error;
+      return data;
+    } catch (error) {
+      console.error('Ошибка получения игрока:', error);
+      return null;
+    }
+  }
+
+  async createPlayer(nickname, telegram = null, avatarUrl = null) {
+    try {
+      const { data: existingPlayer } = await this.client
+        .from('players')
+        .select('id')
+        .eq('nickname', nickname)
+        .single();
+      
+      if (existingPlayer) {
+        return { 
+          success: false, 
+          error: 'Игрок с таким никнеймом уже существует' 
+        };
+      }
+      
+      const { data, error } = await this.client
+        .from('players')
+        .insert([{
+          nickname: nickname.trim(),
+          telegram: telegram ? telegram.trim() : null,
+          avatar_url: avatarUrl,
+          elo_rating: 1500,
+          total_matches: 0,
+          wins: 0,
+          losses: 0,
+          current_streak: 0,
+          best_streak: 0,
+          verified: false,
+          active: true
+        }])
+        .select()
+        .single();
+      
+      if (error) throw error;
+      
+      return { 
+        success: true, 
+        player: data,
+        message: 'Профиль создан! Ожидайте подтверждения организатора.'
+      };
+    } catch (error) {
+      console.error('Ошибка создания игрока:', error);
+      return { 
+        success: false, 
+        error: error.message || 'Ошибка создания профиля' 
+      };
+    }
+  }
+
+  calculateElo(playerElo, opponentElo, kFactor = 32) {
+    const expectedScore = 1 / (1 + Math.pow(10, (opponentElo - playerElo) / 400));
+    const eloChange = Math.round(kFactor * (1 - expectedScore));
+    
+    return {
+      winnerNewElo: playerElo + eloChange,
+      loserNewElo: opponentElo - eloChange,
+      eloChange: eloChange
+    };
+  }
+}
+
+// ========== ИНИЦИАЛИЗАЦИЯ ==========
+async function init() {
+  try {
+    console.log('🚀 Инициализация BOX1V1...');
+    
+    // Проверяем что библиотека Supabase загрузилась
+    if (typeof window.supabase === 'undefined') {
+      console.error('❌ Библиотека Supabase не загрузилась!');
+      showToast('Ошибка загрузки библиотеки Supabase');
+      
+      // Пробуем динамически загрузить
+      console.log('🔄 Пробуем динамически загрузить Supabase...');
+      await loadSupabaseLibrary();
+      
+      // Проверяем снова
+      if (typeof window.supabase === 'undefined') {
+        console.error('❌ Не удалось загрузить Supabase');
+        showToast('Не удалось подключиться к базе данных');
+        document.getElementById('preloader').classList.add('loaded');
+        return;
+      }
+    }
+    
+    console.log('✅ Библиотека Supabase загружена');
+    
+    // Проверяем конфиг
+    if (!SUPABASE_CONFIG || !SUPABASE_CONFIG.url || !SUPABASE_CONFIG.publishableKey) {
+      console.error('❌ Конфигурация Supabase не настроена');
+      showToast('Конфигурация базы данных не настроена');
+      document.getElementById('preloader').classList.add('loaded');
+      return;
+    }
+    
+    console.log('✅ Конфигурация найдена');
+    
+    // Создаём подключение к базе
+    try {
+      db = new SupabaseService();
+      console.log('✅ База данных инициализирована');
+      
+      // Добавляем глобальный доступ для отладки
+      window.getDatabase = () => db;
+    } catch (error) {
+      console.error('❌ Ошибка создания базы данных:', error);
+      showToast('Ошибка подключения к базе данных');
+      document.getElementById('preloader').classList.add('loaded');
+      return;
+    }
+    
+    // Тестируем подключение
+    console.log('🔍 Тестируем подключение...');
+    const connectionTest = await db.testConnection();
+    if (!connectionTest.success) {
+      console.warn('⚠️ Подключение не удалось:', connectionTest.message);
+      showToast('Есть проблемы с подключением к базе данных');
+    } else {
+      console.log('✅ Подключение к базе успешно');
+    }
+    
+    // Загружаем игроков
+    console.log('📥 Загружаем игроков из базы...');
+    allPlayers = await db.getAllPlayers();
+    console.log(`✅ Загружено ${allPlayers.length} игроков`);
+    
+    if (allPlayers.length === 0) {
+      showToast("База игроков пуста. Создайте первый профиль!");
+    }
+    
+    // Рендерим данные
+    renderRoster();
+    renderStats();
+    renderLeaderboard();
+    
+    // Остальные функции
+    handleHashAndDeepLink();
+    
+    setInterval(updateTimer, 1000);
+    updateTimer();
+    
+    checkUserSession();
+    
+    document.getElementById('preloader').classList.add('loaded');
+    
+    initTouchTooltips();
+    
+    console.log('✅ BOX1V1 успешно инициализирован');
+    
+  } catch (e) {
+    console.error("💥 Критическая ошибка инициализации:", e);
+    showToast("Ошибка загрузки приложения. Проверьте консоль.");
+    document.getElementById('preloader').classList.add('loaded');
+  }
+}
+
+// Функция для динамической загрузки Supabase
+async function loadSupabaseLibrary() {
+  return new Promise((resolve) => {
+    const script = document.createElement('script');
+    script.src = 'https://unpkg.com/@supabase/supabase-js@2.38.4/dist/umd/supabase.min.js';
+    script.onload = () => {
+      console.log('✅ Supabase загружен динамически');
+      resolve();
+    };
+    script.onerror = () => {
+      console.error('❌ Ошибка загрузки Supabase');
+      resolve();
+    };
+    document.head.appendChild(script);
+  });
+}
+
+// Ждём полной загрузки страницы и библиотеки Supabase
+window.addEventListener('DOMContentLoaded', () => {
+  console.log('📄 DOM загружен');
+  
+  // Проверяем, загрузилась ли библиотека Supabase
+  if (typeof window.supabase !== 'undefined') {
+    console.log('✅ Supabase уже загружен');
+    init();
+  } else {
+    console.log('⏳ Ждём загрузки Supabase...');
+    // Проверяем каждые 500мс в течение 5 секунд
+    let attempts = 0;
+    const checkSupabase = setInterval(() => {
+      attempts++;
+      if (typeof window.supabase !== 'undefined') {
+        clearInterval(checkSupabase);
+        console.log('✅ Supabase загружен после ожидания');
+        init();
+      } else if (attempts > 10) { // 5 секунд (10 * 500мс)
+        clearInterval(checkSupabase);
+        console.error('❌ Supabase не загрузился за 5 секунд');
+        // Пробуем запустить без базы данных
+        document.getElementById('preloader').classList.add('loaded');
+        showToast('База данных временно недоступна');
+      }
+    }, 500);
+  }
+});
 </script>
-<!-- КОНЕЦ ДОБАВЛЕННОГО КОДА -->
 
 </head>
 <body>
@@ -1151,7 +1035,6 @@ window.addEventListener('DOMContentLoaded', init);
 </div>
 </div>
 
-<!-- НАЧАЛО ДОБАВЛЕННОГО БЛОКА РЕЙТИНГА -->
 <div style="margin-top: 80px;">
   <h2 style="font-size: clamp(2.5rem, 8vw, 6rem);">РЕЙТИНГ СЕЗОНА.</h2>
   <p style="margin-bottom: 40px; max-width: 600px; margin-left: auto; margin-right: auto;">
@@ -1181,7 +1064,6 @@ window.addEventListener('DOMContentLoaded', init);
     СОЗДАТЬ ПРОФИЛЬ
   </button>
 </div>
-<!-- КОНЕЦ ДОБАВЛЕННОГО БЛОКА РЕЙТИНГА -->
 
 </div>
 <div class="bento-grid">
@@ -1278,7 +1160,6 @@ window.addEventListener('DOMContentLoaded', init);
 </div>
 </div>
 
-<!-- НАЧАЛО ДОБАВЛЕННОЙ МОДАЛКИ СОЗДАНИЯ ПРОФИЛЯ -->
 <div class="modal-overlay" id="createProfileModal">
   <div class="modal-content" style="max-width: 500px;">
     <button class="modal-close" onclick="closeModal('createProfileModal')">✕</button>
@@ -1328,7 +1209,6 @@ window.addEventListener('DOMContentLoaded', init);
     Тест DB
   </button>
 </div>
-<!-- КОНЕЦ ДОБАВЛЕННОЙ МОДАЛКИ СОЗДАНИЯ ПРОФИЛЯ -->
 
 </body>
 </html>
