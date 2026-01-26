@@ -19,18 +19,6 @@ p {
   line-height: var(--lh-base);
 }
 
-/* Мобильная типографика */
-@media (max-width: 768px) {
-  :root {
-    --ls-tight: -0.02em;
-    --ls-normal: 0;
-  }
-  
-  h1 { font-size: 3.8rem !important; }
-  h2 { font-size: 2.5rem !important; }
-  p { font-size: 1.1rem; }
-}
-
 /* UX TOOLTIPS */
 .stat-item { 
   position: relative; 
@@ -226,11 +214,11 @@ p {
   top: 0; 
   right: -100%; 
   width: 85%; 
-  max-width: 360px; 
+  max-width: 320px; 
   height: 100%; 
   background: var(--card); 
   z-index: 2000; 
-  padding: 100px 40px; 
+  padding: 100px 24px 40px; 
   display: flex; 
   flex-direction: column; 
   gap: 24px; 
@@ -243,7 +231,7 @@ p {
 }
 
 .mobile-drawer a { 
-  font-size: 2.5rem; 
+  font-size: 2rem; 
   font-weight: 900; 
   text-decoration: none; 
   color: var(--text); 
@@ -640,45 +628,6 @@ tr:hover td {
   margin-top: 4px;
 }
 
-/* LOADING STATES */
-.loading {
-  position: relative;
-  overflow: hidden;
-}
-
-.loading::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, 
-    transparent, 
-    rgba(255,255,255,0.2), 
-    transparent
-  );
-  animation: loading-shimmer 1.5s infinite;
-}
-
-@keyframes loading-shimmer {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
-}
-
-.empty-state {
-  grid-column: 1 / -1;
-  text-align: center;
-  padding: 60px 20px;
-  color: var(--text-dim);
-}
-
-.empty-state h3 {
-  font-size: 1.5rem;
-  margin-bottom: 12px;
-  color: var(--text-dim);
-}
-
 /* SCROLLBAR */
 ::-webkit-scrollbar { 
   width: 8px; 
@@ -715,7 +664,7 @@ tr:hover td {
   }
   
   .nav-inner { 
-    padding: 0 20px; 
+    padding: 0 16px; 
   }
   
   .main-content { 
@@ -767,6 +716,7 @@ tr:hover td {
   .modal-content { 
     padding: 32px 20px; 
     border-radius: 32px; 
+    margin: 0 12px;
   }
   
   .controls-row { 
@@ -806,78 +756,126 @@ tr:hover td {
   }
   
   /* Улучшение доступности на мобильных */
-  .btn, .card, .filter-btn {
+  .btn, .card, .filter-btn, .nav-links a {
     min-height: 44px;
   }
-}
-
-/* Анимация загрузки */
-@keyframes load { 
-  0% { 
-    transform: translateX(-100%); 
-  } 
-  100% { 
-    transform: translateX(100%); 
-  } 
-}
-
-/* Состояния для сортировки таблицы */
-.table-sorting {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.sort-indicator {
-  font-size: 10px;
-  opacity: 0.7;
-}
-
-/* Индикатор загрузки контента */
-.content-loader {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 60px 20px;
-  gap: 20px;
-}
-
-.content-loader .spinner {
-  width: 40px;
-  height: 40px;
-  border: 3px solid var(--border);
-  border-top-color: var(--accent);
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-
-/* Улучшенные hover-эффекты для глубины */
-.card {
-  --shadow-depth: 0 2px 0 rgba(0,0,0,0.05);
-  box-shadow: var(--shadow-sm), var(--shadow-depth);
-}
-
-@media (prefers-color-scheme: dark) {
-  .card {
-    --shadow-depth: 0 2px 0 rgba(255,255,255,0.05);
+  
+  /* Адаптация модалки игрока для мобильных */
+  #m-stats {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  
+  #m-name {
+    font-size: 2rem !important;
+  }
+  
+  #m-ovr {
+    font-size: 2.5rem !important;
+  }
+  
+  /* Кнопки в модалке */
+  .modal-content .btn {
+    padding: 16px 24px;
   }
 }
 
-/* Viewport animations */
-@keyframes fadeInView {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+/* Fix для очень маленьких экранов */
+@media (max-width: 360px) {
+  .nav-inner { 
+    padding: 0 12px; 
+  }
+  
+  .main-content {
+    padding: 90px 12px 40px;
+  }
+  
+  .timer-context {
+    padding: 20px 16px !important;
+  }
+  
+  .mobile-drawer {
+    width: 90%;
+    padding: 100px 20px 40px;
+  }
+  
+  .mobile-drawer a {
+    font-size: 1.8rem;
+  }
+  
+  .card {
+    padding: 24px 20px;
+  }
+  
+  .player-card {
+    height: 380px;
+    padding: 24px;
+  }
+  
+  .modal-content {
+    padding: 24px 16px;
+    border-radius: 24px;
+  }
+  
+  #m-name {
+    font-size: 1.8rem !important;
+  }
+  
+  #m-ovr {
+    font-size: 2rem !important;
+  }
+  
+  .btn {
+    padding: 16px 20px;
+    font-size: 12px;
+  }
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .card { 
-    animation: fadeInView 0.6s var(--cubic) backwards; 
-    animation-timeline: view();
-    animation-range: entry 20% cover 30%;
+/* Portrait mobile fix */
+@media (max-height: 600px) and (orientation: portrait) {
+  .modal-content {
+    max-height: 85vh;
+  }
+  
+  .player-card {
+    height: 350px;
+  }
+}
+
+/* Landscape mobile fix */
+@media (max-height: 500px) and (orientation: landscape) {
+  .main-content {
+    padding: 80px 16px 40px;
+  }
+  
+  .player-card {
+    height: 300px;
+  }
+  
+  .modal-content {
+    max-height: 80vh;
+    padding: 24px;
+  }
+}
+
+/* iPad адаптация */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .bento-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .player-card {
+    height: 400px;
+  }
+}
+
+/* Desktop улучшения */
+@media (min-width: 1025px) {
+  .card:hover {
+    transform: translateY(-8px);
+  }
+  
+  .btn:hover {
+    transform: translateY(-2px);
   }
 }
