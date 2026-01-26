@@ -610,25 +610,47 @@ function openPlayerModal(name) {
     return;
   }
 
+  // 1. Настройка базовой информации
   document.getElementById('m-name').innerText = p.name;
   document.getElementById('m-role').innerText = p.role;
   document.getElementById('m-ovr').innerText = p.ovr;
   document.getElementById('m-img').src = p.photo;
-  document.getElementById('m-badges').innerHTML = p.badges.map(b => `<span style="font-size:10px; background:#000; color:#fff; padding:4px 10px; border-radius:8px; font-weight:800;">${b}</span>`).join('');
+  document.getElementById('m-badges').innerHTML = p.badges.map(b => 
+    `<span style="font-size:10px; background:#000; color:#fff; padding:4px 10px; border-radius:8px; font-weight:800;">${b}</span>`
+  ).join('');
 
-  // Определяем названия характеристик в зависимости от роли
+  // 2. Словарь определений для UX (подсказки)
+  const definitions = {
+    'DRI': 'Техника контроля мяча и дриблинг',
+    'SPD': 'Скорость рывка и передвижения',
+    'SHT': 'Мощность и точность удара',
+    'PHY': 'Физическая мощь и выносливость',
+    'REF': 'Реакция на удары в упор',
+    'DIV': 'Прыгучесть и дальность сейвов',
+    'HAN': 'Надежность фиксации и отбития мяча',
+    'POS': 'Выбор позиции в створе ворот'
+  };
+
+  // 3. Логика переключения статов (Полевой vs Вратарь)
   const isGK = p.role === 'Вратарь';
-  const stats = [
-    { l: isGK ? 'REF' : 'DRI', v: p.drib },
-    { l: isGK ? 'DIV' : 'SPD', v: p.speed },
-    { l: isGK ? 'KIC' : 'SHT', v: p.shot },
-    { l: isGK ? 'POS' : 'PHY', v: p.phys }
+  const stats = isGK ? [
+    { l: 'REF', v: p.drib },
+    { l: 'DIV', v: p.speed },
+    { l: 'HAN', v: p.shot },
+    { l: 'POS', v: p.phys }
+  ] : [
+    { l: 'DRI', v: p.drib },
+    { l: 'SPD', v: p.speed },
+    { l: 'SHT', v: p.shot },
+    { l: 'PHY', v: p.phys }
   ];
 
+  // 4. Генерация HTML с подсказками (title)
   document.getElementById('m-stats').innerHTML = stats.map(s => `
-    <div>
+    <div title="${definitions[s.l]}" style="cursor: help;">
       <div style="display:flex; justify-content:space-between; font-size:12px; font-weight:900; margin-bottom:10px;">
-        <span>${s.l}</span><span>${s.v}</span>
+        <span style="border-bottom: 1px dotted var(--text-dim);">${s.l}</span>
+        <span>${s.v}</span>
       </div>
       <div style="height:4px; background:var(--bg-alt); border-radius:2px; overflow:hidden;">
         <div style="width:0%; height:100%; background:var(--text); transition:1.2s var(--cubic) 0.3s;" id="bar-${s.l}"></div>
@@ -636,9 +658,9 @@ function openPlayerModal(name) {
     </div>
   `).join('');
 
+  // 5. Открытие и анимация
   openModal('playerModal');
-
-  // Анимация баров
+  
   setTimeout(() => {
     stats.forEach(s => {
       const bar = document.getElementById(`bar-${s.l}`);
@@ -646,6 +668,7 @@ function openPlayerModal(name) {
     });
   }, 100);
 
+  // Обновление URL для Deep Linking
   const currentTab = document.querySelector('section.active').id;
   const playerSlug = p.name.replace(/\s+/g, '-').toLowerCase();
   window.history.replaceState(null, null, `#${currentTab}?player=${playerSlug}`);
@@ -714,6 +737,7 @@ window.onload = init;
 </script>
 </body>
 </html>
+
 
 
 
