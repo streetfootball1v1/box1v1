@@ -24,9 +24,9 @@
   --bg-alt: #f8f8f8;
   --card: #ffffff;
   --text: #0a0a0a;
-  --text-dim: #404040; /* Улучшен контраст */
-  --border: rgba(0,0,0,0.08); /* Усилен контраст */
-  --accent: #15803d; /* Более тёмный зелёный для accessibility */
+  --text-dim: #404040;
+  --border: rgba(0,0,0,0.08);
+  --accent: #15803d;
   --accent-light: #22c55e;
   --accent-dark: #166534;
   --ls-tight: -0.04em;
@@ -77,7 +77,7 @@ body {
   }
 }
 
-/* PRELOADER (критичный) */
+/* PRELOADER */
 #preloader {
   position: fixed; 
   inset: 0; 
@@ -93,7 +93,7 @@ body {
   visibility: hidden; 
 }
 
-/* SKELETON LOADING STATES (критичные) */
+/* SKELETON LOADING STATES */
 .skeleton {
   background: linear-gradient(90deg, 
     var(--bg-alt) 25%, 
@@ -122,7 +122,7 @@ body {
   100% { background-position: -200% 0; }
 }
 
-/* NAVIGATION (критичная) */
+/* NAVIGATION */
 nav {
   position: fixed; 
   top: 0; 
@@ -177,6 +177,11 @@ body.scrolled nav {
 /* Основные секции скрыты до загрузки */
 .main-content { opacity: 0; }
 .main-content.loaded { opacity: 1; transition: opacity 0.3s; }
+
+@keyframes load { 
+  0% { transform: translateX(-100%); } 
+  100% { transform: translateX(100%); } 
+}
 </style>
 
 <!-- Deferred non-critical CSS -->
@@ -197,25 +202,25 @@ body.scrolled nav {
 
 <nav id="navbar">
   <div class="nav-inner">
-    <div class="logo" onclick="switchTab('home')" aria-label="На главную" tabindex="0" role="button">BOX<span style="color:var(--accent)">1</span>V1</div>
+    <div class="logo" onclick="window.switchTab('home')" aria-label="На главную" tabindex="0" role="button">BOX<span style="color:var(--accent)">1</span>V1</div>
     <div class="nav-links" role="navigation">
-      <a href="#home" onclick="switchTab('home')" class="active" id="btn-home">Главная</a>
-      <a href="#roster" onclick="switchTab('roster')" id="btn-roster">УЧАСТНИКИ</a>
-      <a href="#stats" onclick="switchTab('stats')" id="btn-stats">Рейтинг</a>
+      <a href="#home" onclick="window.switchTab('home')" class="active" id="btn-home">Главная</a>
+      <a href="#roster" onclick="window.switchTab('roster')" id="btn-roster">УЧАСТНИКИ</a>
+      <a href="#stats" onclick="window.switchTab('stats')" id="btn-stats">Рейтинг</a>
     </div>
-    <button class="burger" id="burger" onclick="toggleMenu()" aria-label="Меню" aria-expanded="false">
+    <button class="burger" id="burger" onclick="window.toggleMenu()" aria-label="Меню" aria-expanded="false">
       <span></span><span></span><span></span>
     </button>
   </div>
 </nav>
 
-<div class="drawer-overlay" id="drawer-overlay" onclick="toggleMenu()"></div>
+<div class="drawer-overlay" id="drawer-overlay" onclick="window.toggleMenu()"></div>
 <div class="mobile-drawer" id="mobile-drawer">
-  <a href="#home" onclick="handleMobileNav('home')">Главная</a>
-  <a href="#roster" onclick="handleMobileNav('roster')">Список</a>
-  <a href="#stats" onclick="handleMobileNav('stats')">Рейтинг</a>
+  <a href="#home" onclick="window.handleMobileNav('home')">Главная</a>
+  <a href="#roster" onclick="window.handleMobileNav('roster')">Список</a>
+  <a href="#stats" onclick="window.handleMobileNav('stats')">Рейтинг</a>
   <div style="margin-top:auto;">
-    <button class="btn btn-primary" style="width:100%" onclick="handleMobileNav('applyModal', true)">Стать частью</button>
+    <button class="btn btn-primary" style="width:100%" onclick="window.handleMobileNav('applyModal', true)">Стать частью</button>
   </div>
 </div>
 
@@ -224,9 +229,9 @@ body.scrolled nav {
 </main>
 
 <!-- Модальные окна -->
-<div class="modal-overlay" id="playerModal" onclick="closeModal('playerModal')" role="dialog" aria-modal="true" aria-label="Карточка игрока">
-  <div class="modal-content" onclick="event.stopPropagation()">
-    <button class="modal-close" onclick="closeModal('playerModal')" aria-label="Закрыть">✕</button>
+<div class="modal-overlay" id="playerModal" role="dialog" aria-modal="true" aria-label="Карточка игрока">
+  <div class="modal-content">
+    <button class="modal-close" onclick="window.closeModal('playerModal')" aria-label="Закрыть">✕</button>
     <div id="m-img-container" class="skeleton skeleton-image"></div>
     <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-top: 32px;">
       <div>
@@ -238,24 +243,24 @@ body.scrolled nav {
     </div>
     <div id="m-stats" style="margin-top:40px;"></div>
     <div style="margin-top:48px; display:flex; gap:12px; flex-wrap:wrap;">
-      <button class="btn btn-primary skeleton" style="flex:1; min-width:140px; height: 48px;"></button>
-      <button class="btn btn-outline skeleton" style="flex:1; min-width:140px; height: 48px;"></button>
+      <button class="btn btn-primary" style="flex:1; min-width:140px;" onclick="window.copyPlayerID()">Копировать ID</button>
+      <button class="btn btn-outline" style="flex:1; min-width:140px;" onclick="window.sharePlayer()">Поделиться</button>
     </div>
   </div>
 </div>
 
-<div class="modal-overlay" id="applyModal" onclick="closeModal('applyModal')" role="dialog" aria-modal="true">
-  <div class="modal-content" onclick="event.stopPropagation()">
-    <button class="modal-close" onclick="closeModal('applyModal')">✕</button>
+<div class="modal-overlay" id="applyModal" role="dialog" aria-modal="true">
+  <div class="modal-content">
+    <button class="modal-close" onclick="window.closeModal('applyModal')">✕</button>
     <h2 style="font-size:2rem; margin-bottom:20px; color: var(--text);">ВСТУПИТЬ В BOX1V1</h2>
     <p style="margin-bottom:32px; color: var(--text-dim);">Чтобы оформить заявку, оставь комментарий под любым постом с хештегом #BOXУЧАСТВОВАТЬ.</p>
     <button class="btn btn-primary" style="width:100%; padding:24px;" onclick="window.open('https://t.me/streetbox1v1')">Открыть Telegram</button>
   </div>
 </div>
 
-<div class="modal-overlay" id="rulesModal" onclick="closeModal('rulesModal')" role="dialog" aria-modal="true">
-  <div class="modal-content" style="max-width: 600px;" onclick="event.stopPropagation()">
-    <button class="modal-close" onclick="closeModal('rulesModal')">✕</button>
+<div class="modal-overlay" id="rulesModal" role="dialog" aria-modal="true">
+  <div class="modal-content" style="max-width: 600px;">
+    <button class="modal-close" onclick="window.closeModal('rulesModal')">✕</button>
     <h2 style="font-size:2rem; margin-bottom:32px; color: var(--text);">РЕГЛАМЕНТ</h2>
     <div style="display:flex; flex-direction:column; gap:20px;">
       <div style="padding-bottom:15px; border-bottom:1px solid var(--border);">
@@ -274,17 +279,24 @@ body.scrolled nav {
   </div>
 </div>
 
-<!-- Async JavaScript -->
+<!-- Загружаем основной скрипт -->
 <script type="module">
-  // Загружаем основные скрипты
   import { initApp } from './app.js';
   
-  // Запускаем приложение после загрузки DOM
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initApp);
-  } else {
+  // Добавляем обработчик кликов для модальных оверлеев
+  document.addEventListener('DOMContentLoaded', () => {
+    // Инициализируем приложение
     initApp();
-  }
+    
+    // Добавляем глобальные обработчики для оверлеев
+    document.querySelectorAll('.modal-overlay').forEach(overlay => {
+      overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) {
+          window.closeModal(overlay.id);
+        }
+      });
+    });
+  });
 </script>
 
 <!-- Fallback для старых браузеров -->
