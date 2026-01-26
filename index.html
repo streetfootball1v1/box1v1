@@ -56,6 +56,29 @@ line-height: var(--lh-tight);
 text-transform: uppercase;
 }
 p { font-size: 1rem; color: var(--text-dim); }
+
+/* UX TOOLTIPS STYLES */
+.stat-item { position: relative; }
+.stat-header { display: flex; align-items: center; gap: 6px; cursor: help; }
+.info-icon {
+  width: 14px; height: 14px; border-radius: 50%; border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 8px; color: var(--text-dim); transition: 0.3s var(--cubic);
+  font-style: normal; font-weight: 800;
+}
+.stat-header:hover .info-icon { background: var(--text); color: #fff; border-color: var(--text); }
+
+.stat-header::after {
+  content: attr(data-tip);
+  position: absolute; bottom: calc(100% + 10px); left: 0;
+  background: #000; color: #fff; padding: 10px 14px; border-radius: 12px;
+  font-size: 11px; font-weight: 500; width: 200px; line-height: 1.4;
+  opacity: 0; visibility: hidden; transform: translateY(10px);
+  transition: 0.4s var(--cubic); z-index: 100; pointer-events: none;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15); text-transform: none; font-style: normal;
+}
+.stat-header:hover::after { opacity: 1; visibility: visible; transform: translateY(0); }
+
 /* PRELOADER */
 #preloader {
 position: fixed; inset: 0; background: #fff; z-index: 9999;
@@ -180,7 +203,6 @@ table { width: 100%; border-collapse: collapse; }
 th { text-align: left; padding: 24px; font-size: 11px; font-weight: 800; text-transform: uppercase; color: var(--text-dim); border-bottom: 1px solid var(--border); }
 td { padding: 20px 24px; border-bottom: 1px solid var(--border); transition: 0.3s; }
 tr:last-child td { border-bottom: none; }
-/* Мягкий hover через opacity, а не фон */
 tr:hover td {
   background: rgba(0,0,0,0.02);
   transition: background 0.2s ease;
@@ -252,6 +274,9 @@ text-transform: uppercase; white-space: nowrap; transition: 0.3s;
 .search-input { max-width: 100%; }
 .filter-bar { overflow-x: auto; padding-bottom: 8px; width: 100%; }
 .player-card { height: 420px; }
+/* Hide tooltips on mobile by default, show on click if needed */
+.stat-header:hover::after { display: none; }
+.stat-header:active::after { display: block; opacity: 1; visibility: visible; }
 }
 @keyframes load { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
 </style>
@@ -410,6 +435,21 @@ const TARGET_DATE = new Date("March 1, 2026 00:00:00").getTime();
 let allPlayers = [];
 let currentRoleFilter = 'Все';
 let renderTimeout;
+
+/**
+ * DICTIONARY FOR UX
+ */
+const statDefs = {
+  'DRI': 'Техника контроля мяча и ведения дриблинга',
+  'SPD': 'Стартовый рывок и скорость перемещения',
+  'SHT': 'Мощность и точность завершающего удара',
+  'PHY': 'Физическая мощь, борьба и атлетизм',
+  'REF': 'Молниеносная реакция на удары в упор',
+  'DIV': 'Дальность прыжка и охват створа ворот',
+  'HAN': 'Надежность фиксации и отражения мяча',
+  'POS': 'Грамотный выбор позиции в створе ворот'
+};
+
 /**
 * TOAST SYSTEM
 */
@@ -565,12 +605,10 @@ lastFocusedElement = document.activeElement;
 const modal = document.getElementById(id);
 modal.classList.add('active');
 document.body.style.overflow = 'hidden';
-// Focus first button in modal
 setTimeout(() => {
 const firstInput = modal.querySelector('button, input, [tabindex="0"]');
 if (firstInput) firstInput.focus();
 }, 100);
-// Focus trap listener
 modal.addEventListener('keydown', trapFocus);
 }
 function closeModal(id) {
@@ -596,13 +634,13 @@ if (document.activeElement === first) { last.focus(); e.preventDefault(); }
 if (document.activeElement === last) { first.focus(); e.preventDefault(); }
 }
 }
-// Close on ESC
 window.addEventListener('keydown', (e) => {
 if (e.key === 'Escape') {
 const activeModal = document.querySelector('.modal-overlay.active');
 if (activeModal) closeModal(activeModal.id);
 }
 });
+
 function openPlayerModal(name) {
   const p = allPlayers.find(x => x.name.toLowerCase() === name.toLowerCase());
   if(!p) {
@@ -610,47 +648,28 @@ function openPlayerModal(name) {
     return;
   }
 
-  // 1. Настройка базовой информации
   document.getElementById('m-name').innerText = p.name;
   document.getElementById('m-role').innerText = p.role;
   document.getElementById('m-ovr').innerText = p.ovr;
   document.getElementById('m-img').src = p.photo;
-  document.getElementById('m-badges').innerHTML = p.badges.map(b => 
-    `<span style="font-size:10px; background:#000; color:#fff; padding:4px 10px; border-radius:8px; font-weight:800;">${b}</span>`
-  ).join('');
+  document.getElementById('m-badges').innerHTML = p.badges.map(b => `<span style="font-size:10px; background:#000; color:#fff; padding:4px 10px; border-radius:8px; font-weight:800;">${b}</span>`).join('');
 
-  // 2. Словарь определений для UX (подсказки)
-  const definitions = {
-    'DRI': 'Техника контроля мяча и дриблинг',
-    'SPD': 'Скорость рывка и передвижения',
-    'SHT': 'Мощность и точность удара',
-    'PHY': 'Физическая мощь и выносливость',
-    'REF': 'Реакция на удары в упор',
-    'DIV': 'Прыгучесть и дальность сейвов',
-    'HAN': 'Надежность фиксации и отбития мяча',
-    'POS': 'Выбор позиции в створе ворот'
-  };
-
-  // 3. Логика переключения статов (Полевой vs Вратарь)
   const isGK = p.role === 'Вратарь';
-  const stats = isGK ? [
-    { l: 'REF', v: p.drib },
-    { l: 'DIV', v: p.speed },
-    { l: 'HAN', v: p.shot },
-    { l: 'POS', v: p.phys }
-  ] : [
-    { l: 'DRI', v: p.drib },
-    { l: 'SPD', v: p.speed },
-    { l: 'SHT', v: p.shot },
-    { l: 'PHY', v: p.phys }
+  const stats = [
+    { l: isGK ? 'REF' : 'DRI', v: p.drib },
+    { l: isGK ? 'DIV' : 'SPD', v: p.speed },
+    { l: isGK ? 'HAN' : 'SHT', v: p.shot },
+    { l: isGK ? 'POS' : 'PHY', v: p.phys }
   ];
 
-  // 4. Генерация HTML с подсказками (title)
   document.getElementById('m-stats').innerHTML = stats.map(s => `
-    <div title="${definitions[s.l]}" style="cursor: help;">
-      <div style="display:flex; justify-content:space-between; font-size:12px; font-weight:900; margin-bottom:10px;">
-        <span style="border-bottom: 1px dotted var(--text-dim);">${s.l}</span>
-        <span>${s.v}</span>
+    <div class="stat-item">
+      <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
+        <div class="stat-header" data-tip="${statDefs[s.l]}">
+          <span style="font-size:12px; font-weight:900;">${s.l}</span>
+          <i class="info-icon">?</i>
+        </div>
+        <span style="font-size:12px; font-weight:900;">${s.v}</span>
       </div>
       <div style="height:4px; background:var(--bg-alt); border-radius:2px; overflow:hidden;">
         <div style="width:0%; height:100%; background:var(--text); transition:1.2s var(--cubic) 0.3s;" id="bar-${s.l}"></div>
@@ -658,9 +677,8 @@ function openPlayerModal(name) {
     </div>
   `).join('');
 
-  // 5. Открытие и анимация
   openModal('playerModal');
-  
+
   setTimeout(() => {
     stats.forEach(s => {
       const bar = document.getElementById(`bar-${s.l}`);
@@ -668,11 +686,11 @@ function openPlayerModal(name) {
     });
   }, 100);
 
-  // Обновление URL для Deep Linking
   const currentTab = document.querySelector('section.active').id;
   const playerSlug = p.name.replace(/\s+/g, '-').toLowerCase();
   window.history.replaceState(null, null, `#${currentTab}?player=${playerSlug}`);
 }
+
 /**
 * ACTIONS
 */
@@ -732,15 +750,7 @@ document.getElementById('secs').innerText = Math.floor((diff % 6e4) / 1000).toSt
 window.addEventListener('scroll', () => {
 document.body.classList.toggle('scrolled', window.scrollY > 50);
 });
-// Start
 window.onload = init;
 </script>
 </body>
 </html>
-
-
-
-
-
-
-
