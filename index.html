@@ -332,7 +332,6 @@ table {
 
 /* Подсказки на мобильных */
 .stat-header:hover::after { display: none; }
-.stat-header:active::after { display: block; opacity: 1; visibility: visible; }
 
 /* Модальное окно игрока на мобильных */
 #m-img-container {
@@ -377,6 +376,28 @@ table {
 }
 
 @keyframes load { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+
+/* СТИЛИ ДЛЯ КАРТОЧКИ ДЛЯ СКАЧИВАНИЯ */
+#download-card {
+  position: fixed;
+  top: -9999px;
+  left: -9999px;
+  width: 540px;
+  background: #fff;
+  border-radius: 40px;
+  padding: 48px;
+  box-shadow: 0 40px 80px rgba(0,0,0,0.1);
+  z-index: 99999;
+  visibility: hidden;
+}
+
+@media (max-width: 768px) {
+  #download-card {
+    width: 90%;
+    padding: 32px 20px;
+    border-radius: 32px;
+  }
+}
 </style>
 </head>
 <body>
@@ -476,23 +497,13 @@ table {
 </section>
 </main>
 
-<!-- КНОПКА СКАЧИВАНИЯ В МОДАЛЬНОМ ОКНЕ -->
+<!-- ОРИГИНАЛЬНОЕ МОДАЛЬНОЕ ОКНО (НЕ ИЗМЕНЯЛОСЬ) -->
 <div class="modal-overlay" id="playerModal" onclick="closeModal('playerModal')" role="dialog" aria-modal="true">
 <div class="modal-content" onclick="event.stopPropagation()">
 <button class="modal-close" onclick="closeModal('playerModal')" aria-label="Закрыть">✕</button>
-
-<!-- Добавляем кнопку скачивания поверх фото -->
-<div id="m-img-container" style="width:100%; height:320px; border-radius:24px; overflow:hidden; background:#f0f0f0; margin-bottom:32px; position:relative;">
-    <img id="m-img" src="" style="width:100%; height:100%; object-fit:cover;" alt="Фото игрока">
-    <button id="downloadBtn" onclick="downloadPlayerCard()" style="position:absolute; bottom:16px; right:16px; width:44px; height:44px; background:var(--accent); border-radius:50%; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 15px rgba(0,0,0,0.3); transition:0.3s cubic-bezier(0.4, 0, 0.2, 1); z-index:10;">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-            <polyline points="7 10 12 15 17 10"></polyline>
-            <line x1="12" y1="15" x2="12" y2="3"></line>
-        </svg>
-    </button>
+<div id="m-img-container" style="width:100%; height:320px; border-radius:24px; overflow:hidden; background:#f0f0f0; margin-bottom:32px;">
+<img id="m-img" src="" style="width:100%; height:100%; object-fit:cover;" alt="Фото игрока">
 </div>
-
 <div style="display:flex; justify-content:space-between; align-items:flex-start;">
 <div>
 <span id="m-role" style="font-size:11px; font-weight:800; text-transform:uppercase; color:var(--accent-dark); background:rgba(34,197,94,0.1); padding:6px 12px; border-radius:10px;">ROLE</span>
@@ -505,8 +516,44 @@ table {
 <div style="margin-top:48px; display:flex; gap:12px; flex-wrap:wrap;">
 <button class="btn btn-primary" style="flex:1; min-width:140px;" onclick="copyPlayerID()">Копировать ID</button>
 <button class="btn btn-outline" style="flex:1; min-width:140px;" onclick="sharePlayer()">Поделиться</button>
+<!-- КНОПКА СКАЧИВАНИЯ -->
+<button class="btn btn-outline" style="flex:1; min-width:140px; background:var(--accent); color:#000; border-color:var(--accent);" onclick="downloadPlayerCard()">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right:8px;">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+        <polyline points="7 10 12 15 17 10"></polyline>
+        <line x1="12" y1="15" x2="12" y2="3"></line>
+    </svg>
+    Скачать карточку
+</button>
 </div>
 </div>
+</div>
+
+<!-- НЕВИДИМАЯ КАРТОЧКА ДЛЯ СКАЧИВАНИЯ -->
+<div id="download-card">
+    <!-- Фото игрока -->
+    <div style="width:100%; height:320px; border-radius:24px; overflow:hidden; background:#f0f0f0; margin-bottom:32px;">
+        <img id="dc-img" src="" style="width:100%; height:100%; object-fit:cover;" alt="Фото игрока">
+    </div>
+    
+    <!-- Информация -->
+    <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+        <div>
+            <span id="dc-role" style="font-size:11px; font-weight:800; text-transform:uppercase; color:var(--accent-dark); background:rgba(34,197,94,0.1); padding:6px 12px; border-radius:10px;">ROLE</span>
+            <h2 id="dc-name" style="font-size: 2.5rem; margin-top:12px;">NAME</h2>
+            <div id="dc-badges" style="display:flex; gap:8px; margin-top:16px; flex-wrap:wrap;"></div>
+        </div>
+        <div id="dc-ovr" style="font-size: 3rem; font-weight:900; font-style:italic; line-height:1; letter-spacing:-3px;">99</div>
+    </div>
+    
+    <!-- Статистика -->
+    <div id="dc-stats" style="margin-top:40px; display:grid; grid-template-columns: 1fr 1fr; gap: 32px;"></div>
+    
+    <!-- Логотип внизу -->
+    <div style="margin-top:48px; text-align:center; padding-top:32px; border-top:1px solid var(--border);">
+        <div style="font-size:1.4rem; font-weight:900; font-style:italic; letter-spacing:-1px;">BOX<span style="color:var(--accent)">1</span>V1</div>
+        <div style="font-size:11px; color:var(--text-dim); margin-top:8px;">ЦИФРОВАЯ ЭКОСИСТЕМА</div>
+    </div>
 </div>
 
 <div class="modal-overlay" id="applyModal" onclick="closeModal('applyModal')" role="dialog" aria-modal="true">
@@ -867,49 +914,107 @@ document.body.classList.toggle('scrolled', window.scrollY > 50);
  * ФУНКЦИЯ СКАЧИВАНИЯ КАРТОЧКИ ИГРОКА
  */
 async function downloadPlayerCard() {
-    const modalContent = document.querySelector('#playerModal .modal-content');
+    // Получаем данные из текущего модального окна
     const name = document.getElementById('m-name').innerText;
+    const role = document.getElementById('m-role').innerText;
+    const ovr = document.getElementById('m-ovr').innerText;
+    const imgSrc = document.getElementById('m-img').src;
+    const badges = document.getElementById('m-badges').innerHTML;
     
-    // Скрываем кнопки, которые не должны быть на фото
-    const downloadBtn = document.getElementById('downloadBtn');
-    const closeBtn = modalContent.querySelector('.modal-close');
-    const actionButtons = modalContent.querySelector('div:last-child');
+    // Копируем статистику
+    const statsContainer = document.getElementById('m-stats');
+    const statsHTML = statsContainer.innerHTML;
     
-    const hideUI = (opacity) => {
-        [downloadBtn, closeBtn, actionButtons].forEach(el => {
-            if(el) el.style.opacity = opacity;
-        });
-    };
-
-    hideUI('0');
-    showToast("Генерируем фото...");
-
+    showToast("Создаём карточку...");
+    
+    // Заполняем невидимую карточку для скачивания
+    document.getElementById('dc-name').innerText = name;
+    document.getElementById('dc-role').innerText = role;
+    document.getElementById('dc-ovr').innerText = ovr;
+    document.getElementById('dc-badges').innerHTML = badges;
+    document.getElementById('dc-stats').innerHTML = statsHTML;
+    
+    // Загружаем изображение с помощью CORS
+    const downloadCard = document.getElementById('download-card');
+    const dcImg = document.getElementById('dc-img');
+    
     try {
-        const canvas = await html2canvas(modalContent, {
+        // Показываем карточку временно для рендеринга
+        downloadCard.style.position = 'fixed';
+        downloadCard.style.top = '0';
+        downloadCard.style.left = '0';
+        downloadCard.style.visibility = 'visible';
+        downloadCard.style.zIndex = '99999';
+        
+        // Ждем загрузки изображения
+        await new Promise((resolve) => {
+            dcImg.onload = resolve;
+            dcImg.src = imgSrc;
+            // Если изображение уже загружено
+            if (dcImg.complete) resolve();
+        });
+        
+        // Даем время для отрисовки
+        await new Promise(resolve => setTimeout(resolve, 100));
+        
+        // Создаем скриншот
+        const canvas = await html2canvas(downloadCard, {
             useCORS: true,
             scale: 2,
             backgroundColor: "#ffffff",
-            borderRadius: 40,
+            allowTaint: true,
+            logging: false,
             onclone: (clonedDoc) => {
-                const content = clonedDoc.querySelector('.modal-content');
-                content.style.transform = 'none';
-                content.style.animation = 'none';
-                content.style.boxShadow = 'none';
-                content.style.border = '1px solid #eee';
+                // Убираем анимации в клонированном документе
+                const clonedCard = clonedDoc.getElementById('download-card');
+                if (clonedCard) {
+                    clonedCard.style.transform = 'none';
+                    clonedCard.style.animation = 'none';
+                    clonedCard.style.boxShadow = 'none';
+                }
             }
         });
-
+        
+        // Создаем ссылку для скачивания
         const link = document.createElement('a');
         link.download = `BOX1V1_${name.replace(/\s+/g, '_')}.png`;
         link.href = canvas.toDataURL("image/png");
         link.click();
         
         showToast("Карточка сохранена!");
+        
     } catch (err) {
         console.error("Download error:", err);
-        showToast("Ошибка при создании изображения");
+        showToast("Ошибка при создании карточки");
+        
+        // Пробуем альтернативный метод
+        try {
+            const modalContent = document.querySelector('#playerModal .modal-content');
+            const canvas = await html2canvas(modalContent, {
+                useCORS: true,
+                scale: 2,
+                backgroundColor: "#ffffff",
+                allowTaint: true,
+                logging: false
+            });
+            
+            const link = document.createElement('a');
+            link.download = `BOX1V1_${name.replace(/\s+/g, '_')}_alt.png`;
+            link.href = canvas.toDataURL("image/png");
+            link.click();
+            
+            showToast("Карточка сохранена (альтернативный метод)");
+        } catch (err2) {
+            console.error("Alternative download error:", err2);
+            showToast("Не удалось создать изображение");
+        }
+        
     } finally {
-        hideUI('1');
+        // Скрываем карточку обратно
+        downloadCard.style.position = 'fixed';
+        downloadCard.style.top = '-9999px';
+        downloadCard.style.left = '-9999px';
+        downloadCard.style.visibility = 'hidden';
     }
 }
 
