@@ -336,8 +336,33 @@ text-transform: uppercase; white-space: nowrap; transition: 0.3s;
 @keyframes load { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
 </style>
 
-<!-- ДОБАВИМ СКРИПТ СУПАБЕЙС В HEAD ДЛЯ ГАРАНТИРОВАННОЙ ЗАГРУЗКИ -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js" defer></script>
+<!-- ПРОБУЕМ РАЗНЫЕ ИСТОЧНИКИ SUPABASE -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<!-- Альтернативный источник -->
+<script>
+  // Фоллбэк: если основной скрипт не загрузился, пробуем другой
+  window.addEventListener('load', function() {
+    if (typeof window.supabase === 'undefined') {
+      console.log('⚠️ Основной скрипт Supabase не загрузился, пробуем альтернативный...');
+      const fallbackScript = document.createElement('script');
+      fallbackScript.src = 'https://unpkg.com/@supabase/supabase-js@2.38.4/dist/umd/supabase.min.js';
+      fallbackScript.onload = function() {
+        console.log('✅ Альтернативный скрипт Supabase загружен');
+        // Инициализируем приложение после загрузки скрипта
+        setTimeout(initApp, 100);
+      };
+      fallbackScript.onerror = function() {
+        console.error('❌ Оба скрипта Supabase не загрузились');
+        // Всё равно инициализируем приложение в демо-режиме
+        setTimeout(initApp, 100);
+      };
+      document.head.appendChild(fallbackScript);
+    } else {
+      console.log('✅ Основной скрипт Supabase загружен');
+      setTimeout(initApp, 100);
+    }
+  });
+</script>
 
 <script>
 // ========== КОНФИГУРАЦИЯ ==========
@@ -350,7 +375,6 @@ let supabase;
 let currentUser = null;
 let allPlayers = [];
 let db = null;
-let isSupabaseLoaded = false;
 
 // ========== ОСНОВНЫЕ ФУНКЦИИ ==========
 const TARGET_DATE = new Date("March 1, 2026 00:00:00").getTime();
@@ -729,32 +753,16 @@ showToast(result.error);
 }
 }
 
-async function testSupabase() {
-if (!db) {
-alert('База данных не загружена. Используются демо-данные.');
-return;
-}
-  
-const result = await db.testConnection();
-alert(result.message);
-  
-const players = await db.getAllPlayers();
-alert(`Игроков в базе: ${players.length}`);
-  
-if (players.length > 0) {
-console.log('Игроки:', players);
-}
-}
-
-window.addEventListener('scroll', () => {
-document.body.classList.toggle('scrolled', window.scrollY > 50);
-});
-
 // ========== SUPABASE SERVICE ==========
 class SupabaseService {
   constructor() {
     console.log('🔧 Создаём Supabase клиент...');
     console.log('URL:', SUPABASE_CONFIG.url);
+    console.log('Supabase доступен?', typeof window.supabase !== 'undefined');
+    
+    if (typeof window.supabase === 'undefined') {
+      throw new Error('Supabase библиотека не загрузилась');
+    }
     
     try {
       this.client = window.supabase.createClient(
@@ -876,8 +884,8 @@ class SupabaseService {
   }
 }
 
-// ========== ИНИЦИАЛИЗАЦИЯ ==========
-async function init() {
+// ========== ИНИЦИАЛИЗАЦИЯ ПРИЛОЖЕНИЯ ==========
+async function initApp() {
   try {
     console.log('🚀 Инициализация BOX1V1...');
     
@@ -955,8 +963,59 @@ async function init() {
   }
 }
 
-// Запускаем инициализацию когда DOM загружен
-window.addEventListener('DOMContentLoaded', init);
+// Функция для теста подключения
+async function testSupabase() {
+  console.log('🔍 Тестируем подключение к Supabase...');
+  
+  if (typeof window.supabase === 'undefined') {
+    alert('❌ Библиотека Supabase не загрузилась!');
+    console.error('Supabase не загружен');
+    return;
+  }
+  
+  if (!SUPABASE_CONFIG.url || !SUPABASE_CONFIG.publishableKey) {
+    alert('❌ Конфигурация не настроена');
+    return;
+  }
+  
+  try {
+    // Пробуем создать тестового клиента
+    const testClient = window.supabase.createClient(
+      SUPABASE_CONFIG.url,
+      SUPABASE_CONFIG.publishableKey,
+      { auth: { persistSession: false } }
+    );
+    
+    // Тестовый запрос
+    const { data, error } = await testClient
+      .from('players')
+      .select('count', { count: 'exact', head: true });
+    
+    if (error) {
+      alert(`❌ Ошибка подключения: ${error.message}`);
+      console.error('Ошибка:', error);
+    } else {
+      alert(`✅ Подключение успешно!`);
+      console.log('Тест подключения успешен:', data);
+      
+      // Если подключение успешно, перезагружаем данные
+      if (db) {
+        allPlayers = await db.getAllPlayers();
+        renderRoster();
+        renderStats();
+        renderLeaderboard();
+        showToast('Данные обновлены с сервера');
+      }
+    }
+  } catch (error) {
+    alert(`❌ Критическая ошибка: ${error.message}`);
+    console.error('Критическая ошибка:', error);
+  }
+}
+
+window.addEventListener('scroll', () => {
+  document.body.classList.toggle('scrolled', window.scrollY > 50);
+});
 </script>
 
 </head>
