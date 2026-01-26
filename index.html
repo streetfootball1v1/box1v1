@@ -604,38 +604,51 @@ if (activeModal) closeModal(activeModal.id);
 }
 });
 function openPlayerModal(name) {
-const p = allPlayers.find(x => x.name.toLowerCase() === name.toLowerCase());
-if(!p) {
-showToast("Игрок не найден");
-return;
-}
-document.getElementById('m-name').innerText = p.name;
-document.getElementById('m-role').innerText = p.role;
-document.getElementById('m-ovr').innerText = p.ovr;
-document.getElementById('m-img').src = p.photo;
-document.getElementById('m-badges').innerHTML = p.badges.map(b => `<span style="font-size:10px; background:#000; color:#fff; padding:4px 10px; border-radius:8px; font-weight:800;">${b}</span>`).join('');
-const stats = [{l:'DRI',v:p.drib},{l:'SPD',v:p.speed},{l:'SHT',v:p.shot},{l:'PHY',v:p.phys}];
-document.getElementById('m-stats').innerHTML = stats.map(s => `
-<div>
-<div style="display:flex; justify-content:space-between; font-size:12px; font-weight:900; margin-bottom:10px;">
-<span>${s.l}</span><span>${s.v}</span>
-</div>
-<div style="height:4px; background:var(--bg-alt); border-radius:2px; overflow:hidden;">
-<div style="width:0%; height:100%; background:var(--text); transition:1.2s var(--cubic) 0.3s;" id="bar-${s.l}"></div>
-</div>
-</div>
-`).join('');
-openModal('playerModal');
-// Анимация баров после открытия
-setTimeout(() => {
-stats.forEach(s => {
-const bar = document.getElementById(`bar-${s.l}`);
-if(bar) bar.style.width = s.v + '%';
-});
-}, 100);
-const currentTab = document.querySelector('section.active').id;
-const playerSlug = p.name.replace(/\s+/g, '-').toLowerCase();
-window.history.replaceState(null, null, `#${currentTab}?player=${playerSlug}`);
+  const p = allPlayers.find(x => x.name.toLowerCase() === name.toLowerCase());
+  if(!p) {
+    showToast("Игрок не найден");
+    return;
+  }
+
+  document.getElementById('m-name').innerText = p.name;
+  document.getElementById('m-role').innerText = p.role;
+  document.getElementById('m-ovr').innerText = p.ovr;
+  document.getElementById('m-img').src = p.photo;
+  document.getElementById('m-badges').innerHTML = p.badges.map(b => `<span style="font-size:10px; background:#000; color:#fff; padding:4px 10px; border-radius:8px; font-weight:800;">${b}</span>`).join('');
+
+  // Определяем названия характеристик в зависимости от роли
+  const isGK = p.role === 'Вратарь';
+  const stats = [
+    { l: isGK ? 'REF' : 'DRI', v: p.drib },
+    { l: isGK ? 'DIV' : 'SPD', v: p.speed },
+    { l: isGK ? 'KIC' : 'SHT', v: p.shot },
+    { l: isGK ? 'POS' : 'PHY', v: p.phys }
+  ];
+
+  document.getElementById('m-stats').innerHTML = stats.map(s => `
+    <div>
+      <div style="display:flex; justify-content:space-between; font-size:12px; font-weight:900; margin-bottom:10px;">
+        <span>${s.l}</span><span>${s.v}</span>
+      </div>
+      <div style="height:4px; background:var(--bg-alt); border-radius:2px; overflow:hidden;">
+        <div style="width:0%; height:100%; background:var(--text); transition:1.2s var(--cubic) 0.3s;" id="bar-${s.l}"></div>
+      </div>
+    </div>
+  `).join('');
+
+  openModal('playerModal');
+
+  // Анимация баров
+  setTimeout(() => {
+    stats.forEach(s => {
+      const bar = document.getElementById(`bar-${s.l}`);
+      if(bar) bar.style.width = s.v + '%';
+    });
+  }, 100);
+
+  const currentTab = document.querySelector('section.active').id;
+  const playerSlug = p.name.replace(/\s+/g, '-').toLowerCase();
+  window.history.replaceState(null, null, `#${currentTab}?player=${playerSlug}`);
 }
 /**
 * ACTIONS
@@ -701,6 +714,7 @@ window.onload = init;
 </script>
 </body>
 </html>
+
 
 
 
