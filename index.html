@@ -141,6 +141,21 @@ p { font-size: 1rem; color: var(--text-dim); }
   color: #fff !important;
 }
 
+.badge-champion {
+  background: linear-gradient(135deg, #8b5cf6, #a78bfa) !important;
+  color: #fff !important;
+}
+
+.badge-topscorer {
+  background: linear-gradient(135deg, #ef4444, #f87171) !important;
+  color: #fff !important;
+}
+
+.badge-playmaker {
+  background: linear-gradient(135deg, #f59e0b, #fbbf24) !important;
+  color: #000 !important;
+}
+
 .badge-default {
   background: #000 !important;
   color: #fff !important;
@@ -280,11 +295,12 @@ position: fixed; inset: 0; background: rgba(255,255,255,0.7);
 backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
 z-index: 3000; display: flex; justify-content: center; align-items: center;
 padding: 20px; opacity: 0; pointer-events: none; transition: 0.4s var(--cubic);
+overflow-y: auto;
 }
 .modal-overlay.active { opacity: 1; pointer-events: auto; }
 .modal-content {
 background: #fff; width: 100%; max-width: 540px; border-radius: 40px;
-padding: 48px; position: relative; max-height: 90vh; overflow-y: auto;
+padding: 48px; position: relative; max-height: 85vh;
 box-shadow: 0 40px 80px rgba(0,0,0,0.1); transform: translateY(40px) scale(0.95); transition: 0.6s var(--cubic);
 }
 .modal-overlay.active .modal-content { transform: translateY(0) scale(1); }
@@ -445,7 +461,7 @@ text-transform: uppercase; white-space: nowrap; transition: 0.3s;
 </section>
 </main>
 <div class="modal-overlay" id="playerModal" onclick="closeModal('playerModal')" role="dialog" aria-modal="true">
-<div class="modal-content" onclick="event.stopPropagation()" id="player-card-export">
+<div class="modal-content" onclick="event.stopPropagation()">
 <!-- Контейнер с иконками действий -->
 <div style="position:absolute; top:24px; left:24px; display:flex; gap:8px; z-index:20;">
   <button class="icon-btn" onclick="shareCard()" aria-label="Поделиться">
@@ -456,7 +472,8 @@ text-transform: uppercase; white-space: nowrap; transition: 0.3s;
   </button>
 </div>
 <button class="modal-close" onclick="closeModal('playerModal')" aria-label="Закрыть">✕</button>
-<div id="m-img-container" style="width:100%; height:320px; border-radius:24px; overflow:hidden; background:#f0f0f0; margin-bottom:32px;">
+<div id="player-card-export" style="overflow:visible;">
+<div id="m-img-container" style="width:100%; height:320px; border-radius:24px; overflow:hidden; background:#f0f0f0; margin-bottom:32px; position:relative;">
 <img id="m-img" src="" style="width:100%; height:100%; object-fit:cover;" alt="Фото игрока" crossorigin="anonymous">
 </div>
 <div style="display:flex; justify-content:space-between; align-items:flex-start;">
@@ -468,6 +485,7 @@ text-transform: uppercase; white-space: nowrap; transition: 0.3s;
 <div id="m-ovr" style="font-size: 3rem; font-weight:900; font-style:italic; line-height:1; letter-spacing:-3px;">99</div>
 </div>
 <div id="m-stats" style="margin-top:40px; display:grid; grid-template-columns: 1fr 1fr; gap: 32px;"></div>
+</div>
 </div>
 </div>
 <div class="modal-overlay" id="applyModal" onclick="closeModal('applyModal')" role="dialog" aria-modal="true">
@@ -528,19 +546,46 @@ const statDefs = {
 async function downloadCard() {
   try {
     const card = document.getElementById('player-card-export');
+    
+    // Скрываем временно кнопки иконок
+    const iconButtons = document.querySelectorAll('.icon-btn');
+    const modalClose = document.querySelector('.modal-close');
+    const originalDisplay = [];
+    
+    iconButtons.forEach(btn => {
+      originalDisplay.push(btn.style.display);
+      btn.style.display = 'none';
+    });
+    if (modalClose) {
+      originalDisplay.push(modalClose.style.display);
+      modalClose.style.display = 'none';
+    }
+    
     const canvas = await html2canvas(card, {
       useCORS: true,
       allowTaint: true,
       backgroundColor: null,
       scale: 2,
-      logging: false
+      logging: false,
+      windowWidth: card.scrollWidth,
+      windowHeight: card.scrollHeight
     });
 
     const link = document.createElement("a");
-    link.download = `BOX1V1-${document.getElementById('m-name').innerText.replace(/\s+/g, '-')}.png`;
+    const playerName = document.getElementById('m-name').innerText.replace(/\s+/g, '-');
+    link.download = `BOX1V1-${playerName}.png`;
     link.href = canvas.toDataURL("image/png");
     link.click();
     showToast("Карточка сохранена");
+    
+    // Восстанавливаем кнопки
+    iconButtons.forEach((btn, i) => {
+      btn.style.display = originalDisplay[i] || '';
+    });
+    if (modalClose && originalDisplay[iconButtons.length]) {
+      modalClose.style.display = originalDisplay[iconButtons.length];
+    }
+    
   } catch (error) {
     console.error("Ошибка при сохранении карточки:", error);
     showToast("Ошибка при сохранении");
@@ -550,29 +595,58 @@ async function downloadCard() {
 async function shareCard() {
   try {
     const card = document.getElementById('player-card-export');
+    
+    // Скрываем временно кнопки иконок
+    const iconButtons = document.querySelectorAll('.icon-btn');
+    const modalClose = document.querySelector('.modal-close');
+    const originalDisplay = [];
+    
+    iconButtons.forEach(btn => {
+      originalDisplay.push(btn.style.display);
+      btn.style.display = 'none';
+    });
+    if (modalClose) {
+      originalDisplay.push(modalClose.style.display);
+      modalClose.style.display = 'none';
+    }
+    
     const canvas = await html2canvas(card, {
       useCORS: true,
       allowTaint: true,
       backgroundColor: null,
       scale: 2,
-      logging: false
+      logging: false,
+      windowWidth: card.scrollWidth,
+      windowHeight: card.scrollHeight
     });
 
     canvas.toBlob(async (blob) => {
       const file = new File([blob], "player-card.png", { type: "image/png" });
+      const playerName = document.getElementById('m-name').innerText;
 
       if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
         await navigator.share({
-          title: `BOX1V1 - ${document.getElementById('m-name').innerText}`,
-          text: 'Карточка игрока из BOX1V1',
+          title: `BOX1V1 - ${playerName}`,
+          text: `Карточка игрока ${playerName} в системе BOX1V1`,
           files: [file]
         });
       } else {
-        // Fallback: копируем ссылку на изображение
-        const dataUrl = canvas.toDataURL("image/png");
-        await navigator.clipboard.writeText(dataUrl);
-        showToast("Изображение скопировано в буфер");
+        // Fallback: скачиваем карточку
+        const link = document.createElement("a");
+        link.download = `BOX1V1-${playerName.replace(/\s+/g, '-')}.png`;
+        link.href = URL.createObjectURL(blob);
+        link.click();
+        showToast("Карточка сохранена");
       }
+      
+      // Восстанавливаем кнопки
+      iconButtons.forEach((btn, i) => {
+        btn.style.display = originalDisplay[i] || '';
+      });
+      if (modalClose && originalDisplay[iconButtons.length]) {
+        modalClose.style.display = originalDisplay[iconButtons.length];
+      }
+      
     }, 'image/png');
   } catch (error) {
     console.error("Ошибка при шаринге:", error);
@@ -587,9 +661,12 @@ function getBadgeClass(badgeName) {
   const name = badgeName.toLowerCase();
   if (name.includes('mvp')) return 'badge-mvp';
   if (name.includes('gold')) return 'badge-gold';
-  if (name.includes('speedster') || name.includes('скорость')) return 'badge-speedster';
-  if (name.includes('defender') || name.includes('защита')) return 'badge-defender';
-  if (name.includes('legend') || name.includes('легенда')) return 'badge-legend';
+  if (name.includes('speedster')) return 'badge-speedster';
+  if (name.includes('defender')) return 'badge-defender';
+  if (name.includes('legend')) return 'badge-legend';
+  if (name.includes('champion')) return 'badge-champion';
+  if (name.includes('topscorer') || name.includes('бомбардир')) return 'badge-topscorer';
+  if (name.includes('playmaker') || name.includes('ассистент')) return 'badge-playmaker';
   return 'badge-default';
 }
 
@@ -649,7 +726,7 @@ drib: parseInt(c[3]) || 0,
 speed: parseInt(c[4]) || 0,
 shot: parseInt(c[5]) || 0,
 phys: parseInt(c[6]) || 0,
-photo: c[7] || 'https://via.placeholder.com/400x600?text=No+Photo',
+photo: (c[7] && c[7].trim() !== '') ? c[7] : 'https://via.placeholder.com/400x600?text=No+Photo',
 status: c[8] || '',
 badges: c[9] ? c[9].split('|').map(b => b.trim()) : []
 };
@@ -732,7 +809,7 @@ document.getElementById('stats-body').innerHTML = sorted.map((p, i) => `
 <td style="font-weight:900; color:var(--text-dim)">${(i+1).toString().padStart(2, '0')}</td>
 <td>
 <div style="display:flex; align-items:center; gap:16px;">
-<img src="${p.photo}" style="width:48px; height:48px; border-radius:14px; object-fit:cover;" alt="">
+<img src="${p.photo}" style="width:48px; height:48px; border-radius:14px; object-fit:cover;" alt="" crossorigin="anonymous">
 <div>
 <div style="font-weight:900; text-transform:uppercase; font-style:italic;">${p.name}</div>
 <div style="font-size:10px; font-weight:700; color:var(--text-dim); text-transform:uppercase;">${p.role}</div>
@@ -798,7 +875,13 @@ function openPlayerModal(name) {
   document.getElementById('m-name').innerText = p.name;
   document.getElementById('m-role').innerText = p.role;
   document.getElementById('m-ovr').innerText = p.ovr;
-  document.getElementById('m-img').src = p.photo;
+  
+  // Устанавливаем фото с обработкой ошибок
+  const imgElement = document.getElementById('m-img');
+  imgElement.src = p.photo;
+  imgElement.onerror = function() {
+    this.src = 'https://via.placeholder.com/400x600?text=No+Photo';
+  };
   
   // Обновляем бейджи с цветными классами
   const badgesHtml = p.badges.map(b => {
