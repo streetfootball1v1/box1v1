@@ -2,7 +2,7 @@
   "name": "BOX1V1",
   "short_name": "BOX1V1",
   "description": "Футбольная экосистема 1 на 1",
-  "start_url": "/boxfw1/",
+  "start_url": "/box1v1/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#0a0a0a",
