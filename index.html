@@ -167,10 +167,10 @@ p { font-size: 1rem; color: var(--text-dim); }
 /* МОБИЛЬНЫЕ ИСПРАВЛЕНИЯ - ОТДЕЛЬНО ОТ КАРТОЧКИ */
 @media (max-width: 768px) {
   .stat-header::after { 
-    position: fixed; /* Меняем на fixed для мобильных */
+    position: fixed;
     left: 50% !important;
     transform: translateX(-50%) translateY(10px) !important;
-    bottom: 120px !important;
+    bottom: min(200px, 30vh) !important; /* Минимум 200px или 30% высоты экрана */
     top: auto !important;
     max-width: 92vw;
     width: auto;
@@ -185,7 +185,6 @@ p { font-size: 1rem; color: var(--text-dim); }
     transform: translateX(-50%) translateY(0) !important;
   }
 }
-
 /* PRELOADER */
 #preloader {
   position: fixed; inset: 0; background: #fff; z-index: 9999;
@@ -1193,6 +1192,7 @@ window.onload = init;
 </script>
 </body>
 </html>
+
 
 
 
