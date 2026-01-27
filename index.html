@@ -80,6 +80,20 @@ h1, h2, h3 {
 }
 p { font-size: 1rem; color: var(--text-dim); }
 
+/* === НОВЫЙ СТИЛЬ ДЛЯ РЕГЛАМЕНТА === */
+.reg-header {
+  font-size: clamp(2.0rem, 8vw, 3.5rem);
+  line-height: 1;
+  letter-spacing: -0.02em; /* смягчено для мобильных */
+  text-transform: uppercase;
+  font-weight: 900;
+  font-style: italic;
+  margin: 20px 0 15px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 /* UX TOOLTIPS STYLES */
 .stat-item { position: relative; }
 .stat-header { display: flex; align-items: center; gap: 6px; cursor: help; }
@@ -220,7 +234,6 @@ section.active { display: block; animation: fadeInUp 0.8s var(--cubic) forwards;
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* === ТВОЙ ДИЗАЙН ГЛАВНОГО ЭКРАНА === */
 .intro-block { 
   padding: 40px 0 80px; 
   text-align: center; 
@@ -634,7 +647,7 @@ select,
 <div class="bento-grid">
 <div class="card" style="grid-column: span 2; background: #fafafa;" onclick="openModal('rulesModal')" tabindex="0">
 <span style="font-size:11px; font-weight:800; color:var(--accent-dark); text-transform:uppercase; letter-spacing:0.1em;">Документация</span>
-<h2 style="font-size: 3.5rem; margin: 20px 0 15px;">РЕГЛАМЕНТ.</h2>
+<h2 class="reg-header">РЕГЛАМЕНТ.</h2>
 <p>Свод правил проведения матчей.</p>
 <div style="margin-top: auto; padding-top: 30px; font-weight: 800; font-size: 12px; text-transform: uppercase;">Изучить правила →</div>
 </div>
@@ -675,7 +688,7 @@ select,
 </div>
 </section>
 </main>
-<!-- Модальные окна и скрипты остаются без изменений -->
+<!-- Модальные окна и скрипты без изменений -->
 <div class="modal-overlay" id="playerModal" onclick="closeModal('playerModal')" role="dialog" aria-modal="true">
 <div class="modal-content" onclick="event.stopPropagation()">
 <button class="modal-close" onclick="closeModal('playerModal')" aria-label="Закрыть">✕</button>
@@ -727,8 +740,6 @@ select,
 </div>
 <script>
 // ... (весь JS-код остаётся без изменений — он уже корректен)
-// Полный скрипт можно оставить как в твоём последнем файле
-// Я его не повторяю, чтобы не удваивать объём, но он полностью совместим
 const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vREjbeB6jNrU01kw1npVtFTvqGdP134ERjmyROoOYeYXbzjgL0ZCNK6KwF0VTk3c1yxZEZEUsJjy2Ur/pub?output=csv  ';
 const TARGET_DATE = new Date("March 1, 2026 00:00:00").getTime();
 let allPlayers = [];
