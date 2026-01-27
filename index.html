@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"/>
 <title>BOX1V1 | УЛИЧНЫЙ ФУТБОЛ 1 НА 1</title>
   <!-- FAVICONS -->
 <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png?v=3">
@@ -267,33 +267,199 @@ text-transform: uppercase; white-space: nowrap; transition: 0.3s;
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
 ::-webkit-scrollbar-thumb:hover { background: #ccc; }
+
+/* Минимальный размер для всех интерактивных элементов на мобильных */
+button, 
+a, 
+[role="button"], 
+input, 
+select,
+.btn,
+.filter-btn,
+.nav-links a {
+  min-height: 44px;
+  min-width: 44px;
+}
+
 /* MOBILE ADAPTIVITY */
 @media (max-width: 1024px) {
 .bento-grid { grid-template-columns: repeat(2, 1fr); }
 }
+
 @media (max-width: 768px) {
-.nav-links { display: none; }
-.burger { display: flex; }
-.nav-inner { padding: 0 20px; }
-.main-content { padding: 100px 16px 60px; }
-.intro-block h1 { font-size: 3.8rem; }
-.intro-block p { font-size: 1.1rem; }
-.timer-context { border-radius: 32px; flex-direction: column; gap: 16px; width: 100%; padding: 24px 16px; margin-top: 40px; }
-.countdown { gap: 12px; }
-.countdown-value { font-size: 1.8rem; }
-.bento-grid { grid-template-columns: 1fr; gap: 16px; }
-.card { padding: 30px 24px; }
-.card[style*="grid-column: span 2"] { grid-column: span 1 !important; }
-.card h2 { font-size: 2.5rem !important; }
-.modal-content { padding: 32px 20px; border-radius: 32px; }
-.controls-row { flex-direction: column; align-items: stretch !important; }
-.search-input { max-width: 100%; }
-.filter-bar { overflow-x: auto; padding-bottom: 8px; width: 100%; }
-.player-card { height: 420px; }
-/* Hide tooltips on mobile by default, show on click if needed */
-.stat-header:hover::after { display: none; }
-.stat-header:active::after { display: block; opacity: 1; visibility: visible; }
+  /* Навигация */
+  .nav-links { display: none; }
+  .burger { display: flex; }
+  .nav-inner { padding: 0 20px; }
+  
+  /* Основной контент */
+  .main-content { padding: 100px 16px 60px; }
+  
+  /* Главная страница */
+  .intro-block { padding: 20px 0 40px; }
+  .intro-block h1 { 
+    font-size: clamp(2.5rem, 15vw, 4rem) !important; 
+    line-height: 0.9;
+    margin-bottom: 16px;
+  }
+  .intro-block p { 
+    font-size: 1.1rem !important;
+    margin-bottom: 24px;
+    padding: 0 10px;
+  }
+  
+  /* Таймер */
+  .timer-context { 
+    border-radius: 24px !important; 
+    flex-direction: column; 
+    gap: 16px; 
+    width: 100% !important; 
+    padding: 24px 16px !important; 
+    margin-top: 40px;
+    text-align: center;
+  }
+  .countdown { 
+    gap: 12px; 
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .countdown > div {
+    flex: 0 0 auto;
+  }
+  .countdown-value { 
+    font-size: 1.8rem !important;
+  }
+  .countdown-label {
+    font-size: 11px;
+  }
+  
+  /* Кнопки на главной */
+  .btn-group {
+    gap: 12px !important;
+  }
+  .btn {
+    padding: 16px 28px !important;
+    font-size: 12px !important;
+    min-height: 44px;
+  }
+  
+  /* Сетка */
+  .bento-grid { 
+    grid-template-columns: 1fr; 
+    gap: 16px;
+    margin-top: 30px;
+  }
+  .card { 
+    padding: 24px !important; 
+    min-height: auto;
+  }
+  .card[style*="grid-column: span 2"] { 
+    grid-column: span 1 !important; 
+  }
+  .card h2 { 
+    font-size: 2rem !important; 
+    margin: 12px 0 !important;
+  }
+  
+  /* Поиск и фильтры */
+  .controls-row { 
+    flex-direction: column; 
+    align-items: stretch !important; 
+    gap: 16px !important;
+  }
+  .search-input { 
+    max-width: 100% !important;
+    padding: 16px 20px !important;
+    font-size: 16px; /* Предотвращает зум в iOS */
+  }
+  .filter-bar { 
+    overflow-x: auto; 
+    padding-bottom: 8px; 
+    width: 100%;
+    display: flex;
+    gap: 6px;
+  }
+  .filter-btn {
+    padding: 12px 16px;
+    white-space: nowrap;
+  }
+  
+  /* Карточки игроков */
+  .player-card { 
+    height: 360px !important;
+    padding: 24px !important;
+  }
+  .player-card h3 {
+    font-size: 1.8rem !important;
+  }
+  
+  /* Модальные окна */
+  .modal-content { 
+    padding: 32px 24px !important; 
+    border-radius: 24px !important;
+    margin: 10px;
+    width: calc(100% - 20px);
+  }
+  .modal-close {
+    top: 16px;
+    right: 16px;
+    width: 40px;
+    height: 40px;
+  }
+  
+  /* Drawer */
+  .mobile-drawer { 
+    padding: 90px 24px 40px !important; 
+    width: min(85%, 320px) !important;
+    height: 100vh;
+    overflow-y: auto;
+  }
+  .mobile-drawer a { 
+    font-size: 1.8rem !important; 
+    letter-spacing: -1px !important;
+    padding: 12px 0;
+  }
+  
+  /* Статистика в модалке */
+  #m-stats {
+    grid-template-columns: 1fr !important;
+    gap: 20px !important;
+  }
+  
+  /* Инфо-подсказки на мобильных */
+  .stat-header:hover::after { 
+    display: none !important; 
+  }
+  
+  /* Таблица рейтинга */
+  .table-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  table {
+    min-width: 500px;
+  }
+  td {
+    padding: 16px 12px !important;
+  }
 }
+
+/* Очень маленькие экраны */
+@media (max-width: 360px) {
+  .intro-block h1 { 
+    font-size: 2.2rem !important; 
+  }
+  .countdown-value { 
+    font-size: 1.5rem !important;
+  }
+  .card h2 {
+    font-size: 1.6rem !important;
+  }
+  .player-card {
+    height: 320px !important;
+  }
+}
+
 @keyframes load { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
 </style>
 </head>
@@ -770,9 +936,3 @@ window.onload = init;
 </script>
 </body>
 </html>
-
-
-
-
-
-
