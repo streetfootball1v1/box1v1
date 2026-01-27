@@ -364,26 +364,26 @@ select,
   .main-content { padding: calc(var(--nav-h) + env(safe-area-inset-top)) 16px 60px; }
   .intro-block { padding: 20px 0 40px; }
   .intro-block h1 { 
-    font-size: clamp(2.5rem, 15vw, 4rem) !important; 
+    font-size: clamp(2.5rem, 15vw, 4rem);
     line-height: 0.9;
     margin-bottom: 16px;
   }
   .intro-block p { 
-    font-size: 1.1rem !important;
+    font-size: 1.1rem;
     margin-bottom: 24px;
     padding: 0 10px;
   }
   .timer-context { 
-    border-radius: 24px !important; 
-    flex-direction: column !important; 
-    gap: 16px !important; 
-    width: 100% !important; 
-    padding: 24px 16px !important; 
+    border-radius: 24px;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+    padding: 24px 16px;
     margin-top: 40px;
     text-align: center;
   }
   .countdown { 
-    gap: 12px; 
+    gap: 12px;
     flex-wrap: wrap;
     justify-content: center;
   }
@@ -394,17 +394,17 @@ select,
     align-items: center;
   }
   .countdown-value { 
-    font-size: 1.8rem !important;
+    font-size: 1.8rem;
   }
   .countdown-label {
     font-size: 11px;
   }
   .btn-group {
-    gap: 12px !important;
+    gap: 12px;
   }
   .btn {
-    padding: 16px 28px !important;
-    font-size: 12px !important;
+    padding: 16px 28px;
+    font-size: 12px;
     min-height: 44px;
   }
   .bento-grid { 
@@ -413,29 +413,29 @@ select,
     margin-top: 30px;
   }
   .card { 
-    padding: 24px !important; 
+    padding: 24px;
     min-height: auto;
   }
   .card[style*="grid-column: span 2"] { 
     grid-column: span 1 !important; 
   }
   .card h2 { 
-    font-size: 2rem !important; 
-    margin: 12px 0 !important;
+    font-size: 2rem;
+    margin: 12px 0;
   }
   .controls-row { 
-    flex-direction: column; 
-    align-items: stretch !important; 
-    gap: 16px !important;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
   }
   .search-input { 
-    max-width: 100% !important;
-    padding: 16px 20px !important;
+    max-width: 100%;
+    padding: 16px 20px;
     font-size: 16px;
   }
   .filter-bar { 
-    overflow-x: auto; 
-    padding-bottom: 8px; 
+    overflow-x: auto;
+    padding-bottom: 8px;
     width: 100%;
     display: flex;
     gap: 6px;
@@ -445,16 +445,16 @@ select,
     white-space: nowrap;
   }
   .player-card { 
-    min-height: 360px !important;
-    height: auto !important;
-    padding: 24px !important;
+    min-height: 360px;
+    height: auto;
+    padding: 24px;
   }
   .player-card h3 {
-    font-size: 1.8rem !important;
+    font-size: 1.8rem;
   }
   .modal-content { 
-    padding: 32px 24px !important; 
-    border-radius: 24px !important;
+    padding: 32px 24px;
+    border-radius: 24px;
     margin: 10px;
     width: calc(100% - 20px);
   }
@@ -465,22 +465,22 @@ select,
     height: 40px;
   }
   .mobile-drawer { 
-    padding: 90px 24px 40px !important; 
-    width: min(85%, 320px) !important;
+    padding: 90px 24px 40px;
+    width: min(85%, 320px);
     height: 100vh;
     overflow-y: auto;
   }
   .mobile-drawer a { 
-    font-size: 1.8rem !important; 
-    letter-spacing: -1px !important;
+    font-size: 1.8rem;
+    letter-spacing: -1px;
     padding: 12px 0;
   }
   #m-stats {
-    grid-template-columns: 1fr !important;
-    gap: 20px !important;
+    grid-template-columns: 1fr;
+    gap: 20px;
   }
   .stat-header:hover::after { 
-    display: none !important; 
+    display: none;
   }
   .table-wrapper {
     overflow-x: auto;
@@ -490,64 +490,62 @@ select,
     min-width: 500px;
   }
   td {
-    padding: 16px 12px !important;
+    padding: 16px 12px;
   }
 }
 
 /* Очень маленькие экраны */
 @media (max-width: 360px) {
   .intro-block h1 { 
-    font-size: 2.2rem !important; 
+    font-size: 2.2rem;
   }
   .countdown-value { 
-    font-size: 1.5rem !important;
+    font-size: 1.5rem;
   }
   .card h2 {
-    font-size: 1.6rem !important;
+    font-size: 1.6rem;
   }
   .player-card {
-    min-height: 320px !important;
+    min-height: 320px;
   }
 }
 
-/* 🔥 ДОПОЛНИТЕЛЬНО: для базовых iPhone */
-@media (max-width: 420px), (max-height: 820px) {
+/* Только для очень маленьких экранов по ширине — iPhone SE / 8 / старые Android */
+@media (max-width: 420px) {
   .intro-block h1 {
-    font-size: clamp(2.0rem, 14vw, 3.0rem) !important;
-    line-height: 1.0 !important;
+    font-size: clamp(2.0rem, 14vw, 3.0rem);
+    line-height: 1.0;
   }
   .player-card {
-    min-height: 300px !important;
+    min-height: 300px;
   }
   .timer-context {
-    padding: 16px !important;
-    gap: 8px !important;
+    padding: 16px;
+    gap: 8px;
   }
   .countdown > div {
-    min-width: 48px !important;
+    min-width: 48px;
   }
   .countdown-value {
-    font-size: 1.4rem !important;
+    font-size: 1.4rem;
   }
   .main-content {
-    padding-top: calc(var(--nav-h) + env(safe-area-inset-top)) !important;
-    padding-bottom: 50px !important;
+    padding-top: calc(var(--nav-h) + env(safe-area-inset-top));
+    padding-bottom: 50px;
   }
   nav {
-    height: calc(var(--nav-h) + env(safe-area-inset-top)) !important;
+    height: calc(var(--nav-h) + env(safe-area-inset-top));
   }
   .btn {
-    padding: 14px 24px !important;
-    font-size: 11px !important;
+    padding: 14px 24px;
+    font-size: 11px;
   }
   .ovr-badge {
-    padding: 4px 10px !important;
-    font-size: 10px !important;
+    padding: 4px 10px;
+    font-size: 10px;
   }
-}
 
-/* TYPOGRAPHY FIX FOR SMALL SCREENS */
-@media (max-width: 420px) {
+  /* Типографика — только здесь */
   h1, h2, h3 {
     letter-spacing: -0.02em;
     font-style: normal;
