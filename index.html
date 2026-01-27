@@ -92,6 +92,7 @@ p { font-size: 1rem; color: var(--text-dim); }
 }
 
 /* UX TOOLTIPS STYLES - ОБНОВЛЕННЫЕ ДЛЯ МОБИЛЬНЫХ */
+/* UX TOOLTIPS STYLES - ИСПРАВЛЕННЫЙ ДЛЯ МОБИЛЬНЫХ */
 .stat-item { position: relative; }
 .stat-header { 
   display: flex; 
@@ -99,13 +100,13 @@ p { font-size: 1rem; color: var(--text-dim); }
   gap: 6px; 
   cursor: help;
   -webkit-tap-highlight-color: transparent;
+  user-select: none;
 }
 .info-icon {
   width: 14px; height: 14px; border-radius: 50%; border: 1px solid var(--border);
   display: flex; align-items: center; justify-content: center;
   font-size: 8px; color: var(--text-dim); transition: 0.3s var(--cubic);
   font-style: normal; font-weight: 800;
-  user-select: none;
 }
 .stat-header:hover .info-icon,
 .stat-header.active .info-icon { 
@@ -116,32 +117,36 @@ p { font-size: 1rem; color: var(--text-dim); }
 
 .stat-header::after {
   content: attr(data-tip);
-  position: absolute; 
-  bottom: calc(100% + 10px); 
-  left: 0;
-  background: #000; 
-  color: #fff; 
-  padding: 10px 14px; 
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%) translateY(10px);
+  background: #000;
+  color: #fff;
+  padding: 10px 12px;
   border-radius: 12px;
-  font-size: 11px; 
-  font-weight: 500; 
-  width: 200px; 
+  font-size: 10px;
+  font-weight: 500;
   line-height: 1.4;
-  opacity: 0; 
-  visibility: hidden; 
-  transform: translateY(10px);
-  transition: 0.4s var(--cubic); 
-  z-index: 100; 
+  opacity: 0;
+  visibility: hidden;
+  transition: 0.4s var(--cubic);
+  z-index: 1000;
   pointer-events: none;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.15); 
-  text-transform: none; 
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+  text-transform: none;
   font-style: normal;
+  max-width: 90vw;
+  white-space: normal;
+  word-break: break-word;
+  box-sizing: border-box;
 }
+
 .stat-header:hover::after,
-.stat-header.active::after { 
-  opacity: 1; 
-  visibility: visible; 
-  transform: translateY(0); 
+.stat-header.active::after {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
 }
 
 /* PRELOADER */
@@ -1151,4 +1156,5 @@ window.onload = init;
 </script>
 </body>
 </html>
+
 
