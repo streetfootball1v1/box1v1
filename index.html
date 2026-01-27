@@ -95,36 +95,26 @@ p { font-size: 1rem; color: var(--text-dim); }
 }
 .stat-header:hover::after { opacity: 1; visibility: visible; transform: translateY(0); }
 
-/* PRELOADER */
+/* PRELOADER - FIXED */
 #preloader {
-position: fixed; inset: 0; background: #fff; z-index: 9999;
-display: flex; justify-content: center; align-items: center;
-transition: opacity 0.8s var(--cubic), visibility 0.8s;
+  position: fixed; 
+  inset: 0; 
+  background: #fff; 
+  z-index: 9999;
+  display: flex; 
+  justify-content: center; 
+  align-items: center;
+  transition: opacity 0.6s var(--cubic), visibility 0.6s;
 }
 #preloader.loaded { 
   opacity: 0; 
   visibility: hidden;
+  pointer-events: none;
 }
-/* Убираем полосу загрузки после загрузки */
-#preloader.loaded .loading-bar {
-  opacity: 0;
-  transition: opacity 0.3s;
-}
+
+/* Полностью убираем полосу загрузки */
 .loading-bar {
-  width: 140px; 
-  height: 2px; 
-  background: var(--bg-alt); 
-  margin: 20px auto 0; 
-  position: relative; 
-  overflow: hidden;
-}
-.loading-bar::after {
-  content: '';
-  position: absolute; 
-  width: 60%; 
-  height: 100%; 
-  background: var(--text); 
-  animation: load 1.5s infinite var(--cubic);
+  display: none !important;
 }
 
 /* TOASTS SYSTEM */
@@ -190,7 +180,12 @@ background: var(--bg-alt); border: none; transition: 0.3s;
 .mobile-drawer.open { right: 0; box-shadow: -40px 0 80px rgba(0,0,0,0.1); }
 .mobile-drawer a { font-size: 2.5rem; font-weight: 900; text-decoration: none; color: var(--text); font-style: italic; text-transform: uppercase; letter-spacing: -2px; }
 /* MAIN CONTENT */
-.main-content { max-width: 1300px; margin: 0 auto; padding: 120px 32px 100px; min-height: 80vh; }
+.main-content { 
+  max-width: 1300px; 
+  margin: 0 auto; 
+  padding: 120px 32px 100px; 
+  min-height: 80vh;
+}
 section { display: none; opacity: 0; }
 section.active { display: block; animation: fadeInUp 0.8s var(--cubic) forwards; }
 @keyframes fadeInUp {
@@ -306,7 +301,7 @@ select,
   min-width: 44px;
 }
 
-/* MOBILE ADAPTIVITY */
+/* MOBILE ADAPTIVITY - FIXED FOR PWA */
 @media (max-width: 1024px) {
 .bento-grid { grid-template-columns: repeat(2, 1fr); }
 }
@@ -317,8 +312,12 @@ select,
   .burger { display: flex; }
   .nav-inner { padding: 0 20px; }
   
-  /* Основной контент */
-  .main-content { padding: 100px 16px 60px; }
+  /* Основной контент - FIXED FOR PWA */
+  .main-content { 
+    padding: calc(72px + env(safe-area-inset-top)) 16px 60px !important;
+    padding: calc(72px + constant(safe-area-inset-top)) 16px 60px !important;
+    padding: 100px 16px 60px !important;
+  }
   
   /* Главная страница */
   .intro-block { padding: 20px 0 40px; }
@@ -418,12 +417,17 @@ select,
     font-size: 1.8rem !important;
   }
   
-  /* Модальные окна */
+  /* Модальные окна - FIXED FOR PWA */
+  .modal-overlay {
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left) !important;
+    padding: constant(safe-area-inset-top) constant(safe-area-inset-right) constant(safe-area-inset-bottom) constant(safe-area-inset-left) !important;
+  }
   .modal-content { 
     padding: 32px 24px !important; 
     border-radius: 24px !important;
     margin: 10px;
     width: calc(100% - 20px);
+    max-height: calc(100vh - 40px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
   }
   .modal-close {
     top: 16px;
@@ -432,9 +436,10 @@ select,
     height: 40px;
   }
   
-  /* Drawer */
+  /* Drawer - FIXED FOR PWA */
   .mobile-drawer { 
-    padding: 90px 24px 40px !important; 
+    padding: calc(90px + env(safe-area-inset-top)) 24px calc(40px + env(safe-area-inset-bottom)) !important; 
+    padding: calc(90px + constant(safe-area-inset-top)) 24px calc(40px + constant(safe-area-inset-bottom)) !important;
     width: min(85%, 320px) !important;
     height: 100vh;
     overflow-y: auto;
@@ -467,6 +472,17 @@ select,
   td {
     padding: 16px 12px !important;
   }
+  
+  /* Улучшаем безопасные области для iOS */
+  nav {
+    padding-top: env(safe-area-inset-top) !important;
+    padding-top: constant(safe-area-inset-top) !important;
+  }
+  
+  body {
+    padding-top: env(safe-area-inset-top);
+    padding-top: constant(safe-area-inset-top);
+  }
 }
 
 /* Очень маленькие экраны */
@@ -483,11 +499,37 @@ select,
   .player-card {
     height: 320px !important;
   }
+  
+  .mobile-drawer {
+    width: 100% !important;
+    max-width: none !important;
+  }
 }
 
+/* Убираем анимацию загрузки */
 @keyframes load { 
   0% { transform: translateX(-100%); } 
   100% { transform: translateX(100%); } 
+}
+
+/* Специфичные фиксы для PWA */
+@media (display-mode: standalone) {
+  body {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+  
+  nav {
+    height: calc(72px + env(safe-area-inset-top)) !important;
+    height: calc(72px + constant(safe-area-inset-top)) !important;
+  }
+  
+  .nav-inner {
+    height: 100%;
+    padding-top: env(safe-area-inset-top);
+    padding-top: constant(safe-area-inset-top);
+  }
 }
 </style>
 </head>
@@ -496,7 +538,7 @@ select,
 <div id="preloader" role="status" aria-label="Загрузка">
 <div style="text-align:center;">
 <h2 style="font-size:3rem; margin-bottom:10px;">BOX<span style="color:var(--accent)">1</span>V1</h2>
-<div class="loading-bar"></div>
+<!-- Убрали строку загрузки полностью -->
 </div>
 </div>
 <nav id="navbar">
@@ -690,17 +732,13 @@ renderStats();
 handleHashAndDeepLink();
 setInterval(updateTimer, 1000);
 updateTimer();
-// Убираем прелоадер после загрузки
-setTimeout(() => {
-  document.getElementById('preloader').classList.add('loaded');
-}, 300);
+// Убираем прелоадер сразу
+document.getElementById('preloader').classList.add('loaded');
 } catch (e) {
 console.error("Load Error", e);
 showToast("Ошибка загрузки данных");
 // Все равно убираем прелоадер даже при ошибке
-setTimeout(() => {
-  document.getElementById('preloader').classList.add('loaded');
-}, 300);
+document.getElementById('preloader').classList.add('loaded');
 }
 }
 function parseCSV(text) {
@@ -964,7 +1002,22 @@ document.getElementById('secs').innerText = Math.floor((diff % 6e4) / 1000).toSt
 window.addEventListener('scroll', () => {
 document.body.classList.toggle('scrolled', window.scrollY > 50);
 });
-window.onload = init;
+
+// Фикс для PWA - определение режима standalone
+function checkPWA() {
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || 
+                      window.navigator.standalone || 
+                      document.referrer.includes('android-app://');
+  
+  if (isStandalone) {
+    document.body.classList.add('pwa-mode');
+  }
+}
+
+window.onload = function() {
+  init();
+  checkPWA();
+};
 </script>
 </body>
 </html>
