@@ -21,14 +21,14 @@
 
     <meta name="description" content="BOX1V1 — закрытая экосистема для футболистов 1 на 1. Техника, медиа и скаутинг.">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://box1v1.ru/  ">
+    <meta property="og:url" content="https://box1v1.ru/">
     <meta property="og:title" content="BOX1V1 | ЦИФРОВАЯ ЭКОСИСТЕМА">
     <meta property="og:description" content="Стань частью элитарного сообщества футболистов 1x1. Рейтинги, карточки и статистика.">
-    <meta property="og:image" content="https://box1v1.ru/preview-og.jpg  ">
+    <meta property="og:image" content="https://box1v1.ru/preview-og.jpg">
 
-    <link rel="preconnect" href="https://fonts.googleapis.com  ">
-    <link rel="preconnect" href="https://fonts.gstatic.com  " crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter  :ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
 <style>
 :root {
   --nav-h: 72px;
@@ -83,15 +83,12 @@ p { font-size: 1rem; color: var(--text-dim); }
 /* === НОВЫЙ СТИЛЬ ДЛЯ РЕГЛАМЕНТА === */
 .reg-header {
   font-size: clamp(2.0rem, 8vw, 3.5rem);
-  line-height: 1;
-  letter-spacing: -0.02em; /* смягчено для мобильных */
+  line-height: var(--lh-tight);
+  letter-spacing: var(--ls-tight);
   text-transform: uppercase;
   font-weight: 900;
   font-style: italic;
   margin: 20px 0 15px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 /* UX TOOLTIPS STYLES */
@@ -287,6 +284,15 @@ section.active { display: block; animation: fadeInUp 0.8s var(--cubic) forwards;
 }
 .card:hover { transform: translateY(-10px); border-color: rgba(0,0,0,0.15); box-shadow: var(--shadow-md); }
 .card:focus-visible { outline: 3px solid var(--accent); }
+
+/* СТИЛИ ДЛЯ КАРТОЧЕК (размеры как в текущей версии) */
+.card h2 {
+  font-size: 3.5rem;
+}
+
+.card h3 {
+  font-size: 1.8rem;
+}
 
 /* PLAYER CARD */
 .player-card { 
@@ -580,12 +586,6 @@ select,
     padding: 4px 10px;
     font-size: 10px;
   }
-
-  /* Типографика — только здесь */
-  h1, h2, h3 {
-    letter-spacing: -0.02em;
-    font-style: normal;
-  }
 }
 
 @keyframes load { 
@@ -651,11 +651,11 @@ select,
 <p>Свод правил проведения матчей.</p>
 <div style="margin-top: auto; padding-top: 30px; font-weight: 800; font-size: 12px; text-transform: uppercase;">Изучить правила →</div>
 </div>
-<div class="card" onclick="window.open('https://t.me/streetbox1v1  ')" tabindex="0">
+<div class="card" onclick="window.open('https://t.me/streetbox1v1')" tabindex="0">
 <h3 style="font-size: 1.8rem;">TELEGRAM</h3>
 <p style="font-size: 14px; margin-top: 8px;">Свежие новости и актуальная информация.</p>
 </div>
-<div class="card" onclick="window.open('https://instagram.com/box.1v1  ')" tabindex="0">
+<div class="card" onclick="window.open('https://instagram.com/box.1v1')" tabindex="0">
 <h3 style="font-size: 1.8rem;">INSTAGRAM</h3>
 <p style="font-size: 14px; margin-top: 8px;">Главные новости в медиа формате.</p>
 </div>
@@ -688,7 +688,6 @@ select,
 </div>
 </section>
 </main>
-<!-- Модальные окна и скрипты без изменений -->
 <div class="modal-overlay" id="playerModal" onclick="closeModal('playerModal')" role="dialog" aria-modal="true">
 <div class="modal-content" onclick="event.stopPropagation()">
 <button class="modal-close" onclick="closeModal('playerModal')" aria-label="Закрыть">✕</button>
@@ -715,7 +714,7 @@ select,
 <button class="modal-close" onclick="closeModal('applyModal')">✕</button>
 <h2 style="font-size:2rem; margin-bottom:20px;">ВСТУПИТЬ В BOX1V1</h2>
 <p style="margin-bottom:32px;">Чтобы оформить заявку, оставь комментарий под любым постом с хештегом #BOXУЧАСТВОВАТЬ.</p>
-<button class="btn btn-primary" style="width:100%; padding:24px;" onclick="window.open('https://t.me/streetbox1v1  ')">Открыть Telegram</button>
+<button class="btn btn-primary" style="width:100%; padding:24px;" onclick="window.open('https://t.me/streetbox1v1')">Открыть Telegram</button>
 </div>
 </div>
 <div class="modal-overlay" id="rulesModal" onclick="closeModal('rulesModal')" role="dialog" aria-modal="true">
@@ -739,8 +738,7 @@ select,
 </div>
 </div>
 <script>
-// ... (весь JS-код остаётся без изменений — он уже корректен)
-const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vREjbeB6jNrU01kw1npVtFTvqGdP134ERjmyROoOYeYXbzjgL0ZCNK6KwF0VTk3c1yxZEZEUsJjy2Ur/pub?output=csv  ';
+const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vREjbeB6jNrU01kw1npVtFTvqGdP134ERjmyROoOYeYXbzjgL0ZCNK6KwF0VTk3c1yxZEZEUsJjy2Ur/pub?output=csv';
 const TARGET_DATE = new Date("March 1, 2026 00:00:00").getTime();
 let allPlayers = [];
 let currentRoleFilter = 'Все';
@@ -807,7 +805,7 @@ drib: parseInt(c[3]) || 0,
 speed: parseInt(c[4]) || 0,
 shot: parseInt(c[5]) || 0,
 phys: parseInt(c[6]) || 0,
-photo: c[7] || 'https://via.placeholder.com/400x600?text=No+Photo  ',
+photo: c[7] || 'https://via.placeholder.com/400x600?text=No+Photo',
 status: c[8] || '',
 badges: c[9] ? c[9].split('|').map(b => b.trim()) : []
 };
