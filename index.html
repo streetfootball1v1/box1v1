@@ -219,8 +219,23 @@ section.active { display: block; animation: fadeInUp 0.8s var(--cubic) forwards;
   from { opacity: 0; transform: translateY(30px); }
   to { opacity: 1; transform: translateY(0); }
 }
-.intro-block { padding: 40px 0 80px; text-align: center; max-width: 900px; margin: 0 auto; }
-.intro-block h1 { font-size: clamp(3.5rem, 12vw, 9.5rem); margin-bottom: 24px; }
+
+/* === ТВОЙ ДИЗАЙН ГЛАВНОГО ЭКРАНА === */
+.intro-block { 
+  padding: 40px 0 80px; 
+  text-align: center; 
+  max-width: 900px; 
+  margin: 0 auto; 
+}
+.intro-block h1 { 
+  font-size: clamp(3.5rem, 12vw, 9.5rem); 
+  margin-bottom: 24px; 
+}
+.intro-block p { 
+  font-size: 1.25rem; 
+  max-width: 540px; 
+  margin: 0 auto 40px; 
+}
 
 /* BUTTONS */
 .btn {
@@ -235,6 +250,20 @@ section.active { display: block; animation: fadeInUp 0.8s var(--cubic) forwards;
 .btn-primary:hover { transform: translateY(-4px); box-shadow: 0 20px 30px rgba(0,0,0,0.15); }
 .btn-outline { background: transparent; border: 1.5px solid var(--border); color: var(--text); }
 .btn-outline:hover { background: var(--bg-alt); border-color: var(--text); }
+
+/* TIMER */
+.timer-context { 
+  margin-top: 60px; 
+  padding: 32px 56px; 
+  background: var(--bg-alt); 
+  border-radius: 100px; 
+  display: inline-flex; 
+  align-items: center; 
+  gap: 40px; 
+  border: 1px solid var(--border); 
+}
+.countdown { display: flex; gap: 24px; }
+.countdown-value { font-size: 2.5rem; font-weight: 900; letter-spacing: -2px; }
 
 /* BENTO GRID */
 .bento-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-top: 40px; }
@@ -320,12 +349,6 @@ tr:hover td {
 }
 .filter-btn:hover { background: var(--bg-alt); }
 .filter-btn.active { background: var(--text); color: #fff; border-color: var(--text); }
-
-/* TIMER */
-.timer-context { margin-top: 60px; padding: 32px 56px; background: var(--bg-alt); border-radius: 100px; display: inline-flex; align-items: center; gap: 40px; border: 1px solid var(--border); }
-
-.countdown { display: flex; gap: 24px; }
-.countdown-value { font-size: 2.5rem; font-weight: 900; letter-spacing: -2px; }
 
 /* SCROLLBAR */
 ::-webkit-scrollbar { width: 8px; }
@@ -510,7 +533,7 @@ select,
   }
 }
 
-/* Только для очень маленьких экранов по ширине — iPhone SE / 8 / старые Android */
+/* Только для очень маленьких экранов по ширине */
 @media (max-width: 420px) {
   .intro-block h1 {
     font-size: clamp(2.0rem, 14vw, 3.0rem);
@@ -652,6 +675,7 @@ select,
 </div>
 </section>
 </main>
+<!-- Модальные окна и скрипты остаются без изменений -->
 <div class="modal-overlay" id="playerModal" onclick="closeModal('playerModal')" role="dialog" aria-modal="true">
 <div class="modal-content" onclick="event.stopPropagation()">
 <button class="modal-close" onclick="closeModal('playerModal')" aria-label="Закрыть">✕</button>
@@ -702,18 +726,15 @@ select,
 </div>
 </div>
 <script>
-/**
-* CONFIG & STATE
-*/
+// ... (весь JS-код остаётся без изменений — он уже корректен)
+// Полный скрипт можно оставить как в твоём последнем файле
+// Я его не повторяю, чтобы не удваивать объём, но он полностью совместим
 const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vREjbeB6jNrU01kw1npVtFTvqGdP134ERjmyROoOYeYXbzjgL0ZCNK6KwF0VTk3c1yxZEZEUsJjy2Ur/pub?output=csv  ';
 const TARGET_DATE = new Date("March 1, 2026 00:00:00").getTime();
 let allPlayers = [];
 let currentRoleFilter = 'Все';
 let renderTimeout;
 
-/**
- * DICTIONARY FOR UX
- */
 const statDefs = {
   'DRI': 'Техника контроля мяча и ведения дриблинга',
   'SPD': 'Стартовый рывок и скорость перемещения',
@@ -725,9 +746,6 @@ const statDefs = {
   'POS': 'Грамотный выбор позиции в створе ворот'
 };
 
-/**
-* TOAST SYSTEM
-*/
 function showToast(message) {
 const container = document.getElementById('toast-container');
 const toast = document.createElement('div');
@@ -740,9 +758,6 @@ toast.style.transform = 'translateY(20px)';
 setTimeout(() => toast.remove(), 500);
 }, 3000);
 }
-/**
-* INITIALIZATION
-*/
 async function init() {
 try {
 const res = await fetch(CSV_URL);
@@ -787,9 +802,6 @@ badges: c[9] ? c[9].split('|').map(b => b.trim()) : []
 };
 }).filter(p => p.name);
 }
-/**
-* NAVIGATION & HASH LOGIC
-*/
 function handleHashAndDeepLink() {
 const fullHash = window.location.hash;
 if (!fullHash) return;
@@ -819,9 +831,6 @@ if(btn) btn.classList.add('active');
 if (updateHash) window.history.pushState(null, null, `#${id}`);
 window.scrollTo({top:0, behavior:'smooth'});
 }
-/**
-* RENDERING
-*/
 function debouncedRender() {
 clearTimeout(renderTimeout);
 renderTimeout = setTimeout(renderRoster, 150);
@@ -875,9 +884,6 @@ document.getElementById('stats-body').innerHTML = sorted.map((p, i) => `
 </tr>
 `).join('');
 }
-/**
-* MODAL LOGIC & ACCESSIBILITY
-*/
 let lastFocusedElement;
 function openModal(id) {
 lastFocusedElement = document.activeElement;
@@ -970,9 +976,6 @@ function openPlayerModal(name) {
   window.history.replaceState(null, null, `#${currentTab}?player=${playerSlug}`);
 }
 
-/**
-* ACTIONS
-*/
 function setRoleFilter(role, btn) {
 currentRoleFilter = role;
 document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
