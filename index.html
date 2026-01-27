@@ -91,27 +91,58 @@ p { font-size: 1rem; color: var(--text-dim); }
   margin: 20px 0 15px;
 }
 
-/* UX TOOLTIPS STYLES */
+/* UX TOOLTIPS STYLES - ОБНОВЛЕННЫЕ ДЛЯ МОБИЛЬНЫХ */
 .stat-item { position: relative; }
-.stat-header { display: flex; align-items: center; gap: 6px; cursor: help; }
+.stat-header { 
+  display: flex; 
+  align-items: center; 
+  gap: 6px; 
+  cursor: help;
+  -webkit-tap-highlight-color: transparent;
+}
 .info-icon {
   width: 14px; height: 14px; border-radius: 50%; border: 1px solid var(--border);
   display: flex; align-items: center; justify-content: center;
   font-size: 8px; color: var(--text-dim); transition: 0.3s var(--cubic);
   font-style: normal; font-weight: 800;
+  user-select: none;
 }
-.stat-header:hover .info-icon { background: var(--text); color: #fff; border-color: var(--text); }
+.stat-header:hover .info-icon,
+.stat-header.active .info-icon { 
+  background: var(--text); 
+  color: #fff; 
+  border-color: var(--text); 
+}
 
 .stat-header::after {
   content: attr(data-tip);
-  position: absolute; bottom: calc(100% + 10px); left: 0;
-  background: #000; color: #fff; padding: 10px 14px; border-radius: 12px;
-  font-size: 11px; font-weight: 500; width: 200px; line-height: 1.4;
-  opacity: 0; visibility: hidden; transform: translateY(10px);
-  transition: 0.4s var(--cubic); z-index: 100; pointer-events: none;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.15); text-transform: none; font-style: normal;
+  position: absolute; 
+  bottom: calc(100% + 10px); 
+  left: 0;
+  background: #000; 
+  color: #fff; 
+  padding: 10px 14px; 
+  border-radius: 12px;
+  font-size: 11px; 
+  font-weight: 500; 
+  width: 200px; 
+  line-height: 1.4;
+  opacity: 0; 
+  visibility: hidden; 
+  transform: translateY(10px);
+  transition: 0.4s var(--cubic); 
+  z-index: 100; 
+  pointer-events: none;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15); 
+  text-transform: none; 
+  font-style: normal;
 }
-.stat-header:hover::after { opacity: 1; visibility: visible; transform: translateY(0); }
+.stat-header:hover::after,
+.stat-header.active::after { 
+  opacity: 1; 
+  visibility: visible; 
+  transform: translateY(0); 
+}
 
 /* PRELOADER */
 #preloader {
@@ -521,8 +552,15 @@ select,
     grid-template-columns: 1fr;
     gap: 20px;
   }
-  .stat-header:hover::after { 
-    display: none;
+  /* Обновленные стили для мобильных тултипов */
+  .stat-header::after { 
+    display: block !important; /* Разрешаем показ на мобилках */
+    width: 180px; /* Немного меньше для мобилок */
+    left: 50%;
+    transform: translateX(-50%) translateY(10px);
+  }
+  .stat-header.active::after {
+    transform: translateX(-50%) translateY(0);
   }
   .table-wrapper {
     overflow-x: auto;
@@ -767,6 +805,53 @@ toast.style.transform = 'translateY(20px)';
 setTimeout(() => toast.remove(), 500);
 }, 3000);
 }
+
+/* ОБРАБОТЧИК ДЛЯ МОБИЛЬНЫХ ТУЛТИПОВ */
+function initMobileTooltips() {
+  document.addEventListener('click', function(e) {
+    if (window.innerWidth > 768) return;
+    
+    const statHeader = e.target.closest('.stat-header');
+    const infoIcon = e.target.closest('.info-icon');
+    
+    if (statHeader || infoIcon) {
+      e.preventDefault();
+      e.stopPropagation();
+      
+      const target = statHeader || infoIcon.closest('.stat-header');
+      
+      // Закрываем все другие открытые тултипы
+      document.querySelectorAll('.stat-header.active').forEach(el => {
+        if (el !== target) el.classList.remove('active');
+      });
+      
+      // Переключаем текущий тултип
+      if (target) {
+        target.classList.toggle('active');
+      }
+    } else {
+      // Клик вне тултипа - закрываем все
+      document.querySelectorAll('.stat-header.active').forEach(el => {
+        el.classList.remove('active');
+      });
+    }
+  });
+  
+  // Закрываем тултипы при клике вне на мобильных
+  document.addEventListener('touchstart', function(e) {
+    if (window.innerWidth > 768) return;
+    
+    const isTooltip = e.target.closest('.stat-header') || 
+                      e.target.closest('.info-icon');
+    
+    if (!isTooltip) {
+      document.querySelectorAll('.stat-header.active').forEach(el => {
+        el.classList.remove('active');
+      });
+    }
+  });
+}
+
 async function init() {
 try {
 const res = await fetch(CSV_URL);
@@ -781,6 +866,10 @@ renderStats();
 handleHashAndDeepLink();
 setInterval(updateTimer, 1000);
 updateTimer();
+
+// Инициализируем мобильные тултипы
+initMobileTooltips();
+
 setTimeout(() => {
   document.getElementById('preloader').classList.add('loaded');
 }, 300);
@@ -970,6 +1059,11 @@ function openPlayerModal(name) {
       </div>
     </div>
   `).join('');
+
+  // Закрываем все открытые тултипы перед открытием новой модалки
+  document.querySelectorAll('.stat-header.active').forEach(el => {
+    el.classList.remove('active');
+  });
 
   openModal('playerModal');
 
