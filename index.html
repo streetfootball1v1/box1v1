@@ -552,16 +552,28 @@ select,
     grid-template-columns: 1fr;
     gap: 20px;
   }
-  /* Обновленные стили для мобильных тултипов */
+  
+  /* ИСПРАВЛЕНИЕ ДЛЯ МОБИЛЬНЫХ ТУЛТИПОВ - ГЛАВНОЕ ИСПРАВЛЕНИЕ! */
   .stat-header::after { 
-    display: block !important; /* Разрешаем показ на мобилках */
-    width: 180px; /* Немного меньше для мобилок */
+    display: block !important;
+    width: calc(100vw - 40px); /* Ширина экрана минус отступы */
+    max-width: 280px; /* Максимальная ширина */
     left: 50%;
     transform: translateX(-50%) translateY(10px);
+    margin-left: 0;
+    text-align: center;
+    white-space: normal;
+    word-wrap: break-word;
+    font-size: 10px;
+    padding: 10px;
+    bottom: calc(100% + 8px);
+    box-sizing: border-box;
   }
+  
   .stat-header.active::after {
     transform: translateX(-50%) translateY(0);
   }
+  
   .table-wrapper {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
@@ -1139,3 +1151,4 @@ window.onload = init;
 </script>
 </body>
 </html>
+
