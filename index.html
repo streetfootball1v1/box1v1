@@ -105,7 +105,6 @@ transition: opacity 0.8s var(--cubic), visibility 0.8s;
   opacity: 0; 
   visibility: hidden;
 }
-/* Убираем полосу загрузки после загрузки */
 #preloader.loaded .loading-bar {
   opacity: 0;
   transition: opacity 0.3s;
@@ -151,8 +150,6 @@ background: var(--glass); backdrop-filter: blur(24px);
 -webkit-backface-visibility: hidden;
 backface-visibility: hidden;
 }
-/* УДАЛЕНО: body.scrolled nav — это вызывало пунктир */
-
 .nav-inner {
 max-width: 1300px; margin: 0 auto; height: 100%;
 display: flex; align-items: center; justify-content: space-between;
@@ -192,7 +189,12 @@ background: var(--bg-alt); border: none; transition: 0.3s;
 .mobile-drawer.open { right: 0; box-shadow: -40px 0 80px rgba(0,0,0,0.1); }
 .mobile-drawer a { font-size: 2.5rem; font-weight: 900; text-decoration: none; color: var(--text); font-style: italic; text-transform: uppercase; letter-spacing: -2px; }
 /* MAIN CONTENT */
-.main-content { max-width: 1300px; margin: 0 auto; padding: 120px 32px 100px; min-height: 80vh; }
+.main-content { 
+  max-width: 1300px; 
+  margin: 0 auto; 
+  padding: 120px 32px 100px; 
+  min-height: calc(100dvh - 72px); /* ← ИСПОЛЬЗУЕМ dvh */
+}
 section { display: none; opacity: 0; }
 section.active { display: block; animation: fadeInUp 0.8s var(--cubic) forwards; }
 @keyframes fadeInUp {
@@ -225,7 +227,11 @@ cursor: pointer; display: flex; flex-direction: column;
 .card:hover { transform: translateY(-10px); border-color: rgba(0,0,0,0.15); box-shadow: var(--shadow-md); }
 .card:focus-visible { outline: 3px solid var(--accent); }
 /* PLAYER CARD */
-.player-card { height: 480px; background: #000; color: #fff; border: none; padding: 32px; }
+.player-card { 
+  min-height: 480px; /* ← ЗАМЕНЁН height НА min-height */
+  height: auto;
+  background: #000; color: #fff; border: none; padding: 32px; 
+}
 .player-img {
 position: absolute; inset: 0; background-size: cover; background-position: center top;
 filter: grayscale(1); opacity: 0.5; transition: 1s var(--cubic);
@@ -314,14 +320,9 @@ select,
 }
 
 @media (max-width: 768px) {
-  /* Навигация */
   .nav-links { display: none; }
   .burger { display: flex; }
-  
-  /* Основной контент */
   .main-content { padding: 100px 16px 60px; }
-  
-  /* Главная страница */
   .intro-block { padding: 20px 0 40px; }
   .intro-block h1 { 
     font-size: clamp(2.5rem, 15vw, 4rem) !important; 
@@ -333,8 +334,6 @@ select,
     margin-bottom: 24px;
     padding: 0 10px;
   }
-  
-  /* Таймер */
   .timer-context { 
     border-radius: 24px !important; 
     flex-direction: column !important; 
@@ -350,7 +349,7 @@ select,
     justify-content: center;
   }
   .countdown > div {
-    min-width: 60px; /* ← КЛЮЧЕВОЕ ИЗМЕНЕНИЕ */
+    min-width: 60px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -361,8 +360,6 @@ select,
   .countdown-label {
     font-size: 11px;
   }
-  
-  /* Кнопки на главной */
   .btn-group {
     gap: 12px !important;
   }
@@ -371,8 +368,6 @@ select,
     font-size: 12px !important;
     min-height: 44px;
   }
-  
-  /* Сетка */
   .bento-grid { 
     grid-template-columns: 1fr; 
     gap: 16px;
@@ -389,8 +384,6 @@ select,
     font-size: 2rem !important; 
     margin: 12px 0 !important;
   }
-  
-  /* Поиск и фильтры */
   .controls-row { 
     flex-direction: column; 
     align-items: stretch !important; 
@@ -399,7 +392,7 @@ select,
   .search-input { 
     max-width: 100% !important;
     padding: 16px 20px !important;
-    font-size: 16px; /* Предотвращает зум в iOS */
+    font-size: 16px;
   }
   .filter-bar { 
     overflow-x: auto; 
@@ -412,8 +405,6 @@ select,
     padding: 12px 16px;
     white-space: nowrap;
   }
-  
-  /* Карточки игроков */
   .player-card { 
     min-height: 360px !important;
     height: auto !important;
@@ -422,8 +413,6 @@ select,
   .player-card h3 {
     font-size: 1.8rem !important;
   }
-  
-  /* Модальные окна */
   .modal-content { 
     padding: 32px 24px !important; 
     border-radius: 24px !important;
@@ -436,8 +425,6 @@ select,
     width: 40px;
     height: 40px;
   }
-  
-  /* Drawer */
   .mobile-drawer { 
     padding: 90px 24px 40px !important; 
     width: min(85%, 320px) !important;
@@ -449,19 +436,13 @@ select,
     letter-spacing: -1px !important;
     padding: 12px 0;
   }
-  
-  /* Статистика в модалке */
   #m-stats {
     grid-template-columns: 1fr !important;
     gap: 20px !important;
   }
-  
-  /* Инфо-подсказки на мобильных */
   .stat-header:hover::after { 
     display: none !important; 
   }
-  
-  /* Таблица рейтинга */
   .table-wrapper {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
@@ -487,6 +468,42 @@ select,
   }
   .player-card {
     min-height: 320px !important;
+  }
+}
+
+/* 🔥 ДОПОЛНИТЕЛЬНО: для базовых iPhone (маленький экран по высоте или ширине) */
+@media (max-width: 420px), (max-height: 820px) {
+  .intro-block h1 {
+    font-size: clamp(2.0rem, 14vw, 3.0rem) !important;
+    line-height: 1.0 !important;
+  }
+  .player-card {
+    min-height: 300px !important;
+  }
+  .timer-context {
+    padding: 16px !important;
+    gap: 8px !important;
+  }
+  .countdown > div {
+    min-width: 48px !important;
+  }
+  .countdown-value {
+    font-size: 1.4rem !important;
+  }
+  .main-content {
+    padding-top: 85px !important;
+    padding-bottom: 50px !important;
+  }
+  nav {
+    height: 64px !important;
+  }
+  .btn {
+    padding: 14px 24px !important;
+    font-size: 11px !important;
+  }
+  .ovr-badge {
+    padding: 4px 10px !important;
+    font-size: 10px !important;
   }
 }
 
@@ -695,14 +712,12 @@ renderStats();
 handleHashAndDeepLink();
 setInterval(updateTimer, 1000);
 updateTimer();
-// Убираем прелоадер после загрузки
 setTimeout(() => {
   document.getElementById('preloader').classList.add('loaded');
 }, 300);
 } catch (e) {
 console.error("Load Error", e);
 showToast("Ошибка загрузки данных");
-// Все равно убираем прелоадер даже при ошибке
 setTimeout(() => {
   document.getElementById('preloader').classList.add('loaded');
 }, 300);
