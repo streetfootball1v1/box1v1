@@ -101,7 +101,32 @@ position: fixed; inset: 0; background: #fff; z-index: 9999;
 display: flex; justify-content: center; align-items: center;
 transition: opacity 0.8s var(--cubic), visibility 0.8s;
 }
-#preloader.loaded { opacity: 0; visibility: hidden; }
+#preloader.loaded { 
+  opacity: 0; 
+  visibility: hidden;
+}
+/* Убираем полосу загрузки после загрузки */
+#preloader.loaded .loading-bar {
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.loading-bar {
+  width: 140px; 
+  height: 2px; 
+  background: var(--bg-alt); 
+  margin: 20px auto 0; 
+  position: relative; 
+  overflow: hidden;
+}
+.loading-bar::after {
+  content: '';
+  position: absolute; 
+  width: 60%; 
+  height: 100%; 
+  background: var(--text); 
+  animation: load 1.5s infinite var(--cubic);
+}
+
 /* TOASTS SYSTEM */
 #toast-container {
 position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%);
@@ -460,7 +485,10 @@ select,
   }
 }
 
-@keyframes load { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+@keyframes load { 
+  0% { transform: translateX(-100%); } 
+  100% { transform: translateX(100%); } 
+}
 </style>
 </head>
 <body>
@@ -468,9 +496,7 @@ select,
 <div id="preloader" role="status" aria-label="Загрузка">
 <div style="text-align:center;">
 <h2 style="font-size:3rem; margin-bottom:10px;">BOX<span style="color:var(--accent)">1</span>V1</h2>
-<div style="width:140px; height:2px; background:var(--bg-alt); margin:0 auto; position:relative; overflow:hidden;">
-<div style="position:absolute; width:60%; height:100%; background:var(--text); animation: load 1.5s infinite var(--cubic);"></div>
-</div>
+<div class="loading-bar"></div>
 </div>
 </div>
 <nav id="navbar">
@@ -664,11 +690,17 @@ renderStats();
 handleHashAndDeepLink();
 setInterval(updateTimer, 1000);
 updateTimer();
-document.getElementById('preloader').classList.add('loaded');
+// Убираем прелоадер после загрузки
+setTimeout(() => {
+  document.getElementById('preloader').classList.add('loaded');
+}, 300);
 } catch (e) {
 console.error("Load Error", e);
 showToast("Ошибка загрузки данных");
-document.getElementById('preloader').classList.add('loaded');
+// Все равно убираем прелоадер даже при ошибке
+setTimeout(() => {
+  document.getElementById('preloader').classList.add('loaded');
+}, 300);
 }
 }
 function parseCSV(text) {
