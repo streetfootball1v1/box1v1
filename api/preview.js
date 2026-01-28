@@ -6,24 +6,27 @@ export default async function handler(req) {
 
   if (!player) return Response.redirect(new URL('/', req.url));
 
-  // Ссылка на твою страницу стат (без лишних папок)
   const targetUrl = `https://box1v1.vercel.app/#stats?player=${encodeURIComponent(player)}`;
-
-  // Сервис-скриншотер (делает фото твоей верстки)
-  const screenshotUrl = `https://s0.wp.com/mshots/v1/${encodeURIComponent(targetUrl)}?w=1200&h=630`;
+  
+  // Используем другой сервис (pikwy), он лучше работает с динамическими сайтами
+  const screenshotUrl = `https://api.pikwy.com/screenshot.php?url=${encodeURIComponent(targetUrl)}&w=1200&h=630&display_full_page=0`;
 
   return new Response(
     `<html>
       <head>
         <meta charset="UTF-8">
-        <meta property="og:title" content="Карточка игрока: ${player}">
-        <meta property="og:description" content="STREET FOOTBALL 1v1 | Статистика и рейтинги">
+        <title>Card: ${player}</title>
+        <meta property="og:title" content="Игрок: ${player}">
+        <meta property="og:description" content="STREET FOOTBALL 1v1 | Статистика">
         <meta property="og:image" content="${screenshotUrl}">
+        <meta property="og:image:width" content="1200">
+        <meta property="og:image:height" content="630">
         <meta property="og:type" content="website">
         <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:image" content="${screenshotUrl}">
         <meta http-equiv="refresh" content="0; url=/#stats?player=${encodeURIComponent(player)}">
       </head>
-      <body>Загрузка карточки...</body>
+      <body></body>
     </html>`,
     { headers: { 'Content-Type': 'text/html; charset=utf-8' } }
   );
