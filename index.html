@@ -392,15 +392,15 @@ box-shadow: 0 40px 80px rgba(0,0,0,0.1); transform: translateY(40px) scale(0.95)
 .modal-close {
 position: absolute; top: 24px; right: 24px; width: 48px; height: 48px;
 background: var(--bg-alt); border-radius: 50%; display: flex;
-align-items: center; justify-content: center; cursor: pointer; z-index: 10;
+align-items: center; justify-content: center; cursor: pointer; z-index: 101;
 border: none; transition: 0.3s var(--cubic);
 }
 .modal-close:hover { transform: rotate(90deg); background: #eee; }
-/* КНОПКА СКАЧИВАНИЯ КАРТОЧКИ */
+/* КНОПКА СКАЧИВАНИЯ КАРТОЧКИ - ИСПРАВЛЕННАЯ ДЛЯ МОБИЛЬНЫХ */
 .download-circle {
 position: absolute;
-top: 15px;
-right: 15px;
+top: 24px;
+right: 80px;
 width: 38px;
 height: 38px;
 background: rgba(255, 255, 255, 0.15);
@@ -575,6 +575,16 @@ right: 16px;
 width: 40px;
 height: 40px;
 }
+.download-circle {
+top: 16px;
+right: 64px;
+width: 40px;
+height: 40px;
+}
+.download-circle svg {
+width: 16px;
+height: 16px;
+}
 .mobile-drawer {
 padding: 90px 24px 40px;
 width: min(85%, 320px);
@@ -633,6 +643,9 @@ font-size: 1.6rem;
 }
 .player-card {
 min-height: 320px;
+}
+.download-circle {
+right: 56px;
 }
 }
 /* Только для очень маленьких экранов по ширине */
@@ -1174,28 +1187,74 @@ captureAndDownload(card, btn);
 }
 });
 function captureAndDownload(card, btn) {
-html2canvas(card, {
-useCORS: true,
-scale: 3,
-backgroundColor: null,
-logging: false,
-windowWidth: 600,
-windowHeight: 800
+// Создаем временный элемент для скриншота
+const tempCard = card.cloneNode(true);
+tempCard.id = 'temp-stats-card';
+tempCard.style.width = '540px';
+tempCard.style.maxWidth = '540px';
+tempCard.style.position = 'absolute';
+tempCard.style.top = '-9999px';
+tempCard.style.left = '-9999px';
+tempCard.style.opacity = '1';
+tempCard.style.visibility = 'visible';
+tempCard.style.display = 'block';
+tempCard.style.boxShadow = '0 40px 80px rgba(0,0,0,0.1)';
+tempCard.style.borderRadius = '40px';
+tempCard.style.padding = '48px';
+tempCard.style.background = '#fff';
+tempCard.style.zIndex = '-1000';
+
+// Удаляем кнопки, которые нам не нужны на скриншоте
+tempCard.querySelector('.modal-close')?.remove();
+tempCard.querySelector('#download-card')?.remove();
+
+document.body.appendChild(tempCard);
+
+html2canvas(tempCard, {
+    backgroundColor: '#ffffff',
+    scale: 2,
+    useCORS: true,
+    logging: false,
+    width: 540,
+    height: tempCard.scrollHeight,
+    windowWidth: 540,
+    windowHeight: tempCard.scrollHeight,
+    onclone: function(clonedDoc) {
+        const clonedCard = clonedDoc.getElementById('temp-stats-card');
+        if (clonedCard) {
+            clonedCard.style.position = 'static';
+            clonedCard.style.transform = 'none';
+            clonedCard.style.opacity = '1';
+            clonedCard.style.visibility = 'visible';
+            clonedCard.style.maxWidth = '540px';
+            clonedCard.style.width = '540px';
+            clonedCard.style.margin = '0 auto';
+        }
+    }
 }).then(canvas => {
-const playerName = document.getElementById('m-name')?.innerText?.replace(/\s+/g, '_') || 'player';
-const link = document.createElement('a');
-link.download = `BOX1V1_${playerName}_card.png`;
-link.href = canvas.toDataURL("image/png");
-document.body.appendChild(link);
-link.click();
-document.body.removeChild(link);
-showToast("Карточка сохранена!");
+    const playerName = document.getElementById('m-name')?.innerText?.replace(/[^a-zA-Zа-яА-Я0-9]/g, '_') || 'player';
+    const link = document.createElement('a');
+    link.download = `BOX1V1_${playerName}_card.png`;
+    link.href = canvas.toDataURL("image/png", 1.0);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    // Удаляем временный элемент
+    document.body.removeChild(tempCard);
+    
+    showToast("Карточка сохранена!");
 }).catch(err => {
-console.error("Ошибка создания изображения:", err);
-showToast("Не удалось сохранить карточку");
+    console.error("Ошибка создания изображения:", err);
+    showToast("Не удалось сохранить карточку");
+    // Удаляем временный элемент в случае ошибки
+    const tempEl = document.getElementById('temp-stats-card');
+    if (tempEl && tempEl.parentNode) {
+        document.body.removeChild(tempEl);
+    }
 }).finally(() => {
-btn.style.opacity = "1";
-btn.disabled = false;
+    btn.style.opacity = "1";
+    btn.disabled = false;
 });
 }
 function updateTimer() {
