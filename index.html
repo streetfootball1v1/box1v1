@@ -4,760 +4,675 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"/>
 <title>BOX1V1 | УЛИЧНЫЙ ФУТБОЛ 1 НА 1</title>
-  <!-- FAVICONS -->
+<!-- FAVICONS -->
 <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png?v=3">
-    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png?v=3">
-    <link rel="shortcut icon" href="favicon.ico?v=3">
-
-    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=3">
-
-    <link rel="manifest" href="site.webmanifest?v=3">
-    <meta name="theme-color" content="#0a0a0a">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-
-    <meta name="msapplication-TileColor" content="#0a0a0a">
-    <meta name="msapplication-TileImage" content="android-chrome-144x144.png">
-
-    <meta name="description" content="BOX1V1 — закрытая экосистема для футболистов 1 на 1. Техника, медиа и скаутинг.">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://box1v1.ru/">
-    <meta property="og:title" content="BOX1V1 | УЛИЧНЫЙ ФУТБОЛ 1 на 1">
-    <meta property="og:description" content="Стань сообщества футболистов 1x1. Рейтинги, карточки и статистика.">
-    <meta property="og:image" content="https://box1v1.ru/preview-og.jpg">
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png?v=3">
+<link rel="shortcut icon" href="favicon.ico?v=3">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=3">
+<link rel="manifest" href="site.webmanifest?v=3">
+<meta name="theme-color" content="#0a0a0a">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="msapplication-TileColor" content="#0a0a0a">
+<meta name="msapplication-TileImage" content="android-chrome-144x144.png">
+<meta name="description" content="BOX1V1 — закрытая экосистема для футболистов 1 на 1. Техника, медиа и скаутинг.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://box1v1.ru/">
+<meta property="og:title" content="BOX1V1 | УЛИЧНЫЙ ФУТБОЛ 1 на 1">
+<meta property="og:description" content="Стань сообщества футболистов 1x1. Рейтинги, карточки и статистика.">
+<meta property="og:image" content="https://box1v1.ru/preview-og.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
 <style>
 :root {
-  --nav-h: 72px;
-  --bg: #ffffff;
-  --bg-alt: #f8f8f8;
-  --card: #ffffff;
-  --text: #0a0a0a;
-  --text-dim: #6b7280;
-  --border: rgba(0,0,0,0.06);
-  --accent: #22c55e;
-  --accent-dark: #16a34a;
-  --ls-tight: -0.04em;
-  --ls-normal: -0.01em;
-  --lh-tight: 1.1;
-  --lh-base: 1.6;
-  --shadow-sm: 0 2px 8px rgba(0,0,0,0.04);
-  --shadow-md: 0 20px 40px -12px rgba(0,0,0,0.08);
-  --cubic: cubic-bezier(0.2, 0, 0, 1);
-  --glass: rgba(255,255,255,0.8);
-  --radius: 24px;
-  --radius-sm: 14px;
+--nav-h: 72px;
+--bg: #ffffff;
+--bg-alt: #f8f8f8;
+--card: #ffffff;
+--text: #0a0a0a;
+--text-dim: #6b7280;
+--border: rgba(0,0,0,0.06);
+--accent: #22c55e;
+--accent-dark: #16a34a;
+--ls-tight: -0.04em;
+--ls-normal: -0.01em;
+--lh-tight: 1.1;
+--lh-base: 1.6;
+--shadow-sm: 0 2px 8px rgba(0,0,0,0.04);
+--shadow-md: 0 20px 40px -12px rgba(0,0,0,0.08);
+--cubic: cubic-bezier(0.2, 0, 0, 1);
+--glass: rgba(255,255,255,0.8);
+--radius: 24px;
+--radius-sm: 14px;
 }
 @media (max-width: 420px) {
-  :root {
-    --nav-h: 64px;
-  }
+:root {
+--nav-h: 64px;
 }
-
+}
 * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 html {
-  scroll-behavior: smooth;
-  background: var(--bg);
-  -webkit-font-smoothing: antialiased;
+scroll-behavior: smooth;
+background: var(--bg);
+-webkit-font-smoothing: antialiased;
 }
 body {
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  overflow-x: hidden;
-  line-height: var(--lh-base);
-  letter-spacing: var(--ls-normal);
+font-family: 'Inter', system-ui, -apple-system, sans-serif;
+background: var(--bg);
+color: var(--text);
+overflow-x: hidden;
+line-height: var(--lh-base);
+letter-spacing: var(--ls-normal);
 }
 h1, h2, h3 {
-  font-weight: 900;
-  font-style: italic;
-  letter-spacing: var(--ls-tight);
-  line-height: var(--lh-tight);
-  text-transform: uppercase;
+font-weight: 900;
+font-style: italic;
+letter-spacing: var(--ls-tight);
+line-height: var(--lh-tight);
+text-transform: uppercase;
 }
 p { font-size: 1rem; color: var(--text-dim); }
-
 /* === НОВЫЙ СТИЛЬ ДЛЯ РЕГЛАМЕНТА === */
 .reg-header {
-  font-size: clamp(2.0rem, 8vw, 3.5rem);
-  line-height: var(--lh-tight);
-  letter-spacing: var(--ls-tight);
-  text-transform: uppercase;
-  font-weight: 900;
-  font-style: italic;
-  margin: 20px 0 15px;
+font-size: clamp(2.0rem, 8vw, 3.5rem);
+line-height: var(--lh-tight);
+letter-spacing: var(--ls-tight);
+text-transform: uppercase;
+font-weight: 900;
+font-style: italic;
+margin: 20px 0 15px;
 }
-
 /* UX TOOLTIPS STYLES - ИСПРАВЛЕННЫЙ ДЛЯ МОБИЛЬНЫХ */
-.stat-item { 
-  position: relative; 
+.stat-item {
+position: relative;
 }
-
-.stat-header { 
-  display: flex; 
-  align-items: center; 
-  gap: 6px; 
-  cursor: help;
-  -webkit-tap-highlight-color: transparent;
-  user-select: none;
-  position: relative; /* Добавляем относительное позиционирование для родителя */
+.stat-header {
+display: flex;
+align-items: center;
+gap: 6px;
+cursor: help;
+-webkit-tap-highlight-color: transparent;
+user-select: none;
+position: relative; /* Добавляем относительное позиционирование для родителя */
 }
-
 .info-icon {
-  width: 14px; 
-  height: 14px; 
-  border-radius: 50%; 
-  border: 1px solid var(--border);
-  display: flex; 
-  align-items: center; 
-  justify-content: center;
-  font-size: 8px; 
-  color: var(--text-dim); 
-  transition: 0.3s var(--cubic);
-  font-style: normal; 
-  font-weight: 800;
+width: 14px;
+height: 14px;
+border-radius: 50%;
+border: 1px solid var(--border);
+display: flex;
+align-items: center;
+justify-content: center;
+font-size: 8px;
+color: var(--text-dim);
+transition: 0.3s var(--cubic);
+font-style: normal;
+font-weight: 800;
 }
-
 .stat-header:hover .info-icon,
-.stat-header.active .info-icon { 
-  background: var(--text); 
-  color: #fff; 
-  border-color: var(--text); 
+.stat-header.active .info-icon {
+background: var(--text);
+color: #fff;
+border-color: var(--text);
 }
-
 /* ИСПРАВЛЕННЫЙ ТУЛТИП - ВЫВОДИМ ИЗ ПОТОКА */
 .stat-header::after {
-  content: attr(data-tip);
-  position: absolute;
-  bottom: calc(100% + 10px);
-  left: 50%;
-  transform: translateX(-50%) translateY(10px);
-  background: #000;
-  color: #fff;
-  padding: 10px 12px;
-  border-radius: 12px;
-  font-size: 10px;
-  font-weight: 500;
-  line-height: 1.4;
-  opacity: 0;
-  visibility: hidden;
-  transition: 0.4s var(--cubic);
-  z-index: 1000;
-  pointer-events: none;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-  text-transform: none;
-  font-style: normal;
-  max-width: min(90vw, 260px);
-  white-space: normal;
-  word-break: break-word;
-  box-sizing: border-box;
-  width: max-content; /* Фиксируем ширину контента */
+content: attr(data-tip);
+position: absolute;
+bottom: calc(100% + 10px);
+left: 50%;
+transform: translateX(-50%) translateY(10px);
+background: #000;
+color: #fff;
+padding: 10px 12px;
+border-radius: 12px;
+font-size: 10px;
+font-weight: 500;
+line-height: 1.4;
+opacity: 0;
+visibility: hidden;
+transition: 0.4s var(--cubic);
+z-index: 1000;
+pointer-events: none;
+box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+text-transform: none;
+font-style: normal;
+max-width: min(90vw, 260px);
+white-space: normal;
+word-break: break-word;
+box-sizing: border-box;
+width: max-content; /* Фиксируем ширину контента */
 }
-
 .stat-header:hover::after,
 .stat-header.active::after {
-  opacity: 1;
-  visibility: visible;
-  transform: translateX(-50%) translateY(0);
+opacity: 1;
+visibility: visible;
+transform: translateX(-50%) translateY(0);
 }
-
 /* МОБИЛЬНЫЕ ИСПРАВЛЕНИЯ - ОТДЕЛЬНО ОТ КАРТОЧКИ */
 @media (max-width: 768px) {
-  .stat-header::after { 
-    position: fixed;
-    left: 50% !important;
-    transform: translateX(-50%) translateY(10px) !important;
-    bottom: min(200px, 30vh) !important; /* Минимум 200px или 30% высоты экрана */
-    top: auto !important;
-    max-width: 92vw;
-    width: auto;
-    margin-left: 0;
-    text-align: center;
-    font-size: 10px;
-    padding: 12px 16px;
-    box-sizing: border-box;
-  }
-  
-  .stat-header.active::after {
-    transform: translateX(-50%) translateY(0) !important;
-  }
+.stat-header::after {
+position: fixed;
+left: 50% !important;
+transform: translateX(-50%) translateY(10px) !important;
+bottom: min(200px, 30vh) !important; /* Минимум 200px или 30% высоты экрана */
+top: auto !important;
+max-width: 92vw;
+width: auto;
+margin-left: 0;
+text-align: center;
+font-size: 10px;
+padding: 12px 16px;
+box-sizing: border-box;
+}
+.stat-header.active::after {
+transform: translateX(-50%) translateY(0) !important;
+}
 }
 /* PRELOADER */
 #preloader {
-  position: fixed; inset: 0; background: #fff; z-index: 9999;
-  display: flex; justify-content: center; align-items: center;
-  transition: opacity 0.8s var(--cubic), visibility 0.8s;
+position: fixed; inset: 0; background: #fff; z-index: 9999;
+display: flex; justify-content: center; align-items: center;
+transition: opacity 0.8s var(--cubic), visibility 0.8s;
 }
-#preloader.loaded { 
-  opacity: 0; 
-  visibility: hidden;
+#preloader.loaded {
+opacity: 0;
+visibility: hidden;
 }
 #preloader.loaded .loading-bar {
-  opacity: 0;
-  transition: opacity 0.3s;
+opacity: 0;
+transition: opacity 0.3s;
 }
 .loading-bar {
-  width: 140px; 
-  height: 2px; 
-  background: var(--bg-alt); 
-  margin: 20px auto 0; 
-  position: relative; 
-  overflow: hidden;
+width: 140px;
+height: 2px;
+background: var(--bg-alt);
+margin: 20px auto 0;
+position: relative;
+overflow: hidden;
 }
 .loading-bar::after {
-  content: '';
-  position: absolute; 
-  width: 60%; 
-  height: 100%; 
-  background: var(--text); 
-  animation: load 1.5s infinite var(--cubic);
+content: '';
+position: absolute;
+width: 60%;
+height: 100%;
+background: var(--text);
+animation: load 1.5s infinite var(--cubic);
 }
-
 /* TOASTS SYSTEM */
 #toast-container {
-  position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%);
-  z-index: 10000; display: flex; flex-direction: column; gap: 10px;
-  pointer-events: none;
+position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%);
+z-index: 10000; display: flex; flex-direction: column; gap: 10px;
+pointer-events: none;
 }
 .toast {
-  background: #000; color: #fff; padding: 16px 24px; border-radius: 16px;
-  font-size: 13px; font-weight: 700; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-  animation: toastIn 0.5s var(--cubic) forwards; pointer-events: auto;
-  display: flex; align-items: center; gap: 12px;
+background: #000; color: #fff; padding: 16px 24px; border-radius: 16px;
+font-size: 13px; font-weight: 700; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+animation: toastIn 0.5s var(--cubic) forwards; pointer-events: auto;
+display: flex; align-items: center; gap: 12px;
 }
 @keyframes toastIn {
-  from { transform: translateY(100px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
+from { transform: translateY(100px); opacity: 0; }
+to { transform: translateY(0); opacity: 1; }
 }
-
 /* NAVIGATION */
 nav {
-  position: fixed; top: 0; left: 0; width: 100%;
-  height: calc(var(--nav-h) + env(safe-area-inset-top));
-  padding-top: env(safe-area-inset-top);
-  background: var(--glass); backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px); z-index: 1000;
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden;
+position: fixed; top: 0; left: 0; width: 100%;
+height: calc(var(--nav-h) + env(safe-area-inset-top));
+padding-top: env(safe-area-inset-top);
+background: var(--glass); backdrop-filter: blur(24px);
+-webkit-backdrop-filter: blur(24px); z-index: 1000;
+-webkit-backface-visibility: hidden;
+backface-visibility: hidden;
 }
 .nav-inner {
-  max-width: 1300px; margin: 0 auto; height: 100%;
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 0 clamp(20px, 5vw, 32px);
-  padding-left: max(clamp(20px, 5vw, 32px), env(safe-area-inset-left));
-  padding-right: max(clamp(20px, 5vw, 32px), env(safe-area-inset-right));
+max-width: 1300px; margin: 0 auto; height: 100%;
+display: flex; align-items: center; justify-content: space-between;
+padding: 0 clamp(20px, 5vw, 32px);
+padding-left: max(clamp(20px, 5vw, 32px), env(safe-area-inset-left));
+padding-right: max(clamp(20px, 5vw, 32px), env(safe-area-inset-right));
 }
 .logo {
-  font-size: 1.4rem; font-weight: 900; font-style: italic; letter-spacing: -1px; cursor: pointer;
-  transition: 0.3s;
+font-size: 1.4rem; font-weight: 900; font-style: italic; letter-spacing: -1px; cursor: pointer;
+transition: 0.3s;
 }
 .logo:hover { opacity: 0.7; }
 .nav-links { display: flex; gap: 8px; justify-content: center; }
 .nav-links a {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  line-height: 1;
-  text-decoration: none; font-size: 12px; font-weight: 700;
-  letter-spacing: 0.05em; text-transform: uppercase; color: var(--text-dim);
-  padding: 10px 20px; border-radius: var(--radius-sm); transition: 0.3s var(--cubic);
-  min-height: 44px;
+display: inline-flex;
+align-items: center;
+justify-content: center;
+line-height: 1;
+text-decoration: none; font-size: 12px; font-weight: 700;
+letter-spacing: 0.05em; text-transform: uppercase; color: var(--text-dim);
+padding: 10px 20px; border-radius: var(--radius-sm); transition: 0.3s var(--cubic);
+min-height: 44px;
 }
 .nav-links a:hover { color: var(--text); background: var(--bg-alt); }
 .nav-links a:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
 .nav-links a.active { color: #fff; background: var(--text); }
-
 /* BURGER */
 .burger {
-  display: none; cursor: pointer; width: 48px; height: 48px; flex-direction: column;
-  justify-content: center; align-items: center; gap: 6px; border-radius: 16px;
-  background: var(--bg-alt); border: none; transition: 0.3s;
+display: none; cursor: pointer; width: 48px; height: 48px; flex-direction: column;
+justify-content: center; align-items: center; gap: 6px; border-radius: 16px;
+background: var(--bg-alt); border: none; transition: 0.3s;
 }
 .burger:hover { background: #eee; }
 .burger span { width: 20px; height: 2px; background: var(--text); border-radius: 4px; transition: 0.3s var(--cubic); }
 .burger.open span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
 .burger.open span:nth-child(2) { opacity: 0; }
 .burger.open span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
-
 /* DRAWER */
 .drawer-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.2); backdrop-filter: blur(8px); z-index: 1999; opacity: 0; visibility: hidden; transition: 0.4s; }
 .drawer-overlay.open { opacity: 1; visibility: visible; }
 .mobile-drawer { position: fixed; top: 0; right: -100%; width: 85%; max-width: 360px; height: 100%; background: #fff; z-index: 2000; padding: 100px 40px; display: flex; flex-direction: column; gap: 24px; transition: 0.5s var(--cubic); }
 .mobile-drawer.open { right: 0; box-shadow: -40px 0 80px rgba(0,0,0,0.1); }
 .mobile-drawer a { font-size: 2.5rem; font-weight: 900; text-decoration: none; color: var(--text); font-style: italic; text-transform: uppercase; letter-spacing: -2px; }
-
 /* MAIN CONTENT */
-.main-content { 
-  max-width: 1300px; 
-  margin: 0 auto; 
-  padding: calc(var(--nav-h) + env(safe-area-inset-top)) 32px 100px; 
-  min-height: calc(100svh - var(--nav-h));
+.main-content {
+max-width: 1300px;
+margin: 0 auto;
+padding: calc(var(--nav-h) + env(safe-area-inset-top)) 32px 100px;
+min-height: calc(100svh - var(--nav-h));
 }
 section { display: none; opacity: 0; }
 section.active { display: block; animation: fadeInUp 0.8s var(--cubic) forwards; }
 @keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(30px); }
-  to { opacity: 1; transform: translateY(0); }
+from { opacity: 0; transform: translateY(30px); }
+to { opacity: 1; transform: translateY(0); }
 }
-
-.intro-block { 
-  padding: 40px 0 80px; 
-  text-align: center; 
-  max-width: 900px; 
-  margin: 0 auto; 
+.intro-block {
+padding: 40px 0 80px;
+text-align: center;
+max-width: 900px;
+margin: 0 auto;
 }
-.intro-block h1 { 
-  font-size: clamp(3.5rem, 12vw, 9.5rem); 
-  margin-bottom: 24px; 
+.intro-block h1 {
+font-size: clamp(3.5rem, 12vw, 9.5rem);
+margin-bottom: 24px;
 }
-.intro-block p { 
-  font-size: 1.25rem; 
-  max-width: 540px; 
-  margin: 0 auto 40px; 
+.intro-block p {
+font-size: 1.25rem;
+max-width: 540px;
+margin: 0 auto 40px;
 }
-
 /* BUTTONS */
 .btn {
-  padding: 20px 36px; border-radius: 20px; font-weight: 800;
-  text-transform: uppercase; font-size: 13px; letter-spacing: 0.05em;
-  cursor: pointer; transition: 0.4s var(--cubic); border: none;
-  text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 10px;
-  position: relative; overflow: hidden;
+padding: 20px 36px; border-radius: 20px; font-weight: 800;
+text-transform: uppercase; font-size: 13px; letter-spacing: 0.05em;
+cursor: pointer; transition: 0.4s var(--cubic); border: none;
+text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+position: relative; overflow: hidden;
 }
 .btn:active { transform: scale(0.96); }
 .btn-primary { background: var(--text); color: #fff; }
 .btn-primary:hover { transform: translateY(-4px); box-shadow: 0 20px 30px rgba(0,0,0,0.15); }
 .btn-outline { background: transparent; border: 1.5px solid var(--border); color: var(--text); }
 .btn-outline:hover { background: var(--bg-alt); border-color: var(--text); }
-
 /* TIMER */
-.timer-context { 
-  margin-top: 60px; 
-  padding: 32px 56px; 
-  background: var(--bg-alt); 
-  border-radius: 100px; 
-  display: inline-flex; 
-  align-items: center; 
-  gap: 40px; 
-  border: 1px solid var(--border); 
+.timer-context {
+margin-top: 60px;
+padding: 32px 56px;
+background: var(--bg-alt);
+border-radius: 100px;
+display: inline-flex;
+align-items: center;
+gap: 40px;
+border: 1px solid var(--border);
 }
 .countdown { display: flex; gap: 24px; }
 .countdown-value { font-size: 2.5rem; font-weight: 900; letter-spacing: -2px; }
-
 /* BENTO GRID */
 .bento-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-top: 40px; }
 .card {
-  background: var(--card); border-radius: var(--radius); border: 1px solid var(--border);
-  padding: 40px; position: relative; overflow: hidden; transition: 0.5s var(--cubic);
-  cursor: pointer; display: flex; flex-direction: column;
+background: var(--card); border-radius: var(--radius); border: 1px solid var(--border);
+padding: 40px; position: relative; overflow: hidden; transition: 0.5s var(--cubic);
+cursor: pointer; display: flex; flex-direction: column;
 }
 .card:hover { transform: translateY(-10px); border-color: rgba(0,0,0,0.15); box-shadow: var(--shadow-md); }
 .card:focus-visible { outline: 3px solid var(--accent); }
-
 /* СТИЛИ ДЛЯ КАРТОЧЕК (размеры как в текущей версии) */
 .card h2 {
-  font-size: 3.5rem;
+font-size: 3.5rem;
 }
-
 .card h3 {
-  font-size: 1.8rem;
+font-size: 1.8rem;
 }
-
 /* PLAYER CARD */
-.player-card { 
-  min-height: 480px;
-  height: auto;
-  background: #000; color: #fff; border: none; padding: 32px; 
-  isolation: isolate;
+.player-card {
+min-height: 480px;
+height: auto;
+background: #000; color: #fff; border: none; padding: 32px;
+isolation: isolate;
 }
 .player-img {
-  position: absolute; inset: 0; background-size: cover; background-position: center top;
-  filter: grayscale(1); opacity: 0.5; transition: 1s var(--cubic);
-  z-index: 0;
+position: absolute; inset: 0; background-size: cover; background-position: center top;
+filter: grayscale(1); opacity: 0.5; transition: 1s var(--cubic);
+z-index: 0;
 }
 .player-card:hover .player-img { filter: grayscale(0); opacity: 0.7; transform: scale(1.05); }
 .player-card::after {
-  content: ''; position: absolute; inset: 0;
-  background: linear-gradient(to top, #000 5%, rgba(0,0,0,0.4) 40%, transparent 90%); z-index: 1;
+content: ''; position: absolute; inset: 0;
+background: linear-gradient(to top, #000 5%, rgba(0,0,0,0.4) 40%, transparent 90%); z-index: 1;
 }
 .player-info { position: relative; z-index: 2; margin-top: auto; }
 .ovr-badge {
-  display: inline-block; padding: 6px 14px; background: var(--accent);
-  color: #000; border-radius: 12px; font-weight: 900; font-size: 12px; margin-top: 12px;
+display: inline-block; padding: 6px 14px; background: var(--accent);
+color: #000; border-radius: 12px; font-weight: 900; font-size: 12px; margin-top: 12px;
 }
-
 /* STATS TABLE */
-.table-wrapper { 
-  background: #fff; border-radius: var(--radius); border: 1px solid var(--border); 
-  overflow: hidden; 
-  overscroll-behavior-x: contain;
+.table-wrapper {
+background: #fff; border-radius: var(--radius); border: 1px solid var(--border);
+overflow: hidden;
+overscroll-behavior-x: contain;
 }
 table { width: 100%; border-collapse: collapse; }
 th { text-align: left; padding: 24px; font-size: 11px; font-weight: 800; text-transform: uppercase; color: var(--text-dim); border-bottom: 1px solid var(--border); }
 td { padding: 20px 24px; border-bottom: 1px solid var(--border); transition: 0.3s; }
 tr:last-child td { border-bottom: none; }
 tr:hover td {
-  background: rgba(0,0,0,0.02);
-  transition: background 0.2s ease;
+background: rgba(0,0,0,0.02);
+transition: background 0.2s ease;
 }
-
 /* MODAL */
 .modal-overlay {
-  position: fixed; inset: 0; background: rgba(255,255,255,0.7);
-  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-  z-index: 3000; display: flex; justify-content: center; align-items: center;
-  padding: 20px; opacity: 0; pointer-events: none; transition: 0.4s var(--cubic);
+position: fixed; inset: 0; background: rgba(255,255,255,0.7);
+backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+z-index: 3000; display: flex; justify-content: center; align-items: center;
+padding: 20px; opacity: 0; pointer-events: none; transition: 0.4s var(--cubic);
 }
 .modal-overlay.active { opacity: 1; pointer-events: auto; }
 .modal-content {
-  background: #fff; width: 100%; max-width: 540px; border-radius: 40px;
-  padding: 48px; position: relative; max-height: 90vh; overflow-y: auto;
-  box-shadow: 0 40px 80px rgba(0,0,0,0.1); transform: translateY(40px) scale(0.95); transition: 0.6s var(--cubic);
+background: #fff; width: 100%; max-width: 540px; border-radius: 40px;
+padding: 48px; position: relative; max-height: 90vh; overflow-y: auto;
+box-shadow: 0 40px 80px rgba(0,0,0,0.1); transform: translateY(40px) scale(0.95); transition: 0.6s var(--cubic);
 }
 .modal-overlay.active .modal-content { transform: translateY(0) scale(1); }
 .modal-close {
-  position: absolute; top: 24px; right: 24px; width: 48px; height: 48px;
-  background: var(--bg-alt); border-radius: 50%; display: flex;
-  align-items: center; justify-content: center; cursor: pointer; z-index: 10;
-  border: none; transition: 0.3s var(--cubic);
+position: absolute; top: 24px; right: 24px; width: 48px; height: 48px;
+background: var(--bg-alt); border-radius: 50%; display: flex;
+align-items: center; justify-content: center; cursor: pointer; z-index: 10;
+border: none; transition: 0.3s var(--cubic);
 }
 .modal-close:hover { transform: rotate(90deg); background: #eee; }
-
+/* КНОПКА СКАЧИВАНИЯ КАРТОЧКИ */
+.download-circle {
+position: absolute;
+top: 15px;
+right: 15px;
+width: 38px;
+height: 38px;
+background: rgba(255, 255, 255, 0.15);
+backdrop-filter: blur(8px);
+-webkit-backdrop-filter: blur(8px);
+border: 1px solid rgba(255, 255, 255, 0.3);
+border-radius: 50%;
+color: white;
+display: flex;
+align-items: center;
+justify-content: center;
+cursor: pointer;
+z-index: 100;
+transition: all 0.3s ease;
+box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+.download-circle:hover {
+background: rgba(255, 255, 255, 0.3);
+transform: scale(1.1);
+}
+.download-circle svg {
+width: 18px;
+height: 18px;
+}
+.download-circle:active {
+transform: scale(0.95);
+}
 /* SEARCH & FILTER */
 .search-input {
-  padding: 18px 28px; border-radius: 20px; border: 1.5px solid var(--border);
-  background: var(--bg-alt); width: 100%; max-width: 360px; font-family: inherit;
-  font-weight: 600; transition: 0.3s;
+padding: 18px 28px; border-radius: 20px; border: 1.5px solid var(--border);
+background: var(--bg-alt); width: 100%; max-width: 360px; font-family: inherit;
+font-weight: 600; transition: 0.3s;
 }
 .search-input:focus { outline: none; border-color: var(--text); background: #fff; box-shadow: 0 0 0 4px rgba(0,0,0,0.03); }
 .filter-btn {
-  padding: 12px 20px; border-radius: 14px; border: 1px solid var(--border);
-  background: #fff; font-size: 12px; font-weight: 800; cursor: pointer;
-  text-transform: uppercase; white-space: nowrap; transition: 0.3s;
+padding: 12px 20px; border-radius: 14px; border: 1px solid var(--border);
+background: #fff; font-size: 12px; font-weight: 800; cursor: pointer;
+text-transform: uppercase; white-space: nowrap; transition: 0.3s;
 }
 .filter-btn:hover { background: var(--bg-alt); }
 .filter-btn.active { background: var(--text); color: #fff; border-color: var(--text); }
-
 /* SCROLLBAR */
 ::-webkit-scrollbar { width: 8px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
 ::-webkit-scrollbar-thumb:hover { background: #ccc; }
-
 /* Минимальный размер для всех интерактивных элементов на мобильных */
-button, 
-a, 
-[role="button"], 
-input, 
+button,
+a,
+[role="button"],
+input,
 select,
 .btn,
 .filter-btn,
 .nav-links a {
-  min-height: 44px;
-  min-width: 44px;
+min-height: 44px;
+min-width: 44px;
 }
-
 /* TOUCH HOVER FIX */
 @media (hover: none) {
-  .card:hover {
-    transform: none;
-  }
+.card:hover {
+transform: none;
 }
-
-/* КНОПКА СКАЧИВАНИЯ КАРТОЧКИ */
-.download-card-btn {
-  position: absolute;
-  top: 24px;
-  right: 80px;
-  width: 48px;
-  height: 48px;
-  background: var(--bg-alt);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  z-index: 10;
-  border: none;
-  transition: 0.3s var(--cubic);
-  color: var(--text);
 }
-
-.download-card-btn:hover {
-  background: #eee;
-  transform: translateY(-2px);
-}
-
-.download-card-btn:active {
-  transform: scale(0.95);
-}
-
-.download-card-btn svg {
-  width: 20px;
-  height: 20px;
-}
-
-.download-card-btn.downloading {
-  opacity: 0.6;
-  pointer-events: none;
-}
-
-.download-card-btn.downloading svg {
-  animation: spin 0.6s linear infinite;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-/* МОБИЛЬНАЯ АДАПТАЦИЯ КНОПКИ СКАЧИВАНИЯ */
-@media (max-width: 768px) {
-  .download-card-btn {
-    top: 16px;
-    right: 64px;
-    width: 40px;
-    height: 40px;
-  }
-  
-  .download-card-btn svg {
-    width: 18px;
-    height: 18px;
-  }
-}
-
-@media (max-width: 420px) {
-  .download-card-btn {
-    top: 14px;
-    right: 60px;
-    width: 36px;
-    height: 36px;
-  }
-  
-  .download-card-btn svg {
-    width: 16px;
-    height: 16px;
-  }
-}
-
 /* MOBILE ADAPTIVITY */
 @media (max-width: 1024px) {
-  .bento-grid { grid-template-columns: repeat(2, 1fr); }
+.bento-grid { grid-template-columns: repeat(2, 1fr); }
 }
-
 @media (max-width: 768px) {
-  .nav-links { display: none; }
-  .burger { display: flex; }
-  .main-content { padding: calc(var(--nav-h) + env(safe-area-inset-top)) 16px 60px; }
-  .intro-block { padding: 20px 0 40px; }
-  .intro-block h1 { 
-    font-size: clamp(2.5rem, 15vw, 4rem);
-    line-height: 0.9;
-    margin-bottom: 16px;
-  }
-  .intro-block p { 
-    font-size: 1.1rem;
-    margin-bottom: 24px;
-    padding: 0 10px;
-  }
-  .timer-context { 
-    border-radius: 24px;
-    flex-direction: column;
-    gap: 16px;
-    width: 100%;
-    padding: 24px 16px;
-    margin-top: 40px;
-    text-align: center;
-  }
-  .countdown { 
-    gap: 12px;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-  .countdown > div {
-    min-width: 60px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  .countdown-value { 
-    font-size: 1.8rem;
-  }
-  .countdown-label {
-    font-size: 11px;
-  }
-  .btn-group {
-    gap: 12px;
-  }
-  .btn {
-    padding: 16px 28px;
-    font-size: 12px;
-    min-height: 44px;
-  }
-  .bento-grid { 
-    grid-template-columns: 1fr; 
-    gap: 16px;
-    margin-top: 30px;
-  }
-  .card { 
-    padding: 24px;
-    min-height: auto;
-  }
-  .card[style*="grid-column: span 2"] { 
-    grid-column: span 1 !important; 
-  }
-  .card h2 { 
-    font-size: 2rem;
-    margin: 12px 0;
-  }
-  .controls-row { 
-    flex-direction: column;
-    align-items: stretch;
-    gap: 16px;
-  }
-  .search-input { 
-    max-width: 100%;
-    padding: 16px 20px;
-    font-size: 16px;
-  }
-  .filter-bar { 
-    overflow-x: auto;
-    padding-bottom: 8px;
-    width: 100%;
-    display: flex;
-    gap: 6px;
-  }
-  .filter-btn {
-    padding: 12px 16px;
-    white-space: nowrap;
-  }
-  .player-card { 
-    min-height: 360px;
-    height: auto;
-    padding: 24px;
-  }
-  .player-card h3 {
-    font-size: 1.8rem;
-  }
-  .modal-content { 
-    padding: 32px 24px;
-    border-radius: 24px;
-    margin: 10px;
-    width: calc(100% - 20px);
-  }
-  .modal-close {
-    top: 16px;
-    right: 16px;
-    width: 40px;
-    height: 40px;
-  }
-  .mobile-drawer { 
-    padding: 90px 24px 40px;
-    width: min(85%, 320px);
-    height: 100vh;
-    overflow-y: auto;
-  }
-  .mobile-drawer a { 
-    font-size: 1.8rem;
-    letter-spacing: -1px;
-    padding: 12px 0;
-  }
-  #m-stats {
-    grid-template-columns: 1fr;
-    gap: 20px;
-  }
-  
-  /* ИСПРАВЛЕНИЕ ДЛЯ МОБИЛЬНЫХ ТУЛТИПОВ - ГЛАВНОЕ ИСПРАВЛЕНИЕ! */
-  .stat-header::after { 
-    display: block !important;
-    width: calc(100vw - 40px); /* Ширина экрана минус отступы */
-    max-width: 280px; /* Максимальная ширина */
-    left: 50%;
-    transform: translateX(-50%) translateY(10px);
-    margin-left: 0;
-    text-align: center;
-    white-space: normal;
-    word-wrap: break-word;
-    font-size: 10px;
-    padding: 10px;
-    bottom: calc(100% + 8px);
-    box-sizing: border-box;
-  }
-  
-  .stat-header.active::after {
-    transform: translateX(-50%) translateY(0);
-  }
-  
-  .table-wrapper {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-  }
-  table {
-    min-width: 500px;
-  }
-  td {
-    padding: 16px 12px;
-  }
+.nav-links { display: none; }
+.burger { display: flex; }
+.main-content { padding: calc(var(--nav-h) + env(safe-area-inset-top)) 16px 60px; }
+.intro-block { padding: 20px 0 40px; }
+.intro-block h1 {
+font-size: clamp(2.5rem, 15vw, 4rem);
+line-height: 0.9;
+margin-bottom: 16px;
 }
-
+.intro-block p {
+font-size: 1.1rem;
+margin-bottom: 24px;
+padding: 0 10px;
+}
+.timer-context {
+border-radius: 24px;
+flex-direction: column;
+gap: 16px;
+width: 100%;
+padding: 24px 16px;
+margin-top: 40px;
+text-align: center;
+}
+.countdown {
+gap: 12px;
+flex-wrap: wrap;
+justify-content: center;
+}
+.countdown > div {
+min-width: 60px;
+display: flex;
+flex-direction: column;
+align-items: center;
+}
+.countdown-value {
+font-size: 1.8rem;
+}
+.countdown-label {
+font-size: 11px;
+}
+.btn-group {
+gap: 12px;
+}
+.btn {
+padding: 16px 28px;
+font-size: 12px;
+min-height: 44px;
+}
+.bento-grid {
+grid-template-columns: 1fr;
+gap: 16px;
+margin-top: 30px;
+}
+.card {
+padding: 24px;
+min-height: auto;
+}
+.card[style*="grid-column: span 2"] {
+grid-column: span 1 !important;
+}
+.card h2 {
+font-size: 2rem;
+margin: 12px 0;
+}
+.controls-row {
+flex-direction: column;
+align-items: stretch;
+gap: 16px;
+}
+.search-input {
+max-width: 100%;
+padding: 16px 20px;
+font-size: 16px;
+}
+.filter-bar {
+overflow-x: auto;
+padding-bottom: 8px;
+width: 100%;
+display: flex;
+gap: 6px;
+}
+.filter-btn {
+padding: 12px 16px;
+white-space: nowrap;
+}
+.player-card {
+min-height: 360px;
+height: auto;
+padding: 24px;
+}
+.player-card h3 {
+font-size: 1.8rem;
+}
+.modal-content {
+padding: 32px 24px;
+border-radius: 24px;
+margin: 10px;
+width: calc(100% - 20px);
+}
+.modal-close {
+top: 16px;
+right: 16px;
+width: 40px;
+height: 40px;
+}
+.mobile-drawer {
+padding: 90px 24px 40px;
+width: min(85%, 320px);
+height: 100vh;
+overflow-y: auto;
+}
+.mobile-drawer a {
+font-size: 1.8rem;
+letter-spacing: -1px;
+padding: 12px 0;
+}
+#m-stats {
+grid-template-columns: 1fr;
+gap: 20px;
+}
+/* ИСПРАВЛЕНИЕ ДЛЯ МОБИЛЬНЫХ ТУЛТИПОВ - ГЛАВНОЕ ИСПРАВЛЕНИЕ! */
+.stat-header::after {
+display: block !important;
+width: calc(100vw - 40px); /* Ширина экрана минус отступы */
+max-width: 280px; /* Максимальная ширина */
+left: 50%;
+transform: translateX(-50%) translateY(10px);
+margin-left: 0;
+text-align: center;
+white-space: normal;
+word-wrap: break-word;
+font-size: 10px;
+padding: 10px;
+bottom: calc(100% + 8px);
+box-sizing: border-box;
+}
+.stat-header.active::after {
+transform: translateX(-50%) translateY(0);
+}
+.table-wrapper {
+overflow-x: auto;
+-webkit-overflow-scrolling: touch;
+}
+table {
+min-width: 500px;
+}
+td {
+padding: 16px 12px;
+}
+}
 /* Очень маленькие экраны */
 @media (max-width: 360px) {
-  .intro-block h1 { 
-    font-size: 2.2rem;
-  }
-  .countdown-value { 
-    font-size: 1.5rem;
-  }
-  .card h2 {
-    font-size: 1.6rem;
-  }
-  .player-card {
-    min-height: 320px;
-  }
+.intro-block h1 {
+font-size: 2.2rem;
 }
-
+.countdown-value {
+font-size: 1.5rem;
+}
+.card h2 {
+font-size: 1.6rem;
+}
+.player-card {
+min-height: 320px;
+}
+}
 /* Только для очень маленьких экранов по ширине */
 @media (max-width: 420px) {
-  .intro-block h1 {
-    font-size: clamp(2.0rem, 14vw, 3.0rem);
-    line-height: 1.0;
-  }
-  .player-card {
-    min-height: 300px;
-  }
-  .timer-context {
-    padding: 16px;
-    gap: 8px;
-  }
-  .countdown > div {
-    min-width: 48px;
-  }
-  .countdown-value {
-    font-size: 1.4rem;
-  }
-  .main-content {
-    padding-top: calc(var(--nav-h) + env(safe-area-inset-top));
-    padding-bottom: 50px;
-  }
-  nav {
-    height: calc(var(--nav-h) + env(safe-area-inset-top));
-  }
-  .btn {
-    padding: 14px 24px;
-    font-size: 11px;
-  }
-  .ovr-badge {
-    padding: 4px 10px;
-    font-size: 10px;
-  }
+.intro-block h1 {
+font-size: clamp(2.0rem, 14vw, 3.0rem);
+line-height: 1.0;
 }
-
-@keyframes load { 
-  0% { transform: translateX(-100%); } 
-  100% { transform: translateX(100%); } 
+.player-card {
+min-height: 300px;
+}
+.timer-context {
+padding: 16px;
+gap: 8px;
+}
+.countdown > div {
+min-width: 48px;
+}
+.countdown-value {
+font-size: 1.4rem;
+}
+.main-content {
+padding-top: calc(var(--nav-h) + env(safe-area-inset-top));
+padding-bottom: 50px;
+}
+nav {
+height: calc(var(--nav-h) + env(safe-area-inset-top));
+}
+.btn {
+padding: 14px 24px;
+font-size: 11px;
+}
+.ovr-badge {
+padding: 4px 10px;
+font-size: 10px;
+}
+}
+@keyframes load {
+0% { transform: translateX(-100%); }
+100% { transform: translateX(100%); }
 }
 </style>
 </head>
@@ -856,14 +771,14 @@ select,
 </section>
 </main>
 <div class="modal-overlay" id="playerModal" onclick="closeModal('playerModal')" role="dialog" aria-modal="true">
-<div class="modal-content" onclick="event.stopPropagation()">
+<div class="modal-content" id="stats-card" onclick="event.stopPropagation()">
 <button class="modal-close" onclick="closeModal('playerModal')" aria-label="Закрыть">✕</button>
-<button class="download-card-btn" id="downloadCardBtn" aria-label="Скачать карточку игрока">
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-    <polyline points="7 10 12 15 17 10"></polyline>
-    <line x1="12" y1="15" x2="12" y2="3"></line>
-  </svg>
+<button id="download-card" class="download-circle" aria-label="Скачать карточку">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+<polyline points="7 10 12 15 17 10"></polyline>
+<line x1="12" y1="15" x2="12" y2="3"></line>
+</svg>
 </button>
 <div id="m-img-container" style="width:100%; height:320px; border-radius:24px; overflow:hidden; background:#f0f0f0; margin-bottom:32px;">
 <img id="m-img" src="" style="width:100%; height:100%; object-fit:cover;" alt="Фото игрока">
@@ -917,18 +832,16 @@ const TARGET_DATE = new Date("March 1, 2026 00:00:00").getTime();
 let allPlayers = [];
 let currentRoleFilter = 'Все';
 let renderTimeout;
-
 const statDefs = {
-  'DRI': 'Техника контроля мяча и ведения дриблинга',
-  'SPD': 'Стартовый рывок и скорость перемещения',
-  'SHT': 'Мощность и точность завершающего удара',
-  'PHY': 'Физическая мощь, борьба и атлетизм',
-  'REF': 'Молниеносная реакция на удары в упор',
-  'DIV': 'Дальность прыжка и охват створа ворот',
-  'HAN': 'Надежность фиксации и отражения мяча',
-  'POS': 'Грамотный выбор позиции в створе ворот'
+'DRI': 'Техника контроля мяча и ведения дриблинга',
+'SPD': 'Стартовый рывок и скорость перемещения',
+'SHT': 'Мощность и точность завершающего удара',
+'PHY': 'Физическая мощь, борьба и атлетизм',
+'REF': 'Молниеносная реакция на удары в упор',
+'DIV': 'Дальность прыжка и охват створа ворот',
+'HAN': 'Надежность фиксации и отражения мяча',
+'POS': 'Грамотный выбор позиции в створе ворот'
 };
-
 function showToast(message) {
 const container = document.getElementById('toast-container');
 const toast = document.createElement('div');
@@ -941,155 +854,43 @@ toast.style.transform = 'translateY(20px)';
 setTimeout(() => toast.remove(), 500);
 }, 3000);
 }
-
 /* ОБРАБОТЧИК ДЛЯ МОБИЛЬНЫХ ТУЛТИПОВ */
 function initMobileTooltips() {
-  document.addEventListener('click', function(e) {
-    if (window.innerWidth > 768) return;
-    
-    const statHeader = e.target.closest('.stat-header');
-    const infoIcon = e.target.closest('.info-icon');
-    
-    if (statHeader || infoIcon) {
-      e.preventDefault();
-      e.stopPropagation();
-      
-      const target = statHeader || infoIcon.closest('.stat-header');
-      
-      // Закрываем все другие открытые тултипы
-      document.querySelectorAll('.stat-header.active').forEach(el => {
-        if (el !== target) el.classList.remove('active');
-      });
-      
-      // Переключаем текущий тултип
-      if (target) {
-        target.classList.toggle('active');
-      }
-    } else {
-      // Клик вне тултипа - закрываем все
-      document.querySelectorAll('.stat-header.active').forEach(el => {
-        el.classList.remove('active');
-      });
-    }
-  });
-  
-  // Закрываем тултипы при клике вне на мобильных
-  document.addEventListener('touchstart', function(e) {
-    if (window.innerWidth > 768) return;
-    
-    const isTooltip = e.target.closest('.stat-header') || 
-                      e.target.closest('.info-icon');
-    
-    if (!isTooltip) {
-      document.querySelectorAll('.stat-header.active').forEach(el => {
-        el.classList.remove('active');
-      });
-    }
-  });
+document.addEventListener('click', function(e) {
+if (window.innerWidth > 768) return;
+const statHeader = e.target.closest('.stat-header');
+const infoIcon = e.target.closest('.info-icon');
+if (statHeader || infoIcon) {
+e.preventDefault();
+e.stopPropagation();
+const target = statHeader || infoIcon.closest('.stat-header');
+// Закрываем все другие открытые тултипы
+document.querySelectorAll('.stat-header.active').forEach(el => {
+if (el !== target) el.classList.remove('active');
+});
+// Переключаем текущий тултип
+if (target) {
+target.classList.toggle('active');
 }
-
-/* ФУНКЦИИ ДЛЯ СКАЧИВАНИЯ КАРТОЧКИ */
-function initDownloadFeature() {
-  const downloadBtn = document.getElementById('downloadCardBtn');
-  if (!downloadBtn) return;
-  
-  downloadBtn.addEventListener('click', function(e) {
-    e.stopPropagation();
-    downloadPlayerCard();
-  });
+} else {
+// Клик вне тултипа - закрываем все
+document.querySelectorAll('.stat-header.active').forEach(el => {
+el.classList.remove('active');
+});
 }
-
-function downloadPlayerCard() {
-  const modalContent = document.querySelector('#playerModal .modal-content');
-  const playerName = document.getElementById('m-name')?.innerText || 'player';
-  const downloadBtn = document.getElementById('downloadCardBtn');
-  
-  if (!modalContent) {
-    showToast("Ошибка: карточка не найдена");
-    return;
-  }
-  
-  // Показываем состояние загрузки
-  downloadBtn.classList.add('downloading');
-  downloadBtn.disabled = true;
-  
-  // Загружаем библиотеку html2canvas, если её нет
-  if (!window.html2canvas) {
-    const script = document.createElement('script');
-    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
-    script.onload = () => captureAndDownload(modalContent, playerName, downloadBtn);
-    script.onerror = () => {
-      showToast("Ошибка загрузки библиотеки");
-      downloadBtn.classList.remove('downloading');
-      downloadBtn.disabled = false;
-    };
-    document.head.appendChild(script);
-  } else {
-    captureAndDownload(modalContent, playerName, downloadBtn);
-  }
+});
+// Закрываем тултипы при клике вне на мобильных
+document.addEventListener('touchstart', function(e) {
+if (window.innerWidth > 768) return;
+const isTooltip = e.target.closest('.stat-header') ||
+e.target.closest('.info-icon');
+if (!isTooltip) {
+document.querySelectorAll('.stat-header.active').forEach(el => {
+el.classList.remove('active');
+});
 }
-
-function captureAndDownload(element, playerName, downloadBtn) {
-  // Временные стили для улучшения качества
-  const originalBoxShadow = element.style.boxShadow;
-  const originalTransform = element.style.transform;
-  
-  // Улучшаем качество для скриншота
-  element.style.boxShadow = '0 20px 60px rgba(0,0,0,0.15)';
-  element.style.transform = 'none';
-  
-  // Настройки для высокого качества
-  const options = {
-    scale: 2,
-    useCORS: true,
-    backgroundColor: '#ffffff',
-    logging: false,
-    allowTaint: true,
-    foreignObjectRendering: false,
-    imageTimeout: 0,
-    removeContainer: true
-  };
-  
-  html2canvas(element, options).then(canvas => {
-    // Восстанавливаем оригинальные стили
-    element.style.boxShadow = originalBoxShadow;
-    element.style.transform = originalTransform;
-    
-    // Форматируем имя для файла
-    const formattedName = playerName
-      .replace(/\s+/g, '_')
-      .replace(/[^a-zA-Z0-9_а-яА-Я]/g, '')
-      .toLowerCase();
-    
-    // Создаем ссылку для скачивания
-    const link = document.createElement('a');
-    link.download = `box1v1_${formattedName}_card.png`;
-    link.href = canvas.toDataURL('image/png');
-    
-    // Инициируем скачивание
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    
-    // Показываем уведомление
-    showToast('Карточка скачана!');
-    
-    // Восстанавливаем кнопку
-    downloadBtn.classList.remove('downloading');
-    downloadBtn.disabled = false;
-    
-  }).catch(error => {
-    console.error('Ошибка при создании скриншота:', error);
-    showToast('Ошибка при создании карточки');
-    
-    // Восстанавливаем стили и кнопку
-    element.style.boxShadow = originalBoxShadow;
-    element.style.transform = originalTransform;
-    downloadBtn.classList.remove('downloading');
-    downloadBtn.disabled = false;
-  });
+});
 }
-
 async function init() {
 try {
 const res = await fetch(CSV_URL);
@@ -1104,21 +905,16 @@ renderStats();
 handleHashAndDeepLink();
 setInterval(updateTimer, 1000);
 updateTimer();
-
 // Инициализируем мобильные тултипы
 initMobileTooltips();
-
-// Инициализируем функцию скачивания
-initDownloadFeature();
-
 setTimeout(() => {
-  document.getElementById('preloader').classList.add('loaded');
+document.getElementById('preloader').classList.add('loaded');
 }, 300);
 } catch (e) {
 console.error("Load Error", e);
 showToast("Ошибка загрузки данных");
 setTimeout(() => {
-  document.getElementById('preloader').classList.add('loaded');
+document.getElementById('preloader').classList.add('loaded');
 }, 300);
 }
 }
@@ -1264,62 +1060,53 @@ const activeModal = document.querySelector('.modal-overlay.active');
 if (activeModal) closeModal(activeModal.id);
 }
 });
-
 function openPlayerModal(name) {
-  const p = allPlayers.find(x => x.name.toLowerCase() === name.toLowerCase());
-  if(!p) {
-    showToast("Игрок не найден");
-    return;
-  }
-
-  document.getElementById('m-name').innerText = p.name;
-  document.getElementById('m-role').innerText = p.role;
-  document.getElementById('m-ovr').innerText = p.ovr;
-  document.getElementById('m-img').src = p.photo;
-  document.getElementById('m-badges').innerHTML = p.badges.map(b => `<span style="font-size:10px; background:#000; color:#fff; padding:4px 10px; border-radius:8px; font-weight:800;">${b}</span>`).join('');
-
-  const isGK = p.role === 'Вратарь';
-  const stats = [
-    { l: isGK ? 'REF' : 'DRI', v: p.drib },
-    { l: isGK ? 'DIV' : 'SPD', v: p.speed },
-    { l: isGK ? 'HAN' : 'SHT', v: p.shot },
-    { l: isGK ? 'POS' : 'PHY', v: p.phys }
-  ];
-
-  document.getElementById('m-stats').innerHTML = stats.map(s => `
-    <div class="stat-item">
-      <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
-        <div class="stat-header" data-tip="${statDefs[s.l]}">
-          <span style="font-size:12px; font-weight:900;">${s.l}</span>
-          <i class="info-icon">?</i>
-        </div>
-        <span style="font-size:12px; font-weight:900;">${s.v}</span>
-      </div>
-      <div style="height:4px; background:var(--bg-alt); border-radius:2px; overflow:hidden;">
-        <div style="width:0%; height:100%; background:var(--text); transition:1.2s var(--cubic) 0.3s;" id="bar-${s.l}"></div>
-      </div>
-    </div>
-  `).join('');
-
-  // Закрываем все открытые тултипы перед открытием новой модалки
-  document.querySelectorAll('.stat-header.active').forEach(el => {
-    el.classList.remove('active');
-  });
-
-  openModal('playerModal');
-
-  setTimeout(() => {
-    stats.forEach(s => {
-      const bar = document.getElementById(`bar-${s.l}`);
-      if(bar) bar.style.width = s.v + '%';
-    });
-  }, 100);
-
-  const currentTab = document.querySelector('section.active').id;
-  const playerSlug = p.name.replace(/\s+/g, '-').toLowerCase();
-  window.history.replaceState(null, null, `#${currentTab}?player=${playerSlug}`);
+const p = allPlayers.find(x => x.name.toLowerCase() === name.toLowerCase());
+if(!p) {
+showToast("Игрок не найден");
+return;
 }
-
+document.getElementById('m-name').innerText = p.name;
+document.getElementById('m-role').innerText = p.role;
+document.getElementById('m-ovr').innerText = p.ovr;
+document.getElementById('m-img').src = p.photo;
+document.getElementById('m-badges').innerHTML = p.badges.map(b => `<span style="font-size:10px; background:#000; color:#fff; padding:4px 10px; border-radius:8px; font-weight:800;">${b}</span>`).join('');
+const isGK = p.role === 'Вратарь';
+const stats = [
+{ l: isGK ? 'REF' : 'DRI', v: p.drib },
+{ l: isGK ? 'DIV' : 'SPD', v: p.speed },
+{ l: isGK ? 'HAN' : 'SHT', v: p.shot },
+{ l: isGK ? 'POS' : 'PHY', v: p.phys }
+];
+document.getElementById('m-stats').innerHTML = stats.map(s => `
+<div class="stat-item">
+<div style="display:flex; justify-content:space-between; margin-bottom:12px;">
+<div class="stat-header" data-tip="${statDefs[s.l]}">
+<span style="font-size:12px; font-weight:900;">${s.l}</span>
+<i class="info-icon">?</i>
+</div>
+<span style="font-size:12px; font-weight:900;">${s.v}</span>
+</div>
+<div style="height:4px; background:var(--bg-alt); border-radius:2px; overflow:hidden;">
+<div style="width:0%; height:100%; background:var(--text); transition:1.2s var(--cubic) 0.3s;" id="bar-${s.l}"></div>
+</div>
+</div>
+`).join('');
+// Закрываем все открытые тултипы перед открытием новой модалки
+document.querySelectorAll('.stat-header.active').forEach(el => {
+el.classList.remove('active');
+});
+openModal('playerModal');
+setTimeout(() => {
+stats.forEach(s => {
+const bar = document.getElementById(`bar-${s.l}`);
+if(bar) bar.style.width = s.v + '%';
+});
+}, 100);
+const currentTab = document.querySelector('section.active').id;
+const playerSlug = p.name.replace(/\s+/g, '-').toLowerCase();
+window.history.replaceState(null, null, `#${currentTab}?player=${playerSlug}`);
+}
 function setRoleFilter(role, btn) {
 currentRoleFilter = role;
 document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
@@ -1358,6 +1145,58 @@ url: url
 navigator.clipboard.writeText(url);
 showToast('Ссылка скопирована в буфер');
 }
+}
+/* ФУНКЦИЯ СКАЧИВАНИЯ КАРТОЧКИ */
+document.addEventListener('click', function(e) {
+if (e.target.closest('#download-card')) {
+const card = document.getElementById('stats-card');
+if (!card) {
+showToast("Ошибка: карточка не найдена");
+return;
+}
+const btn = e.target.closest('#download-card');
+btn.style.opacity = "0.5";
+btn.disabled = true;
+// Динамическая загрузка библиотеки
+if (!window.html2canvas) {
+const script = document.createElement('script');
+script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+script.onload = () => captureAndDownload(card, btn);
+script.onerror = () => {
+showToast("Ошибка загрузки инструмента сохранения");
+btn.style.opacity = "1";
+btn.disabled = false;
+};
+document.head.appendChild(script);
+} else {
+captureAndDownload(card, btn);
+}
+}
+});
+function captureAndDownload(card, btn) {
+html2canvas(card, {
+useCORS: true,
+scale: 3,
+backgroundColor: null,
+logging: false,
+windowWidth: 600,
+windowHeight: 800
+}).then(canvas => {
+const playerName = document.getElementById('m-name')?.innerText?.replace(/\s+/g, '_') || 'player';
+const link = document.createElement('a');
+link.download = `BOX1V1_${playerName}_card.png`;
+link.href = canvas.toDataURL("image/png");
+document.body.appendChild(link);
+link.click();
+document.body.removeChild(link);
+showToast("Карточка сохранена!");
+}).catch(err => {
+console.error("Ошибка создания изображения:", err);
+showToast("Не удалось сохранить карточку");
+}).finally(() => {
+btn.style.opacity = "1";
+btn.disabled = false;
+});
 }
 function updateTimer() {
 const now = Date.now();
