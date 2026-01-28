@@ -4,44 +4,34 @@ export default async function handler(req) {
   const { searchParams } = new URL(req.url);
   const player = searchParams.get('player');
 
-  // Твой АКТУАЛЬНЫЙ ID таблицы
-  const sheetId = "1BwmAAIYqx1YHxiqt1s8w46Gout5So96nU7XwvmLR8wY";
-  // Используем "Лист1", так как в таблице лист называется именно так
-  const sheetUrl = `https://opensheet.elk.sh/${sheetId}/Лист1`;
+  if (!player) return Response.redirect(new URL('/box1v1/', req.url));
 
-  try {
-    const response = await fetch(sheetUrl);
-    const data = await response.json();
-    
-    // Ищем игрока по точному названию колонки "A (Имя)"
-    const playerData = data.find(p => 
-      p["A (Имя)"] && p["A (Имя)"].toString().toLowerCase() === player?.toLowerCase()
-    );
+  // 1. Ссылка на твой сайт, где открывается конкретная карта
+  const targetUrl = `https://box1v1.vercel.app/box1v1/#stats?player=${encodeURIComponent(player)}`;
 
-    if (playerData) {
-      const name = playerData["A (Имя)"];
-      const ovr = playerData["B (OVR)"] || "??";
-      const photo = playerData["H (Фото URL)"] || "";
+  // 2. Ссылка на сервис-скриншотер (он сделает фото твоего сайта на лету)
+  // Мы задаем размеры 1200x630 — это стандарт для большой карточки в ТГ
+  const screenshotUrl = `https://s0.wp.com/mshots/v1/${encodeURIComponent(targetUrl)}?w=1200&h=630`;
 
-      return new Response(
-        `<html>
-          <head>
-            <meta charset="UTF-8">
-            <meta property="og:title" content="${name} | OVR: ${ovr}">
-            <meta property="og:description" content="STREET FOOTBALL 1v1">
-            <meta property="og:image" content="${photo}">
-            <meta property="og:type" content="website">
-            <meta name="twitter:card" content="summary_large_image">
-            <meta http-equiv="refresh" content="0; url=/#roster?player=${encodeURIComponent(player)}">
-          </head>
-          <body>Загрузка карточки ${name}...</body>
-        </html>`,
-        { headers: { 'Content-Type': 'text/html; charset=utf-8' } }
-      );
-    }
-  } catch (e) {
-    return new Response("Ошибка: " + e.message, { status: 500 });
-  }
+  return new Response(
+    `<html>
+      <head>
+        <meta charset="UTF-8">
+        <title>Карточка ${player}</title>
+        
+        <meta property="og:title" content="Игрок: ${player}">
+        <meta property="og:description" content="Посмотри полную статистику игрока в STREET FOOTBALL 1v1">
+        
+        <meta property="og:image" content="${screenshotUrl}">
+        
+        <meta property="og:type" content="website">
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:image" content="${screenshotUrl}">
 
-  return Response.redirect(new URL('/', req.url));
+        <meta http-equiv="refresh" content="0; url=/box1v1/#stats?player=${encodeURIComponent(player)}">
+      </head>
+      <body>Загрузка карточки ${player}...</body>
+    </html>`,
+    { headers: { 'Content-Type': 'text/html; charset=utf-8' } }
+  );
 }
