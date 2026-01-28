@@ -24,6 +24,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+<!-- Подключаем библиотеку html2canvas -->
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <style>
 :root {
 --nav-h: 72px;
@@ -920,6 +922,8 @@ setInterval(updateTimer, 1000);
 updateTimer();
 // Инициализируем мобильные тултипы
 initMobileTooltips();
+// Инициализируем кнопку скачивания
+setupDownloadButton();
 setTimeout(() => {
 document.getElementById('preloader').classList.add('loaded');
 }, 300);
@@ -1043,6 +1047,10 @@ const firstInput = modal.querySelector('button, input, [tabindex="0"]');
 if (firstInput) firstInput.focus();
 }, 100);
 modal.addEventListener('keydown', trapFocus);
+// Инициализируем кнопку скачивания при открытии модального окна
+if (id === 'playerModal') {
+setTimeout(setupDownloadButton, 300);
+}
 }
 function closeModal(id) {
 const modal = document.getElementById(id);
@@ -1159,88 +1167,90 @@ navigator.clipboard.writeText(url);
 showToast('Ссылка скопирована в буфер');
 }
 }
-/* ФУНКЦИЯ СКАЧИВАНИЯ КАРТОЧКИ - МАКСИМАЛЬНО ПРОСТАЯ РАБОЧАЯ ВЕРСИЯ */
-document.addEventListener('click', function(e) {
-    if (e.target.closest('#download-card')) {
-        e.preventDefault();
-        e.stopPropagation();
+/* ФУНКЦИЯ СКАЧИВАНИЯ КАРТОЧКИ - РАБОЧАЯ ВЕРСИЯ */
+function setupDownloadButton() {
+    const downloadBtn = document.getElementById('download-card');
+    
+    if (downloadBtn && !downloadBtn.hasAttribute('data-handler-attached')) {
+        downloadBtn.setAttribute('data-handler-attached', 'true');
         
-        const btn = e.target.closest('#download-card');
-        btn.style.opacity = "0.5";
-        btn.disabled = true;
+        downloadBtn.addEventListener('click', async function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const card = document.getElementById('stats-card');
+            if (!card) {
+                showToast("Карточка не найдена");
+                return;
+            }
+            
+            // Проверяем, загружена ли библиотека
+            if (typeof html2canvas === 'undefined') {
+                showToast("Библиотека для создания карточки не загружена");
+                return;
+            }
+            
+            // Временно меняем вид кнопки
+            const originalOpacity = this.style.opacity;
+            this.style.opacity = '0.5';
+            this.disabled = true;
+            
+            showToast("Создаем карточку...");
+            
+            try {
+                // Временно скрываем кнопки на карточке
+                const closeBtn = card.querySelector('.modal-close');
+                const downloadBtn = card.querySelector('#download-card');
+                const originalCloseDisplay = closeBtn ? closeBtn.style.display : '';
+                const originalDownloadDisplay = downloadBtn ? downloadBtn.style.display : '';
+                
+                if (closeBtn) closeBtn.style.display = 'none';
+                if (downloadBtn) downloadBtn.style.display = 'none';
+                
+                // Делаем скриншот карточки
+                const canvas = await html2canvas(card, {
+                    scale: 2,
+                    useCORS: true,
+                    allowTaint: true,
+                    backgroundColor: '#ffffff',
+                    logging: false
+                });
+                
+                // Восстанавливаем кнопки
+                if (closeBtn) closeBtn.style.display = originalCloseDisplay;
+                if (downloadBtn) downloadBtn.style.display = originalDownloadDisplay;
+                
+                // Создаем ссылку для скачивания
+                const playerName = document.getElementById('m-name')?.innerText || 'player';
+                const safeName = playerName.replace(/[^a-zA-Zа-яА-Я0-9]/g, '_');
+                const link = document.createElement('a');
+                link.download = `BOX1V1_${safeName}_card.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.style.display = 'none';
+                
+                document.body.appendChild(link);
+                link.click();
+                
+                // Убираем ссылку через некоторое время
+                setTimeout(() => {
+                    if (link.parentNode) {
+                        document.body.removeChild(link);
+                    }
+                }, 100);
+                
+                showToast("✅ Карточка скачана!");
+            } catch (error) {
+                console.error('Ошибка при создании карточки:', error);
+                showToast("❌ Ошибка при создании карточки");
+            } finally {
+                // Восстанавливаем кнопку
+                this.style.opacity = originalOpacity;
+                this.disabled = false;
+            }
+        });
         
-        // Динамическая загрузка библиотеки
-        if (!window.html2canvas) {
-            const script = document.createElement('script');
-            script.src = 'https://html2canvas.hertzen.com/dist/html2canvas.min.js';
-            script.onload = () => captureAndDownload(btn);
-            script.onerror = () => {
-                showToast("Ошибка загрузки инструмента сохранения");
-                btn.style.opacity = "1";
-                btn.disabled = false;
-            };
-            document.head.appendChild(script);
-        } else {
-            captureAndDownload(btn);
-        }
+        console.log('Обработчик кнопки скачивания добавлен');
     }
-});
-
-function captureAndDownload(btn) {
-    // Получаем карточку
-    const card = document.getElementById('stats-card');
-    if (!card) {
-        showToast("Ошибка: карточка не найдена");
-        btn.style.opacity = "1";
-        btn.disabled = false;
-        return;
-    }
-    
-    // Временно скрываем кнопки
-    const closeBtn = card.querySelector('.modal-close');
-    const downloadBtn = card.querySelector('#download-card');
-    const closeBtnOriginalDisplay = closeBtn ? closeBtn.style.display : '';
-    const downloadBtnOriginalDisplay = downloadBtn ? downloadBtn.style.display : '';
-    
-    if (closeBtn) closeBtn.style.display = 'none';
-    if (downloadBtn) downloadBtn.style.display = 'none';
-    
-    // Простые настройки для html2canvas
-    html2canvas(card, {
-        scale: 2,
-        useCORS: true,
-        allowTaint: true,
-        backgroundColor: '#ffffff',
-        logging: true // Включаем логи для отладки
-    }).then(canvas => {
-        // Восстанавливаем кнопки
-        if (closeBtn) closeBtn.style.display = closeBtnOriginalDisplay;
-        if (downloadBtn) downloadBtn.style.display = downloadBtnOriginalDisplay;
-        
-        // Создаем ссылку для скачивания
-        const playerName = document.getElementById('m-name')?.innerText?.replace(/[^a-zA-Zа-яА-Я0-9]/g, '_') || 'player';
-        const link = document.createElement('a');
-        link.download = `BOX1V1_${playerName}_card.png`;
-        link.href = canvas.toDataURL('image/png');
-        
-        // Триггер скачивания
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        
-        showToast("✅ Карточка сохранена!");
-    }).catch(error => {
-        console.error('Ошибка html2canvas:', error);
-        
-        // Восстанавливаем кнопки
-        if (closeBtn) closeBtn.style.display = closeBtnOriginalDisplay;
-        if (downloadBtn) downloadBtn.style.display = downloadBtnOriginalDisplay;
-        
-        showToast("❌ Не удалось сохранить карточку");
-    }).finally(() => {
-        btn.style.opacity = "1";
-        btn.disabled = false;
-    });
 }
 function updateTimer() {
 const now = Date.now();
@@ -1263,5 +1273,3 @@ window.onload = init;
 </script>
 </body>
 </html>
-
-
