@@ -1091,10 +1091,19 @@ document.getElementById('m-name').innerText = p.name;
 document.getElementById('m-role').innerText = p.role;
 document.getElementById('m-ovr').innerText = p.ovr;
 
-// ИСПРАВЛЕНИЕ: Сохраняем оригинальный URL для восстановления после скачивания
 const imgElement = document.getElementById('m-img');
-imgElement.src = p.photo;
-imgElement.setAttribute('data-original', p.photo);
+const originalSrc = p.photo;
+imgElement.setAttribute('data-original', originalSrc);
+
+// ИСПРАВЛЕНИЕ: Используем прокси для внешних изображений чтобы избежать CORS при скачивании
+// weserv.nl - бесплатный прокси с поддержкой CORS
+if (originalSrc && originalSrc.startsWith('http') && !originalSrc.includes('localhost') && !originalSrc.includes('box1v1.ru')) {
+    const proxyUrl = `https://images.weserv.nl/?url=${encodeURIComponent(originalSrc)}&default=${encodeURIComponent(originalSrc)}`;
+    imgElement.src = proxyUrl;
+    imgElement.setAttribute('data-proxy', proxyUrl);
+} else {
+    imgElement.src = originalSrc;
+}
 
 document.getElementById('m-badges').innerHTML = p.badges.map(b => `<span style="font-size:10px; background:#000; color:#fff; padding:4px 10px; border-radius:8px; font-weight:800;">${b}</span>`).join('');
 const isGK = p.role === 'Вратарь';
@@ -1172,7 +1181,7 @@ navigator.clipboard.writeText(url);
 showToast('Ссылка скопирована в буфер');
 }
 }
-/* ФУНКЦИЯ СКАЧИВАНИЯ КАРТОЧКИ - ПОЛНОСТЬЮ ИСПРАВЛЕННАЯ */
+/* ФУНКЦИЯ СКАЧИВАНИЯ КАРТОЧКИ - ИСПРАВЛЕННАЯ (без лишних тостов, без обрезки, с фото) */
 function setupDownloadButton() {
     const downloadBtn = document.getElementById('download-card');
     
@@ -1190,73 +1199,63 @@ function setupDownloadButton() {
             return;
         }
         
-        // Проверяем, загружена ли библиотека
         if (typeof html2canvas === 'undefined') {
-            showToast("Библиотека для создания карточки не загружена");
+            showToast("Библиотека не загружена");
             return;
         }
         
-        // Получаем элементы которые нужно скрыть
         const closeBtn = card.querySelector('.modal-close');
         const downloadBtnIcon = card.querySelector('#download-card');
         const imgEl = document.getElementById('m-img');
-        const originalSrc = imgEl.getAttribute('data-original') || imgEl.src;
         
-        // Блокируем кнопку
+        // Сохраняем оригинальные стили для восстановления
+        const originalMaxHeight = card.style.maxHeight;
+        const originalOverflowY = card.style.overflowY;
+        const originalOverflow = card.style.overflow;
+        
+        // Блокируем кнопку на время создания
         this.style.opacity = '0.5';
         this.disabled = true;
-        showToast("Создаем карточку...");
         
         try {
-            // 1. Предварительно конвертируем изображение в base64 чтобы избежать CORS
-            if (!originalSrc.startsWith('data:')) {
-                try {
-                    const response = await fetch(originalSrc, { mode: 'cors' });
-                    const blob = await response.blob();
-                    const base64 = await new Promise((resolve, reject) => {
-                        const reader = new FileReader();
-                        reader.onloadend = () => resolve(reader.result);
-                        reader.onerror = reject;
-                        reader.readAsDataURL(blob);
-                    });
-                    imgEl.src = base64;
-                    // Ждем загрузки изображения
-                    await new Promise(resolve => setTimeout(resolve, 300));
-                } catch (imgError) {
-                    console.warn('Не удалось конвертировать изображение:', imgError);
-                    // Продолжаем без конвертации, возможно сработает allowTaint
-                }
-            }
+            // 1. Подготавливаем карточку: убираем ограничения высоты для полного захвата (важно для мобильных)
+            card.style.maxHeight = 'none';
+            card.style.overflowY = 'visible';
+            card.style.overflow = 'visible';
             
             // 2. Скрываем кнопки перед скриншотом
             if (closeBtn) closeBtn.style.display = 'none';
             if (downloadBtnIcon) downloadBtnIcon.style.display = 'none';
             
-            // 3. Создаем canvas
+            // Небольшая задержка чтобы DOM обновился
+            await new Promise(resolve => setTimeout(resolve, 100));
+            
+            // 3. Создаем canvas с полным размером карточки
             const canvas = await html2canvas(card, {
                 scale: 2,
                 useCORS: true,
                 allowTaint: true,
                 backgroundColor: '#ffffff',
                 logging: false,
-                onclone: (clonedDoc) => {
-                    // Убираем ограничения высоты для корректного рендера
-                    const clonedCard = clonedDoc.getElementById('stats-card');
-                    if (clonedCard) {
-                        clonedCard.style.maxHeight = 'none';
-                        clonedCard.style.overflow = 'visible';
-                    }
-                }
+                windowWidth: card.scrollWidth,
+                windowHeight: card.scrollHeight,
+                x: 0,
+                y: 0,
+                scrollX: 0,
+                scrollY: -window.scrollY
             });
             
-            // 4. Восстанавливаем кнопки и изображение
+            // 4. Восстанавливаем стили и кнопки
+            card.style.maxHeight = originalMaxHeight;
+            card.style.overflowY = originalOverflowY;
+            card.style.overflow = originalOverflow;
+            
             if (closeBtn) closeBtn.style.display = '';
             if (downloadBtnIcon) downloadBtnIcon.style.display = '';
-            imgEl.src = originalSrc;
             this.style.opacity = '';
             this.disabled = false;
             
-            // 5. Конвертируем в blob и скачиваем (работает на ПК и мобильных)
+            // 5. Скачиваем
             const playerName = document.getElementById('m-name')?.innerText || 'player';
             const safeName = playerName.replace(/[^a-zA-Zа-яА-Я0-9]/g, '_');
             
@@ -1271,37 +1270,36 @@ function setupDownloadButton() {
                 link.href = url;
                 link.download = `BOX1V1_${safeName}.png`;
                 
-                // Для iOS Safari - открываем в новом окне, так как скачивание не поддерживается напрямую
                 if (/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream) {
                     window.open(url, '_blank');
                     showToast("Удерживайте изображение для сохранения");
                 } else {
-                    // Для Android и ПК - стандартное скачивание
                     document.body.appendChild(link);
                     link.click();
                     document.body.removeChild(link);
                     showToast("✅ Карточка сохранена!");
                 }
                 
-                // Освобождаем память через небольшую задержку
                 setTimeout(() => URL.revokeObjectURL(url), 1000);
                 
             }, 'image/png');
             
         } catch (error) {
-            console.error('Ошибка при создании карточки:', error);
-            showToast("❌ Ошибка при создании карточки");
+            console.error('Ошибка:', error);
             
             // Восстанавливаем всё при ошибке
+            card.style.maxHeight = originalMaxHeight;
+            card.style.overflowY = originalOverflowY;
+            card.style.overflow = originalOverflow;
+            
             if (closeBtn) closeBtn.style.display = '';
             if (downloadBtnIcon) downloadBtnIcon.style.display = '';
-            if (imgEl && originalSrc) imgEl.src = originalSrc;
             this.style.opacity = '';
             this.disabled = false;
+            
+            showToast("❌ Ошибка при создании карточки");
         }
     });
-    
-    console.log('Обработчик кнопки скачивания добавлен');
 }
 function updateTimer() {
 const now = Date.now();
