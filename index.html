@@ -796,7 +796,7 @@ font-size: 10px;
 </svg>
 </button>
 <div id="m-img-container" style="width:100%; height:320px; border-radius:24px; overflow:hidden; background:#f0f0f0; margin-bottom:32px;">
-<img id="m-img" src="" style="width:100%; height:100%; object-fit:cover;" alt="Фото игрока">
+<img id="m-img" src="" style="width:100%; height:100%; object-fit:cover;" alt="Фото игрока" loading="lazy">
 </div>
 <div style="display:flex; justify-content:space-between; align-items:flex-start;">
 <div>
@@ -1007,7 +1007,7 @@ aria-label="Профиль игрока ${p.name}, рейтинг ${p.ovr}, ро
 style="animation: fadeInUp 0.6s var(--cubic) both ${i*0.03}s"
 onclick="openPlayerModal('${p.name}')"
 onkeydown="if(event.key==='Enter') openPlayerModal('${p.name}')">
-<div class="player-img" style="background-image: url('${p.photo}')"></div>
+<div class="player-img" style="background-image: url('${p.photo}')" loading="lazy"></div>
 ${p.status ? `<div style="position:absolute; top:32px; right:32px; z-index:3; background:var(--accent); color:#000; font-size:10px; font-weight:900; padding:6px 14px; border-radius:12px; text-transform:uppercase;">${p.status}</div>` : ''}
 <div class="player-info">
 <span style="font-size:11px; font-weight:800; text-transform:uppercase; color:var(--accent); letter-spacing:0.1em;">${p.role}</span>
@@ -1025,7 +1025,7 @@ document.getElementById('stats-body').innerHTML = sorted.map((p, i) => `
 <td style="font-weight:900; color:var(--text-dim)">${(i+1).toString().padStart(2, '0')}</td>
 <td>
 <div style="display:flex; align-items:center; gap:16px;">
-<img src="${p.photo}" style="width:48px; height:48px; border-radius:14px; object-fit:cover;" alt="">
+<img src="${p.photo}" loading="lazy" style="width:48px; height:48px; border-radius:14px; object-fit:cover;" alt="">
 <div>
 <div style="font-weight:900; text-transform:uppercase; font-style:italic;">${p.name}</div>
 <div style="font-size:10px; font-weight:700; color:var(--text-dim); text-transform:uppercase;">${p.role}</div>
@@ -1090,7 +1090,12 @@ return;
 document.getElementById('m-name').innerText = p.name;
 document.getElementById('m-role').innerText = p.role;
 document.getElementById('m-ovr').innerText = p.ovr;
-document.getElementById('m-img').src = p.photo;
+
+// ИСПРАВЛЕНИЕ: Сохраняем оригинальный URL для восстановления после скачивания
+const imgElement = document.getElementById('m-img');
+imgElement.src = p.photo;
+imgElement.setAttribute('data-original', p.photo);
+
 document.getElementById('m-badges').innerHTML = p.badges.map(b => `<span style="font-size:10px; background:#000; color:#fff; padding:4px 10px; border-radius:8px; font-weight:800;">${b}</span>`).join('');
 const isGK = p.role === 'Вратарь';
 const stats = [
@@ -1167,90 +1172,136 @@ navigator.clipboard.writeText(url);
 showToast('Ссылка скопирована в буфер');
 }
 }
-/* ФУНКЦИЯ СКАЧИВАНИЯ КАРТОЧКИ - РАБОЧАЯ ВЕРСИЯ */
+/* ФУНКЦИЯ СКАЧИВАНИЯ КАРТОЧКИ - ПОЛНОСТЬЮ ИСПРАВЛЕННАЯ */
 function setupDownloadButton() {
     const downloadBtn = document.getElementById('download-card');
     
-    if (downloadBtn && !downloadBtn.hasAttribute('data-handler-attached')) {
-        downloadBtn.setAttribute('data-handler-attached', 'true');
+    if (!downloadBtn || downloadBtn.hasAttribute('data-handler-attached')) return;
+    
+    downloadBtn.setAttribute('data-handler-attached', 'true');
+    
+    downloadBtn.addEventListener('click', async function(e) {
+        e.preventDefault();
+        e.stopPropagation();
         
-        downloadBtn.addEventListener('click', async function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            
-            const card = document.getElementById('stats-card');
-            if (!card) {
-                showToast("Карточка не найдена");
-                return;
+        const card = document.getElementById('stats-card');
+        if (!card) {
+            showToast("Карточка не найдена");
+            return;
+        }
+        
+        // Проверяем, загружена ли библиотека
+        if (typeof html2canvas === 'undefined') {
+            showToast("Библиотека для создания карточки не загружена");
+            return;
+        }
+        
+        // Получаем элементы которые нужно скрыть
+        const closeBtn = card.querySelector('.modal-close');
+        const downloadBtnIcon = card.querySelector('#download-card');
+        const imgEl = document.getElementById('m-img');
+        const originalSrc = imgEl.getAttribute('data-original') || imgEl.src;
+        
+        // Блокируем кнопку
+        this.style.opacity = '0.5';
+        this.disabled = true;
+        showToast("Создаем карточку...");
+        
+        try {
+            // 1. Предварительно конвертируем изображение в base64 чтобы избежать CORS
+            if (!originalSrc.startsWith('data:')) {
+                try {
+                    const response = await fetch(originalSrc, { mode: 'cors' });
+                    const blob = await response.blob();
+                    const base64 = await new Promise((resolve, reject) => {
+                        const reader = new FileReader();
+                        reader.onloadend = () => resolve(reader.result);
+                        reader.onerror = reject;
+                        reader.readAsDataURL(blob);
+                    });
+                    imgEl.src = base64;
+                    // Ждем загрузки изображения
+                    await new Promise(resolve => setTimeout(resolve, 300));
+                } catch (imgError) {
+                    console.warn('Не удалось конвертировать изображение:', imgError);
+                    // Продолжаем без конвертации, возможно сработает allowTaint
+                }
             }
             
-            // Проверяем, загружена ли библиотека
-            if (typeof html2canvas === 'undefined') {
-                showToast("Библиотека для создания карточки не загружена");
-                return;
-            }
+            // 2. Скрываем кнопки перед скриншотом
+            if (closeBtn) closeBtn.style.display = 'none';
+            if (downloadBtnIcon) downloadBtnIcon.style.display = 'none';
             
-            // Временно меняем вид кнопки
-            const originalOpacity = this.style.opacity;
-            this.style.opacity = '0.5';
-            this.disabled = true;
-            
-            showToast("Создаем карточку...");
-            
-            try {
-                // Временно скрываем кнопки на карточке
-                const closeBtn = card.querySelector('.modal-close');
-                const downloadBtn = card.querySelector('#download-card');
-                const originalCloseDisplay = closeBtn ? closeBtn.style.display : '';
-                const originalDownloadDisplay = downloadBtn ? downloadBtn.style.display : '';
-                
-                if (closeBtn) closeBtn.style.display = 'none';
-                if (downloadBtn) downloadBtn.style.display = 'none';
-                
-                // Делаем скриншот карточки
-                const canvas = await html2canvas(card, {
-                    scale: 2,
-                    useCORS: true,
-                    allowTaint: true,
-                    backgroundColor: '#ffffff',
-                    logging: false
-                });
-                
-                // Восстанавливаем кнопки
-                if (closeBtn) closeBtn.style.display = originalCloseDisplay;
-                if (downloadBtn) downloadBtn.style.display = originalDownloadDisplay;
-                
-                // Создаем ссылку для скачивания
-                const playerName = document.getElementById('m-name')?.innerText || 'player';
-                const safeName = playerName.replace(/[^a-zA-Zа-яА-Я0-9]/g, '_');
-                const link = document.createElement('a');
-                link.download = `BOX1V1_${safeName}_card.png`;
-                link.href = canvas.toDataURL('image/png');
-                link.style.display = 'none';
-                
-                document.body.appendChild(link);
-                link.click();
-                
-                // Убираем ссылку через некоторое время
-                setTimeout(() => {
-                    if (link.parentNode) {
-                        document.body.removeChild(link);
+            // 3. Создаем canvas
+            const canvas = await html2canvas(card, {
+                scale: 2,
+                useCORS: true,
+                allowTaint: true,
+                backgroundColor: '#ffffff',
+                logging: false,
+                onclone: (clonedDoc) => {
+                    // Убираем ограничения высоты для корректного рендера
+                    const clonedCard = clonedDoc.getElementById('stats-card');
+                    if (clonedCard) {
+                        clonedCard.style.maxHeight = 'none';
+                        clonedCard.style.overflow = 'visible';
                     }
-                }, 100);
+                }
+            });
+            
+            // 4. Восстанавливаем кнопки и изображение
+            if (closeBtn) closeBtn.style.display = '';
+            if (downloadBtnIcon) downloadBtnIcon.style.display = '';
+            imgEl.src = originalSrc;
+            this.style.opacity = '';
+            this.disabled = false;
+            
+            // 5. Конвертируем в blob и скачиваем (работает на ПК и мобильных)
+            const playerName = document.getElementById('m-name')?.innerText || 'player';
+            const safeName = playerName.replace(/[^a-zA-Zа-яА-Я0-9]/g, '_');
+            
+            canvas.toBlob(function(blob) {
+                if (!blob) {
+                    showToast("❌ Ошибка создания файла");
+                    return;
+                }
                 
-                showToast("✅ Карточка скачана!");
-            } catch (error) {
-                console.error('Ошибка при создании карточки:', error);
-                showToast("❌ Ошибка при создании карточки");
-            } finally {
-                // Восстанавливаем кнопку
-                this.style.opacity = originalOpacity;
-                this.disabled = false;
-            }
-        });
-        
-        console.log('Обработчик кнопки скачивания добавлен');
-    }
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `BOX1V1_${safeName}.png`;
+                
+                // Для iOS Safari - открываем в новом окне, так как скачивание не поддерживается напрямую
+                if (/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream) {
+                    window.open(url, '_blank');
+                    showToast("Удерживайте изображение для сохранения");
+                } else {
+                    // Для Android и ПК - стандартное скачивание
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    showToast("✅ Карточка сохранена!");
+                }
+                
+                // Освобождаем память через небольшую задержку
+                setTimeout(() => URL.revokeObjectURL(url), 1000);
+                
+            }, 'image/png');
+            
+        } catch (error) {
+            console.error('Ошибка при создании карточки:', error);
+            showToast("❌ Ошибка при создании карточки");
+            
+            // Восстанавливаем всё при ошибке
+            if (closeBtn) closeBtn.style.display = '';
+            if (downloadBtnIcon) downloadBtnIcon.style.display = '';
+            if (imgEl && originalSrc) imgEl.src = originalSrc;
+            this.style.opacity = '';
+            this.disabled = false;
+        }
+    });
+    
+    console.log('Обработчик кнопки скачивания добавлен');
 }
 function updateTimer() {
 const now = Date.now();
