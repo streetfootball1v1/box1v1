@@ -2,1335 +2,2494 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover"/>
+<meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+
 <title>BOX1V1 | УЛИЧНЫЙ ФУТБОЛ 1 НА 1</title>
+
 <!-- FAVICONS -->
 <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png?v=3">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png?v=3">
 <link rel="shortcut icon" href="favicon.ico?v=3">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=3">
 <link rel="manifest" href="site.webmanifest?v=3">
-<meta name="theme-color" content="#0a0a0a">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="msapplication-TileColor" content="#0a0a0a">
-<meta name="msapplication-TileImage" content="android-chrome-144x144.png">
+
+<!-- SEO -->
 <meta name="description" content="BOX1V1 — закрытая экосистема для футболистов 1 на 1. Техника, медиа и скаутинг.">
+<meta name="keywords" content="футбол 1 на 1, уличный футбол, футзал, мини-футбол, box1v1">
+<meta name="author" content="BOX1V1">
+<meta name="robots" content="index, follow">
+
+<!-- OPEN GRAPH -->
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://box1v1.ru/">
 <meta property="og:title" content="BOX1V1 | УЛИЧНЫЙ ФУТБОЛ 1 на 1">
-<meta property="og:description" content="Стань сообщества футболистов 1x1. Рейтинги, карточки и статистика.">
+<meta property="og:description" content="Стань частью сообщества футболистов 1x1. Рейтинги, карточки и статистика.">
 <meta property="og:image" content="https://box1v1.ru/preview-og.jpg">
+<meta property="og:locale" content="ru_RU">
+
+<!-- FONTS (оптимизированная загрузка) -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
-<!-- Подключаем библиотеку html2canvas -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+<!-- LIBRARIES -->
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+
 <style>
 :root {
---nav-h: 72px;
---bg: #ffffff;
---bg-alt: #f8f8f8;
---card: #ffffff;
---text: #0a0a0a;
---text-dim: #6b7280;
---border: rgba(0,0,0,0.06);
---accent: #22c55e;
---accent-dark: #16a34a;
---ls-tight: -0.04em;
---ls-normal: -0.01em;
---lh-tight: 1.1;
---lh-base: 1.6;
---shadow-sm: 0 2px 8px rgba(0,0,0,0.04);
---shadow-md: 0 20px 40px -12px rgba(0,0,0,0.08);
---cubic: cubic-bezier(0.2, 0, 0, 1);
---glass: rgba(255,255,255,0.8);
---radius: 24px;
---radius-sm: 14px;
+  /* Цвета с улучшенной доступностью (WCAG AA) */
+  --bg: #fafafa;
+  --bg-elevated: #ffffff;
+  --text: #0a0a0a;
+  --text-secondary: #374151; /* Было #6b7280 - улучшен контраст */
+  --text-tertiary: #6b7280;
+  --accent: #22c55e;
+  --accent-dark: #16a34a;
+  --border: rgba(0,0,0,0.08);
+  --border-strong: rgba(0,0,0,0.15);
+  
+  /* Типографика */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --ls-tight: -0.03em;
+  --ls-normal: -0.01em;
+  --lh-tight: 1.1;
+  --lh-base: 1.6;
+  
+  /* Размеры */
+  --nav-h: 72px;
+  --radius: 24px;
+  --radius-sm: 14px;
+  --safe-top: env(safe-area-inset-top);
+  --safe-bottom: env(safe-area-inset-bottom);
+  --safe-left: env(safe-area-inset-left);
+  --safe-right: env(safe-area-inset-right);
+  
+  /* Анимации */
+  --ease-out: cubic-bezier(0.2, 0, 0, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
 }
+
 @media (max-width: 420px) {
-:root {
---nav-h: 64px;
+  :root { --nav-h: 64px; }
 }
+
+/* Сброс и базовые стили */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
 }
-* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 html {
-scroll-behavior: smooth;
-background: var(--bg);
--webkit-font-smoothing: antialiased;
+  scroll-behavior: smooth;
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
+
 body {
-font-family: 'Inter', system-ui, -apple-system, sans-serif;
-background: var(--bg);
-color: var(--text);
-overflow-x: hidden;
-line-height: var(--lh-base);
-letter-spacing: var(--ls-normal);
+  font-family: var(--font-sans);
+  background: var(--bg);
+  color: var(--text);
+  line-height: var(--lh-base);
+  letter-spacing: var(--ls-normal);
+  overflow-x: hidden;
+  min-height: 100vh;
+  min-height: 100dvh; /* Для мобильных без полос прокрутки */
 }
+
+/* Типографика с иерархией */
 h1, h2, h3 {
-font-weight: 900;
-font-style: italic;
-letter-spacing: var(--ls-tight);
-line-height: var(--lh-tight);
-text-transform: uppercase;
+  font-weight: 900;
+  font-style: italic;
+  letter-spacing: var(--ls-tight);
+  line-height: var(--lh-tight);
+  text-transform: uppercase;
+  font-feature-settings: "ss01", "ss02"; /* Inter оптимизация */
 }
-p { font-size: 1rem; color: var(--text-dim); }
-/* === НОВЫЙ СТИЛЬ ДЛЯ РЕГЛАМЕНТА === */
-.reg-header {
-font-size: clamp(2.0rem, 8vw, 3.5rem);
-line-height: var(--lh-tight);
-letter-spacing: var(--ls-tight);
-text-transform: uppercase;
-font-weight: 900;
-font-style: italic;
-margin: 20px 0 15px;
+
+p {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  max-width: 65ch; /* Оптимальная длина строки для чтения */
 }
-/* UX TOOLTIPS STYLES - ИСПРАВЛЕННЫЙ ДЛЯ МОБИЛЬНЫХ */
-.stat-item {
-position: relative;
+
+/* Утилиты для доступности */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
 }
-.stat-header {
-display: flex;
-align-items: center;
-gap: 6px;
-cursor: help;
--webkit-tap-highlight-color: transparent;
-user-select: none;
-position: relative;
+
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: var(--text);
+  color: white;
+  padding: 8px;
+  text-decoration: none;
+  z-index: 10000;
+  transition: top 0.3s;
 }
-.info-icon {
-width: 14px;
-height: 14px;
-border-radius: 50%;
-border: 1px solid var(--border);
-display: flex;
-align-items: center;
-justify-content: center;
-font-size: 8px;
-color: var(--text-dim);
-transition: 0.3s var(--cubic);
-font-style: normal;
-font-weight: 800;
+
+.skip-link:focus {
+  top: 0;
 }
-.stat-header:hover .info-icon,
-.stat-header.active .info-icon {
-background: var(--text);
-color: #fff;
-border-color: var(--text);
-}
-/* ИСПРАВЛЕННЫЙ ТУЛТИП - ВЫВОДИМ ИЗ ПОТОКА */
-.stat-header::after {
-content: attr(data-tip);
-position: absolute;
-bottom: calc(100% + 10px);
-left: 50%;
-transform: translateX(-50%) translateY(10px);
-background: #000;
-color: #fff;
-padding: 10px 12px;
-border-radius: 12px;
-font-size: 10px;
-font-weight: 500;
-line-height: 1.4;
-opacity: 0;
-visibility: hidden;
-transition: 0.4s var(--cubic);
-z-index: 1000;
-pointer-events: none;
-box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-text-transform: none;
-font-style: normal;
-max-width: min(90vw, 260px);
-white-space: normal;
-word-break: break-word;
-box-sizing: border-box;
-width: max-content;
-}
-.stat-header:hover::after,
-.stat-header.active::after {
-opacity: 1;
-visibility: visible;
-transform: translateX(-50%) translateY(0);
-}
-/* МОБИЛЬНЫЕ ИСПРАВЛЕНИЯ - ОТДЕЛЬНО ОТ КАРТОЧКИ */
-@media (max-width: 768px) {
-.stat-header::after {
-position: fixed;
-left: 50% !important;
-transform: translateX(-50%) translateY(10px) !important;
-bottom: min(200px, 30vh) !important;
-top: auto !important;
-max-width: 92vw;
-width: auto;
-margin-left: 0;
-text-align: center;
-font-size: 10px;
-padding: 12px 16px;
-box-sizing: border-box;
-}
-.stat-header.active::after {
-transform: translateX(-50%) translateY(0) !important;
-}
-}
-/* PRELOADER */
+
+/* PRELOADER с максимальной отказоустойчивостью */
 #preloader {
-position: fixed; inset: 0; background: #fff; z-index: 9999;
-display: flex; justify-content: center; align-items: center;
-transition: opacity 0.8s var(--cubic), visibility 0.8s;
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: opacity 0.6s var(--ease-out), visibility 0.6s;
 }
+
 #preloader.loaded {
-opacity: 0;
-visibility: hidden;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
 }
-#preloader.loaded .loading-bar {
-opacity: 0;
-transition: opacity 0.3s;
+
+.preloader-content {
+  text-align: center;
+  padding: 20px;
 }
+
+.preloader-logo {
+  font-size: clamp(2rem, 8vw, 3rem);
+  font-weight: 900;
+  font-style: italic;
+  letter-spacing: -0.05em;
+  margin-bottom: 1.5rem;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
 .loading-bar {
-width: 140px;
-height: 2px;
-background: var(--bg-alt);
-margin: 20px auto 0;
-position: relative;
-overflow: hidden;
+  width: 160px;
+  height: 3px;
+  background: rgba(0,0,0,0.05);
+  border-radius: 3px;
+  overflow: hidden;
+  margin: 0 auto;
+  position: relative;
 }
+
 .loading-bar::after {
-content: '';
-position: absolute;
-width: 60%;
-height: 100%;
-background: var(--text);
-animation: load 1.5s infinite var(--cubic);
+  content: '';
+  position: absolute;
+  left: -50%;
+  width: 50%;
+  height: 100%;
+  background: var(--text);
+  animation: load 1.2s infinite ease-in-out;
+  border-radius: 3px;
 }
-/* TOASTS SYSTEM */
+
+@keyframes load {
+  0% { left: -50%; }
+  100% { left: 100%; }
+}
+
+/* TOASTS */
 #toast-container {
-position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%);
-z-index: 10000; display: flex; flex-direction: column; gap: 10px;
-pointer-events: none;
+  position: fixed;
+  bottom: max(24px, calc(var(--safe-bottom) + 8px));
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10001;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  pointer-events: none;
+  width: calc(100% - 40px);
+  max-width: 400px;
 }
+
 .toast {
-background: #000; color: #fff; padding: 16px 24px; border-radius: 16px;
-font-size: 13px; font-weight: 700; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-animation: toastIn 0.5s var(--cubic) forwards; pointer-events: auto;
-display: flex; align-items: center; gap: 12px;
+  background: rgba(0,0,0,0.9);
+  backdrop-filter: blur(12px);
+  color: #fff;
+  padding: 16px 24px;
+  border-radius: 16px;
+  font-size: 14px;
+  font-weight: 600;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+  animation: toastIn 0.4s var(--ease-spring) forwards;
+  pointer-events: auto;
+  text-align: center;
+  border: 1px solid rgba(255,255,255,0.1);
 }
+
 @keyframes toastIn {
-from { transform: translateY(100px); opacity: 0; }
-to { transform: translateY(0); opacity: 1; }
+  from { 
+    opacity: 0; 
+    transform: translateY(20px) scale(0.9); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0) scale(1); 
+  }
 }
-/* NAVIGATION */
+
+/* NAVIGATION с доступностью */
 nav {
-position: fixed; top: 0; left: 0; width: 100%;
-height: calc(var(--nav-h) + env(safe-area-inset-top));
-padding-top: env(safe-area-inset-top);
-background: var(--glass); backdrop-filter: blur(24px);
--webkit-backdrop-filter: blur(24px); z-index: 1000;
--webkit-backface-visibility: hidden;
-backface-visibility: hidden;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: calc(var(--nav-h) + var(--safe-top));
+  padding-top: var(--safe-top);
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  z-index: 1000;
+  border-bottom: 1px solid var(--border);
+  transition: background 0.3s, box-shadow 0.3s;
 }
+
+nav.scrolled {
+  background: rgba(255,255,255,0.95);
+  box-shadow: 0 4px 30px rgba(0,0,0,0.05);
+}
+
 .nav-inner {
-max-width: 1300px; margin: 0 auto; height: 100%;
-display: flex; align-items: center; justify-content: space-between;
-padding: 0 clamp(20px, 5vw, 32px);
-padding-left: max(clamp(20px, 5vw, 32px), env(safe-area-inset-left));
-padding-right: max(clamp(20px, 5vw, 32px), env(safe-area-inset-right));
+  max-width: 1300px;
+  margin: 0 auto;
+  height: var(--nav-h);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 max(20px, var(--safe-left)) 0 max(20px, var(--safe-right));
 }
+
 .logo {
-font-size: 1.4rem; font-weight: 900; font-style: italic; letter-spacing: -1px; cursor: pointer;
-transition: 0.3s;
+  font-size: 1.5rem;
+  font-weight: 900;
+  font-style: italic;
+  letter-spacing: -0.03em;
+  cursor: pointer;
+  transition: opacity 0.2s;
+  text-decoration: none;
+  color: var(--text);
+  padding: 8px 0;
 }
+
 .logo:hover { opacity: 0.7; }
-.nav-links { display: flex; gap: 8px; justify-content: center; }
-.nav-links a {
-display: inline-flex;
-align-items: center;
-justify-content: center;
-line-height: 1;
-text-decoration: none; font-size: 12px; font-weight: 700;
-letter-spacing: 0.05em; text-transform: uppercase; color: var(--text-dim);
-padding: 10px 20px; border-radius: var(--radius-sm); transition: 0.3s var(--cubic);
-min-height: 44px;
+.logo:active { opacity: 0.5; }
+
+.nav-links {
+  display: flex;
+  gap: 8px;
 }
-.nav-links a:hover { color: var(--text); background: var(--bg-alt); }
-.nav-links a:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
-.nav-links a.active { color: #fff; background: var(--text); }
-/* BURGER */
+
+.nav-links a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  padding: 10px 20px;
+  border-radius: var(--radius-sm);
+  transition: all 0.2s var(--ease-out);
+  min-height: 44px;
+  border: 1px solid transparent;
+  position: relative;
+  overflow: hidden;
+}
+
+.nav-links a:hover, .nav-links a:focus {
+  color: var(--text);
+  background: rgba(0,0,0,0.03);
+  transform: translateY(-1px);
+}
+
+.nav-links a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.nav-links a.active {
+  color: #fff;
+  background: var(--text);
+  border-color: var(--text);
+}
+
+/* BURGER - увеличенная зона клика */
 .burger {
-display: none; cursor: pointer; width: 48px; height: 48px; flex-direction: column;
-justify-content: center; align-items: center; gap: 6px; border-radius: 16px;
-background: var(--bg-alt); border: none; transition: 0.3s;
+  display: none;
+  cursor: pointer;
+  width: 48px;
+  height: 48px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  border-radius: 14px;
+  background: rgba(0,0,0,0.03);
+  border: none;
+  transition: all 0.3s var(--ease-out);
+  position: relative;
 }
-.burger:hover { background: #eee; }
-.burger span { width: 20px; height: 2px; background: var(--text); border-radius: 4px; transition: 0.3s var(--cubic); }
-.burger.open span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
-.burger.open span:nth-child(2) { opacity: 0; }
-.burger.open span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
-/* DRAWER */
-.drawer-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.2); backdrop-filter: blur(8px); z-index: 1999; opacity: 0; visibility: hidden; transition: 0.4s; }
-.drawer-overlay.open { opacity: 1; visibility: visible; }
-.mobile-drawer { position: fixed; top: 0; right: -100%; width: 85%; max-width: 360px; height: 100%; background: #fff; z-index: 2000; padding: 100px 40px; display: flex; flex-direction: column; gap: 24px; transition: 0.5s var(--cubic); }
-.mobile-drawer.open { right: 0; box-shadow: -40px 0 80px rgba(0,0,0,0.1); }
-.mobile-drawer a { font-size: 2.5rem; font-weight: 900; text-decoration: none; color: var(--text); font-style: italic; text-transform: uppercase; letter-spacing: -2px; }
-/* MAIN CONTENT */
+
+.burger:hover {
+  background: rgba(0,0,0,0.06);
+  transform: scale(1.05);
+}
+
+.burger:active {
+  transform: scale(0.95);
+}
+
+.burger span {
+  width: 22px;
+  height: 2px;
+  background: var(--text);
+  border-radius: 2px;
+  transition: all 0.3s var(--ease-spring);
+  transform-origin: center;
+}
+
+.burger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.burger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+.burger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+/* DRAWER с улучшенной доступностью */
+.drawer-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  backdrop-filter: blur(8px);
+  z-index: 1999;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.4s var(--ease-out);
+}
+
+.drawer-overlay.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.mobile-drawer {
+  position: fixed;
+  top: 0;
+  right: -100%;
+  width: min(86%, 380px);
+  height: 100%;
+  height: 100dvh;
+  background: var(--bg-elevated);
+  z-index: 2000;
+  padding: calc(var(--safe-top) + 80px) 32px calc(var(--safe-bottom) + 32px);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: right 0.5s var(--ease-spring);
+  box-shadow: -20px 0 60px rgba(0,0,0,0.15);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.mobile-drawer.open {
+  right: 0;
+}
+
+.mobile-drawer a {
+  font-size: 2rem;
+  font-weight: 900;
+  text-decoration: none;
+  color: var(--text);
+  font-style: italic;
+  text-transform: uppercase;
+  letter-spacing: -0.03em;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border);
+  transition: all 0.2s;
+  opacity: 0;
+  transform: translateX(20px);
+  transition: opacity 0.4s, transform 0.4s, color 0.2s;
+}
+
+.mobile-drawer.open a {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.mobile-drawer.open a:nth-child(1) { transition-delay: 0.1s; }
+.mobile-drawer.open a:nth-child(2) { transition-delay: 0.15s; }
+.mobile-drawer.open a:nth-child(3) { transition-delay: 0.2s; }
+
+.mobile-drawer a:hover, .mobile-drawer a:focus {
+  color: var(--accent-dark);
+  padding-left: 8px;
+}
+
+.mobile-drawer .btn-group {
+  margin-top: auto;
+  padding-top: 32px;
+}
+
+/* MAIN CONTENT с учетом safe-area */
 .main-content {
-max-width: 1300px;
-margin: 0 auto;
-padding: calc(var(--nav-h) + env(safe-area-inset-top)) 32px 100px;
-min-height: calc(100svh - var(--nav-h));
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: calc(var(--nav-h) + var(--safe-top) + 20px) max(20px, var(--safe-left)) calc(100px + var(--safe-bottom)) max(20px, var(--safe-right));
+  min-height: 100vh;
+  min-height: 100dvh;
 }
-section { display: none; opacity: 0; }
-section.active { display: block; animation: fadeInUp 0.8s var(--cubic) forwards; }
-@keyframes fadeInUp {
-from { opacity: 0; transform: translateY(30px); }
-to { opacity: 1; transform: translateY(0); }
+
+/* SECTIONS */
+section {
+  display: none;
+  opacity: 0;
+  animation: fadeIn 0.6s var(--ease-out) forwards;
 }
+
+section.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* INTRO BLOCK */
 .intro-block {
-padding: 40px 0 80px;
-text-align: center;
-max-width: 900px;
-margin: 0 auto;
+  padding: 60px 0 100px;
+  text-align: center;
+  max-width: 900px;
+  margin: 0 auto;
 }
+
+.intro-block span {
+  display: block;
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--accent-dark);
+  margin-bottom: 24px;
+  opacity: 0;
+  animation: fadeInUp 0.6s 0.2s forwards;
+}
+
 .intro-block h1 {
-font-size: clamp(3.5rem, 12vw, 9.5rem);
-margin-bottom: 24px;
+  font-size: clamp(3rem, 12vw, 9rem);
+  margin-bottom: 24px;
+  opacity: 0;
+  animation: fadeInUp 0.6s 0.3s forwards;
+  line-height: 0.9;
 }
+
 .intro-block p {
-font-size: 1.25rem;
-max-width: 540px;
-margin: 0 auto 40px;
+  font-size: clamp(1.125rem, 2.5vw, 1.5rem);
+  color: var(--text-secondary);
+  max-width: 500px;
+  margin: 0 auto 40px;
+  opacity: 0;
+  animation: fadeInUp 0.6s 0.4s forwards;
 }
-/* BUTTONS */
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.btn-group {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+  opacity: 0;
+  animation: fadeInUp 0.6s 0.5s forwards;
+}
+
+/* BUTTONS с состояниями */
 .btn {
-padding: 20px 36px; border-radius: 20px; font-weight: 800;
-text-transform: uppercase; font-size: 13px; letter-spacing: 0.05em;
-cursor: pointer; transition: 0.4s var(--cubic); border: none;
-text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 10px;
-position: relative; overflow: hidden;
+  padding: 18px 32px;
+  border-radius: 18px;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 13px;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  transition: all 0.25s var(--ease-out);
+  border: none;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  position: relative;
+  overflow: hidden;
+  min-height: 56px;
+  min-width: 140px;
+  user-select: none;
+  -webkit-touch-callout: none;
 }
-.btn:active { transform: scale(0.96); }
-.btn-primary { background: var(--text); color: #fff; }
-.btn-primary:hover { transform: translateY(-4px); box-shadow: 0 20px 30px rgba(0,0,0,0.15); }
-.btn-outline { background: transparent; border: 1.5px solid var(--border); color: var(--text); }
-.btn-outline:hover { background: var(--bg-alt); border-color: var(--text); }
-/* TIMER */
+
+/* Ripple effect */
+.btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), rgba(255,255,255,0.4) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+}
+
+.btn:active::after {
+  opacity: 1;
+  transition: opacity 0.1s;
+}
+
+.btn-primary {
+  background: var(--text);
+  color: #fff;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+}
+
+.btn-outline {
+  background: transparent;
+  border: 1.5px solid var(--border-strong);
+  color: var(--text);
+}
+
+.btn-outline:hover {
+  background: rgba(0,0,0,0.02);
+  border-color: var(--text);
+  transform: translateY(-2px);
+}
+
+.btn-outline:active {
+  background: rgba(0,0,0,0.05);
+  transform: translateY(0);
+}
+
+/* Disable hover effects on touch devices */
+@media (hover: none) and (pointer: coarse) {
+  .btn:hover {
+    transform: none !important;
+  }
+  .btn:active {
+    transform: scale(0.98) !important;
+    opacity: 0.9;
+  }
+}
+
+/* TIMER с фиксированной шириной цифр */
 .timer-context {
-margin-top: 60px;
-padding: 32px 56px;
-background: var(--bg-alt);
-border-radius: 100px;
-display: inline-flex;
-align-items: center;
-gap: 40px;
-border: 1px solid var(--border);
+  margin-top: 60px;
+  padding: 28px 48px;
+  background: var(--bg-elevated);
+  border-radius: 100px;
+  display: inline-flex;
+  align-items: center;
+  gap: 32px;
+  border: 1px solid var(--border);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+  opacity: 0;
+  animation: fadeInUp 0.6s 0.6s forwards;
+  flex-wrap: wrap;
+  justify-content: center;
 }
-.countdown { display: flex; gap: 24px; }
-.countdown-value { font-size: 2.5rem; font-weight: 900; letter-spacing: -2px; }
+
+.timer-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.countdown {
+  display: flex;
+  gap: 24px;
+}
+
+.countdown > div {
+  text-align: center;
+  min-width: 60px;
+}
+
+.countdown-value {
+  font-size: clamp(2rem, 5vw, 2.5rem);
+  font-weight: 900;
+  letter-spacing: -0.02em; /* Уменьшено для читаемости */
+  line-height: 1;
+  font-variant-numeric: tabular-nums; /* Фиксированная ширина цифр */
+  font-feature-settings: "tnum";
+}
+
+.countdown-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-top: 4px;
+}
+
 /* BENTO GRID */
-.bento-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-top: 40px; }
+.bento-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  margin-top: 40px;
+}
+
+/* CARDS */
 .card {
-background: var(--card); border-radius: var(--radius); border: 1px solid var(--border);
-padding: 40px; position: relative; overflow: hidden; transition: 0.5s var(--cubic);
-cursor: pointer; display: flex; flex-direction: column;
+  background: var(--bg-elevated);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  padding: 40px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s var(--ease-out);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
-.card:hover { transform: translateY(-10px); border-color: rgba(0,0,0,0.15); box-shadow: var(--shadow-md); }
-.card:focus-visible { outline: 3px solid var(--accent); }
-/* СТИЛИ ДЛЯ КАРТОЧЕК (размеры как в текущей версии) */
+
+@media (hover: hover) {
+  .card:hover {
+    transform: translateY(-4px);
+    border-color: var(--border-strong);
+    box-shadow: 0 20px 40px -12px rgba(0,0,0,0.1);
+  }
+}
+
+.card:active {
+  transform: scale(0.99);
+}
+
+.card:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+}
+
 .card h2 {
-font-size: 3.5rem;
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  line-height: 1;
 }
+
 .card h3 {
-font-size: 1.8rem;
+  font-size: 1.5rem;
+  line-height: 1.2;
 }
-/* PLAYER CARD */
+
+.card p {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+/* PLAYER CARDS */
 .player-card {
-min-height: 480px;
-height: auto;
-background: #000; color: #fff; border: none; padding: 32px;
-isolation: isolate;
+  min-height: 480px;
+  background: #000;
+  color: #fff;
+  border: none;
+  padding: 32px;
+  isolation: isolate;
+  position: relative;
 }
+
 .player-img {
-position: absolute; inset: 0; background-size: cover; background-position: center top;
-filter: grayscale(1); opacity: 0.5; transition: 1s var(--cubic);
-z-index: 0;
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center top;
+  filter: grayscale(1);
+  opacity: 0.4;
+  transition: all 1s var(--ease-out);
+  z-index: 0;
 }
-.player-card:hover .player-img { filter: grayscale(0); opacity: 0.7; transform: scale(1.05); }
+
+@media (hover: hover) {
+  .player-card:hover .player-img {
+    filter: grayscale(0);
+    opacity: 0.6;
+    transform: scale(1.05);
+  }
+}
+
 .player-card::after {
-content: ''; position: absolute; inset: 0;
-background: linear-gradient(to top, #000 5%, rgba(0,0,0,0.4) 40%, transparent 90%); z-index: 1;
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, #000 0%, rgba(0,0,0,0.6) 50%, transparent 100%);
+  z-index: 1;
 }
-.player-info { position: relative; z-index: 2; margin-top: auto; }
+
+.player-info {
+  position: relative;
+  z-index: 2;
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.player-info span {
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--accent);
+  letter-spacing: 0.15em;
+}
+
+.player-info h3 {
+  font-size: clamp(1.75rem, 4vw, 2.2rem);
+  overflow-wrap: break-word;
+  hyphens: auto;
+  word-break: break-word;
+}
+
+.player-badges {
+  font-size: 11px;
+  color: rgba(255,255,255,0.7);
+  margin-top: 4px;
+}
+
 .ovr-badge {
-display: inline-block; padding: 6px 14px; background: var(--accent);
-color: #000; border-radius: 12px; font-weight: 900; font-size: 12px; margin-top: 12px;
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 14px;
+  background: var(--accent);
+  color: #000;
+  border-radius: 12px;
+  font-weight: 900;
+  font-size: 12px;
+  margin-top: 12px;
+  width: fit-content;
+  box-shadow: 0 4px 12px rgba(34,197,94,0.3);
 }
-/* STATS TABLE */
+
+/* STATS TABLE с улучшенной доступностью */
 .table-wrapper {
-background: #fff; border-radius: var(--radius); border: 1px solid var(--border);
-overflow: hidden;
-overscroll-behavior-x: contain;
+  background: var(--bg-elevated);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  overflow: hidden;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  position: relative;
 }
-table { width: 100%; border-collapse: collapse; }
-th { text-align: left; padding: 24px; font-size: 11px; font-weight: 800; text-transform: uppercase; color: var(--text-dim); border-bottom: 1px solid var(--border); }
-td { padding: 20px 24px; border-bottom: 1px solid var(--border); transition: 0.3s; }
-tr:last-child td { border-bottom: none; }
-tr:hover td {
-background: rgba(0,0,0,0.02);
-transition: background 0.2s ease;
+
+/* Индикатор горизонтального скролла */
+.table-wrapper::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 40px;
+  background: linear-gradient(to right, transparent, rgba(0,0,0,0.03));
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s;
 }
-/* MODAL */
+
+.table-wrapper.can-scroll-right::after {
+  opacity: 1;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 400px;
+}
+
+th {
+  text-align: left;
+  padding: 24px;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  letter-spacing: 0.1em;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+td {
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border);
+  transition: background 0.2s;
+  vertical-align: middle;
+}
+
+tr:last-child td {
+  border-bottom: none;
+}
+
+tbody tr {
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+tbody tr:hover, tbody tr:focus-within {
+  background: rgba(0,0,0,0.02);
+}
+
+tbody tr:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+
+/* PLAYER ROW */
+.player-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.player-avatar-sm {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  object-fit: cover;
+  background: var(--bg);
+  flex-shrink: 0;
+}
+
+.player-info-sm {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0; /* Для text-overflow */
+}
+
+.player-name-sm {
+  font-weight: 800;
+  text-transform: uppercase;
+  font-style: italic;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.player-role-sm {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* MODAL - полностью переработан */
 .modal-overlay {
-position: fixed; inset: 0; background: rgba(255,255,255,0.7);
-backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-z-index: 3000; display: flex; justify-content: center; align-items: center;
-padding: 20px; opacity: 0; pointer-events: none; transition: 0.4s var(--cubic);
+  position: fixed;
+  inset: 0;
+  background: rgba(255,255,255,0.8);
+  backdrop-filter: blur(24px) saturate(180%);
+  z-index: 3000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.4s var(--ease-out);
+  overflow-y: auto;
 }
-.modal-overlay.active { opacity: 1; pointer-events: auto; }
+
+.modal-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
 .modal-content {
-background: #fff; width: 100%; max-width: 540px; border-radius: 40px;
-padding: 48px; position: relative; max-height: 90vh; overflow-y: auto;
-box-shadow: 0 40px 80px rgba(0,0,0,0.1); transform: translateY(40px) scale(0.95); transition: 0.6s var(--cubic);
+  background: var(--bg-elevated);
+  width: 100%;
+  max-width: 520px;
+  border-radius: 32px;
+  padding: 48px;
+  position: relative;
+  max-height: 90vh;
+  max-height: 90dvh;
+  overflow-y: auto;
+  box-shadow: 0 40px 80px -20px rgba(0,0,0,0.2);
+  transform: translateY(40px) scale(0.95);
+  transition: transform 0.5s var(--ease-spring);
+  border: 1px solid var(--border);
 }
-.modal-overlay.active .modal-content { transform: translateY(0) scale(1); }
+
+.modal-overlay.active .modal-content {
+  transform: translateY(0) scale(1);
+}
+
 .modal-close {
-position: absolute; top: 24px; right: 24px; width: 48px; height: 48px;
-background: var(--bg-alt); border-radius: 50%; display: flex;
-align-items: center; justify-content: center; cursor: pointer; z-index: 101;
-border: none; transition: 0.3s var(--cubic);
+  position: absolute;
+  top: max(20px, var(--safe-top));
+  right: max(20px, var(--safe-right));
+  width: 44px;
+  height: 44px;
+  background: rgba(0,0,0,0.03);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: none;
+  transition: all 0.3s;
+  z-index: 10;
+  color: var(--text-secondary);
 }
-.modal-close:hover { transform: rotate(90deg); background: #eee; }
-/* КНОПКА СКАЧИВАНИЯ КАРТОЧКИ */
+
+.modal-close:hover, .modal-close:focus {
+  background: rgba(0,0,0,0.08);
+  color: var(--text);
+  transform: rotate(90deg);
+}
+
 .download-circle {
-position: absolute;
-top: 24px;
-right: 80px;
-width: 38px;
-height: 38px;
-background: rgba(255, 255, 255, 0.15);
-backdrop-filter: blur(8px);
--webkit-backdrop-filter: blur(8px);
-border: 1px solid rgba(255, 255, 255, 0.3);
-border-radius: 50%;
-color: white;
-display: flex;
-align-items: center;
-justify-content: center;
-cursor: pointer;
-z-index: 100;
-transition: all 0.3s ease;
-box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  position: absolute;
+  top: max(20px, var(--safe-top));
+  right: calc(max(20px, var(--safe-right)) + 56px);
+  width: 44px;
+  height: 44px;
+  background: rgba(0,0,0,0.03);
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  transition: all 0.3s;
 }
-.download-circle:hover {
-background: rgba(255, 255, 255, 0.3);
-transform: scale(1.1);
+
+.download-circle:hover, .download-circle:focus {
+  background: var(--text);
+  color: #fff;
+  border-color: var(--text);
+  transform: scale(1.1);
 }
+
 .download-circle svg {
-width: 18px;
-height: 18px;
+  width: 20px;
+  height: 20px;
 }
-.download-circle:active {
-transform: scale(0.95);
+
+/* PLAYER MODAL CONTENT */
+#m-img-container {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  max-height: 320px;
+  border-radius: 20px;
+  overflow: hidden;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  margin-bottom: 32px;
+  position: relative;
 }
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+#m-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+
+#m-img.loaded {
+  opacity: 1;
+  animation: none;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.modal-title-group {
+  flex: 1;
+  min-width: 0;
+}
+
+#m-role {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--accent-dark);
+  background: rgba(34,197,94,0.1);
+  padding: 8px 14px;
+  border-radius: 20px;
+  margin-bottom: 12px;
+  letter-spacing: 0.1em;
+}
+
+#m-name {
+  font-size: clamp(1.75rem, 5vw, 2.5rem);
+  line-height: 1.1;
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
+#m-badges {
+  display: flex;
+  gap: 8px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+
+.badge {
+  font-size: 10px;
+  font-weight: 800;
+  background: var(--text);
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+#m-ovr {
+  font-size: clamp(2.5rem, 6vw, 3.5rem);
+  font-weight: 900;
+  font-style: italic;
+  line-height: 1;
+  letter-spacing: -0.05em;
+  color: var(--text);
+  flex-shrink: 0;
+}
+
+/* STATS GRID в модалке */
+#m-stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.stat-item {
+  position: relative;
+}
+
+.stat-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  gap: 8px;
+}
+
+.stat-label-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: help;
+  position: relative;
+  padding: 4px 0;
+}
+
+.stat-label {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.stat-value {
+  font-size: 13px;
+  font-weight: 900;
+  color: var(--text);
+}
+
+.info-icon {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 1.5px solid var(--border-strong);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  color: var(--text-tertiary);
+  font-style: normal;
+  font-weight: 800;
+  flex-shrink: 0;
+  transition: all 0.2s;
+}
+
+.stat-label-group:hover .info-icon,
+.stat-label-group:focus .info-icon {
+  background: var(--text);
+  color: #fff;
+  border-color: var(--text);
+}
+
+/* TOOLTIP - улучшенный */
+.stat-label-group[data-tooltip]::before {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%) translateY(8px);
+  background: rgba(0,0,0,0.9);
+  color: #fff;
+  padding: 10px 16px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.4;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s var(--ease-out);
+  z-index: 100;
+  pointer-events: none;
+  white-space: nowrap;
+  max-width: 260px;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.stat-label-group[data-tooltip]::after {
+  content: '';
+  position: absolute;
+  bottom: calc(100% + 4px);
+  left: 50%;
+  transform: translateX(-50%) translateY(8px);
+  border: 6px solid transparent;
+  border-top-color: rgba(0,0,0,0.9);
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s var(--ease-out);
+}
+
+.stat-label-group:hover[data-tooltip]::before,
+.stat-label-group:hover[data-tooltip]::after,
+.stat-label-group:focus[data-tooltip]::before,
+.stat-label-group:focus[data-tooltip]::after {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* Mobile tooltip fix */
+@media (max-width: 768px) {
+  .stat-label-group[data-tooltip]::before {
+    position: fixed;
+    left: 50% !important;
+    top: auto !important;
+    bottom: 150px !important;
+    transform: translateX(-50%) !important;
+    max-width: calc(100vw - 40px);
+    white-space: normal;
+    z-index: 10000;
+  }
+  .stat-label-group[data-tooltip]::after {
+    display: none;
+  }
+}
+
+/* Progress bars */
+.stat-bar-bg {
+  height: 6px;
+  background: var(--border);
+  border-radius: 3px;
+  overflow: hidden;
+  position: relative;
+}
+
+.stat-bar-fill {
+  height: 100%;
+  background: var(--text);
+  border-radius: 3px;
+  width: 0%;
+  transition: width 1.2s var(--ease-out) 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-bar-fill::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  animation: shimmer-bar 2s infinite;
+}
+
+@keyframes shimmer-bar {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
 /* SEARCH & FILTER */
+.controls-row {
+  margin-bottom: 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
 .search-input {
-padding: 18px 28px; border-radius: 20px; border: 1.5px solid var(--border);
-background: var(--bg-alt); width: 100%; max-width: 360px; font-family: inherit;
-font-weight: 600; transition: 0.3s;
+  padding: 16px 24px;
+  border-radius: 16px;
+  border: 1.5px solid var(--border);
+  background: var(--bg-elevated);
+  width: 100%;
+  max-width: 360px;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 500;
+  transition: all 0.2s;
+  color: var(--text);
 }
-.search-input:focus { outline: none; border-color: var(--text); background: #fff; box-shadow: 0 0 0 4px rgba(0,0,0,0.03); }
+
+.search-input:hover {
+  border-color: var(--border-strong);
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: var(--text);
+  background: #fff;
+  box-shadow: 0 0 0 4px rgba(0,0,0,0.04);
+}
+
+.search-input::placeholder {
+  color: var(--text-tertiary);
+}
+
+.filter-bar {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
 .filter-btn {
-padding: 12px 20px; border-radius: 14px; border: 1px solid var(--border);
-background: #fff; font-size: 12px; font-weight: 800; cursor: pointer;
-text-transform: uppercase; white-space: nowrap; transition: 0.3s;
+  padding: 12px 20px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--bg-elevated);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+  transition: all 0.2s;
+  color: var(--text-secondary);
+  min-height: 44px;
 }
-.filter-btn:hover { background: var(--bg-alt); }
-.filter-btn.active { background: var(--text); color: #fff; border-color: var(--text); }
+
+.filter-btn:hover {
+  border-color: var(--border-strong);
+  color: var(--text);
+  transform: translateY(-1px);
+}
+
+.filter-btn.active {
+  background: var(--text);
+  color: #fff;
+  border-color: var(--text);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
 /* SCROLLBAR */
-::-webkit-scrollbar { width: 8px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
-::-webkit-scrollbar-thumb:hover { background: #ccc; }
-/* Минимальный размер для всех интерактивных элементов на мобильных */
-button,
-a,
-[role="button"],
-input,
-select,
-.btn,
-.filter-btn,
-.nav-links a {
-min-height: 44px;
-min-width: 44px;
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
 }
-/* TOUCH HOVER FIX */
-@media (hover: none) {
-.card:hover {
-transform: none;
+
+::-webkit-scrollbar-track {
+  background: transparent;
 }
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 4px;
 }
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-tertiary);
+}
+
 /* MOBILE ADAPTIVITY */
 @media (max-width: 1024px) {
-.bento-grid { grid-template-columns: repeat(2, 1fr); }
+  .bento-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
+
 @media (max-width: 768px) {
-.nav-links { display: none; }
-.burger { display: flex; }
-.main-content { padding: calc(var(--nav-h) + env(safe-area-inset-top)) 16px 60px; }
-.intro-block { padding: 20px 0 40px; }
-.intro-block h1 {
-font-size: clamp(2.5rem, 15vw, 4rem);
-line-height: 0.9;
-margin-bottom: 16px;
+  .nav-links {
+    display: none;
+  }
+  
+  .burger {
+    display: flex;
+  }
+  
+  .main-content {
+    padding-left: max(16px, var(--safe-left));
+    padding-right: max(16px, var(--safe-right));
+  }
+  
+  .intro-block {
+    padding: 40px 0 60px;
+  }
+  
+  .timer-context {
+    border-radius: 24px;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+    padding: 24px;
+  }
+  
+  .countdown {
+    gap: 16px;
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .countdown > div {
+    min-width: 50px;
+  }
+  
+  .countdown-value {
+    font-size: 2rem;
+  }
+  
+  .btn {
+    padding: 16px 24px;
+    min-height: 52px;
+    width: 100%;
+    max-width: 300px;
+  }
+  
+  .btn-group {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .bento-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  
+  .card {
+    padding: 28px;
+  }
+  
+  .card[style*="grid-column: span 2"] {
+    grid-column: span 1 !important;
+  }
+  
+  .player-card {
+    min-height: 360px;
+  }
+  
+  .controls-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .search-input {
+    max-width: 100%;
+  }
+  
+  .filter-bar {
+    overflow-x: auto;
+    padding-bottom: 8px;
+    flex-wrap: nowrap;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  
+  .filter-bar::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .filter-btn {
+    flex-shrink: 0;
+  }
+  
+  .modal-content {
+    padding: 24px;
+    border-radius: 24px;
+    margin: 10px;
+    width: calc(100% - 20px);
+    max-height: 95vh;
+    max-height: 95dvh;
+  }
+  
+  .modal-close, .download-circle {
+    top: 16px;
+    right: 16px;
+    width: 40px;
+    height: 40px;
+  }
+  
+  .download-circle {
+    right: 64px;
+  }
+  
+  #m-img-container {
+    aspect-ratio: 4 / 3;
+  }
+  
+  #m-stats {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  th, td {
+    padding: 16px 12px;
+  }
+  
+  .player-avatar-sm {
+    width: 40px;
+    height: 40px;
+  }
 }
-.intro-block p {
-font-size: 1.1rem;
-margin-bottom: 24px;
-padding: 0 10px;
-}
-.timer-context {
-border-radius: 24px;
-flex-direction: column;
-gap: 16px;
-width: 100%;
-padding: 24px 16px;
-margin-top: 40px;
-text-align: center;
-}
-.countdown {
-gap: 12px;
-flex-wrap: wrap;
-justify-content: center;
-}
-.countdown > div {
-min-width: 60px;
-display: flex;
-flex-direction: column;
-align-items: center;
-}
-.countdown-value {
-font-size: 1.8rem;
-}
-.countdown-label {
-font-size: 11px;
-}
-.btn-group {
-gap: 12px;
-}
-.btn {
-padding: 16px 28px;
-font-size: 12px;
-min-height: 44px;
-}
-.bento-grid {
-grid-template-columns: 1fr;
-gap: 16px;
-margin-top: 30px;
-}
-.card {
-padding: 24px;
-min-height: auto;
-}
-.card[style*="grid-column: span 2"] {
-grid-column: span 1 !important;
-}
-.card h2 {
-font-size: 2rem;
-margin: 12px 0;
-}
-.controls-row {
-flex-direction: column;
-align-items: stretch;
-gap: 16px;
-}
-.search-input {
-max-width: 100%;
-padding: 16px 20px;
-font-size: 16px;
-}
-.filter-bar {
-overflow-x: auto;
-padding-bottom: 8px;
-width: 100%;
-display: flex;
-gap: 6px;
-}
-.filter-btn {
-padding: 12px 16px;
-white-space: nowrap;
-}
-.player-card {
-min-height: 360px;
-height: auto;
-padding: 24px;
-}
-.player-card h3 {
-font-size: 1.8rem;
-}
-.modal-content {
-padding: 32px 24px;
-border-radius: 24px;
-margin: 10px;
-width: calc(100% - 20px);
-}
-.modal-close {
-top: 16px;
-right: 16px;
-width: 40px;
-height: 40px;
-}
-.download-circle {
-top: 16px;
-right: 64px;
-width: 40px;
-height: 40px;
-}
-.download-circle svg {
-width: 16px;
-height: 16px;
-}
-.mobile-drawer {
-padding: 90px 24px 40px;
-width: min(85%, 320px);
-height: 100vh;
-overflow-y: auto;
-}
-.mobile-drawer a {
-font-size: 1.8rem;
-letter-spacing: -1px;
-padding: 12px 0;
-}
-#m-stats {
-grid-template-columns: 1fr;
-gap: 20px;
-}
-/* ИСПРАВЛЕНИЕ ДЛЯ МОБИЛЬНЫХ ТУЛТИПОВ */
-.stat-header::after {
-display: block !important;
-width: calc(100vw - 40px);
-max-width: 280px;
-left: 50%;
-transform: translateX(-50%) translateY(10px);
-margin-left: 0;
-text-align: center;
-white-space: normal;
-word-wrap: break-word;
-font-size: 10px;
-padding: 10px;
-bottom: calc(100% + 8px);
-box-sizing: border-box;
-}
-.stat-header.active::after {
-transform: translateX(-50%) translateY(0);
-}
-.table-wrapper {
-overflow-x: auto;
--webkit-overflow-scrolling: touch;
-}
-table {
-min-width: 500px;
-}
-td {
-padding: 16px 12px;
-}
-}
+
 /* Очень маленькие экраны */
 @media (max-width: 360px) {
-.intro-block h1 {
-font-size: 2.2rem;
+  .intro-block h1 {
+    font-size: 2.5rem;
+  }
+  
+  .countdown-value {
+    font-size: 1.5rem;
+  }
+  
+  .countdown-label {
+    font-size: 9px;
+  }
+  
+  .card h2 {
+    font-size: 1.75rem;
+  }
+  
+  .download-circle {
+    right: 56px;
+  }
 }
-.countdown-value {
-font-size: 1.5rem;
+
+/* Ночной режим (если пользователь предпочитает) */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0a0a0a;
+    --bg-elevated: #111111;
+    --text: #ffffff;
+    --text-secondary: #a1a1aa;
+    --text-tertiary: #71717a;
+    --border: rgba(255,255,255,0.1);
+    --border-strong: rgba(255,255,255,0.2);
+  }
+  
+  .loading-bar {
+    background: rgba(255,255,255,0.1);
+  }
+  
+  .loading-bar::after {
+    background: #fff;
+  }
+  
+  #preloader {
+    background: var(--bg);
+  }
+  
+  .player-card {
+    background: #000;
+  }
+  
+  .table-wrapper::after {
+    background: linear-gradient(to right, transparent, rgba(255,255,255,0.05));
+  }
 }
-.card h2 {
-font-size: 1.6rem;
-}
-.player-card {
-min-height: 320px;
-}
-.download-circle {
-right: 56px;
-}
-}
-/* Только для очень маленьких экранов по ширине */
-@media (max-width: 420px) {
-.intro-block h1 {
-font-size: clamp(2.0rem, 14vw, 3.0rem);
-line-height: 1.0;
-}
-.player-card {
-min-height: 300px;
-}
-.timer-context {
-padding: 16px;
-gap: 8px;
-}
-.countdown > div {
-min-width: 48px;
-}
-.countdown-value {
-font-size: 1.4rem;
-}
-.main-content {
-padding-top: calc(var(--nav-h) + env(safe-area-inset-top));
-padding-bottom: 50px;
-}
-nav {
-height: calc(var(--nav-h) + env(safe-area-inset-top));
-}
-.btn {
-padding: 14px 24px;
-font-size: 11px;
-}
-.ovr-badge {
-padding: 4px 10px;
-font-size: 10px;
-}
-}
-@keyframes load {
-0% { transform: translateX(-100%); }
-100% { transform: translateX(100%); }
-}
-/* Убираем подсветку элементов при касании */
-* {
--webkit-tap-highlight-color: transparent;
+
+/* Print styles */
+@media print {
+  nav, .btn-group, .drawer-overlay, .mobile-drawer, #toast-container {
+    display: none !important;
+  }
+  
+  .modal-overlay {
+    position: static;
+    opacity: 1;
+    visibility: visible;
+  }
+  
+  .modal-content {
+    box-shadow: none;
+    max-height: none;
+  }
 }
 </style>
 </head>
 <body>
-<div id="toast-container"></div>
-<div id="preloader" role="status" aria-label="Загрузка">
-<div style="text-align:center;">
-<h2 style="font-size:3rem; margin-bottom:10px;">BOX<span style="color:var(--accent)">1</span>V1</h2>
-<div class="loading-bar"></div>
+<!-- Accessibility skip link -->
+<a href="#main" class="skip-link">Перейти к содержимому</a>
+
+<!-- Preloader -->
+<div id="preloader" role="status" aria-label="Загрузка приложения">
+  <div class="preloader-content">
+    <div class="preloader-logo">BOX<span style="color:var(--accent)">1</span>V1</div>
+    <div class="loading-bar" aria-hidden="true"></div>
+  </div>
 </div>
-</div>
-<nav id="navbar">
-<div class="nav-inner">
-<div class="logo" onclick="switchTab('home')" aria-label="На главную">BOX<span style="color:var(--accent)">1</span>V1</div>
-<div class="nav-links" role="navigation">
-<a href="#home" onclick="switchTab('home')" class="active" id="btn-home">Главная</a>
-<a href="#roster" onclick="switchTab('roster')" id="btn-roster">УЧАСТНИКИ</a>
-<a href="#stats" onclick="switchTab('stats')" id="btn-stats">Рейтинг</a>
-</div>
-<button class="burger" id="burger" onclick="toggleMenu()" aria-label="Меню" aria-expanded="false">
-<span></span><span></span><span></span>
-</button>
-</div>
+
+<!-- Toast Container -->
+<div id="toast-container" role="region" aria-live="polite" aria-atomic="true"></div>
+
+<!-- Navigation -->
+<nav id="navbar" role="navigation" aria-label="Главное меню">
+  <div class="nav-inner">
+    <a href="#home" class="logo" onclick="switchTab('home'); return false;" aria-label="BOX1V1 - На главную">
+      BOX<span style="color:var(--accent)">1</span>V1
+    </a>
+    
+    <div class="nav-links">
+      <a href="#home" onclick="switchTab('home'); return false;" id="btn-home" class="active" aria-current="page">Главная</a>
+      <a href="#roster" onclick="switchTab('roster'); return false;" id="btn-roster">Участники</a>
+      <a href="#stats" onclick="switchTab('stats'); return false;" id="btn-stats">Рейтинг</a>
+    </div>
+    
+    <button class="burger" id="burger" onclick="toggleMenu()" aria-label="Открыть меню" aria-expanded="false" aria-controls="mobile-drawer">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </button>
+  </div>
 </nav>
-<div class="drawer-overlay" id="drawer-overlay" onclick="toggleMenu()"></div>
-<div class="mobile-drawer" id="mobile-drawer">
-<a href="#home" onclick="handleMobileNav('home')">Главная</a>
-<a href="#roster" onclick="handleMobileNav('roster')">Список</a>
-<a href="#stats" onclick="handleMobileNav('stats')">Рейтинг</a>
-<div style="margin-top:auto;">
-<button class="btn btn-primary" style="width:100%" onclick="handleMobileNav('applyModal', true)">Стать частью</button>
+
+<!-- Mobile Drawer -->
+<div class="drawer-overlay" id="drawer-overlay" onclick="toggleMenu()" aria-hidden="true"></div>
+<div class="mobile-drawer" id="mobile-drawer" role="dialog" aria-label="Мобильное меню" aria-modal="true">
+  <a href="#home" onclick="handleMobileNav('home'); return false;">Главная</a>
+  <a href="#roster" onclick="handleMobileNav('roster'); return false;">Участники</a>
+  <a href="#stats" onclick="handleMobileNav('stats'); return false;">Рейтинг</a>
+  <div class="btn-group">
+    <button class="btn btn-primary" onclick="handleMobileNav('applyModal', true)" style="width:100%">Стать частью</button>
+  </div>
 </div>
-</div>
-<main class="main-content">
-<section id="home" class="active">
-<div class="intro-block">
-<span style="font-size:12px; font-weight:800; text-transform:uppercase; letter-spacing:0.4em; color:var(--accent-dark); display:block; margin-bottom:20px;">The Next Gen Football</span>
-<h1>BOX1V1.</h1>
-<p>Решает не команда.<br>Решаешь ты.</p>
-<div class="btn-group" style="display:flex; gap:16px; justify-content:center; flex-wrap:wrap;">
-<button class="btn btn-primary" onclick="switchTab('roster')">Участники</button>
-<button class="btn btn-outline" onclick="openModal('applyModal')">Подать заявку</button>
-</div>
-<div class="timer-context" id="timer-container">
-<span class="timer-label" id="timer-status">До старта сезона:</span>
-<div class="countdown" id="timer">
-<div><div class="countdown-value" id="days">00</div><div class="countdown-label">дн</div></div>
-<div><div class="countdown-value" id="hours">00</div><div class="countdown-label">чс</div></div>
-<div><div class="countdown-value" id="mins">00</div><div class="countdown-label">мин</div></div>
-<div><div class="countdown-value" id="secs">00</div><div class="countdown-label">сек</div></div>
-</div>
-</div>
-</div>
-<div class="bento-grid">
-<div class="card" style="grid-column: span 2; background: #fafafa;" onclick="openModal('rulesModal')" tabindex="0">
-<span style="font-size:11px; font-weight:800; color:var(--accent-dark); text-transform:uppercase; letter-spacing:0.1em;">Документация</span>
-<h2 class="reg-header">РЕГЛАМЕНТ.</h2>
-<p>Свод правил проведения матчей.</p>
-<div style="margin-top: auto; padding-top: 30px; font-weight: 800; font-size: 12px; text-transform: uppercase;">Изучить правила →</div>
-</div>
-<div class="card" onclick="window.open('https://t.me/streetbox1v1')" tabindex="0">
-<h3 style="font-size: 1.8rem;">TELEGRAM</h3>
-<p style="font-size: 14px; margin-top: 8px;">Свежие новости и актуальная информация.</p>
-</div>
-<div class="card" onclick="window.open('https://instagram.com/box.1v1')" tabindex="0">
-<h3 style="font-size: 1.8rem;">INSTAGRAM</h3>
-<p style="font-size: 14px; margin-top: 8px;">Главные новости в медиа формате.</p>
-</div>
-</div>
-</section>
-<section id="roster">
-<div style="margin-bottom: 60px;">
-<h1 style="font-size: clamp(3rem, 10vw, 8rem);">УЧАСТНИКИ.</h1>
-<p style="font-size: 1.25rem;">Действующие участники BOX1V1.</p>
-</div>
-<div class="controls-row" style="margin-bottom: 40px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:20px;">
-<input type="text" class="search-input" id="playerSearch" placeholder="Поиск по имени..." oninput="debouncedRender()">
-<div class="filter-bar" style="display:flex; gap:8px;">
-<button class="filter-btn active" data-role="Все" onclick="setRoleFilter('Все', this)">Все</button>
-<button class="filter-btn" data-role="Игрок" onclick="setRoleFilter('Игрок', this)">Полевые</button>
-<button class="filter-btn" data-role="Вратарь" onclick="setRoleFilter('Вратарь', this)">Вратари</button>
-</div>
-</div>
-<div class="bento-grid" id="roster-grid"></div>
-</section>
-<section id="stats">
-<h1 style="font-size: clamp(3rem, 10vw, 8rem); margin-bottom:40px;">РЕЙТИНГ.</h1>
-<div class="table-wrapper">
-<table role="grid">
-<thead>
-<tr><th>#.</th><th>Игрок</th><th style="text-align:right;">OVR рейтинг</th></tr>
-</thead>
-<tbody id="stats-body"></tbody>
-</table>
-</div>
-</section>
+
+<!-- Main Content -->
+<main id="main" class="main-content">
+  <!-- Home Section -->
+  <section id="home" class="active" aria-label="Главная">
+    <div class="intro-block">
+      <span>The Next Gen Football</span>
+      <h1>BOX1V1.</h1>
+      <p>Решает не команда.<br>Решаешь ты.</p>
+      <div class="btn-group">
+        <button class="btn btn-primary" onclick="switchTab('roster')">Участники</button>
+        <button class="btn btn-outline" onclick="openModal('applyModal')">Подать заявку</button>
+      </div>
+      
+      <div class="timer-context" id="timer-container">
+        <span class="timer-label" id="timer-status">До старта сезона:</span>
+        <div class="countdown" id="timer">
+          <div>
+            <div class="countdown-value" id="days">--</div>
+            <div class="countdown-label">дн</div>
+          </div>
+          <div>
+            <div class="countdown-value" id="hours">--</div>
+            <div class="countdown-label">чс</div>
+          </div>
+          <div>
+            <div class="countdown-value" id="mins">--</div>
+            <div class="countdown-label">мин</div>
+          </div>
+          <div>
+            <div class="countdown-value" id="secs">--</div>
+            <div class="countdown-label">сек</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="bento-grid">
+      <div class="card" style="grid-column: span 2;" onclick="openModal('rulesModal')" tabindex="0" role="button" aria-label="Открыть регламент">
+        <span style="font-size:11px; font-weight:800; color:var(--accent-dark); text-transform:uppercase; letter-spacing:0.1em;">Документация</span>
+        <h2>РЕГЛАМЕНТ.</h2>
+        <p>Свод правил проведения матчей.</p>
+        <div style="margin-top:auto; padding-top:30px; font-weight:800; font-size:12px; text-transform:uppercase; color:var(--text-secondary);">
+          Изучить правила →
+        </div>
+      </div>
+      
+      <div class="card" onclick="window.open('https://t.me/streetbox1v1', '_blank')" tabindex="0" role="link" aria-label="Открыть Telegram">
+        <h3>TELEGRAM</h3>
+        <p>Свежие новости и актуальная информация.</p>
+      </div>
+      
+      <div class="card" onclick="window.open('https://instagram.com/box.1v1', '_blank')" tabindex="0" role="link" aria-label="Открыть Instagram">
+        <h3>INSTAGRAM</h3>
+        <p>Главные новости в медиа формате.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Roster Section -->
+  <section id="roster" aria-label="Участники">
+    <div style="margin-bottom: 60px;">
+      <h1 style="font-size: clamp(3rem, 10vw, 8rem); line-height:0.9;">УЧАСТНИКИ.</h1>
+      <p style="font-size: 1.25rem; margin-top:16px;">Действующие участники BOX1V1.</p>
+    </div>
+    
+    <div class="controls-row">
+      <input type="search" 
+             class="search-input" 
+             id="playerSearch" 
+             placeholder="Поиск по имени..." 
+             oninput="debouncedRender()"
+             aria-label="Поиск игрока"
+             autocomplete="off">
+             
+      <div class="filter-bar" role="group" aria-label="Фильтр по роли">
+        <button class="filter-btn active" onclick="setRoleFilter('Все', this)" aria-pressed="true">Все</button>
+        <button class="filter-btn" onclick="setRoleFilter('Игрок', this)" aria-pressed="false">Полевые</button>
+        <button class="filter-btn" onclick="setRoleFilter('Вратарь', this)" aria-pressed="false">Вратари</button>
+      </div>
+    </div>
+    
+    <div class="bento-grid" id="roster-grid" role="region" aria-live="polite" aria-label="Сетка игроков">
+      <!-- Content loaded by JS -->
+    </div>
+  </section>
+
+  <!-- Stats Section -->
+  <section id="stats" aria-label="Рейтинг">
+    <h1 style="font-size: clamp(3rem, 10vw, 8rem); margin-bottom:40px; line-height:0.9;">РЕЙТИНГ.</h1>
+    <div class="table-wrapper" role="region" aria-label="Таблица рейтинга" tabindex="0">
+      <table role="table" aria-label="Рейтинг игроков">
+        <thead>
+          <tr>
+            <th scope="col" aria-label="Позиция">#</th>
+            <th scope="col">Игрок</th>
+            <th scope="col" style="text-align:right;">OVR</th>
+          </tr>
+        </thead>
+        <tbody id="stats-body">
+          <!-- Content loaded by JS -->
+        </tbody>
+      </table>
+    </div>
+  </section>
 </main>
-<div class="modal-overlay" id="playerModal" onclick="closeModal('playerModal')" role="dialog" aria-modal="true">
-<div class="modal-content" id="stats-card" onclick="event.stopPropagation()">
-<button class="modal-close" onclick="closeModal('playerModal')" aria-label="Закрыть">✕</button>
-<button id="download-card" class="download-circle" aria-label="Скачать карточку">
-<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-<polyline points="7 10 12 15 17 10"></polyline>
-<line x1="12" y1="15" x2="12" y2="3"></line>
-</svg>
-</button>
-<div id="m-img-container" style="width:100%; height:320px; border-radius:24px; overflow:hidden; background:#f0f0f0; margin-bottom:32px;">
-<img id="m-img" src="" style="width:100%; height:100%; object-fit:cover;" alt="Фото игрока" loading="lazy">
+
+<!-- Player Modal -->
+<div class="modal-overlay" id="playerModal" role="dialog" aria-modal="true" aria-labelledby="m-name" onclick="if(event.target === this) closeModal('playerModal')">
+  <div class="modal-content" id="stats-card" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closeModal('playerModal')" aria-label="Закрыть карточку игрока">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
+    
+    <button id="download-card" class="download-circle" aria-label="Скачать карточку игрока">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+        <polyline points="7 10 12 15 17 10"></polyline>
+        <line x1="12" y1="15" x2="12" y2="3"></line>
+      </svg>
+    </button>
+    
+    <div id="m-img-container">
+      <img id="m-img" src="" alt="Фото игрока" loading="lazy" onload="this.classList.add('loaded')">
+    </div>
+    
+    <div class="modal-header">
+      <div class="modal-title-group">
+        <span id="m-role">ROLE</span>
+        <h2 id="m-name">NAME</h2>
+        <div id="m-badges" role="list" aria-label="Бейджи игрока"></div>
+      </div>
+      <div id="m-ovr" aria-label="Общий рейтинг">99</div>
+    </div>
+    
+    <div id="m-stats" role="region" aria-label="Характеристики игрока"></div>
+    
+    <div style="display:flex; gap:12px; flex-wrap:wrap;">
+      <button class="btn btn-primary" style="flex:1; min-width:140px;" onclick="copyPlayerID()">
+        Копировать ID
+      </button>
+      <button class="btn btn-outline" style="flex:1; min-width:140px;" onclick="sharePlayer()">
+        Поделиться
+      </button>
+    </div>
+  </div>
 </div>
-<div style="display:flex; justify-content:space-between; align-items:flex-start;">
-<div>
-<span id="m-role" style="font-size:11px; font-weight:800; text-transform:uppercase; color:var(--accent-dark); background:rgba(34,197,94,0.1); padding:6px 12px; border-radius:10px;">ROLE</span>
-<h2 id="m-name" style="font-size: 2.5rem; margin-top:12px;">NAME</h2>
-<div id="m-badges" style="display:flex; gap:8px; margin-top:16px; flex-wrap:wrap;"></div>
+
+<!-- Apply Modal -->
+<div class="modal-overlay" id="applyModal" role="dialog" aria-modal="true" aria-labelledby="apply-title" onclick="if(event.target === this) closeModal('applyModal')">
+  <div class="modal-content" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closeModal('applyModal')" aria-label="Закрыть">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
+    
+    <h2 id="apply-title" style="font-size:1.75rem; margin-bottom:16px; line-height:1.2;">ВСТУПИТЬ В BOX1V1</h2>
+    <p style="margin-bottom:32px; color:var(--text-secondary); line-height:1.6;">
+      Чтобы оформить заявку, оставь комментарий под любым постом с хештегом <strong style="color:var(--text);">#BOXУЧАСТВОВАТЬ</strong>.
+    </p>
+    <button class="btn btn-primary" style="width:100%;" onclick="window.open('https://t.me/streetbox1v1', '_blank')">
+      Открыть Telegram
+    </button>
+  </div>
 </div>
-<div id="m-ovr" style="font-size: 3rem; font-weight:900; font-style:italic; line-height:1; letter-spacing:-3px;">99</div>
+
+<!-- Rules Modal -->
+<div class="modal-overlay" id="rulesModal" role="dialog" aria-modal="true" aria-labelledby="rules-title" onclick="if(event.target === this) closeModal('rulesModal')">
+  <div class="modal-content" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closeModal('rulesModal')" aria-label="Закрыть">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
+    
+    <h2 id="rules-title" style="font-size:1.75rem; margin-bottom:32px; line-height:1.2;">РЕГЛАМЕНТ</h2>
+    
+    <div style="display:flex; flex-direction:column; gap:24px;">
+      <article style="padding-bottom:24px; border-bottom:1px solid var(--border);">
+        <h3 style="font-size:12px; font-weight:800; text-transform:uppercase; color:var(--accent-dark); margin-bottom:8px; letter-spacing:0.1em;">01. Формат</h3>
+        <p style="color:var(--text-secondary); line-height:1.6; margin:0;">Матчи 1 на 1 с участием независимого вратаря.</p>
+      </article>
+      
+      <article style="padding-bottom:24px; border-bottom:1px solid var(--border);">
+        <h3 style="font-size:12px; font-weight:800; text-transform:uppercase; color:var(--accent-dark); margin-bottom:8px; letter-spacing:0.1em;">02. Тайминг</h3>
+        <p style="color:var(--text-secondary); line-height:1.6; margin:0;">Лимит на атаку — 20 секунд.</p>
+      </article>
+      
+      <article>
+        <h3 style="font-size:12px; font-weight:800; text-transform:uppercase; color:var(--accent-dark); margin-bottom:8px; letter-spacing:0.1em;">03. Результат</h3>
+        <p style="color:var(--text-secondary); line-height:1.6; margin:0;">Продолжительность игры до двух голов, без ничьи.</p>
+      </article>
+    </div>
+  </div>
 </div>
-<div id="m-stats" style="margin-top:40px; display:grid; grid-template-columns: 1fr 1fr; gap: 32px;"></div>
-<div style="margin-top:48px; display:flex; gap:12px; flex-wrap:wrap;">
-<button class="btn btn-primary" style="flex:1; min-width:140px;" onclick="copyPlayerID()">Копировать ID</button>
-<button class="btn btn-outline" style="flex:1; min-width:140px;" onclick="sharePlayer()">Поделиться</button>
-</div>
-</div>
-</div>
-<div class="modal-overlay" id="applyModal" onclick="closeModal('applyModal')" role="dialog" aria-modal="true">
-<div class="modal-content" onclick="event.stopPropagation()">
-<button class="modal-close" onclick="closeModal('applyModal')">✕</button>
-<h2 style="font-size:2rem; margin-bottom:20px;">ВСТУПИТЬ В BOX1V1</h2>
-<p style="margin-bottom:32px;">Чтобы оформить заявку, оставь комментарий под любым постом с хештегом #BOXУЧАСТВОВАТЬ.</p>
-<button class="btn btn-primary" style="width:100%; padding:24px;" onclick="window.open('https://t.me/streetbox1v1')">Открыть Telegram</button>
-</div>
-</div>
-<div class="modal-overlay" id="rulesModal" onclick="closeModal('rulesModal')" role="dialog" aria-modal="true">
-<div class="modal-content" style="max-width: 600px;" onclick="event.stopPropagation()">
-<button class="modal-close" onclick="closeModal('rulesModal')">✕</button>
-<h2 style="font-size:2rem; margin-bottom:32px;">РЕГЛАМЕНТ</h2>
-<div style="display:flex; flex-direction:column; gap:20px;">
-<div style="padding-bottom:15px; border-bottom:1px solid var(--border);">
-<strong style="text-transform:uppercase; font-size:12px; display:block; margin-bottom:4px; color:var(--accent-dark)">01. Формат</strong>
-<p style="font-size:15px; color:var(--text); font-weight:500;">Матчи 1 на 1 с участием независимого вратаря.</p>
-</div>
-<div style="padding-bottom:15px; border-bottom:1px solid var(--border);">
-<strong style="text-transform:uppercase; font-size:12px; display:block; margin-bottom:4px; color:var(--accent-dark)">02. Тайминг</strong>
-<p style="font-size:15px; color:var(--text); font-weight:500;">Лимит на атаку — 20 секунд.</p>
-</div>
-<div style="padding-bottom:15px; border-bottom:1px solid var(--border);">
-<strong style="text-transform:uppercase; font-size:12px; display:block; margin-bottom:4px; color:var(--accent-dark)">03. Результат</strong>
-<p style="font-size:15px; color:var(--text); font-weight:500;">Продолжительность игры до двух голов, без ничьи.</p>
-</div>
-</div>
-</div>
-</div>
+
 <script>
+// Конфигурация
 const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vREjbeB6jNrU01kw1npVtFTvqGdP134ERjmyROoOYeYXbzjgL0ZCNK6KwF0VTk3c1yxZEZEUsJjy2Ur/pub?output=csv';
 const TARGET_DATE = new Date("March 1, 2026 00:00:00").getTime();
+
+// Состояние приложения
 let allPlayers = [];
 let currentRoleFilter = 'Все';
 let renderTimeout;
+let lastFocusedElement = null;
+
+// Определения характеристик для тултипов
 const statDefs = {
-'DRI': 'Техника контроля мяча и ведения дриблинга',
-'SPD': 'Стартовый рывок и скорость перемещения',
-'SHT': 'Мощность и точность завершающего удара',
-'PHY': 'Физическая мощь, борьба и атлетизм',
-'REF': 'Молниеносная реакция на удары в упор',
-'DIV': 'Дальность прыжка и охват створа ворот',
-'HAN': 'Надежность фиксации и отражения мяча',
-'POS': 'Грамотный выбор позиции в створе ворот'
+  'DRI': 'Техника контроля мяча и ведения дриблинга',
+  'SPD': 'Стартовый рывок и скорость перемещения',
+  'SHT': 'Мощность и точность завершающего удара',
+  'PHY': 'Физическая мощь, борьба и атлетизм',
+  'REF': 'Молниеносная реакция на удары в упор',
+  'DIV': 'Дальность прыжка и охват створа ворот',
+  'HAN': 'Надежность фиксации и отражения мяча',
+  'POS': 'Грамотный выбор позиции в створе ворот'
 };
-function showToast(message) {
-const container = document.getElementById('toast-container');
-const toast = document.createElement('div');
-toast.className = 'toast';
-toast.innerHTML = `<span>${message}</span>`;
-container.appendChild(toast);
-setTimeout(() => {
-toast.style.opacity = '0';
-toast.style.transform = 'translateY(20px)';
-setTimeout(() => toast.remove(), 500);
-}, 3000);
+
+// Утилиты
+const $ = (selector) => document.querySelector(selector);
+const $$ = (selector) => document.querySelectorAll(selector);
+
+// Toast уведомления
+function showToast(message, duration = 3000) {
+  const container = $('#toast-container');
+  const toast = document.createElement('div');
+  toast.className = 'toast';
+  toast.textContent = message;
+  toast.setAttribute('role', 'status');
+  toast.setAttribute('aria-live', 'polite');
+  
+  container.appendChild(toast);
+  
+  // Удаление по таймауту
+  setTimeout(() => {
+    toast.style.opacity = '0';
+    toast.style.transform = 'translateY(20px)';
+    setTimeout(() => toast.remove(), 500);
+  }, duration);
 }
-/* ОБРАБОТЧИК ДЛЯ МОБИЛЬНЫХ ТУЛТИПОВ */
-function initMobileTooltips() {
-document.addEventListener('click', function(e) {
-if (window.innerWidth > 768) return;
-const statHeader = e.target.closest('.stat-header');
-const infoIcon = e.target.closest('.info-icon');
-if (statHeader || infoIcon) {
-e.preventDefault();
-e.stopPropagation();
-const target = statHeader || infoIcon.closest('.stat-header');
-// Закрываем все другие открытые тултипы
-document.querySelectorAll('.stat-header.active').forEach(el => {
-if (el !== target) el.classList.remove('active');
-});
-// Переключаем текущий тултип
-if (target) {
-target.classList.toggle('active');
-}
-} else {
-// Клик вне тултипа - закрываем все
-document.querySelectorAll('.stat-header.active').forEach(el => {
-el.classList.remove('active');
-});
-}
-});
-// Закрываем тултипы при клике вне на мобильных
-document.addEventListener('touchstart', function(e) {
-if (window.innerWidth > 768) return;
-const isTooltip = e.target.closest('.stat-header') ||
-e.target.closest('.info-icon');
-if (!isTooltip) {
-document.querySelectorAll('.stat-header.active').forEach(el => {
-el.classList.remove('active');
-});
-}
-});
-}
-async function init() {
-try {
-const res = await fetch(CSV_URL);
-if (!res.ok) throw new Error("Network response was not ok");
-const text = await res.text();
-allPlayers = parseCSV(text);
-if (allPlayers.length === 0) {
-showToast("Ростер временно пуст");
-}
-renderRoster();
-renderStats();
-handleHashAndDeepLink();
-setInterval(updateTimer, 1000);
-updateTimer();
-// Инициализируем мобильные тултипы
-initMobileTooltips();
-// Инициализируем кнопку скачивания
-setupDownloadButton();
-setTimeout(() => {
-document.getElementById('preloader').classList.add('loaded');
-}, 300);
-} catch (e) {
-console.error("Load Error", e);
-showToast("Ошибка загрузки данных");
-setTimeout(() => {
-document.getElementById('preloader').classList.add('loaded');
-}, 300);
-}
-}
+
+// Парсинг CSV
 function parseCSV(text) {
-const rows = text.replace(/\r/g, '').split('\n').filter(r => r.trim());
-return rows.slice(1).map(row => {
-const matches = row.match(/(".*?"|[^",\n]+)(?=\s*,|\s*$)/g);
-const c = matches ? matches.map(m => m.replace(/^"|"$/g, '').trim()) : [];
-return {
-name: c[0] || '',
-ovr: parseInt(c[1]) || 0,
-role: c[2] || 'Игрок',
-drib: parseInt(c[3]) || 0,
-speed: parseInt(c[4]) || 0,
-shot: parseInt(c[5]) || 0,
-phys: parseInt(c[6]) || 0,
-photo: c[7] || 'https://via.placeholder.com/400x600?text=No+Photo',
-status: c[8] || '',
-badges: c[9] ? c[9].split('|').map(b => b.trim()) : []
-};
-}).filter(p => p.name);
+  const rows = text.replace(/\r/g, '').split('\n').filter(r => r.trim());
+  return rows.slice(1).map(row => {
+    const matches = row.match(/(".*?"|[^",\n]+)(?=\s*,|\s*$)/g);
+    const c = matches ? matches.map(m => m.replace(/^"|"$/g, '').trim()) : [];
+    return {
+      name: c[0] || '',
+      ovr: parseInt(c[1]) || 0,
+      role: c[2] || 'Игрок',
+      drib: parseInt(c[3]) || 0,
+      speed: parseInt(c[4]) || 0,
+      shot: parseInt(c[5]) || 0,
+      phys: parseInt(c[6]) || 0,
+      photo: c[7] || 'https://via.placeholder.com/400x600?text=No+Photo',
+      status: c[8] || '',
+      badges: c[9] ? c[9].split('|').map(b => b.trim()).filter(Boolean) : []
+    };
+  }).filter(p => p.name);
 }
+
+// Инициализация
+async function init() {
+  try {
+    // Ripple эффект для кнопок
+    initRippleEffect();
+    
+    // Загрузка данных
+    const response = await fetch(CSV_URL);
+    if (!response.ok) throw new Error('Network error');
+    
+    const text = await response.text();
+    allPlayers = parseCSV(text);
+    
+    if (allPlayers.length === 0) {
+      showToast('Ростер временно пуст');
+    } else {
+      renderRoster();
+      renderStats();
+    }
+    
+    // Обработка хэша URL
+    handleHashAndDeepLink();
+    
+    // Инициализация таймера
+    updateTimer();
+    setInterval(updateTimer, 1000);
+    
+    // Инициализация обработчиков
+    setupDownloadButton();
+    setupScrollDetection();
+    
+    // Скрытие прелоадера
+    setTimeout(() => {
+      $('#preloader').classList.add('loaded');
+    }, 500);
+    
+  } catch (error) {
+    console.error('Init error:', error);
+    showToast('Ошибка загрузки данных. Проверьте соединение.');
+    $('#preloader').classList.add('loaded');
+  }
+}
+
+// Ripple эффект для кнопок
+function initRippleEffect() {
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('.btn');
+    if (!btn) return;
+    
+    const rect = btn.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    const y = ((e.clientY - rect.top) / rect.height) * 100;
+    
+    btn.style.setProperty('--x', `${x}%`);
+    btn.style.setProperty('--y', `${y}%`);
+  });
+}
+
+// Обработка хэша и диплинков
 function handleHashAndDeepLink() {
-const fullHash = window.location.hash;
-if (!fullHash) return;
-const [hashPart, queryPart] = fullHash.split('?');
-const cleanHash = hashPart.replace('#', '');
-if (cleanHash && ['home', 'roster', 'stats'].includes(cleanHash)) {
-switchTab(cleanHash, false);
+  const hash = window.location.hash;
+  if (!hash) return;
+  
+  const [hashPart, queryPart] = hash.split('?');
+  const cleanHash = hashPart.replace('#', '');
+  
+  if (['home', 'roster', 'stats'].includes(cleanHash)) {
+    switchTab(cleanHash, false);
+  }
+  
+  if (queryPart) {
+    const params = new URLSearchParams(queryPart);
+    const playerName = params.get('player');
+    if (playerName) {
+      const name = playerName.replace(/-/g, ' ');
+      const player = allPlayers.find(p => p.name.toLowerCase() === name.toLowerCase());
+      if (player) {
+        setTimeout(() => openPlayerModal(player.name), 300);
+      }
+    }
+  }
 }
-if (queryPart) {
-const params = new URLSearchParams(queryPart);
-const pNameFromUrl = params.get('player');
-if (pNameFromUrl) {
-const pName = pNameFromUrl.replace(/-/g, ' ');
-const found = allPlayers.find(x => x.name.toLowerCase() === pName.toLowerCase());
-if (found) setTimeout(() => openPlayerModal(found.name), 200);
-}
-}
-}
+
+// Переключение вкладок
 function switchTab(id, updateHash = true) {
-const target = document.getElementById(id);
-if(!target) return;
-document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
-document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
-target.classList.add('active');
-const btn = document.getElementById('btn-' + id);
-if(btn) btn.classList.add('active');
-if (updateHash) window.history.pushState(null, null, `#${id}`);
-window.scrollTo({top:0, behavior:'smooth'});
+  const target = $(`#${id}`);
+  if (!target) return;
+  
+  // Скрыть все секции
+  $$('section').forEach(s => {
+    s.classList.remove('active');
+    s.setAttribute('aria-hidden', 'true');
+  });
+  
+  // Обновить навигацию
+  $$('.nav-links a').forEach(a => {
+    a.classList.remove('active');
+    a.setAttribute('aria-current', 'false');
+  });
+  
+  // Показать целевую секцию
+  target.classList.add('active');
+  target.removeAttribute('aria-hidden');
+  
+  const btn = $(`#btn-${id}`);
+  if (btn) {
+    btn.classList.add('active');
+    btn.setAttribute('aria-current', 'page');
+  }
+  
+  if (updateHash) {
+    window.history.pushState(null, null, `#${id}`);
+  }
+  
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
-function debouncedRender() {
-clearTimeout(renderTimeout);
-renderTimeout = setTimeout(renderRoster, 150);
-}
+
+// Рендер ростера
 function renderRoster() {
-const grid = document.getElementById('roster-grid');
-const search = document.getElementById('playerSearch').value.toLowerCase();
-const filtered = allPlayers.filter(p => {
-const mSearch = p.name.toLowerCase().includes(search);
-const mRole = currentRoleFilter === 'Все' || p.role === currentRoleFilter;
-return mSearch && mRole;
-});
-if (filtered.length === 0) {
-grid.innerHTML = `<div style="grid-column: 1/-1; padding: 40px; text-align: center; color: var(--text-dim);">Атлеты не найдены</div>`;
-return;
+  const grid = $('#roster-grid');
+  const search = $('#playerSearch').value.toLowerCase().trim();
+  
+  const filtered = allPlayers.filter(p => {
+    const matchesSearch = p.name.toLowerCase().includes(search);
+    const matchesRole = currentRoleFilter === 'Все' || p.role === currentRoleFilter;
+    return matchesSearch && matchesRole;
+  });
+  
+  if (filtered.length === 0) {
+    grid.innerHTML = `
+      <div style="grid-column: 1/-1; padding: 60px 20px; text-align: center; color: var(--text-secondary);">
+        <p style="font-size: 1.125rem;">Атлеты не найдены</p>
+        <p style="font-size: 0.875rem; margin-top: 8px;">Попробуйте изменить параметры поиска</p>
+      </div>
+    `;
+    return;
+  }
+  
+  grid.innerHTML = filtered.map((p, i) => `
+    <div class="card player-card" 
+         tabindex="0" 
+         role="button" 
+         aria-label="Карточка игрока ${p.name}, рейтинг ${p.ovr}"
+         style="animation: fadeIn 0.5s ${i * 0.05}s forwards; opacity: 0;"
+         onclick="openPlayerModal('${p.name}')"
+         onkeydown="if(event.key === 'Enter' || event.key === ' ') { event.preventDefault(); openPlayerModal('${p.name}'); }">
+      
+      <div class="player-img" 
+           style="background-image: url('${p.photo}')" 
+           aria-hidden="true"
+           loading="lazy"></div>
+      
+      ${p.status ? `<div style="position:absolute; top:24px; right:24px; z-index:3; background:var(--accent); color:#000; font-size:11px; font-weight:900; padding:6px 14px; border-radius:20px; text-transform:uppercase; letter-spacing:0.05em;">${p.status}</div>` : ''}
+      
+      <div class="player-info">
+        <span>${p.role}</span>
+        <h3>${p.name}</h3>
+        ${p.badges.length > 0 ? `<div class="player-badges">${p.badges[0]}</div>` : ''}
+        <span class="ovr-badge">OVR ${p.ovr}</span>
+      </div>
+    </div>
+  `).join('');
 }
-grid.innerHTML = filtered.map((p, i) => `
-<div class="card player-card"
-tabindex="0"
-role="button"
-aria-label="Профиль игрока ${p.name}, рейтинг ${p.ovr}, роль ${p.role}${p.badges[0] ? ', ' + p.badges[0] : ''}"
-style="animation: fadeInUp 0.6s var(--cubic) both ${i*0.03}s"
-onclick="openPlayerModal('${p.name}')"
-onkeydown="if(event.key==='Enter') openPlayerModal('${p.name}')">
-<div class="player-img" style="background-image: url('${p.photo}')" loading="lazy"></div>
-${p.status ? `<div style="position:absolute; top:32px; right:32px; z-index:3; background:var(--accent); color:#000; font-size:10px; font-weight:900; padding:6px 14px; border-radius:12px; text-transform:uppercase;">${p.status}</div>` : ''}
-<div class="player-info">
-<span style="font-size:11px; font-weight:800; text-transform:uppercase; color:var(--accent); letter-spacing:0.1em;">${p.role}</span>
-<h3 style="font-size:2.2rem; margin: 8px 0;">${p.name}</h3>
-${p.badges.length > 0 ? `<div style="font-size:10px; color:rgba(255,255,255,0.7); margin-top:4px;">${p.badges[0]}</div>` : ''}
-<div class="ovr-badge">OVR ${p.ovr}</div>
-</div>
-</div>
-`).join('');
-}
+
+// Рендер статистики
 function renderStats() {
-const sorted = [...allPlayers].sort((a, b) => b.ovr - a.ovr);
-document.getElementById('stats-body').innerHTML = sorted.map((p, i) => `
-<tr onclick="openPlayerModal('${p.name}')" style="cursor:pointer" tabindex="0" onkeydown="if(event.key==='Enter') openPlayerModal('${p.name}')" aria-label="Рейтинг ${p.ovr}, ${p.name}, ${p.role}${p.badges[0] ? ', ' + p.badges[0] : ''}">
-<td style="font-weight:900; color:var(--text-dim)">${(i+1).toString().padStart(2, '0')}</td>
-<td>
-<div style="display:flex; align-items:center; gap:16px;">
-<img src="${p.photo}" loading="lazy" style="width:48px; height:48px; border-radius:14px; object-fit:cover;" alt="">
-<div>
-<div style="font-weight:900; text-transform:uppercase; font-style:italic;">${p.name}</div>
-<div style="font-size:10px; font-weight:700; color:var(--text-dim); text-transform:uppercase;">${p.role}</div>
-</div>
-</div>
-</td>
-<td style="text-align:right;"><span class="ovr-badge">${p.ovr}</span></td>
-</tr>
-`).join('');
+  const sorted = [...allPlayers].sort((a, b) => b.ovr - a.ovr);
+  
+  $('#stats-body').innerHTML = sorted.map((p, i) => `
+    <tr onclick="openPlayerModal('${p.name}')" 
+        tabindex="0" 
+        role="button"
+        aria-label="${i + 1} место, ${p.name}, ${p.role}, рейтинг ${p.ovr}"
+        onkeydown="if(event.key === 'Enter') openPlayerModal('${p.name}')"
+        style="animation: fadeIn 0.3s ${i * 0.03}s forwards; opacity: 0;">
+      
+      <td style="font-weight:800; color:var(--text-tertiary); font-variant-numeric: tabular-nums;">
+        ${(i + 1).toString().padStart(2, '0')}
+      </td>
+      
+      <td>
+        <div class="player-row">
+          <img src="${p.photo}" 
+               alt="" 
+               class="player-avatar-sm" 
+               loading="lazy"
+               onerror="this.src='https://via.placeholder.com/100?text=?'">
+          <div class="player-info-sm">
+            <div class="player-name-sm">${p.name}</div>
+            <div class="player-role-sm">${p.role}</div>
+          </div>
+        </div>
+      </td>
+      
+      <td style="text-align:right;">
+        <span class="ovr-badge" style="margin:0;">${p.ovr}</span>
+      </td>
+    </tr>
+  `).join('');
 }
-let lastFocusedElement;
-function openModal(id) {
-lastFocusedElement = document.activeElement;
-const modal = document.getElementById(id);
-modal.classList.add('active');
-document.body.style.overflow = 'hidden';
-setTimeout(() => {
-const firstInput = modal.querySelector('button, input, [tabindex="0"]');
-if (firstInput) firstInput.focus();
-}, 100);
-modal.addEventListener('keydown', trapFocus);
-// Инициализируем кнопку скачивания при открытии модального окна
-if (id === 'playerModal') {
-setTimeout(setupDownloadButton, 300);
-}
-}
-function closeModal(id) {
-const modal = document.getElementById(id);
-if(!modal) return;
-modal.classList.remove('active');
-document.body.style.overflow = '';
-modal.removeEventListener('keydown', trapFocus);
-if (id === 'playerModal') {
-const currentTab = document.querySelector('section.active').id;
-window.history.replaceState(null, null, `#${currentTab}`);
-}
-if (lastFocusedElement) lastFocusedElement.focus();
-}
-function trapFocus(e) {
-if (e.key !== 'Tab') return;
-const focusableEls = this.querySelectorAll('button, [href], input, [tabindex="0"]');
-const first = focusableEls[0];
-const last = focusableEls[focusableEls.length - 1];
-if (e.shiftKey) {
-if (document.activeElement === first) { last.focus(); e.preventDefault(); }
-} else {
-if (document.activeElement === last) { first.focus(); e.preventDefault(); }
-}
-}
-window.addEventListener('keydown', (e) => {
-if (e.key === 'Escape') {
-const activeModal = document.querySelector('.modal-overlay.active');
-if (activeModal) closeModal(activeModal.id);
-}
-});
+
+// Открытие модалки игрока
 function openPlayerModal(name) {
-const p = allPlayers.find(x => x.name.toLowerCase() === name.toLowerCase());
-if(!p) {
-showToast("Игрок не найден");
-return;
-}
-document.getElementById('m-name').innerText = p.name;
-document.getElementById('m-role').innerText = p.role;
-document.getElementById('m-ovr').innerText = p.ovr;
-
-const imgElement = document.getElementById('m-img');
-const originalSrc = p.photo;
-imgElement.setAttribute('data-original', originalSrc);
-
-// Используем прокси для внешних изображений чтобы избежать CORS при скачивании
-if (originalSrc && originalSrc.startsWith('http') && !originalSrc.includes('localhost') && !originalSrc.includes('box1v1.ru')) {
-    const proxyUrl = `https://images.weserv.nl/?url=${encodeURIComponent(originalSrc)}&default=${encodeURIComponent(originalSrc)}`;
-    imgElement.src = proxyUrl;
-    imgElement.setAttribute('data-proxy', proxyUrl);
-} else {
-    imgElement.src = originalSrc;
-}
-
-document.getElementById('m-badges').innerHTML = p.badges.map(b => `<span style="font-size:10px; background:#000; color:#fff; padding:4px 10px; border-radius:8px; font-weight:800;">${b}</span>`).join('');
-const isGK = p.role === 'Вратарь';
-const stats = [
-{ l: isGK ? 'REF' : 'DRI', v: p.drib },
-{ l: isGK ? 'DIV' : 'SPD', v: p.speed },
-{ l: isGK ? 'HAN' : 'SHT', v: p.shot },
-{ l: isGK ? 'POS' : 'PHY', v: p.phys }
-];
-document.getElementById('m-stats').innerHTML = stats.map(s => `
-<div class="stat-item">
-<div style="display:flex; justify-content:space-between; margin-bottom:12px;">
-<div class="stat-header" data-tip="${statDefs[s.l]}">
-<span style="font-size:12px; font-weight:900;">${s.l}</span>
-<i class="info-icon">?</i>
-</div>
-<span style="font-size:12px; font-weight:900;">${s.v}</span>
-</div>
-<div style="height:4px; background:var(--bg-alt); border-radius:2px; overflow:hidden;">
-<div style="width:0%; height:100%; background:var(--text); transition:1.2s var(--cubic) 0.3s;" id="bar-${s.l}"></div>
-</div>
-</div>
-`).join('');
-// Закрываем все открытые тултипы перед открытием новой модалки
-document.querySelectorAll('.stat-header.active').forEach(el => {
-el.classList.remove('active');
-});
-openModal('playerModal');
-setTimeout(() => {
-stats.forEach(s => {
-const bar = document.getElementById(`bar-${s.l}`);
-if(bar) bar.style.width = s.v + '%';
-});
-}, 100);
-const currentTab = document.querySelector('section.active').id;
-const playerSlug = p.name.replace(/\s+/g, '-').toLowerCase();
-window.history.replaceState(null, null, `#${currentTab}?player=${playerSlug}`);
-}
-function setRoleFilter(role, btn) {
-currentRoleFilter = role;
-document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-btn.classList.add('active');
-renderRoster();
-}
-function toggleMenu() {
-const drawer = document.getElementById('mobile-drawer');
-const overlay = document.getElementById('drawer-overlay');
-const burger = document.getElementById('burger');
-const isOpen = drawer.classList.toggle('open');
-overlay.classList.toggle('open');
-burger.classList.toggle('open');
-burger.setAttribute('aria-expanded', isOpen);
-}
-function handleMobileNav(id, isModal = false) {
-toggleMenu();
-setTimeout(() => isModal ? openModal(id) : switchTab(id), 400);
-}
-function copyPlayerID() {
-const name = document.getElementById('m-name').innerText;
-navigator.clipboard.writeText(name).then(() => {
-showToast('ID игрока скопирован');
-});
-}
-function sharePlayer() {
-const name = document.getElementById('m-name').innerText;
-const url = window.location.href;
-if(navigator.share) {
-navigator.share({
-title: 'BOX1V1 | ' + name,
-text: `Карточка атлета ${name} в системе BOX1V1! 🔥`,
-url: url
-}).catch(() => {});
-} else {
-navigator.clipboard.writeText(url);
-showToast('Ссылка скопирована в буфер');
-}
-}
-/* ФУНКЦИЯ СКАЧИВАНИЯ КАРТОЧКИ - ИСПРАВЛЕННАЯ ДЛЯ IOS/ANDROID (без перескока) */
-function setupDownloadButton() {
-    const downloadBtn = document.getElementById('download-card');
-    
-    if (!downloadBtn || downloadBtn.hasAttribute('data-handler-attached')) return;
-    
-    downloadBtn.setAttribute('data-handler-attached', 'true');
-    
-    downloadBtn.addEventListener('click', async function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        
-        const card = document.getElementById('stats-card');
-        if (!card) {
-            showToast("Карточка не найдена");
-            return;
-        }
-        
-        if (typeof html2canvas === 'undefined') {
-            showToast("Библиотека не загружена");
-            return;
-        }
-        
-        const closeBtn = card.querySelector('.modal-close');
-        const downloadBtnIcon = card.querySelector('#download-card');
-        
-        // Сохраняем оригинальные стили для восстановления
-        const originalMaxHeight = card.style.maxHeight;
-        const originalOverflowY = card.style.overflowY;
-        const originalOverflow = card.style.overflow;
-        
-        // Блокируем кнопку на время создания
-        this.style.opacity = '0.5';
-        this.disabled = true;
-        
-        try {
-            // 1. Подготавливаем карточку: убираем ограничения высоты для полного захвата
-            card.style.maxHeight = 'none';
-            card.style.overflowY = 'visible';
-            card.style.overflow = 'visible';
-            
-            // 2. Скрываем кнопки перед скриншотом
-            if (closeBtn) closeBtn.style.display = 'none';
-            if (downloadBtnIcon) downloadBtnIcon.style.display = 'none';
-            
-            // Небольшая задержка чтобы DOM обновился
-            await new Promise(resolve => setTimeout(resolve, 100));
-            
-            // 3. Создаем canvas
-            const canvas = await html2canvas(card, {
-                scale: 2,
-                useCORS: true,
-                allowTaint: true,
-                backgroundColor: '#ffffff',
-                logging: false
-            });
-            
-            // 4. Восстанавливаем стили и кнопки
-            card.style.maxHeight = originalMaxHeight;
-            card.style.overflowY = originalOverflowY;
-            card.style.overflow = originalOverflow;
-            if (closeBtn) closeBtn.style.display = '';
-            if (downloadBtnIcon) downloadBtnIcon.style.display = '';
-            this.style.opacity = '';
-            this.disabled = false;
-            
-            // 5. Скачиваем или показываем Share Sheet
-            const playerName = document.getElementById('m-name')?.innerText || 'player';
-            const safeName = playerName.replace(/[^a-zA-Zа-яА-Я0-9]/g, '_');
-            
-            canvas.toBlob(async function(blob) {
-                if (!blob) {
-                    showToast("❌ Ошибка создания файла");
-                    return;
-                }
-                
-                const file = new File([blob], `BOX1V1_${safeName}.png`, { type: 'image/png' });
-                
-                // Для мобильных (iOS Safari 15+, Android Chrome) используем Web Share API с файлами
-                // Это открывает нативное меню "Поделиться" без перескока на другую вкладку
-                if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
-                    try {
-                        await navigator.share({
-                            files: [file],
-                            title: `BOX1V1 ${playerName}`,
-                            text: 'Карточка игрока BOX1V1'
-                        });
-                        // Успешно поделились (или сохранили в галерею через "Сохранить изображение")
-                        showToast("✅ Готово!");
-                    } catch (err) {
-                        // Пользователь просто закрыл окно "Поделиться" или нажал "Отмена"
-                        if (err.name !== 'AbortError') {
-                            console.error('Share error:', err);
-                            showToast("❌ Не удалось поделиться");
-                        }
-                        // При AbortError ничего не показываем - это нормальное поведение
-                    }
-                    return;
-                }
-                
-                // Для ПК и старых браузеров - стандартное скачивание
-                const url = URL.createObjectURL(blob);
-                const link = document.createElement('a');
-                link.href = url;
-                link.download = `BOX1V1_${safeName}.png`;
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-                URL.revokeObjectURL(url);
-                showToast("✅ Карточка сохранена!");
-                
-            }, 'image/png');
-            
-        } catch (error) {
-            console.error('Ошибка:', error);
-            
-            // ВСЕГДА восстанавливаем состояние при ошибке (важно для UX)
-            card.style.maxHeight = originalMaxHeight;
-            card.style.overflowY = originalOverflowY;
-            card.style.overflow = originalOverflow;
-            if (closeBtn) closeBtn.style.display = '';
-            if (downloadBtnIcon) downloadBtnIcon.style.display = '';
-            this.style.opacity = '';
-            this.disabled = false;
-            
-            showToast("❌ Ошибка при создании карточки");
-        }
+  const p = allPlayers.find(x => x.name.toLowerCase() === name.toLowerCase());
+  if (!p) {
+    showToast('Игрок не найден');
+    return;
+  }
+  
+  // Сохранить фокус для возврата
+  lastFocusedElement = document.activeElement;
+  
+  // Заполнить данные
+  $('#m-name').textContent = p.name;
+  $('#m-role').textContent = p.role;
+  $('#m-ovr').textContent = p.ovr;
+  
+  // Фото с прокси для CORS если нужно
+  const imgEl = $('#m-img');
+  imgEl.classList.remove('loaded');
+  imgEl.setAttribute('data-original', p.photo);
+  
+  if (p.photo.startsWith('http') && !p.photo.includes('localhost')) {
+    imgEl.src = `https://images.weserv.nl/?url=${encodeURIComponent(p.photo)}&default=${encodeURIComponent(p.photo)}`;
+  } else {
+    imgEl.src = p.photo;
+  }
+  
+  // Бейджи
+  $('#m-badges').innerHTML = p.badges.map(b => 
+    `<span class="badge" role="listitem">${b}</span>`
+  ).join('');
+  
+  // Статистика
+  const isGK = p.role === 'Вратарь';
+  const stats = [
+    { key: isGK ? 'REF' : 'DRI', value: p.drib },
+    { key: isGK ? 'DIV' : 'SPD', value: p.speed },
+    { key: isGK ? 'HAN' : 'SHT', value: p.shot },
+    { key: isGK ? 'POS' : 'PHY', value: p.phys }
+  ];
+  
+  $('#m-stats').innerHTML = stats.map(s => `
+    <div class="stat-item">
+      <div class="stat-header">
+        <div class="stat-label-group" data-tooltip="${statDefs[s.key]}" tabindex="0">
+          <span class="stat-label">${s.key}</span>
+          <i class="info-icon" aria-hidden="true">?</i>
+        </div>
+        <span class="stat-value">${s.value}</span>
+      </div>
+      <div class="stat-bar-bg" aria-hidden="true">
+        <div class="stat-bar-fill" id="bar-${s.key}" style="width: 0%" data-width="${s.value}%"></div>
+      </div>
+    </div>
+  `).join('');
+  
+  // Открыть модалку
+  openModal('playerModal');
+  
+  // Анимация полосок
+  setTimeout(() => {
+    stats.forEach(s => {
+      const bar = $(`#bar-${s.key}`);
+      if (bar) bar.style.width = bar.getAttribute('data-width');
     });
+  }, 100);
+  
+  // Обновить URL
+  const currentTab = $('section.active')?.id || 'home';
+  const slug = p.name.replace(/\s+/g, '-').toLowerCase();
+  window.history.replaceState(null, null, `#${currentTab}?player=${slug}`);
 }
+
+// Управление модалками
+function openModal(id) {
+  const modal = $(`#${id}`);
+  if (!modal) return;
+  
+  modal.classList.add('active');
+  document.body.style.overflow = 'hidden';
+  
+  // Фокус на первый интерактивный элемент
+  setTimeout(() => {
+    const focusable = modal.querySelector('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+    if (focusable) focusable.focus();
+  }, 100);
+  
+  // Обработчик Escape
+  modal._escapeHandler = (e) => {
+    if (e.key === 'Escape') closeModal(id);
+  };
+  document.addEventListener('keydown', modal._escapeHandler);
+}
+
+function closeModal(id) {
+  const modal = $(`#${id}`);
+  if (!modal) return;
+  
+  modal.classList.remove('active');
+  document.body.style.overflow = '';
+  
+  if (modal._escapeHandler) {
+    document.removeEventListener('keydown', modal._escapeHandler);
+  }
+  
+  // Вернуть фокус
+  if (lastFocusedElement) {
+    lastFocusedElement.focus();
+    lastFocusedElement = null;
+  }
+  
+  // Очистить URL
+  if (id === 'playerModal') {
+    const currentTab = $('section.active')?.id || 'home';
+    window.history.replaceState(null, null, `#${currentTab}`);
+  }
+}
+
+// Фильтр ролей
+function setRoleFilter(role, btn) {
+  currentRoleFilter = role;
+  
+  $$('.filter-btn').forEach(b => {
+    b.classList.remove('active');
+    b.setAttribute('aria-pressed', 'false');
+  });
+  
+  btn.classList.add('active');
+  btn.setAttribute('aria-pressed', 'true');
+  
+  renderRoster();
+}
+
+// Debounce для поиска
+function debouncedRender() {
+  clearTimeout(renderTimeout);
+  renderTimeout = setTimeout(renderRoster, 150);
+}
+
+// Мобильное меню
+function toggleMenu() {
+  const drawer = $('#mobile-drawer');
+  const overlay = $('#drawer-overlay');
+  const burger = $('#burger');
+  const isOpen = drawer.classList.toggle('open');
+  
+  overlay.classList.toggle('open');
+  burger.classList.toggle('open');
+  burger.setAttribute('aria-expanded', isOpen);
+  
+  if (isOpen) {
+    document.body.style.overflow = 'hidden';
+    // Фокус на первый пункт меню
+    setTimeout(() => drawer.querySelector('a')?.focus(), 100);
+  } else {
+    document.body.style.overflow = '';
+  }
+}
+
+function handleMobileNav(id, isModal = false) {
+  toggleMenu();
+  setTimeout(() => {
+    if (isModal) openModal(id);
+    else switchTab(id);
+  }, 300);
+}
+
+// Копирование ID
+async function copyPlayerID() {
+  const name = $('#m-name').textContent;
+  try {
+    await navigator.clipboard.writeText(name);
+    showToast('ID скопирован в буфер');
+  } catch {
+    showToast('Не удалось скопировать');
+  }
+}
+
+// Поделиться
+async function sharePlayer() {
+  const name = $('#m-name').textContent;
+  const url = window.location.href;
+  
+  if (navigator.share) {
+    try {
+      await navigator.share({
+        title: `BOX1V1 | ${name}`,
+        text: `Карточка атлета ${name} в системе BOX1V1`,
+        url: url
+      });
+    } catch (err) {
+      if (err.name !== 'AbortError') {
+        showToast('Ошибка при отправке');
+      }
+    }
+  } else {
+    try {
+      await navigator.clipboard.writeText(url);
+      showToast('Ссылка скопирована');
+    } catch {
+      showToast('Не удалось скопировать ссылку');
+    }
+  }
+}
+
+// Скачивание карточки
+function setupDownloadButton() {
+  const btn = $('#download-card');
+  if (!btn || btn.dataset.initialized) return;
+  
+  btn.dataset.initialized = 'true';
+  
+  btn.addEventListener('click', async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    const card = $('#stats-card');
+    if (!card || typeof html2canvas === 'undefined') {
+      showToast('Ошибка инициализации');
+      return;
+    }
+    
+    const closeBtn = card.querySelector('.modal-close');
+    const downloadBtn = card.querySelector('#download-card');
+    const originalStyles = {
+      maxHeight: card.style.maxHeight,
+      overflowY: card.style.overflowY,
+      overflow: card.style.overflow
+    };
+    
+    btn.style.opacity = '0.5';
+    btn.disabled = true;
+    
+    try {
+      // Подготовка карточки
+      card.style.maxHeight = 'none';
+      card.style.overflowY = 'visible';
+      card.style.overflow = 'visible';
+      
+      if (closeBtn) closeBtn.style.display = 'none';
+      if (downloadBtn) downloadBtn.style.display = 'none';
+      
+      await new Promise(r => setTimeout(r, 100));
+      
+      // Создание скриншота
+      const canvas = await html2canvas(card, {
+        scale: 2,
+        useCORS: true,
+        allowTaint: true,
+        backgroundColor: '#ffffff',
+        logging: false
+      });
+      
+      // Восстановление стилей
+      Object.assign(card.style, originalStyles);
+      if (closeBtn) closeBtn.style.display = '';
+      if (downloadBtn) downloadBtn.style.display = '';
+      btn.style.opacity = '';
+      btn.disabled = false;
+      
+      const playerName = $('#m-name')?.textContent || 'player';
+      const safeName = playerName.replace(/[^a-zA-Zа-яА-Я0-9]/g, '_');
+      
+      canvas.toBlob(async (blob) => {
+        if (!blob) {
+          showToast('Ошибка создания файла');
+          return;
+        }
+        
+        const file = new File([blob], `BOX1V1_${safeName}.png`, { type: 'image/png' });
+        
+        // Web Share API для мобильных (не открывает новую вкладку)
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+          try {
+            await navigator.share({
+              files: [file],
+              title: `BOX1V1 ${playerName}`,
+              text: 'Карточка игрока'
+            });
+            showToast('Готово!');
+          } catch (err) {
+            if (err.name !== 'AbortError') {
+              showToast('Не удалось поделиться');
+            }
+          }
+          return;
+        }
+        
+        // Скачивание для десктопа
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `BOX1V1_${safeName}.png`;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        URL.revokeObjectURL(url);
+        showToast('Карточка сохранена!');
+      }, 'image/png');
+      
+    } catch (error) {
+      console.error('Download error:', error);
+      // Восстановление при ошибке
+      Object.assign(card.style, originalStyles);
+      if (closeBtn) closeBtn.style.display = '';
+      if (downloadBtn) downloadBtn.style.display = '';
+      btn.style.opacity = '';
+      btn.disabled = false;
+      showToast('Ошибка при создании карточки');
+    }
+  });
+}
+
+// Таймер
 function updateTimer() {
-const now = Date.now();
-const diff = TARGET_DATE - now;
-const timerEl = document.getElementById('timer');
-if(diff <= 0) {
-document.getElementById('timer-status').innerText = "Сезон открыт!";
-if(timerEl) timerEl.style.display = 'none';
-return;
+  const now = Date.now();
+  const diff = TARGET_DATE - now;
+  
+  if (diff <= 0) {
+    $('#timer-status').textContent = 'Сезон открыт!';
+    $('#timer').style.display = 'none';
+    return;
+  }
+  
+  const days = Math.floor(diff / 86400000);
+  const hours = Math.floor((diff % 86400000) / 3600000);
+  const mins = Math.floor((diff % 3600000) / 60000);
+  const secs = Math.floor((diff % 60000) / 1000);
+  
+  $('#days').textContent = days.toString().padStart(2, '0');
+  $('#hours').textContent = hours.toString().padStart(2, '0');
+  $('#mins').textContent = mins.toString().padStart(2, '0');
+  $('#secs').textContent = secs.toString().padStart(2, '0');
 }
-document.getElementById('days').innerText = Math.floor(diff / 864e5).toString().padStart(2, '0');
-document.getElementById('hours').innerText = Math.floor((diff % 864e5) / 36e5).toString().padStart(2, '0');
-document.getElementById('mins').innerText = Math.floor((diff % 36e5) / 6e4).toString().padStart(2, '0');
-document.getElementById('secs').innerText = Math.floor((diff % 6e4) / 1000).toString().padStart(2, '0');
+
+// Обнаружение скролла для навигации
+function setupScrollDetection() {
+  let ticking = false;
+  
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      window.requestAnimationFrame(() => {
+        const nav = $('#navbar');
+        if (window.scrollY > 50) {
+          nav.classList.add('scrolled');
+        } else {
+          nav.classList.remove('scrolled');
+        }
+        ticking = false;
+      });
+      ticking = true;
+    }
+  }, { passive: true });
 }
-window.addEventListener('scroll', () => {
-document.body.classList.toggle('scrolled', window.scrollY > 50);
+
+// Индикатор скролла для таблицы
+function setupTableScrollIndicator() {
+  const wrapper = document.querySelector('.table-wrapper');
+  if (!wrapper) return;
+  
+  const checkScroll = () => {
+    const canScroll = wrapper.scrollWidth > wrapper.clientWidth;
+    const isScrolled = wrapper.scrollLeft < (wrapper.scrollWidth - wrapper.clientWidth - 10);
+    wrapper.classList.toggle('can-scroll-right', canScroll && isScrolled);
+  };
+  
+  wrapper.addEventListener('scroll', checkScroll, { passive: true });
+  window.addEventListener('resize', checkScroll);
+  checkScroll();
+}
+
+// Service Worker регистрация (для PWA)
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js').catch(() => {
+    // Тихое игнорирование если SW не настроен
+  });
+}
+
+// Обработка ошибок
+window.addEventListener('error', (e) => {
+  console.error('Global error:', e);
+  showToast('Произошла ошибка. Перезагрузите страницу.');
 });
-window.onload = init;
+
+window.addEventListener('unhandledrejection', (e) => {
+  console.error('Unhandled promise:', e);
+});
+
+// Старт
+window.addEventListener('DOMContentLoaded', init);
 </script>
 </body>
 </html>
