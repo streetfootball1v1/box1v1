@@ -1,10 +1,15 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" data-theme="light">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover"/>
-<meta name="theme-color" content="#0a0a0a">
+<meta name="theme-color" content="#0a0a0a" id="theme-meta">
 <title>BOX1V1 | УЛИЧНЫЙ ФУТБОЛ 1 НА 1</title>
+
+<!-- PWA -->
+<link rel="manifest" href="data:application/json;base64,eyJuYW1lIjogIkJPWDFWMSIsICJzaG9ydF9uYW1lIjogIkJPWDFWMSIsICJzdGFydF91cmwiOiAiLyIsICJkaXNwbGF5IjogInN0YW5kYWxvbmUiLCAiYmFja2dyb3VuZF9jb2xvciI6ICIjZmFmYWZhIiwgInRoZW1lX2NvbG9yIjogIiMwYTBhMGEifQ==">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -15,10 +20,13 @@
 :root {
   --bg: #fafafa;
   --bg-elevated: rgba(255, 255, 255, 0.8);
+  --bg-card: #ffffff;
   --text: #0a0a0a;
   --text-secondary: #374151;
   --text-tertiary: #6b7280;
   --accent: #16a34a;
+  --accent-gk: #f59e0b;
+  --accent-field: #16a34a;
   --border: rgba(0,0,0,0.08);
   --border-strong: rgba(0,0,0,0.15);
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -28,6 +36,19 @@
   --safe-bottom: env(safe-area-inset-bottom);
   --ease-out: cubic-bezier(0.2, 0, 0, 1);
   --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --shadow: 0 4px 20px rgba(0,0,0,0.05);
+}
+
+[data-theme="dark"] {
+  --bg: #0a0a0a;
+  --bg-elevated: rgba(255, 255, 255, 0.05);
+  --bg-card: #1a1a1a;
+  --text: #fafafa;
+  --text-secondary: #9ca3af;
+  --text-tertiary: #6b7280;
+  --border: rgba(255,255,255,0.1);
+  --border-strong: rgba(255,255,255,0.2);
+  --shadow: 0 4px 20px rgba(0,0,0,0.5);
 }
 
 @media (max-width: 420px) { :root { --nav-h: 64px; } }
@@ -54,6 +75,7 @@ body {
   overflow-x: hidden; 
   min-height: 100vh; 
   min-height: 100dvh; 
+  transition: background 0.3s, color 0.3s;
 }
 
 h1, h2, h3 { 
@@ -69,13 +91,36 @@ h1, h2, h3 {
   top: -40px; 
   left: 0; 
   background: var(--text); 
-  color: white; 
+  color: var(--bg); 
   padding: 8px; 
   text-decoration: none; 
   z-index: 10000; 
   transition: top 0.3s; 
 }
 .skip-link:focus { top: 0; }
+
+/* PULL TO REFRESH */
+.ptr-indicator {
+  position: fixed;
+  top: -60px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40px;
+  height: 40px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  transition: top 0.2s, transform 0.2s;
+  box-shadow: var(--shadow);
+  pointer-events: none;
+}
+.ptr-indicator.visible { top: calc(var(--nav-h) + 20px); }
+.ptr-indicator.refreshing { animation: rotate 1s linear infinite; }
+@keyframes rotate { to { transform: translateX(-50%) rotate(360deg); } }
 
 /* PRELOADER */
 #preloader { 
@@ -101,12 +146,13 @@ h1, h2, h3 {
   letter-spacing: -0.05em; 
   margin-bottom: 1.5rem; 
   animation: pulse 2s infinite; 
+  color: var(--text);
 }
 @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
 .loading-bar { 
   width: 160px; 
   height: 3px; 
-  background: rgba(0,0,0,0.05); 
+  background: var(--border); 
   border-radius: 3px; 
   overflow: hidden; 
   margin: 0 auto; 
@@ -123,6 +169,15 @@ h1, h2, h3 {
   border-radius: 3px; 
 }
 @keyframes load { 0% { left: -50%; } 100% { left: 100%; } }
+
+/* SKELETON */
+.skeleton {
+  background: linear-gradient(90deg, var(--border) 25%, var(--bg-elevated) 50%, var(--border) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 12px;
+}
+@keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
 
 /* TOASTS */
 #toast-container { 
@@ -167,19 +222,16 @@ nav {
   width: 100%; 
   height: calc(var(--nav-h) + var(--safe-top)); 
   padding-top: var(--safe-top); 
-  background: rgba(255,255,255,0.95); 
+  background: rgba(var(--bg-rgb, 250,250,250), 0.95); 
   backdrop-filter: blur(20px); 
   -webkit-backdrop-filter: blur(20px); 
   z-index: 1000; 
   border-bottom: 1px solid var(--border); 
-  transition: box-shadow 0.3s; 
+  transition: box-shadow 0.3s, background 0.3s; 
 }
-nav.scrolled { 
-  box-shadow: 0 4px 20px rgba(0,0,0,0.05); 
-}
-@supports not (backdrop-filter: blur(20px)) {
-  nav { background: rgba(255,255,255,0.98); }
-}
+nav.scrolled { box-shadow: var(--shadow); }
+[data-theme="dark"] nav { background: rgba(10,10,10,0.95); }
+
 .nav-inner { 
   max-width: 1300px; 
   margin: 0 auto; 
@@ -204,7 +256,7 @@ nav.scrolled {
 .logo:hover { opacity: 0.7; }
 .logo-accent { color: var(--accent); }
 
-.nav-links { display: flex; gap: 8px; }
+.nav-links { display: flex; gap: 8px; align-items: center; }
 .nav-links a { 
   display: inline-flex; 
   align-items: center; 
@@ -223,14 +275,31 @@ nav.scrolled {
 }
 .nav-links a:hover, .nav-links a:focus { 
   color: var(--text); 
-  background: rgba(0,0,0,0.03); 
+  background: var(--bg-elevated); 
 }
 .nav-links a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .nav-links a.active { 
   background: var(--text); 
-  color: #fff; 
+  color: var(--bg); 
   border-color: var(--text); 
 }
+
+/* THEME TOGGLE */
+.theme-toggle {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--bg-elevated);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: var(--text);
+  margin-left: 8px;
+}
+.theme-toggle:hover { background: var(--border); }
 
 /* BURGER */
 .burger { 
@@ -243,11 +312,11 @@ nav.scrolled {
   align-items: center; 
   gap: 5px; 
   border-radius: 12px; 
-  background: rgba(0,0,0,0.03); 
+  background: var(--bg-elevated); 
   border: none; 
   transition: all 0.3s; 
 }
-.burger:hover { background: rgba(0,0,0,0.06); }
+.burger:hover { background: var(--border); }
 .burger:active { transform: scale(0.95); }
 .burger span { 
   width: 20px; 
@@ -260,7 +329,7 @@ nav.scrolled {
 .burger.open span:nth-child(2) { opacity: 0; }
 .burger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
-/* MOBILE MENU - Bottom Sheet */
+/* MOBILE MENU */
 .drawer-overlay { 
   position: fixed; 
   inset: 0; 
@@ -278,9 +347,8 @@ nav.scrolled {
   right: 0; 
   bottom: -100%; 
   max-height: 70vh; 
-  background: rgba(255,255,255,0.98); 
+  background: var(--bg-card); 
   backdrop-filter: blur(20px); 
-  -webkit-backdrop-filter: blur(20px); 
   z-index: 2000; 
   padding: 20px 24px calc(24px + var(--safe-bottom)); 
   border-radius: 24px 24px 0 0; 
@@ -296,7 +364,7 @@ nav.scrolled {
   transform: translateX(-50%);
   width: 40px;
   height: 4px;
-  background: rgba(0,0,0,0.1);
+  background: var(--border-strong);
   border-radius: 2px;
 }
 .mobile-drawer a { 
@@ -311,14 +379,7 @@ nav.scrolled {
   transition: color 0.2s; 
 }
 .mobile-drawer a:last-of-type { border-bottom: none; }
-.mobile-drawer a:hover, .mobile-drawer a:focus { 
-  color: var(--accent); 
-}
-.mobile-drawer a:focus-visible { 
-  outline: 2px solid var(--accent); 
-  outline-offset: 4px; 
-  border-radius: 4px; 
-}
+.mobile-drawer a:hover, .mobile-drawer a:focus { color: var(--accent); }
 .mobile-drawer .btn-group { 
   margin-top: 24px; 
   display: flex;
@@ -358,6 +419,7 @@ section.active { display: block; }
   opacity: 0; 
   animation: fadeInUp 0.6s 0.3s forwards; 
   line-height: 1.1; 
+  color: var(--text);
 }
 .intro-block p { 
   font-size: clamp(1rem, 2.5vw, 1.25rem); 
@@ -390,7 +452,9 @@ section.active { display: block; }
   min-height: 52px; 
   min-width: 140px; 
   background: var(--text); 
-  color: #fff; 
+  color: var(--bg); 
+  position: relative;
+  overflow: hidden;
 }
 .btn:hover, .btn:focus { 
   transform: translateY(-2px); 
@@ -403,20 +467,43 @@ section.active { display: block; }
   color: var(--text); 
 }
 .btn-outline:hover, .btn-outline:focus { 
-  background: rgba(0,0,0,0.02); 
+  background: var(--bg-elevated); 
   border-color: var(--text); 
 }
+.btn.accent { background: var(--accent); color: white; }
+.btn.accent-gk { background: var(--accent-gk); color: white; }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
 
 @media (hover: none) and (pointer: coarse) {
   .btn:hover { transform: none !important; }
   .btn:active { transform: scale(0.96); opacity: 0.9; }
 }
 
+/* COMPARE BAR */
+.compare-bar {
+  position: fixed;
+  bottom: -100px;
+  left: 0;
+  right: 0;
+  background: var(--bg-card);
+  border-top: 1px solid var(--border);
+  padding: 16px 24px calc(16px + var(--safe-bottom));
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 998;
+  transition: bottom 0.3s var(--ease-spring);
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
+}
+.compare-bar.visible { bottom: 0; }
+.compare-count { font-weight: 700; font-size: 14px; }
+.compare-actions { display: flex; gap: 8px; }
+
 /* TIMER */
 .timer-context { 
   margin-top: 48px; 
   padding: 20px 32px; 
-  background: rgba(255,255,255,0.8); 
+  background: var(--bg-elevated); 
   backdrop-filter: blur(10px); 
   border-radius: 20px; 
   display: inline-flex; 
@@ -442,6 +529,7 @@ section.active { display: block; }
   font-weight: 900; 
   line-height: 1; 
   font-variant-numeric: tabular-nums; 
+  color: var(--text);
 }
 .countdown-label { 
   font-size: 10px; 
@@ -452,9 +540,18 @@ section.active { display: block; }
 }
 
 /* BENTO GRID */
-.bento-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-top: 40px; }
+.bento-grid { 
+  display: grid; 
+  grid-template-columns: repeat(4, 1fr); 
+  gap: 20px; 
+  margin-top: 40px; 
+}
+@media (max-width: 1024px) { .bento-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 768px) { .bento-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 480px) { .bento-grid { grid-template-columns: 1fr; } }
+
 .card { 
-  background: rgba(255,255,255,0.8); 
+  background: var(--bg-elevated); 
   backdrop-filter: blur(10px); 
   border-radius: var(--radius); 
   border: 1px solid var(--border); 
@@ -466,27 +563,40 @@ section.active { display: block; }
   display: flex; 
   flex-direction: column; 
   gap: 12px; 
+  transform-style: preserve-3d;
+  perspective: 1000px;
 }
 @media (hover: hover) { 
   .card:hover { 
     transform: translateY(-4px); 
     border-color: var(--border-strong); 
-    box-shadow: 0 12px 24px rgba(0,0,0,0.08); 
+    box-shadow: var(--shadow); 
   } 
 }
 .card:active { transform: scale(0.98); }
 .card:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
-.card h2 { font-size: clamp(1.5rem, 3vw, 2rem); line-height: 1.1; }
-.card h3 { font-size: 1.25rem; line-height: 1.2; }
+.card h2 { font-size: clamp(1.5rem, 3vw, 2rem); line-height: 1.1; color: var(--text); }
+.card h3 { font-size: 1.25rem; line-height: 1.2; color: var(--text); }
 .card p { color: var(--text-secondary); font-size: 0.9rem; line-height: 1.5; }
+.card.span-2 { grid-column: span 2; }
+@media (max-width: 768px) { .card.span-2 { grid-column: 1 / -1; } }
 
-/* PLAYER CARDS - ИСПРАВЛЕННЫЕ */
+/* 3D TILT EFFECT */
+.tilt-inner {
+  transform-style: preserve-3d;
+  transition: transform 0.1s;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* PLAYER CARDS */
 .player-card { 
   min-height: 380px; 
   background: linear-gradient(180deg, #2a2a2a 0%, #000 100%); 
   color: #fff; 
   border: none; 
-  padding: 24px; 
+  padding: 0; 
   position: relative; 
   border-radius: var(--radius); 
   display: flex;
@@ -494,40 +604,36 @@ section.active { display: block; }
   overflow: hidden;
 }
 
-/* ИСПРАВЛЕНИЕ ФОТО: добавлена проверка через JS + fallback */
 .player-img { 
   position: absolute; 
   inset: 0; 
   background-size: cover; 
   background-position: center top; 
   background-repeat: no-repeat;
-  filter: grayscale(1) brightness(0.6);
-  opacity: 0; /* Скрыто до загрузки */
-  transition: opacity 0.5s, filter 0.5s, transform 0.5s; 
+  opacity: 0;
+  transition: opacity 0.5s, transform 0.5s; 
   z-index: 0;
 }
-.player-img.loaded { opacity: 0.6; }
+.player-img.loaded { opacity: 1; }
 .player-img.error { 
-  background: linear-gradient(135deg, #444 0%, #222 100%) !important; 
+  background: linear-gradient(135deg, #444 0%, #222 100%); 
   opacity: 0.4; 
 }
 @media (hover: hover) { 
   .player-card:hover .player-img.loaded { 
-    filter: grayscale(0) brightness(0.7); 
-    opacity: 0.7; 
     transform: scale(1.03); 
   } 
 }
 
-/* Градиент не перекрывает нижнюю часть где текст */
+/* Gradient overlay - improved visibility */
 .player-card::after { 
   content: ''; 
   position: absolute; 
   bottom: 0;
   left: 0;
   right: 0;
-  height: 70%;
-  background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.7) 40%, transparent 100%); 
+  height: 80%;
+  background: linear-gradient(to top, rgba(0,0,0,0.98) 0%, rgba(0,0,0,0.8) 30%, rgba(0,0,0,0.4) 60%, transparent 100%); 
   z-index: 1;
   pointer-events: none; 
 }
@@ -539,10 +645,10 @@ section.active { display: block; }
   display: flex; 
   flex-direction: column; 
   gap: 6px; 
-  padding-bottom: 4px;
+  padding: 24px;
+  transform: translateZ(20px);
 }
 
-/* ИСПРАВЛЕНИЕ ОБРЕЗАННЫХ БУКВ: разрешен перенос */
 .player-info h3 { 
   font-size: clamp(1.2rem, 3vw, 1.6rem); 
   line-height: 1.25; 
@@ -552,10 +658,11 @@ section.active { display: block; }
   hyphens: auto;
   max-width: 100%;
   display: -webkit-box;
-  -webkit-line-clamp: 3; /* Максимум 3 строки */
+  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
+  color: #fff;
 }
 
 .player-info span { 
@@ -565,13 +672,13 @@ section.active { display: block; }
   color: var(--accent); 
   letter-spacing: 0.1em; 
 }
+.player-info span.gk { color: var(--accent-gk); }
 .player-badges { 
   font-size: 11px; 
   color: rgba(255,255,255,0.6); 
   font-weight: 500;
 }
 
-/* ИСПРАВЛЕНИЕ OVR: точно виден */
 .ovr-badge { 
   display: inline-flex; 
   align-items: center; 
@@ -586,9 +693,9 @@ section.active { display: block; }
   width: fit-content; 
   box-shadow: 0 4px 12px rgba(0,0,0,0.3);
   position: relative;
-  z-index: 10; /* Выше всех */
-  align-self: flex-start;
+  z-index: 10;
 }
+.ovr-badge.gk { background: var(--accent-gk); }
 
 .status-badge {
   position: absolute; 
@@ -603,10 +710,36 @@ section.active { display: block; }
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.2);
 }
+.status-badge.gk { background: var(--accent-gk); }
 
-/* TABLE */
+/* Compare checkbox on cards */
+.compare-checkbox {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  z-index: 10;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.5);
+  background: rgba(0,0,0,0.3);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  color: transparent;
+}
+.compare-checkbox:hover { border-color: #fff; background: rgba(0,0,0,0.5); }
+.compare-checkbox.checked { 
+  background: var(--accent); 
+  border-color: var(--accent); 
+  color: #fff; 
+}
+
+/* TABLE & MOBILE CARDS */
 .table-wrapper { 
-  background: rgba(255,255,255,0.8); 
+  background: var(--bg-elevated); 
   backdrop-filter: blur(10px); 
   border-radius: var(--radius); 
   border: 1px solid var(--border); 
@@ -614,6 +747,67 @@ section.active { display: block; }
   overflow-x: auto; 
   -webkit-overflow-scrolling: touch; 
 }
+
+/* Mobile Cards View (hidden on desktop) */
+.mobile-stats-grid {
+  display: none;
+  gap: 16px;
+}
+.mobile-player-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.mobile-player-card:active { transform: scale(0.98); }
+.mobile-player-card .rank {
+  font-size: 20px;
+  font-weight: 900;
+  font-style: italic;
+  color: var(--text-tertiary);
+  min-width: 40px;
+  text-align: center;
+}
+.mobile-player-card .avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  object-fit: cover;
+  background: var(--bg-elevated);
+}
+.mobile-player-card .info { flex: 1; min-width: 0; }
+.mobile-player-card .name {
+  font-weight: 700;
+  text-transform: uppercase;
+  font-style: italic;
+  font-size: 16px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--text);
+}
+.mobile-player-card .role {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+.mobile-player-card .ovr {
+  font-size: 24px;
+  font-weight: 900;
+  font-style: italic;
+  color: var(--accent);
+}
+
+@media (max-width: 640px) {
+  .table-wrapper { display: none; }
+  .mobile-stats-grid { display: grid; }
+}
+
 table { width: 100%; border-collapse: collapse; min-width: 400px; }
 th { 
   text-align: left; 
@@ -626,10 +820,10 @@ th {
   border-bottom: 1px solid var(--border); 
   white-space: nowrap; 
 }
-td { padding: 16px 24px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+td { padding: 16px 24px; border-bottom: 1px solid var(--border); vertical-align: middle; color: var(--text); }
 tr:last-child td { border-bottom: none; }
 tbody tr { cursor: pointer; transition: background 0.2s; }
-tbody tr:hover, tbody tr:focus-within { background: rgba(0,0,0,0.02); }
+tbody tr:hover, tbody tr:focus-within { background: var(--bg-elevated); }
 tbody tr:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
 
 .player-row { display: flex; align-items: center; gap: 12px; }
@@ -638,7 +832,7 @@ tbody tr:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px;
   height: 40px; 
   border-radius: 12px; 
   object-fit: cover; 
-  background: var(--bg); 
+  background: var(--bg-elevated); 
   flex-shrink: 0; 
 }
 .player-info-sm { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
@@ -650,11 +844,12 @@ tbody tr:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px;
   overflow: hidden; 
   text-overflow: ellipsis; 
   font-size: 0.95rem;
+  color: var(--text);
 }
 .player-role-sm { 
   font-size: 11px; 
   font-weight: 600; 
-  color: var(--text-tertiary); 
+  color: var(--text-secondary); 
   text-transform: uppercase; 
   letter-spacing: 0.05em; 
 }
@@ -663,9 +858,8 @@ tbody tr:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px;
 .modal-overlay { 
   position: fixed; 
   inset: 0; 
-  background: rgba(255,255,255,0.95); 
+  background: rgba(var(--bg-rgb, 250,250,250), 0.95); 
   backdrop-filter: blur(20px); 
-  -webkit-backdrop-filter: blur(20px); 
   z-index: 3000; 
   display: flex; 
   justify-content: center; 
@@ -675,13 +869,11 @@ tbody tr:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px;
   visibility: hidden; 
   transition: all 0.3s; 
 }
+[data-theme="dark"] .modal-overlay { background: rgba(10,10,10,0.95); }
 .modal-overlay.active { opacity: 1; visibility: visible; }
-@supports not (backdrop-filter: blur(20px)) {
-  .modal-overlay { background: rgba(255,255,255,0.98); }
-}
 
 .modal-content { 
-  background: #fff; 
+  background: var(--bg-card); 
   width: 100%; 
   max-width: 480px; 
   border-radius: 24px; 
@@ -690,14 +882,19 @@ tbody tr:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px;
   max-height: 90vh; 
   max-height: 90dvh; 
   overflow-y: auto; 
-  box-shadow: 0 20px 60px rgba(0,0,0,0.15); 
+  box-shadow: var(--shadow); 
   border: 1px solid var(--border); 
   transform: translateY(20px); 
   transition: transform 0.3s var(--ease-spring); 
+  color: var(--text);
 }
 .modal-overlay.active .modal-content { transform: translateY(0); }
 
-/* Кнопки в модалке - sticky на десктопе, static на мобильном */
+/* Compare Modal - wider */
+.modal-content.wide {
+  max-width: 900px;
+}
+
 .modal-header-fixed { 
   position: sticky; 
   top: -32px;
@@ -709,7 +906,7 @@ tbody tr:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px;
   z-index: 10; 
   margin: -32px -32px 16px -32px;
   padding: 16px 20px;
-  background: linear-gradient(to bottom, rgba(255,255,255,0.9), transparent);
+  background: linear-gradient(to bottom, var(--bg-card), transparent);
   pointer-events: none;
 }
 .modal-header-fixed > button { pointer-events: auto; }
@@ -723,6 +920,7 @@ tbody tr:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px;
     justify-content: flex-end;
   }
   .modal-content { padding: 24px; max-height: 100vh; border-radius: 0; }
+  .modal-content.wide { max-width: 100%; }
 }
 
 .modal-close, .download-circle { 
@@ -735,35 +933,28 @@ tbody tr:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px;
   cursor: pointer; 
   border: 1px solid var(--border); 
   transition: all 0.2s; 
-  background: #fff; 
+  background: var(--bg-card); 
   color: var(--text-secondary); 
 }
 .modal-close:hover, .download-circle:hover, .modal-close:focus, .download-circle:focus { 
-  background: var(--bg); 
+  background: var(--bg-elevated); 
   color: var(--text); 
   border-color: var(--border-strong); 
 }
-.modal-close:focus-visible, .download-circle:focus-visible { 
-  outline: 2px solid var(--accent); 
-  outline-offset: 2px; 
-}
 
-#m-img-container { 
+#m-img-container, .compare-img-container { 
   width: 100%; 
   aspect-ratio: 1 / 1; 
   max-height: 280px; 
   border-radius: 16px; 
   overflow: hidden; 
-  background: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%); 
-  background-size: 200% 100%; 
-  animation: shimmer 1.5s infinite; 
+  background: var(--bg-elevated);
   margin-bottom: 24px; 
-  margin-top: 0;
   position: relative; 
 }
-@keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
-#m-img { width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 0.3s; }
-#m-img.loaded { opacity: 1; animation: none; }
+.compare-img-container { max-height: 200px; }
+#m-img, .compare-img { width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 0.3s; }
+#m-img.loaded, .compare-img.loaded { opacity: 1; }
 
 .modal-header { 
   display: flex; 
@@ -780,22 +971,24 @@ tbody tr:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px;
   font-weight: 700; 
   text-transform: uppercase; 
   color: var(--accent); 
-  background: rgba(22,163,74,0.08); 
+  background: rgba(22,163,74,0.1); 
   padding: 6px 12px; 
   border-radius: 20px; 
   margin-bottom: 8px; 
   letter-spacing: 0.05em; 
 }
+#m-role.gk { color: var(--accent-gk); background: rgba(245,158,11,0.1); }
 #m-name { 
   font-size: clamp(1.5rem, 4vw, 2rem); 
   line-height: 1.2; 
+  color: var(--text);
 }
 #m-badges { display: flex; gap: 6px; margin-top: 12px; flex-wrap: wrap; }
 .badge { 
   font-size: 10px; 
   font-weight: 700; 
   background: var(--text); 
-  color: #fff; 
+  color: var(--bg); 
   padding: 4px 10px; 
   border-radius: 12px; 
   text-transform: uppercase; 
@@ -833,9 +1026,36 @@ tbody tr:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px;
   background: var(--text); 
   border-radius: 3px; 
   width: 0%; 
-  transition: width 1s var(--ease-out) 0.2s; 
+  transition: width 1s var(--ease-out); 
 }
 .stat-bar-fill.accent { background: var(--accent); }
+.stat-bar-fill.gk { background: var(--accent-gk); }
+
+/* RADAR CHART CONTAINER */
+.radar-container {
+  width: 100%;
+  height: 300px;
+  margin: 24px 0;
+  position: relative;
+}
+.radar-canvas {
+  width: 100%;
+  height: 100%;
+}
+
+/* COMPARE LAYOUT */
+.compare-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+}
+@media (max-width: 640px) {
+  .compare-grid { grid-template-columns: 1fr; gap: 24px; }
+  .radar-container { height: 250px; }
+}
+.compare-player { text-align: center; }
+.compare-player h3 { margin: 12px 0 4px; font-size: 1.5rem; }
+.compare-player .role { font-size: 12px; text-transform: uppercase; color: var(--text-secondary); margin-bottom: 16px; }
 
 /* CONTROLS */
 .controls-row { 
@@ -845,7 +1065,7 @@ tbody tr:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px;
   align-items: center; 
   flex-wrap: wrap; 
   gap: 16px; 
-  background: rgba(255,255,255,0.6); 
+  background: var(--bg-elevated); 
   backdrop-filter: blur(10px); 
   padding: 16px; 
   border-radius: 20px; 
@@ -855,7 +1075,7 @@ tbody tr:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px;
   padding: 12px 20px; 
   border-radius: 100px; 
   border: 1px solid var(--border); 
-  background: #fff; 
+  background: var(--bg-card); 
   width: 100%; 
   max-width: 320px; 
   font-family: inherit; 
@@ -876,7 +1096,7 @@ tbody tr:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px;
   padding: 10px 18px; 
   border-radius: 100px; 
   border: 1px solid var(--border); 
-  background: #fff; 
+  background: var(--bg-card); 
   font-size: 12px; 
   font-weight: 600; 
   cursor: pointer; 
@@ -889,9 +1109,10 @@ tbody tr:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px;
 .filter-btn:hover { border-color: var(--border-strong); color: var(--text); }
 .filter-btn.active { 
   background: var(--text); 
-  color: #fff; 
+  color: var(--bg); 
   border-color: var(--text); 
 }
+.filter-btn.gk.active { background: var(--accent-gk); border-color: var(--accent-gk); }
 .filter-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
 @media (max-width: 640px) {
@@ -901,10 +1122,40 @@ tbody tr:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px;
   .filter-bar::-webkit-scrollbar { display: none; }
 }
 
+/* FORM ELEMENTS */
+.form-group { margin-bottom: 20px; }
+.form-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+  letter-spacing: 0.05em;
+}
+.form-input, .form-select {
+  width: 100%;
+  padding: 14px 18px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 15px;
+  transition: all 0.2s;
+}
+.form-input:focus, .form-select:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(22,163,74,0.1);
+}
+.form-input::placeholder { color: var(--text-tertiary); }
+
 /* SCROLLBAR */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 3px; }
+[data-theme="dark"] ::-webkit-scrollbar-thumb { background: var(--border-strong); }
 
 /* MOBILE */
 @media (max-width: 1024px) { .bento-grid { grid-template-columns: repeat(2, 1fr); } }
@@ -933,7 +1184,7 @@ tbody tr:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px;
   .ovr-badge { font-size: 12px; padding: 5px 12px; }
 }
 
-/* Скрытый контейнер для скриншотов */
+/* SCREENSHOT CONTAINER */
 #screenshot-container { 
   position: fixed; 
   top: -9999px; 
@@ -952,6 +1203,7 @@ tbody tr:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px;
   box-shadow: none; 
   background: white; 
   padding: 32px; 
+  color: #0a0a0a;
 }
 #screenshot-container .modal-header-fixed { display: none; }
 #screenshot-container #m-img-container { margin: 0 0 24px 0; }
@@ -959,10 +1211,32 @@ tbody tr:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px;
   width: var(--width, 0%) !important; 
   transition: none !important; 
 }
+
+/* VIRTUAL SCROLL CONTAINER */
+.virtual-container {
+  position: relative;
+  height: 600px;
+  overflow-y: auto;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--bg-elevated);
+}
+.virtual-content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+}
 </style>
 </head>
 <body>
 <a href="#main" class="skip-link">Перейти к содержимому</a>
+
+<div class="ptr-indicator" id="ptr">
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="M12 5v14M19 12l-7 7-7-7"/>
+  </svg>
+</div>
 
 <div id="preloader" role="status" aria-label="Загрузка">
   <div class="preloader-content">
@@ -983,6 +1257,9 @@ tbody tr:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px;
       <a href="#home" onclick="switchTab('home'); return false;" id="btn-home" class="active" aria-current="page">Главная</a>
       <a href="#roster" onclick="switchTab('roster'); return false;" id="btn-roster">Участники</a>
       <a href="#stats" onclick="switchTab('stats'); return false;" id="btn-stats">Рейтинг</a>
+      <button class="theme-toggle" onclick="toggleTheme()" aria-label="Переключить тему" title="Сменить тему">
+        <span id="theme-icon">🌙</span>
+      </button>
     </div>
     <button class="burger" id="burger" onclick="toggleMenu()" aria-label="Открыть меню" aria-expanded="false" aria-controls="mobile-drawer">
       <span aria-hidden="true"></span>
@@ -997,6 +1274,11 @@ tbody tr:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px;
   <a href="#home" onclick="handleMobileNav('home'); return false;">Главная</a>
   <a href="#roster" onclick="handleMobileNav('roster'); return false;">Участники</a>
   <a href="#stats" onclick="handleMobileNav('stats'); return false;">Рейтинг</a>
+  <div style="padding: 16px; border-top: 1px solid var(--border); margin-top: 8px;">
+    <button class="theme-toggle" onclick="toggleTheme(); toggleMenu()" style="width: 100%; margin: 0; border-radius: 12px;">
+      <span id="theme-icon-mobile">🌙 Сменить тему</span>
+    </button>
+  </div>
   <div class="btn-group">
     <button class="btn" onclick="handleMobileNav('applyModal', true)" style="width:100%">Подать заявку</button>
   </div>
@@ -1043,21 +1325,37 @@ tbody tr:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px;
   <section id="roster" aria-label="Участники">
     <div style="margin-bottom: 32px;">
       <h1 style="font-size: clamp(2rem, 10vw, 6rem);">УЧАСТНИКИ.</h1>
-      <p style="font-size: 1.125rem; margin-top:8px; color: var(--text-secondary);">Действующие участники BOX1V1.</p>
+      <p style="font-size: 1.125rem; margin-top:8px; color: var(--text-secondary);">Действующие участники BOX1V1. Выберите двоих для сравнения.</p>
     </div>
     <div class="controls-row">
       <input type="search" class="search-input" id="playerSearch" placeholder="Поиск по имени..." oninput="debouncedRender()" aria-label="Поиск игрока" autocomplete="off">
       <div class="filter-bar" role="group" aria-label="Фильтр по роли">
         <button class="filter-btn active" onclick="setRoleFilter('Все', this)" aria-pressed="true">Все</button>
         <button class="filter-btn" onclick="setRoleFilter('Игрок', this)" aria-pressed="false">Полевые</button>
-        <button class="filter-btn" onclick="setRoleFilter('Вратарь', this)" aria-pressed="false">Вратари</button>
+        <button class="filter-btn gk" onclick="setRoleFilter('Вратарь', this)" aria-pressed="false">Вратари</button>
       </div>
     </div>
-    <div class="bento-grid" id="roster-grid" role="region" aria-live="polite" aria-label="Сетка игроков"></div>
+    <div class="bento-grid" id="roster-grid" role="region" aria-live="polite" aria-label="Сетка игроков">
+      <!-- Skeleton loading -->
+      <div class="card player-card skeleton-card" style="min-height: 380px;">
+        <div class="skeleton" style="position:absolute; inset:0;"></div>
+      </div>
+      <div class="card player-card skeleton-card" style="min-height: 380px;">
+        <div class="skeleton" style="position:absolute; inset:0;"></div>
+      </div>
+      <div class="card player-card skeleton-card" style="min-height: 380px;">
+        <div class="skeleton" style="position:absolute; inset:0;"></div>
+      </div>
+      <div class="card player-card skeleton-card" style="min-height: 380px;">
+        <div class="skeleton" style="position:absolute; inset:0;"></div>
+      </div>
+    </div>
   </section>
 
   <section id="stats" aria-label="Рейтинг">
     <h1 style="font-size: clamp(2rem, 10vw, 6rem); margin-bottom:32px;">РЕЙТИНГ.</h1>
+    
+    <!-- Desktop Table -->
     <div class="table-wrapper" role="region" aria-label="Таблица рейтинга" tabindex="0">
       <table role="table" aria-label="Рейтинг игроков">
         <thead>
@@ -1067,11 +1365,25 @@ tbody tr:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px;
             <th scope="col" style="text-align:right;">OVR</th>
           </tr>
         </thead>
-        <tbody id="stats-body"></tbody>
+        <tbody id="stats-body">
+          <tr><td colspan="3" style="text-align: center; padding: 40px;">Загрузка...</td></tr>
+        </tbody>
       </table>
     </div>
+
+    <!-- Mobile Cards -->
+    <div class="mobile-stats-grid" id="mobile-stats-grid" role="region" aria-label="Рейтинг игроков"></div>
   </section>
 </main>
+
+<!-- Compare Bar -->
+<div class="compare-bar" id="compare-bar">
+  <span class="compare-count">Выбрано: <span id="compare-count">0</span>/2</span>
+  <div class="compare-actions">
+    <button class="btn btn-outline" onclick="clearCompare()" style="min-width: auto; padding: 12px 20px;">Сбросить</button>
+    <button class="btn" onclick="openCompareModal()" id="compare-btn" disabled style="min-width: auto; padding: 12px 24px;">Сравнить</button>
+  </div>
+</div>
 
 <!-- Player Modal -->
 <div class="modal-overlay" id="playerModal" role="dialog" aria-modal="true" aria-labelledby="m-name" onclick="if(event.target === this) closeModal('playerModal')">
@@ -1114,6 +1426,30 @@ tbody tr:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px;
   </div>
 </div>
 
+<!-- Compare Modal -->
+<div class="modal-overlay" id="compareModal" role="dialog" aria-modal="true" aria-label="Сравнение игроков" onclick="if(event.target === this) closeModal('compareModal')">
+  <div class="modal-content wide" onclick="event.stopPropagation()">
+    <div class="modal-header-fixed">
+      <button class="modal-close" onclick="closeModal('compareModal')" aria-label="Закрыть">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+    
+    <h2 style="font-size: 1.5rem; margin-bottom: 24px; text-align: center;">СРАВНЕНИЕ</h2>
+    
+    <div class="compare-grid" id="compare-container">
+      <!-- Dynamic content -->
+    </div>
+    
+    <div class="radar-container">
+      <canvas id="radarCanvas" class="radar-canvas"></canvas>
+    </div>
+  </div>
+</div>
+
 <!-- Apply Modal -->
 <div class="modal-overlay" id="applyModal" role="dialog" aria-modal="true" aria-labelledby="apply-title" onclick="if(event.target === this) closeModal('applyModal')">
   <div class="modal-content" onclick="event.stopPropagation()">
@@ -1126,8 +1462,27 @@ tbody tr:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px;
       </button>
     </div>
     <h2 id="apply-title" style="font-size:1.5rem; margin:40px 0 16px; line-height:1.2;">ВСТУПИТЬ В BOX1V1</h2>
-    <p style="margin-bottom:24px; color:var(--text-secondary); line-height:1.6; font-size: 0.95rem;">Чтобы оформить заявку, оставь комментарий под любым постом с хештегом <strong style="color:var(--text);">#BOXУЧАСТВОВАТЬ</strong>.</p>
-    <button class="btn" style="width:100%;" onclick="window.open('https://t.me/streetbox1v1', '_blank')">Открыть Telegram</button>
+    <p style="margin-bottom:24px; color:var(--text-secondary); line-height:1.6; font-size: 0.95rem;">Заполните форму ниже. Мы свяжемся с вами в Telegram.</p>
+    
+    <form id="applyForm" onsubmit="handleApply(event)">
+      <div class="form-group">
+        <label class="form-label" for="apply-name">Имя и фамилия</label>
+        <input type="text" id="apply-name" class="form-input" required placeholder="Иван Петров">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="apply-role">Позиция</label>
+        <select id="apply-role" class="form-select" required>
+          <option value="">Выберите позицию</option>
+          <option value="Игрок">Полевой игрок</option>
+          <option value="Вратарь">Вратарь</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="apply-contact">Telegram или Телефон</label>
+        <input type="text" id="apply-contact" class="form-input" required placeholder="@username или +7...">
+      </div>
+      <button type="submit" class="btn" style="width:100%;">Отправить заявку</button>
+    </form>
   </div>
 </div>
 
@@ -1160,109 +1515,101 @@ tbody tr:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px;
   </div>
 </div>
 
-<!-- Скрытый контейнер для скриншотов -->
+<!-- Screenshot Container -->
 <div id="screenshot-container" aria-hidden="true"></div>
 
 <script>
+// ==================== CONFIG & STATE ====================
 const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vREjbeB6jNrU01kw1npVtFTvqGdP134ERjmyROoOYeYXbzjgL0ZCNK6KwF0VTk3c1yxZEZEUsJjy2Ur/pub?output=csv';
 const TARGET_DATE = new Date("March 1, 2026 00:00:00").getTime();
+const STORAGE_KEY = 'box1v1_players';
+const STORAGE_TIME = 'box1v1_last_fetch';
 
 let allPlayers = [];
+let filteredPlayers = [];
 let currentRoleFilter = 'Все';
+let compareList = [];
 let renderTimeout;
+let abortController = null;
+let timerInterval;
 let lastFocusedElement = null;
 let statAnimationTimers = [];
 let focusTrapHandler = null;
+let touchStartY = 0;
+let isRefreshing = false;
 
 const statDefs = {
-  'DRI': 'Техника контроля мяча и ведения дриблинга',
-  'SPD': 'Стартовый рывок и скорость перемещения',
-  'SHT': 'Мощность и точность завершающего удара',
-  'PHY': 'Физическая мощь, борьба и атлетизм',
-  'REF': 'Молниеносная реакция на удары в упор',
-  'DIV': 'Дальность прыжка и охват створа ворот',
-  'HAN': 'Надежность фиксации и отражения мяча',
-  'POS': 'Грамотный выбор позиции в створе ворот'
+  'DRI': 'Техника контроля мяча',
+  'SPD': 'Скорость и рывок',
+  'SHT': 'Точность удара',
+  'PHY': 'Физическая мощь',
+  'REF': 'Реакция',
+  'DIV': 'Прыжок и охват',
+  'HAN': 'Игра руками',
+  'POS': 'Позиционирование'
 };
 
 const $ = (selector) => document.querySelector(selector);
 const $$ = (selector) => document.querySelectorAll(selector);
 
-function showToast(message, duration = 3000) {
-  const container = $('#toast-container');
-  const toast = document.createElement('div');
-  toast.className = 'toast';
-  toast.textContent = message;
-  toast.setAttribute('role', 'status');
-  container.appendChild(toast);
-  setTimeout(() => {
-    toast.style.opacity = '0';
-    toast.style.transform = 'translateY(20px)';
-    setTimeout(() => toast.remove(), 500);
-  }, duration);
-}
-
-function announceToScreenReader(message) {
-  const region = $('#search-live-region');
-  region.textContent = message;
-  setTimeout(() => { region.textContent = ''; }, 1000);
-}
-
-function parseCSV(text) {
-  const lines = text.replace(/\r/g, '').split('\n').filter(r => r.trim());
-  if (lines.length < 2) return [];
-  
-  const result = [];
-  for (let i = 1; i < lines.length; i++) {
-    const row = lines[i];
-    const cells = [];
-    let cell = '';
-    let inQuotes = false;
-    
-    for (let j = 0; j < row.length; j++) {
-      const char = row[j];
-      const nextChar = row[j + 1];
-      
-      if (char === '"') {
-        if (inQuotes && nextChar === '"') {
-          cell += '"';
-          j++;
-        } else {
-          inQuotes = !inQuotes;
-        }
-      } else if (char === ',' && !inQuotes) {
-        cells.push(cell.trim());
-        cell = '';
-      } else {
-        cell += char;
-      }
-    }
-    cells.push(cell.trim());
-    
-    if (cells[0]) {
-      result.push({
-        name: cells[0] || '',
-        ovr: parseInt(cells[1]) || 0,
-        role: cells[2] || 'Игрок',
-        drib: parseInt(cells[3]) || 0,
-        speed: parseInt(cells[4]) || 0,
-        shot: parseInt(cells[5]) || 0,
-        phys: parseInt(cells[6]) || 0,
-        photo: cells[7] || '',
-        status: cells[8] || '',
-        badges: cells[9] ? cells[9].split('|').map(b => b.trim()).filter(Boolean) : []
-      });
-    }
-  }
-  return result;
-}
-
+// ==================== INIT ====================
 async function init() {
+  // Theme init
+  initTheme();
+  
+  // Load data
+  await loadData();
+  
+  // Setup UI
+  handleHashAndDeepLink();
+  updateTimer();
+  timerInterval = setInterval(updateTimer, 1000);
+  setupDownloadButton();
+  setupScrollDetection();
+  setupPullToRefresh();
+  setup3DTilt();
+  
+  // Hide preloader
+  setTimeout(() => $('#preloader').classList.add('loaded'), 500);
+  
+  // Visibility change
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      clearInterval(timerInterval);
+    } else {
+      timerInterval = setInterval(updateTimer, 1000);
+    }
+  });
+}
+
+// ==================== DATA LOADING ====================
+async function loadData() {
+  // Try cache first for offline
+  const cached = localStorage.getItem(STORAGE_KEY);
+  const lastFetch = localStorage.getItem(STORAGE_TIME);
+  const isStale = !lastFetch || (Date.now() - parseInt(lastFetch) > 3600000); // 1 hour
+  
+  if (cached && (!navigator.onLine || isStale)) {
+    allPlayers = JSON.parse(cached);
+    renderRoster();
+    renderStats();
+    if (!navigator.onLine) showToast('Оффлайн режим', 3000);
+    return;
+  }
+  
+  // Fetch fresh
   try {
-    const response = await fetch(CSV_URL);
+    if (abortController) abortController.abort();
+    abortController = new AbortController();
+    
+    const response = await fetch(CSV_URL, { signal: abortController.signal });
     if (!response.ok) throw new Error('Network error');
     const text = await response.text();
     allPlayers = parseCSV(text);
+    
+    // Cache it
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(allPlayers));
+    localStorage.setItem(STORAGE_TIME, Date.now().toString());
     
     if (allPlayers.length === 0) {
       showToast('Ростер временно пуст');
@@ -1270,162 +1617,435 @@ async function init() {
       renderRoster();
       renderStats();
     }
-    
-    handleHashAndDeepLink();
-    updateTimer();
-    setInterval(updateTimer, 1000);
-    setupDownloadButton();
-    setupScrollDetection();
-    
-    setTimeout(() => $('#preloader').classList.add('loaded'), 500);
   } catch (error) {
-    console.error('Init error:', error);
-    showToast('Ошибка загрузки данных');
-    $('#preloader').classList.add('loaded');
-  }
-}
-
-function handleHashAndDeepLink() {
-  const hash = window.location.hash;
-  if (!hash) return;
-  const [hashPart, queryPart] = hash.split('?');
-  const cleanHash = hashPart.replace('#', '');
-  if (['home', 'roster', 'stats'].includes(cleanHash)) {
-    switchTab(cleanHash, false);
-  }
-  if (queryPart) {
-    const params = new URLSearchParams(queryPart);
-    const playerName = params.get('player');
-    if (playerName) {
-      const name = playerName.replace(/-/g, ' ');
-      const player = allPlayers.find(p => p.name.toLowerCase() === name.toLowerCase());
-      if (player) setTimeout(() => openPlayerModal(player.name), 300);
+    if (error.name === 'AbortError') return;
+    console.error('Fetch error:', error);
+    
+    // Fallback to cache
+    if (cached) {
+      allPlayers = JSON.parse(cached);
+      renderRoster();
+      renderStats();
+      showToast('Использованы сохраненные данные');
+    } else {
+      showToast('Ошибка загрузки данных');
     }
   }
 }
 
-function switchTab(id, updateHash = true) {
-  const target = $(`#${id}`);
-  if (!target) return;
-  $$('section').forEach(s => {
-    s.classList.remove('active');
-    s.setAttribute('aria-hidden', 'true');
-  });
-  $$('.nav-links a').forEach(a => {
-    a.classList.remove('active');
-    a.removeAttribute('aria-current');
-  });
-  target.classList.add('active');
-  target.removeAttribute('aria-hidden');
-  const btn = $(`#btn-${id}`);
-  if (btn) {
-    btn.classList.add('active');
-    btn.setAttribute('aria-current', 'page');
+function parseCSV(text) {
+  const lines = text.replace(/\r/g, '').split('\n').filter(r => r.trim());
+  if (lines.length < 2) return [];
+  
+  // Parse headers
+  const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
+  const getIndex = (name) => headers.findIndex(h => h.includes(name.toLowerCase()));
+  
+  const idx = {
+    name: getIndex('name'),
+    ovr: getIndex('ovr'),
+    role: getIndex('role'),
+    drib: getIndex('drib'),
+    speed: getIndex('speed'),
+    shot: getIndex('shot'),
+    phys: getIndex('phys'),
+    photo: getIndex('photo'),
+    status: getIndex('status'),
+    badges: getIndex('badges')
+  };
+  
+  const result = [];
+  for (let i = 1; i < lines.length; i++) {
+    const cells = parseCSVLine(lines[i]);
+    if (cells[idx.name]) {
+      result.push({
+        name: cells[idx.name] || '',
+        ovr: parseInt(cells[idx.ovr]) || 0,
+        role: cells[idx.role] || 'Игрок',
+        drib: parseInt(cells[idx.drib]) || 0,
+        speed: parseInt(cells[idx.speed]) || 0,
+        shot: parseInt(cells[idx.shot]) || 0,
+        phys: parseInt(cells[idx.phys]) || 0,
+        photo: cells[idx.photo] || '',
+        status: cells[idx.status] || '',
+        badges: cells[idx.badges] ? cells[idx.badges].split('|').map(b => b.trim()).filter(Boolean) : []
+      });
+    }
   }
-  if (updateHash) {
-    const currentHash = window.location.hash;
-    const [path] = currentHash.split('?');
-    window.history.pushState(null, null, `#${id}`);
-  }
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  return result;
 }
 
-/* ИСПРАВЛЕННЫЙ РЕНДЕР КАРТОЧЕК */
+function parseCSVLine(line) {
+  const cells = [];
+  let cell = '';
+  let inQuotes = false;
+  
+  for (let j = 0; j < line.length; j++) {
+    const char = line[j];
+    const nextChar = line[j + 1];
+    
+    if (char === '"') {
+      if (inQuotes && nextChar === '"') {
+        cell += '"';
+        j++;
+      } else {
+        inQuotes = !inQuotes;
+      }
+    } else if (char === ',' && !inQuotes) {
+      cells.push(cell.trim());
+      cell = '';
+    } else {
+      cell += char;
+    }
+  }
+  cells.push(cell.trim());
+  return cells;
+}
+
+// ==================== RENDERING ====================
 function renderRoster() {
   const grid = $('#roster-grid');
   const search = $('#playerSearch').value.toLowerCase().trim();
-  const filtered = allPlayers.filter(p => {
+  filteredPlayers = allPlayers.filter(p => {
     const matchesSearch = p.name.toLowerCase().includes(search);
     const matchesRole = currentRoleFilter === 'Все' || p.role === currentRoleFilter;
     return matchesSearch && matchesRole;
   });
   
-  announceToScreenReader(`Найдено игроков: ${filtered.length}`);
+  announceToScreenReader(`Найдено игроков: ${filteredPlayers.length}`);
   
-  if (filtered.length === 0) {
+  if (filteredPlayers.length === 0) {
     grid.innerHTML = `<div style="grid-column: 1/-1; padding: 60px 20px; text-align: center; color: var(--text-secondary);"><p style="font-size: 1.125rem;">Атлеты не найдены</p><p style="font-size: 0.875rem; margin-top: 8px;">Попробуйте изменить параметры поиска</p></div>`;
     return;
   }
   
-  // Генерируем карточки с уникальными ID для изображений
-  grid.innerHTML = filtered.map((p, i) => {
-    const playerId = p.name.replace(/\s+/g, '-').replace(/[^a-zA-Zа-яА-Я0-9-]/g, '');
-    const photoUrl = p.photo && p.photo.startsWith('http') ? p.photo : 'https://via.placeholder.com/400x600/333/fff?text=No+Photo';
-    
-    return `
-    <div class="card player-card" tabindex="0" role="button" aria-label="Карточка игрока ${p.name}, рейтинг ${p.ovr}"
-         style="animation: fadeIn 0.5s ${i * 0.05}s forwards; opacity: 0;"
-         onclick="openPlayerModal('${p.name.replace(/'/g, "\\'")}')"
-         onkeydown="handlePlayerCardKeydown(event, '${p.name.replace(/'/g, "\\'")}')">
-      
-      <div class="player-img" id="img-${playerId}" 
-           data-src="${photoUrl}"
-           style="background-image: url('${photoUrl}');"
-           aria-hidden="true"></div>
-      
-      ${p.status ? `<div class="status-badge">${p.status}</div>` : ''}
-      
-      <div class="player-info">
-        <span>${p.role}</span>
-        <h3>${escapeHtml(p.name)}</h3>
-        ${p.badges.length > 0 ? `<div class="player-badges">${escapeHtml(p.badges[0])}</div>` : ''}
-        <span class="ovr-badge">OVR ${p.ovr}</span>
-      </div>
-    </div>
-  `}).join('');
+  // Virtual scroll if > 50
+  if (filteredPlayers.length > 50) {
+    renderVirtual(grid, filteredPlayers);
+    return;
+  }
   
-  // Проверяем загрузку изображений после рендера
+  grid.innerHTML = filteredPlayers.map((p, i) => createPlayerCard(p, i)).join('');
+  
+  // Load images
   setTimeout(() => {
-    filtered.forEach(p => {
-      const playerId = p.name.replace(/\s+/g, '-').replace(/[^a-zA-Zа-яА-Я0-9-]/g, '');
-      const imgDiv = document.getElementById(`img-${playerId}`);
-      if (imgDiv) {
-        const img = new Image();
-        img.onload = () => imgDiv.classList.add('loaded');
-        img.onerror = () => {
-          imgDiv.classList.add('error');
-          imgDiv.style.backgroundImage = 'none';
-        };
-        img.src = imgDiv.getAttribute('data-src');
-      }
-    });
+    filteredPlayers.forEach(p => loadPlayerImage(p));
   }, 100);
 }
 
-function handlePlayerCardKeydown(event, name) {
-  if (event.key === 'Enter' || event.key === ' ') {
-    event.preventDefault();
-    openPlayerModal(name);
-  }
+function createPlayerCard(p, index, isVirtual = false) {
+  const playerId = sanitizeId(p.name);
+  const isGK = p.role === 'Вратарь';
+  const accentColor = isGK ? 'gk' : '';
+  const isSelected = compareList.includes(p.name);
+  
+  return `
+    <div class="card player-card ${isVirtual ? 'virtual-item' : ''}" 
+         tabindex="0" 
+         role="button" 
+         aria-label="Карточка игрока ${p.name}, рейтинг ${p.ovr}"
+         style="animation: fadeIn 0.5s ${index * 0.05}s forwards; opacity: 0;"
+         onclick="handleCardClick(event, '${escapeJs(p.name)}')"
+         onkeydown="handlePlayerCardKeydown(event, '${escapeJs(p.name)}')"
+         data-name="${escapeJs(p.name)}">
+      
+      <div class="compare-checkbox ${isSelected ? 'checked' : ''}" 
+           onclick="event.stopPropagation(); toggleCompare('${escapeJs(p.name)}')"
+           aria-label="${isSelected ? 'Убрать из сравнения' : 'Добавить к сравнению'}"
+           role="checkbox" 
+           aria-checked="${isSelected}">
+        ${isSelected ? '✓' : ''}
+      </div>
+      
+      <div class="player-img" id="img-${playerId}" 
+           data-src="${p.photo || ''}"
+           data-name="${p.name.charAt(0)}"
+           aria-hidden="true">
+        ${!p.photo ? `<div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:120px; font-weight:900; color:rgba(255,255,255,0.1);">${p.name.charAt(0)}</div>` : ''}
+      </div>
+      
+      ${p.status ? `<div class="status-badge ${accentColor}">${p.status}</div>` : ''}
+      
+      <div class="player-info">
+        <span class="${accentColor}">${p.role}</span>
+        <h3>${escapeHtml(p.name)}</h3>
+        ${p.badges.length > 0 ? `<div class="player-badges">${escapeHtml(p.badges[0])}</div>` : ''}
+        <span class="ovr-badge ${accentColor}">OVR ${p.ovr}</span>
+      </div>
+    </div>
+  `;
 }
 
-function escapeHtml(text) {
-  const div = document.createElement('div');
-  div.textContent = text;
-  return div.innerHTML;
+function renderVirtual(container, players) {
+  container.innerHTML = `<div class="virtual-container" id="virtual-container">
+    <div class="virtual-content" id="virtual-content" style="height: ${players.length * 400}px;">
+      ${players.slice(0, 10).map((p, i) => createPlayerCard(p, i, true)).join('')}
+    </div>
+  </div>`;
+  
+  const cont = $('#virtual-container');
+  cont.addEventListener('scroll', () => {
+    const scrollTop = cont.scrollTop;
+    const startIdx = Math.floor(scrollTop / 400);
+    const visible = players.slice(startIdx, startIdx + 10);
+    $('#virtual-content').innerHTML = visible.map((p, i) => createPlayerCard(p, startIdx + i, true)).join('');
+    visible.forEach(p => loadPlayerImage(p));
+  });
+}
+
+function loadPlayerImage(p) {
+  const playerId = sanitizeId(p.name);
+  const imgDiv = document.getElementById(`img-${playerId}`);
+  if (!imgDiv || imgDiv.classList.contains('loaded')) return;
+  
+  const url = imgDiv.getAttribute('data-src');
+  if (!url || !url.startsWith('http')) {
+    imgDiv.classList.add('error');
+    return;
+  }
+  
+  const img = new Image();
+  img.onload = () => {
+    imgDiv.classList.add('loaded');
+    imgDiv.style.backgroundImage = `url(${url})`;
+  };
+  img.onerror = () => {
+    imgDiv.classList.add('error');
+    // Show initial as fallback
+    imgDiv.innerHTML = `<div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:120px; font-weight:900; color:rgba(255,255,255,0.1);">${p.name.charAt(0)}</div>`;
+  };
+  img.src = url;
 }
 
 function renderStats() {
   const sorted = [...allPlayers].sort((a, b) => b.ovr - a.ovr);
+  
+  // Desktop table
   $('#stats-body').innerHTML = sorted.map((p, i) => `
-    <tr onclick="openPlayerModal('${p.name.replace(/'/g, "\\'")}')" tabindex="0" role="button" aria-label="${i + 1} место, ${p.name}, ${p.role}, рейтинг ${p.ovr}"
-        onkeydown="if(event.key === 'Enter') openPlayerModal('${p.name.replace(/'/g, "\\'")}')"
+    <tr onclick="openPlayerModal('${escapeJs(p.name)}')" tabindex="0" role="button" aria-label="${i + 1} место, ${p.name}, ${p.role}, рейтинг ${p.ovr}"
+        onkeydown="if(event.key === 'Enter') openPlayerModal('${escapeJs(p.name)}')"
         style="animation: fadeIn 0.3s ${i * 0.03}s forwards; opacity: 0;">
       <td style="font-weight:700; color:var(--text-tertiary); font-variant-numeric: tabular-nums;">${(i + 1).toString().padStart(2, '0')}</td>
       <td>
         <div class="player-row">
-          <img src="${p.photo || 'https://via.placeholder.com/100'}" alt="" class="player-avatar-sm" loading="lazy" onerror="this.src='https://via.placeholder.com/100/333/fff?text=?'" crossorigin="anonymous">
+          <img src="${p.photo || 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect fill="%23ddd" width="100" height="100"/><text x="50%" y="50%" text-anchor="middle" dy=".3em" fill="%23999">${p.name.charAt(0)}</text></svg>'}" 
+               alt="" class="player-avatar-sm" loading="lazy" 
+               onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22><rect fill=%22%23ddd%22 width=%22100%22 height=%22100%22/><text x=%2250%%22 y=%2250%%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%23999%22>${p.name.charAt(0)}</text></svg>'">
           <div class="player-info-sm">
             <div class="player-name-sm">${escapeHtml(p.name)}</div>
             <div class="player-role-sm">${p.role}</div>
           </div>
         </div>
       </td>
-      <td style="text-align:right;"><span class="ovr-badge" style="margin:0;">${p.ovr}</span></td>
+      <td style="text-align:right;"><span class="ovr-badge" style="margin:0; ${p.role === 'Вратарь' ? 'background:var(--accent-gk)' : ''}">${p.ovr}</span></td>
     </tr>
+  `).join('');
+  
+  // Mobile cards
+  $('#mobile-stats-grid').innerHTML = sorted.map((p, i) => `
+    <div class="mobile-player-card" onclick="openPlayerModal('${escapeJs(p.name)}')">
+      <div class="rank">${(i + 1).toString().padStart(2, '0')}</div>
+      <img src="${p.photo || 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect fill="%23ddd" width="100" height="100"/><text x="50%" y="50%" text-anchor="middle" dy=".3em" fill="%23999">${p.name.charAt(0)}</text></svg>'}" 
+           class="avatar" loading="lazy"
+           onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22><rect fill=%22%23ddd%22 width=%22100%22 height=%22100%22/><text x=%2250%%22 y=%2250%%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%23999%22>${p.name.charAt(0)}</text></svg>'">
+      <div class="info">
+        <div class="name">${escapeHtml(p.name)}</div>
+        <div class="role">${p.role}</div>
+      </div>
+      <div class="ovr" style="${p.role === 'Вратарь' ? 'color:var(--accent-gk)' : ''}">${p.ovr}</div>
+    </div>
   `).join('');
 }
 
+// ==================== INTERACTIONS ====================
+function handleCardClick(event, name) {
+  // If clicking checkbox area, don't open modal
+  if (event.target.closest('.compare-checkbox')) return;
+  openPlayerModal(name);
+}
+
+function handlePlayerCardKeydown(event, name) {
+  if (event.key === 'Enter' || event.key === ' ') {
+    event.preventDefault();
+    handleCardClick(event, name);
+  }
+}
+
+function debouncedRender() {
+  clearTimeout(renderTimeout);
+  renderTimeout = setTimeout(renderRoster, 300); // Increased to 300ms
+}
+
+function setRoleFilter(role, btn) {
+  currentRoleFilter = role;
+  $$('.filter-btn').forEach(b => { 
+    b.classList.remove('active'); 
+    b.setAttribute('aria-pressed', 'false'); 
+  });
+  btn.classList.add('active');
+  btn.setAttribute('aria-pressed', 'true');
+  renderRoster();
+}
+
+// ==================== COMPARE FEATURE ====================
+function toggleCompare(name) {
+  const idx = compareList.indexOf(name);
+  if (idx > -1) {
+    compareList.splice(idx, 1);
+  } else {
+    if (compareList.length >= 2) {
+      showToast('Можно сравнить только 2 игрока');
+      return;
+    }
+    compareList.push(name);
+  }
+  updateCompareBar();
+  renderRoster(); // Re-render to update checkboxes
+}
+
+function updateCompareBar() {
+  const bar = $('#compare-bar');
+  const count = $('#compare-count');
+  const btn = $('#compare-btn');
+  
+  count.textContent = compareList.length;
+  btn.disabled = compareList.length !== 2;
+  
+  if (compareList.length > 0) {
+    bar.classList.add('visible');
+  } else {
+    bar.classList.remove('visible');
+  }
+}
+
+function clearCompare() {
+  compareList = [];
+  updateCompareBar();
+  renderRoster();
+}
+
+function openCompareModal() {
+  if (compareList.length !== 2) return;
+  
+  const p1 = allPlayers.find(p => p.name === compareList[0]);
+  const p2 = allPlayers.find(p => p.name === compareList[1]);
+  if (!p1 || !p2) return;
+  
+  const container = $('#compare-container');
+  const isGK1 = p1.role === 'Вратарь';
+  const isGK2 = p2.role === 'Вратарь';
+  
+  container.innerHTML = `
+    <div class="compare-player">
+      <div class="compare-img-container">
+        <img src="${p1.photo || ''}" class="compare-img ${p1.photo ? 'loaded' : ''}" 
+             onload="this.classList.add('loaded')" 
+             onerror="this.style.display='none'; this.parentElement.innerHTML='<div style=\\'position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:60px;font-weight:900;background:var(--bg-elevated);color:var(--text-tertiary);\\'>${p1.name.charAt(0)}</div>'">
+      </div>
+      <h3>${escapeHtml(p1.name)}</h3>
+      <div class="role" style="${isGK1 ? 'color:var(--accent-gk)' : ''}">${p1.role} • OVR ${p1.ovr}</div>
+    </div>
+    <div class="compare-player">
+      <div class="compare-img-container">
+        <img src="${p2.photo || ''}" class="compare-img ${p2.photo ? 'loaded' : ''}" 
+             onload="this.classList.add('loaded')"
+             onerror="this.style.display='none'; this.parentElement.innerHTML='<div style=\\'position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:60px;font-weight:900;background:var(--bg-elevated);color:var(--text-tertiary);\\'>${p2.name.charAt(0)}</div>'">
+      </div>
+      <h3>${escapeHtml(p2.name)}</h3>
+      <div class="role" style="${isGK2 ? 'color:var(--accent-gk)' : ''}">${p2.role} • OVR ${p2.ovr}</div>
+    </div>
+  `;
+  
+  drawRadarChart(p1, p2);
+  openModal('compareModal');
+}
+
+function drawRadarChart(p1, p2) {
+  const canvas = $('#radarCanvas');
+  const ctx = canvas.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.getBoundingClientRect();
+  
+  canvas.width = rect.width * dpr;
+  canvas.height = rect.height * dpr;
+  ctx.scale(dpr, dpr);
+  
+  const centerX = rect.width / 2;
+  const centerY = rect.height / 2;
+  const radius = Math.min(centerX, centerY) - 40;
+  
+  const stats1 = [p1.drib, p1.speed, p1.shot, p1.phys];
+  const stats2 = [p2.drib, p2.speed, p2.shot, p2.phys];
+  const labels = ['DRI', 'SPD', 'SHT', 'PHY'];
+  const angleStep = (Math.PI * 2) / 4;
+  
+  ctx.clearRect(0, 0, rect.width, rect.height);
+  
+  // Draw grid
+  ctx.strokeStyle = getComputedStyle(document.body).getPropertyValue('--border');
+  ctx.lineWidth = 1;
+  for (let i = 1; i <= 5; i++) {
+    ctx.beginPath();
+    for (let j = 0; j < 4; j++) {
+      const angle = j * angleStep - Math.PI / 2;
+      const x = centerX + Math.cos(angle) * (radius * i / 5);
+      const y = centerY + Math.sin(angle) * (radius * i / 5);
+      if (j === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+    ctx.closePath();
+    ctx.stroke();
+  }
+  
+  // Draw axes and labels
+  ctx.fillStyle = getComputedStyle(document.body).getPropertyValue('--text-secondary');
+  ctx.font = '12px Inter';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  
+  for (let i = 0; i < 4; i++) {
+    const angle = i * angleStep - Math.PI / 2;
+    const x = centerX + Math.cos(angle) * radius;
+    const y = centerY + Math.sin(angle) * radius;
+    
+    ctx.beginPath();
+    ctx.moveTo(centerX, centerY);
+    ctx.lineTo(x, y);
+    ctx.stroke();
+    
+    const labelX = centerX + Math.cos(angle) * (radius + 25);
+    const labelY = centerY + Math.sin(angle) * (radius + 25);
+    ctx.fillText(labels[i], labelX, labelY);
+  }
+  
+  // Draw data
+  function drawData(stats, color) {
+    ctx.fillStyle = color + '33'; // 20% opacity
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    
+    for (let i = 0; i < 4; i++) {
+      const angle = i * angleStep - Math.PI / 2;
+      const value = stats[i] / 100;
+      const x = centerX + Math.cos(angle) * (radius * value);
+      const y = centerY + Math.sin(angle) * (radius * value);
+      if (i === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+  }
+  
+  const color1 = getComputedStyle(document.body).getPropertyValue('--accent').trim();
+  const color2 = getComputedStyle(document.body).getPropertyValue('--text-tertiary').trim();
+  
+  drawData(stats1, color1);
+  drawData(stats2, color2);
+}
+
+// ==================== MODALS ====================
 function openPlayerModal(name) {
   statAnimationTimers.forEach(clearTimeout);
   statAnimationTimers = [];
@@ -1436,18 +2056,24 @@ function openPlayerModal(name) {
   lastFocusedElement = document.activeElement;
   $('#m-name').textContent = p.name;
   $('#m-role').textContent = p.role;
+  $('#m-role').className = p.role === 'Вратарь' ? 'gk' : '';
   $('#m-ovr').textContent = p.ovr;
   
   const imgEl = $('#m-img');
   imgEl.classList.remove('loaded');
-  imgEl.style.display = 'block';
   
-  // Используем прокси для CORS если нужно
-  const proxiedUrl = p.photo && p.photo.startsWith('http') && !p.photo.includes('localhost') 
-    ? `https://images.weserv.nl/?url=${encodeURIComponent(p.photo)}&default=${encodeURIComponent(p.photo)}`
-    : p.photo || 'https://via.placeholder.com/400x600';
-  
-  imgEl.src = proxiedUrl;
+  // Use local image or initials fallback
+  if (p.photo && p.photo.startsWith('http')) {
+    imgEl.src = p.photo;
+    imgEl.style.display = 'block';
+    imgEl.nextElementSibling?.remove();
+  } else {
+    imgEl.style.display = 'none';
+    const initial = document.createElement('div');
+    initial.style.cssText = 'position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:120px;font-weight:900;background:var(--bg-elevated);color:var(--text-tertiary);';
+    initial.textContent = p.name.charAt(0);
+    imgEl.parentElement.appendChild(initial);
+  }
   
   $('#m-badges').innerHTML = p.badges.map(b => `<span class="badge" role="listitem">${escapeHtml(b)}</span>`).join('') || '';
   
@@ -1462,30 +2088,30 @@ function openPlayerModal(name) {
   $('#m-stats').innerHTML = stats.map(s => `
     <div class="stat-item">
       <div class="stat-header">
-        <div class="stat-label-group" data-tooltip="${statDefs[s.key]}" tabindex="0" role="tooltip" aria-label="${statDefs[s.key]}">
+        <div class="stat-label-group" title="${statDefs[s.key]}">
           <span class="stat-label">${s.key}</span>
-          <i class="info-icon" aria-hidden="true">?</i>
         </div>
         <span class="stat-value">${s.value}</span>
       </div>
       <div class="stat-bar-bg" aria-hidden="true">
-        <div class="stat-bar-fill ${s.value >= 90 ? 'accent' : ''}" id="bar-${s.key}" style="width: 0%" data-width="${s.value}%"></div>
+        <div class="stat-bar-fill ${isGK ? 'gk' : (s.value >= 90 ? 'accent' : '')}" id="bar-${s.key}" style="width: 0%" data-width="${s.value}%"></div>
       </div>
     </div>
   `).join('');
   
   openModal('playerModal');
   
+  // Animate bars with IntersectionObserver-like delay
   stats.forEach((s, index) => {
     const timer = setTimeout(() => {
       const bar = $(`#bar-${s.key}`);
       if (bar) bar.style.width = bar.getAttribute('data-width');
-    }, 100 + (index * 50));
+    }, 100 + (index * 100));
     statAnimationTimers.push(timer);
   });
   
   const currentTab = $('section.active')?.id || 'home';
-  const slug = p.name.replace(/\s+/g, '-').toLowerCase();
+  const slug = sanitizeId(p.name);
   window.history.replaceState(null, null, `#${currentTab}?player=${slug}`);
 }
 
@@ -1498,7 +2124,6 @@ function openModal(id) {
   modal.classList.add('active');
   document.body.style.overflow = 'hidden';
   
-  // Focus trap
   const content = modal.querySelector('.modal-content');
   if (content) {
     focusTrapHandler = createFocusTrap(content);
@@ -1509,6 +2134,32 @@ function openModal(id) {
     const focusable = modal.querySelector('button, [href], input, [tabindex]:not([tabindex="-1"])');
     if (focusable) focusable.focus();
   }, 100);
+  
+  // Haptic
+  if (navigator.vibrate) navigator.vibrate(10);
+}
+
+function closeModal(id) {
+  const modal = $(`#${id}`);
+  if (!modal) return;
+  
+  statAnimationTimers.forEach(clearTimeout);
+  statAnimationTimers = [];
+  
+  cleanupModalHandlers();
+  
+  modal.classList.remove('active');
+  document.body.style.overflow = '';
+  
+  if (lastFocusedElement) { 
+    lastFocusedElement.focus(); 
+    lastFocusedElement = null; 
+  }
+  
+  if (id === 'playerModal' || id === 'compareModal') {
+    const currentTab = $('section.active')?.id || 'home';
+    window.history.replaceState(null, null, `#${currentTab}`);
+  }
 }
 
 function cleanupModalHandlers() {
@@ -1540,102 +2191,158 @@ function createFocusTrap(element) {
   };
 }
 
-function closeModal(id) {
-  const modal = $(`#${id}`);
-  if (!modal) return;
-  
-  statAnimationTimers.forEach(clearTimeout);
-  statAnimationTimers = [];
-  
-  cleanupModalHandlers();
-  
-  modal.classList.remove('active');
-  document.body.style.overflow = '';
-  
-  if (lastFocusedElement) { 
-    lastFocusedElement.focus(); 
-    lastFocusedElement = null; 
-  }
-  
-  if (id === 'playerModal') {
-    const currentTab = $('section.active')?.id || 'home';
-    window.history.replaceState(null, null, `#${currentTab}`);
-  }
+// ==================== UTILITIES ====================
+function sanitizeId(name) {
+  return name.replace(/\s+/g, '-').replace(/[^a-zA-Zа-яА-Я0-9-]/g, '').toLowerCase();
 }
 
-function setRoleFilter(role, btn) {
-  currentRoleFilter = role;
-  $$('.filter-btn').forEach(b => { 
-    b.classList.remove('active'); 
-    b.setAttribute('aria-pressed', 'false'); 
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+function escapeJs(str) {
+  return str.replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '\\"');
+}
+
+function showToast(message, duration = 3000) {
+  const container = $('#toast-container');
+  const toast = document.createElement('div');
+  toast.className = 'toast';
+  toast.textContent = message;
+  toast.setAttribute('role', 'status');
+  container.appendChild(toast);
+  
+  if (navigator.vibrate) navigator.vibrate(20);
+  
+  setTimeout(() => {
+    toast.style.opacity = '0';
+    toast.style.transform = 'translateY(20px)';
+    setTimeout(() => toast.remove(), 500);
+  }, duration);
+}
+
+function announceToScreenReader(message) {
+  const region = $('#search-live-region');
+  region.textContent = message;
+  setTimeout(() => { region.textContent = ''; }, 1000);
+}
+
+function handleApply(e) {
+  e.preventDefault();
+  const name = $('#apply-name').value;
+  const role = $('#apply-role').value;
+  const contact = $('#apply-contact').value;
+  
+  const text = `Заявка BOX1V1:%0AИмя: ${encodeURIComponent(name)}%0AПозиция: ${encodeURIComponent(role)}%0AКонтакт: ${encodeURIComponent(contact)}`;
+  window.open(`https://t.me/streetbox1v1?text=${text}`, '_blank');
+  closeModal('applyModal');
+  showToast('Заявка отправлена!');
+  e.target.reset();
+}
+
+// ==================== THEME ====================
+function initTheme() {
+  const saved = localStorage.getItem('theme') || 'light';
+  document.documentElement.setAttribute('data-theme', saved);
+  updateThemeIcon(saved);
+}
+
+function toggleTheme() {
+  const current = document.documentElement.getAttribute('data-theme');
+  const next = current === 'light' ? 'dark' : 'light';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('theme', next);
+  updateThemeIcon(next);
+  
+  // Update meta theme-color
+  const metaColor = next === 'dark' ? '#0a0a0a' : '#fafafa';
+  $('#theme-meta').setAttribute('content', metaColor);
+}
+
+function updateThemeIcon(theme) {
+  const icon = theme === 'light' ? '🌙' : '☀️';
+  const text = theme === 'light' ? '🌙 Сменить тему' : '☀️ Сменить тему';
+  $('#theme-icon').textContent = icon;
+  const mobile = $('#theme-icon-mobile');
+  if (mobile) mobile.textContent = text;
+}
+
+// ==================== PULL TO REFRESH ====================
+function setupPullToRefresh() {
+  if (!('ontouchstart' in window)) return;
+  
+  const ptr = $('#ptr');
+  let startY = 0;
+  let currentY = 0;
+  let pulling = false;
+  
+  document.addEventListener('touchstart', (e) => {
+    if (window.scrollY === 0) {
+      startY = e.touches[0].clientY;
+      pulling = true;
+    }
+  }, { passive: true });
+  
+  document.addEventListener('touchmove', (e) => {
+    if (!pulling) return;
+    currentY = e.touches[0].clientY;
+    const diff = currentY - startY;
+    
+    if (diff > 0 && diff < 100) {
+      ptr.style.top = (diff / 2 - 60) + 'px';
+      ptr.style.transform = `translateX(-50%) rotate(${diff * 2}deg)`;
+      ptr.classList.add('visible');
+    }
+  }, { passive: true });
+  
+  document.addEventListener('touchend', () => {
+    if (!pulling) return;
+    pulling = false;
+    
+    if (currentY - startY > 80) {
+      ptr.classList.add('refreshing');
+      ptr.style.top = '20px';
+      loadData().then(() => {
+        ptr.classList.remove('refreshing', 'visible');
+        ptr.style.top = '';
+        ptr.style.transform = '';
+        showToast('Обновлено!');
+      });
+    } else {
+      ptr.classList.remove('visible');
+      ptr.style.top = '';
+      ptr.style.transform = '';
+    }
   });
-  btn.classList.add('active');
-  btn.setAttribute('aria-pressed', 'true');
-  renderRoster();
 }
 
-function debouncedRender() {
-  clearTimeout(renderTimeout);
-  renderTimeout = setTimeout(renderRoster, 150);
-}
-
-function toggleMenu() {
-  const drawer = $('#mobile-drawer');
-  const overlay = $('#drawer-overlay');
-  const burger = $('#burger');
-  const isOpen = drawer.classList.toggle('open');
-  overlay.classList.toggle('open');
-  burger.classList.toggle('open');
-  burger.setAttribute('aria-expanded', isOpen);
-  if (isOpen) {
-    document.body.style.overflow = 'hidden';
-  } else {
-    document.body.style.overflow = '';
-    if (lastFocusedElement) lastFocusedElement.focus();
+// ==================== 3D TILT ====================
+function setup3DTilt() {
+  if (!('ontouchstart' in window)) {
+    document.addEventListener('mousemove', (e) => {
+      const cards = document.querySelectorAll('.player-card');
+      cards.forEach(card => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        
+        if (x >= 0 && x <= rect.width && y >= 0 && y <= rect.height) {
+          const centerX = rect.width / 2;
+          const centerY = rect.height / 2;
+          const rotateX = (y - centerY) / 20;
+          const rotateY = (centerX - x) / 20;
+          card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+        } else {
+          card.style.transform = '';
+        }
+      });
+    });
   }
 }
 
-function handleMobileNav(id, isModal = false) {
-  toggleMenu();
-  setTimeout(() => isModal ? openModal(id) : switchTab(id), 300);
-}
-
-async function copyPlayerID() {
-  const name = $('#m-name').textContent;
-  try {
-    await navigator.clipboard.writeText(name);
-    showToast('ID скопирован');
-  } catch { 
-    showToast('Не удалось скопировать'); 
-  }
-}
-
-async function sharePlayer() {
-  const name = $('#m-name').textContent;
-  const url = window.location.href;
-  
-  const shareData = { 
-    title: `BOX1V1 | ${name}`, 
-    text: `Карточка атлета ${name} в системе BOX1V1`, 
-    url: url 
-  };
-  
-  if (navigator.share) {
-    try {
-      await navigator.share(shareData);
-    } catch (err) { 
-      if (err.name !== 'AbortError') showToast('Ошибка при отправке');
-    }
-  } else {
-    try {
-      await navigator.clipboard.writeText(url);
-      showToast('Ссылка скопирована');
-    } catch { 
-      showToast('Не удалось скопировать ссылку'); 
-    }
-  }
-}
-
+// ==================== DOWNLOAD & SHARE ====================
 function setupDownloadButton() {
   const btn = $('#download-card');
   if (!btn || btn.dataset.initialized) return;
@@ -1643,46 +2350,24 @@ function setupDownloadButton() {
   
   btn.addEventListener('click', async (e) => {
     e.preventDefault();
-    e.stopPropagation();
-    
     btn.style.opacity = '0.5';
     btn.disabled = true;
-    btn.style.transform = 'scale(0.95)';
     showToast('Создаём карточку...', 3000);
     
     try {
       const img = $('#m-img');
-      if (!img.complete) {
-        await new Promise((resolve) => {
-          img.onload = resolve;
-          img.onerror = resolve;
-          setTimeout(resolve, 3000);
-        });
-      }
-      
       const container = $('#screenshot-container');
       container.innerHTML = '';
       
       const original = $('#stats-card');
       const clone = original.cloneNode(true);
-      
       clone.querySelector('.modal-header-fixed')?.remove();
       
-      clone.style.cssText = `
-        position: static; 
-        max-height: none; 
-        overflow: visible; 
-        transform: none; 
-        width: 480px; 
-        background: white; 
-        padding: 32px; 
-        border-radius: 24px; 
-        box-shadow: none;
-        border: 1px solid #eee;
-      `;
+      // Fix for screenshot
+      clone.style.cssText = 'position:static;max-height:none;overflow:visible;transform:none;width:480px;background:white;padding:32px;border-radius:24px;color:#0a0a0a;';
       
       const cloneImg = clone.querySelector('#m-img');
-      if (img.complete && img.naturalWidth > 0) {
+      if (img.complete && img.naturalWidth > 0 && img.src.startsWith('http')) {
         try {
           const canvas = document.createElement('canvas');
           canvas.width = img.naturalWidth;
@@ -1692,7 +2377,8 @@ function setupDownloadButton() {
           cloneImg.src = canvas.toDataURL('image/png');
           cloneImg.style.opacity = '1';
         } catch (e) {
-          console.log('CORS error, using original src');
+          // CORS error, use placeholder
+          cloneImg.src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400"><rect fill="%23333" width="400" height="400"/></svg>';
         }
       }
       
@@ -1702,7 +2388,7 @@ function setupDownloadButton() {
       });
       
       container.appendChild(clone);
-      await new Promise(resolve => setTimeout(resolve, 200));
+      await new Promise(r => setTimeout(r, 200));
       
       const canvas = await html2canvas(clone, {
         scale: 2,
@@ -1715,51 +2401,130 @@ function setupDownloadButton() {
       });
       
       container.innerHTML = '';
+      const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+      const file = new File([blob], `BOX1V1_${sanitizeId($('#m-name').textContent)}.png`, { type: 'image/png' });
       
-      const playerName = $('#m-name')?.textContent || 'player';
-      const safeName = playerName.replace(/[^a-zA-Zа-яА-Я0-9]/g, '_');
-      const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png', 1.0));
-      
-      if (!blob) throw new Error('Canvas to Blob failed');
-      
-      const file = new File([blob], `BOX1V1_${safeName}.png`, { type: 'image/png' });
-      
-      if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
-        try {
-          await navigator.share({ files: [file], title: `BOX1V1 ${playerName}`, text: 'Карточка игрока' });
-          showToast('Готово!');
-          resetBtn();
-          return;
-        } catch (err) {
-          if (err.name === 'AbortError') { resetBtn(); return; }
-        }
-      }
-      
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = `BOX1V1_${safeName}.png`;
-      document.body.appendChild(link);
-      link.click();
-      setTimeout(() => {
-        document.body.removeChild(link);
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        await navigator.share({ files: [file], title: `BOX1V1 ${$('#m-name').textContent}` });
+      } else {
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = file.name;
+        link.click();
         URL.revokeObjectURL(url);
-      }, 100);
-      
+      }
       showToast('Карточка сохранена!');
-    } catch (error) {
-      console.error('Download error:', error);
-      showToast('Ошибка при создании карточки');
+    } catch (err) {
+      console.error(err);
+      showToast('Ошибка при создании');
     } finally {
-      resetBtn();
-    }
-    
-    function resetBtn() {
       btn.style.opacity = '';
       btn.disabled = false;
-      btn.style.transform = '';
     }
   });
+}
+
+async function copyPlayerID() {
+  const name = $('#m-name').textContent;
+  try {
+    await navigator.clipboard.writeText(name);
+    showToast('ID скопирован');
+  } catch { showToast('Не удалось скопировать'); }
+}
+
+async function sharePlayer() {
+  const name = $('#m-name').textContent;
+  const url = window.location.href;
+  const shareData = { title: `BOX1V1 | ${name}`, text: `Карточка атлета ${name}`, url: url };
+  
+  if (navigator.share) {
+    try { await navigator.share(shareData); } 
+    catch (err) { if (err.name !== 'AbortError') fallback(); }
+  } else { fallback(); }
+  
+  function fallback() {
+    navigator.clipboard.writeText(url).then(() => showToast('Ссылка скопирована'));
+  }
+}
+
+// ==================== NAVIGATION ====================
+function switchTab(id, updateHash = true) {
+  const target = $(`#${id}`);
+  if (!target) return;
+  
+  $$('section').forEach(s => {
+    s.classList.remove('active');
+    s.setAttribute('aria-hidden', 'true');
+  });
+  $$('.nav-links a').forEach(a => {
+    a.classList.remove('active');
+    a.removeAttribute('aria-current');
+  });
+  
+  target.classList.add('active');
+  target.removeAttribute('aria-hidden');
+  const btn = $(`#btn-${id}`);
+  if (btn) {
+    btn.classList.add('active');
+    btn.setAttribute('aria-current', 'page');
+  }
+  
+  if (updateHash) {
+    window.history.pushState(null, null, `#${id}`);
+  }
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  
+  // Haptic
+  if (navigator.vibrate) navigator.vibrate(5);
+}
+
+function toggleMenu() {
+  const drawer = $('#mobile-drawer');
+  const overlay = $('#drawer-overlay');
+  const burger = $('#burger');
+  const isOpen = drawer.classList.toggle('open');
+  overlay.classList.toggle('open');
+  burger.classList.toggle('open');
+  burger.setAttribute('aria-expanded', isOpen);
+  document.body.style.overflow = isOpen ? 'hidden' : '';
+}
+
+function handleMobileNav(id, isModal = false) {
+  toggleMenu();
+  setTimeout(() => isModal ? openModal(id) : switchTab(id), 300);
+}
+
+function handleHashAndDeepLink() {
+  const hash = window.location.hash;
+  if (!hash) return;
+  const [hashPart, queryPart] = hash.split('?');
+  const cleanHash = hashPart.replace('#', '');
+  if (['home', 'roster', 'stats'].includes(cleanHash)) {
+    switchTab(cleanHash, false);
+  }
+  if (queryPart) {
+    const params = new URLSearchParams(queryPart);
+    const playerName = params.get('player');
+    if (playerName) {
+      const name = playerName.replace(/-/g, ' ');
+      const player = allPlayers.find(p => sanitizeId(p.name) === playerName || p.name.toLowerCase() === name.toLowerCase());
+      if (player) setTimeout(() => openPlayerModal(player.name), 300);
+    }
+  }
+}
+
+function setupScrollDetection() {
+  let ticking = false;
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      requestAnimationFrame(() => {
+        $('#navbar').classList.toggle('scrolled', window.scrollY > 50);
+        ticking = false;
+      });
+      ticking = true;
+    }
+  }, { passive: true });
 }
 
 function updateTimer() {
@@ -1769,6 +2534,7 @@ function updateTimer() {
   if (diff <= 0) {
     $('#timer-status').textContent = 'Сезон открыт!';
     $('#timer').style.display = 'none';
+    clearInterval(timerInterval);
     return;
   }
   
@@ -1783,23 +2549,11 @@ function updateTimer() {
   $('#secs').textContent = secs.toString().padStart(2, '0');
 }
 
-function setupScrollDetection() {
-  let ticking = false;
-  window.addEventListener('scroll', () => {
-    if (!ticking) {
-      window.requestAnimationFrame(() => {
-        $('#navbar').classList.toggle('scrolled', window.scrollY > 50);
-        ticking = false;
-      });
-      ticking = true;
-    }
-  }, { passive: true });
-}
-
-// Escape для закрытия модалок
+// ==================== EVENT LISTENERS ====================
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') {
     closeModal('playerModal');
+    closeModal('compareModal');
     closeModal('applyModal');
     closeModal('rulesModal');
   }
@@ -1807,6 +2561,17 @@ document.addEventListener('keydown', (e) => {
 
 window.addEventListener('DOMContentLoaded', init);
 window.addEventListener('hashchange', handleHashAndDeepLink);
+
+// Service Worker registration for PWA
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('data:text/javascript;base64,' + btoa(`
+    self.addEventListener('install', e => self.skipWaiting());
+    self.addEventListener('activate', e => e.waitUntil(clients.claim()));
+    self.addEventListener('fetch', e => {
+      e.respondWith(fetch(e.request).catch(() => caches.match(e.request)));
+    });
+  `)).catch(() => {});
+}
 </script>
 </body>
 </html>
