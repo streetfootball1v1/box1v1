@@ -6,6 +6,14 @@
 <meta name="theme-color" content="#0a0a0a">
 <title>BOX1V1 | УЛИЧНЫЙ ФУТБОЛ 1 НА 1</title>
 
+<!-- Open Graph для шеринга (создай preview.jpg 1200x630) -->
+<meta property="og:title" content="BOX1V1 | Уличный футбол 1 на 1">
+<meta property="og:description" content="Решает не команда. Решаешь ты.">
+<meta property="og:image" content="https://streetfootball1v1.github.io/box1v1/preview.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:type" content="website">
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -301,12 +309,6 @@ tbody tr:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px;
   .modal-close, .download-circle { width: 36px; height: 36px; }
 }
 
-/* Скрытый контейнер для скриншотов */
-#screenshot-container { position: fixed; top: -9999px; left: -9999px; width: 520px; z-index: -1; pointer-events: none; opacity: 0; }
-#screenshot-container .modal-content { position: static; max-height: none; overflow: visible; transform: none; margin: 0; box-shadow: none; border: 1px solid #eee; }
-#screenshot-container .modal-header-fixed { display: none; }
-#screenshot-container #m-img-container { margin-top: 0; }
-
 /* Accessibility improvements */
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 button:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
@@ -375,14 +377,13 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outlin
         <button class="btn btn-outline" onclick="App.openModal('applyModal')">Подать заявку</button>
       </div>
       
-      <!-- Честный статус вместо фейкового таймера -->
       <div class="status-context" id="status-container">
         <span class="status-label">Статус проекта</span>
         <div class="status-text">
           🔥 Набор участников открыт
           <span class="beta-badge">Beta</span>
         </div>
-        <p class="status-hint">Первый сезон стартует после комплектации групп. Следите за обновлениями.</p>
+        <p class="status-hint">Первый сезон стартует после комплектации групп.</p>
       </div>
     </div>
     
@@ -418,7 +419,6 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outlin
       </div>
     </div>
     <div class="bento-grid" id="roster-grid" role="region" aria-live="polite" aria-label="Сетка игроков">
-      <!-- Skeleton loading -->
       <div class="card player-card skeleton" style="grid-column: span 1;">
         <div style="position: absolute; inset: 0; background: #1a1a1a;"></div>
       </div>
@@ -539,14 +539,11 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outlin
   </div>
 </div>
 
-<div id="screenshot-container" aria-hidden="true"></div>
-
 <script>
 // Модуль приложения с изолированным состоянием
 const App = (function() {
   'use strict';
   
-  // Приватное состояние
   const state = {
     players: [],
     filter: 'Все',
@@ -559,14 +556,13 @@ const App = (function() {
 
   const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vREjbeB6jNrU01kw1npVtFTvqGdP134ERjmyROoOYeYXbzjgL0ZCNK6KwF0VTk3c1yxZEZEUsJjy2Ur/pub?output=csv';
   
-  // Конфигурация
   const CONFIG = {
     ENABLE_TIMER: false,
     SHOW_PRELIMINARY_BADGE: true,
     STRICT_VALIDATION: true
   };
 
-  // XSS защита
+  // XSS защита только для текста, НЕ для URL
   const escapeHTML = (str) => {
     if (!str) return '';
     const div = document.createElement('div');
@@ -642,7 +638,7 @@ const App = (function() {
     }, duration);
   };
 
-  // Парсер CSV (улучшенный)
+  // Парсер CSV с поддержкой кавычек
   const parseCSV = (text) => {
     const lines = text.split('\n').filter(l => l.trim());
     if (lines.length < 2) return [];
@@ -651,7 +647,6 @@ const App = (function() {
     
     for (let i = 1; i < lines.length; i++) {
       const line = lines[i];
-      // Простой парсер с поддержкой кавычек
       const values = [];
       let current = '';
       let inQuotes = false;
@@ -696,10 +691,29 @@ const App = (function() {
     return players;
   };
 
-  // Инициализация
+  // Инициализация с кэшированием localStorage
   const init = async () => {
     const preloader = document.getElementById('preloader');
     const loadingStatus = document.getElementById('loading-status');
+    
+    // Проверяем кэш (1 час)
+    const CACHE_KEY = 'box1v1_roster';
+    const CACHE_TIME = 60 * 60 * 1000;
+    const cached = localStorage.getItem(CACHE_KEY);
+    const cachedTime = localStorage.getItem(`${CACHE_KEY}_time`);
+
+    if (cached && cachedTime && (Date.now() - parseInt(cachedTime) < CACHE_TIME)) {
+      try {
+        state.players = JSON.parse(cached);
+        render();
+        setupEventListeners();
+        setupDownloadButton();
+        setTimeout(() => preloader?.classList.add('loaded'), 500);
+        return;
+      } catch (e) {
+        console.warn('Cache parse error', e);
+      }
+    }
     
     try {
       const controller = new AbortController();
@@ -723,6 +737,10 @@ const App = (function() {
       if (state.players.length === 0) {
         throw new Error('Нет данных об игроках');
       }
+      
+      // Сохраняем в кэш
+      localStorage.setItem(CACHE_KEY, JSON.stringify(state.players));
+      localStorage.setItem(`${CACHE_KEY}_time`, Date.now().toString());
       
       render();
       setupEventListeners();
@@ -758,7 +776,7 @@ const App = (function() {
     if (tbody) tbody.innerHTML = `<tr><td colspan="3" style="text-align: center; padding: 40px;">${escapeHTML(message)}</td></tr>`;
   };
 
-  // Рендеринг ростера с DocumentFragment
+  // Рендеринг ростера - ИСПРАВЛЕНО: не используем escapeHTML для URL
   const renderRoster = () => {
     const grid = document.getElementById('roster-grid');
     if (!grid) return;
@@ -794,11 +812,17 @@ const App = (function() {
       });
       
       const imgDiv = createEl('div', 'player-img', { 'aria-hidden': 'true' });
-      // Обработка изображения с fallback
+      
+      // ИСПРАВЛЕНИЕ: НЕ используем escapeHTML для URL, только заменяем кавычки
       if (p.photo) {
         const tempImg = new Image();
-        tempImg.onload = () => { imgDiv.style.backgroundImage = `url('${escapeHTML(p.photo)}')`; };
-        tempImg.onerror = () => { imgDiv.style.backgroundColor = '#1a1a1a'; };
+        tempImg.onload = () => { 
+          // Экранируем только одинарные кавычки для CSS, остальное не трогаем
+          imgDiv.style.backgroundImage = `url('${p.photo.replace(/'/g, "\\'")}')`; 
+        };
+        tempImg.onerror = () => { 
+          imgDiv.style.backgroundColor = '#1a1a1a'; 
+        };
         tempImg.src = p.photo;
       }
       
@@ -946,6 +970,7 @@ const App = (function() {
     
     if (mImg) {
       mImg.classList.remove('loaded');
+      mImg.style.display = 'block';
       if (player.photo) {
         mImg.src = player.photo;
         mImg.onload = () => mImg.classList.add('loaded');
@@ -996,7 +1021,6 @@ const App = (function() {
         `;
         mStats.appendChild(item);
         
-        // Анимация заполнения
         setTimeout(() => {
           const bar = item.querySelector(`#bar-${idx}`);
           if (bar) bar.style.width = `${Math.min(s.value, 100)}%`;
@@ -1016,17 +1040,14 @@ const App = (function() {
     modal.classList.add('active');
     document.body.style.overflow = 'hidden';
     
-    // Focus trap
     const cleanup = initFocusTrap(modal);
     modal._cleanupFocusTrap = cleanup;
     
-    // Focus первый элемент
     setTimeout(() => {
       const focusable = modal.querySelector('button, [href], input, select, textarea');
       if (focusable) focusable.focus();
     }, 100);
     
-    // Escape handler
     const escapeHandler = (e) => {
       if (e.key === 'Escape') closeModal(id);
     };
@@ -1055,14 +1076,13 @@ const App = (function() {
       state.lastFocused = null;
     }
     
-    // Сброс URL
     const currentTab = document.querySelector('section.active')?.id || 'home';
     if (window.history.replaceState) {
       window.history.replaceState(null, null, `#${currentTab}`);
     }
   };
 
-  // Кнопка скачивания карточки
+  // ИСПРАВЛЕНИЕ: Проверка CORS перед скачиванием
   const setupDownloadButton = () => {
     const btn = document.getElementById('download-card');
     if (!btn) return;
@@ -1079,7 +1099,6 @@ const App = (function() {
         const card = document.getElementById('stats-card');
         if (!card) throw new Error('Card not found');
         
-        // Ждём загрузки изображения
         const img = document.getElementById('m-img');
         if (img && !img.complete) {
           await new Promise((resolve) => {
@@ -1092,19 +1111,30 @@ const App = (function() {
         const canvas = await html2canvas(card, {
           scale: 2,
           useCORS: true,
-          allowTaint: true,
+          allowTaint: true, // Разрешаем tainted canvas, но проверим потом
           backgroundColor: '#ffffff',
           logging: false,
           ignoreElements: (element) => element.classList.contains('modal-header-fixed')
         });
         
+        // ПРОВЕРКА: Если canvas "испорчен" (tainted) из-за CORS
+        try {
+          const testData = canvas.toDataURL('image/png');
+          if (testData === 'data:,') throw new Error('Tainted canvas');
+        } catch (corsError) {
+          showToast('Скачивание недоступно: CORS ограничение на фото');
+          console.warn('CORS error:', corsError);
+          return;
+        }
+        
         const playerName = document.getElementById('m-name')?.textContent || 'player';
         const safeName = playerName.replace(/[^a-zA-Zа-яА-Я0-9]/g, '_');
         const fileName = `BOX1V1_${safeName}.png`;
         
-        // Пробуем Web Share API
         const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
-        if (blob && navigator.share && navigator.canShare) {
+        if (!blob) throw new Error('Canvas to Blob failed');
+        
+        if (navigator.share && navigator.canShare) {
           const file = new File([blob], fileName, { type: 'image/png' });
           if (navigator.canShare({ files: [file] })) {
             try {
@@ -1117,7 +1147,6 @@ const App = (function() {
           }
         }
         
-        // Fallback: скачивание
         const link = document.createElement('a');
         link.download = fileName;
         link.href = canvas.toDataURL();
@@ -1136,7 +1165,6 @@ const App = (function() {
 
   // Инициализация обработчиков событий
   const setupEventListeners = () => {
-    // Поиск с debounce
     const searchInput = document.getElementById('playerSearch');
     if (searchInput) {
       let timeout;
@@ -1147,7 +1175,6 @@ const App = (function() {
       });
     }
     
-    // Фильтры
     document.querySelectorAll('.filter-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
         document.querySelectorAll('.filter-btn').forEach(b => {
@@ -1161,14 +1188,12 @@ const App = (function() {
       });
     });
     
-    // Закрытие по клику вне
     document.querySelectorAll('.modal-overlay').forEach(modal => {
       modal.addEventListener('click', (e) => {
         if (e.target === modal) closeModal(modal.id);
       });
     });
     
-    // Закрытие по кнопке
     document.querySelectorAll('.modal-close').forEach(btn => {
       const modal = btn.closest('.modal-overlay');
       if (modal) {
@@ -1176,7 +1201,6 @@ const App = (function() {
       }
     });
     
-    // Скролл навигации
     let ticking = false;
     window.addEventListener('scroll', () => {
       if (!ticking) {
@@ -1189,7 +1213,6 @@ const App = (function() {
     }, { passive: true });
   };
 
-  // Общий рендер
   const render = () => {
     renderRoster();
     renderStats();
@@ -1285,8 +1308,17 @@ const App = (function() {
   };
 })();
 
-// Инициализация
-document.addEventListener('DOMContentLoaded', App.init);
+// Инициализация и Service Worker
+document.addEventListener('DOMContentLoaded', () => {
+  App.init();
+  
+  // Регистрация Service Worker для офлайн-режима
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./sw.js')
+      .then(reg => console.log('SW registered:', reg.scope))
+      .catch(err => console.warn('SW registration failed:', err));
+  }
+});
 </script>
 </body>
 </html>
