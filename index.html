@@ -3,38 +3,38 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover"/>
-<meta name="theme-color" content="#0a0a0a">
+<meta name="theme-color" content="#f0f0ee">
 <title>BOX1V1 | УЛИЧНЫЙ ФУТБОЛ 1 НА 1</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
 <style>
 /* ============================================
-   CONFIG & VARIABLES
+   CONFIG & VARIABLES (Concrete Theme 2026)
    ============================================ */
 :root {
-  /* Colors */
-  --bg: #0a0a0a;
-  --bg-elevated: #141414;
-  --bg-skeleton: #1a1a1a;
-  --text: #fafafa;
-  --text-secondary: #a1a1aa;
-  --accent: #22c55e;
-  --accent-glow: rgba(34, 197, 94, 0.4);
-  --border: rgba(255,255,255,0.06);
-  --error: #ef4444;
+  /* Colors - Concrete & Asphalt */
+  --bg: #f0f0ee;              /* Warm concrete wall */
+  --bg-warm: #f7f5f3;         /* Under warm light */
+  --surface: #ffffff;         /* Clean tile */
+  --surface-shadow: rgba(0,0,0,0.08);
+  --text: #1a1a1a;           /* Asphalt black, not pure #000 */
+  --text-secondary: #666666;  /* Readable gray */
+  --accent: #ccff00;         /* Fluorescent line (lime) */
+  --accent-orange: #ff4d00;  /* Ball orange */
+  --border: rgba(0,0,0,0.08);
+  --shadow-color: rgba(0,0,0,0.15);
   
-  /* Typography Scale */
-  --font-mono: 'SF Mono', Monaco, monospace;
+  /* Typography */
+  --font-mono: 'IBM Plex Mono', monospace;
   --font-system: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   
   /* Motion */
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
   --duration-fast: 150ms;
   --duration-normal: 300ms;
   --duration-slow: 500ms;
@@ -42,8 +42,8 @@
   /* Layout */
   --header-height: 80px;
   --max-width: 1400px;
-  --radius: 24px;
-  --radius-sm: 12px;
+  --radius: 4px;             /* Sharp corners - concrete tile */
+  --radius-sm: 2px;
 }
 
 /* ============================================
@@ -62,14 +62,15 @@ html {
   -moz-osx-font-smoothing: grayscale;
   background: var(--bg);
   color: var(--text);
-  /* Prevent scroll jump when locking body */
-  overflow-y: scroll;
+  overflow-x: hidden;
 }
 
 body {
   background: var(--bg);
   min-height: 100vh;
   line-height: 1.5;
+  /* Subtle concrete texture */
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
 }
 
 /* Typography Utilities */
@@ -80,33 +81,9 @@ body {
 
 .text-sports {
   font-weight: 800;
-  letter-spacing: -0.02em;
-  line-height: 1.1;
-}
-
-/* ============================================
-   ANIMATED BACKGROUND
-   ============================================ */
-body::before {
-  content: '';
-  position: fixed;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: 
-    radial-gradient(circle at 20% 50%, rgba(34,197,94,0.08) 0%, transparent 50%),
-    radial-gradient(circle at 80% 80%, rgba(34,197,94,0.05) 0%, transparent 50%),
-    radial-gradient(circle at 40% 20%, rgba(255,255,255,0.02) 0%, transparent 40%);
-  animation: meshMove 20s ease-in-out infinite;
-  pointer-events: none;
-  z-index: -1;
-}
-
-@keyframes meshMove {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  33% { transform: translate(2%, 2%) scale(1.1); }
-  66% { transform: translate(-2%, 1%) scale(0.95); }
+  letter-spacing: -0.03em;
+  line-height: 0.95;
+  text-transform: uppercase;
 }
 
 /* ============================================
@@ -120,7 +97,7 @@ body::before {
   display: flex;
   justify-content: center;
   align-items: center;
-  transition: opacity 0.8s var(--ease-out), visibility 0.8s;
+  transition: opacity 0.6s var(--ease-out), visibility 0.6s;
 }
 
 #preloader.loaded {
@@ -134,25 +111,29 @@ body::before {
   font-weight: 900;
   font-style: italic;
   letter-spacing: -0.05em;
-  background: linear-gradient(135deg, var(--text) 0%, var(--accent) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: logoReveal 1.2s var(--ease-out) forwards;
-  clip-path: inset(0 100% 0 0);
+  color: var(--text);
+  position: relative;
 }
 
-@keyframes logoReveal {
-  to { clip-path: inset(0 0 0 0); }
+.preloader-logo::after {
+  content: 'BOX1V1';
+  position: absolute;
+  left: 2px;
+  top: 2px;
+  color: var(--accent);
+  opacity: 0.4;
+  z-index: -1;
+  filter: blur(2px);
 }
 
 /* ============================================
    SKELETON SCREENS
    ============================================ */
 .skeleton {
-  background: linear-gradient(90deg, var(--bg-skeleton) 25%, #2a2a2a 50%, var(--bg-skeleton) 75%);
+  background: linear-gradient(90deg, #e0e0e0 25%, #f0f0f0 50%, #e0e0e0 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius);
 }
 
 @keyframes shimmer {
@@ -163,27 +144,11 @@ body::before {
 .skeleton-card {
   height: 480px;
   border-radius: var(--radius);
-  background: var(--bg-elevated);
+  background: var(--surface);
   position: relative;
   overflow: hidden;
+  border: 1px solid var(--border);
 }
-
-.skeleton-card::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.03), transparent);
-  transform: translateX(-100%);
-  animation: shimmer 2s infinite;
-}
-
-.skeleton-text {
-  height: 1em;
-  margin-bottom: 0.5em;
-}
-
-.skeleton-text.short { width: 40%; }
-.skeleton-text.medium { width: 70%; }
 
 /* ============================================
    NAVIGATION
@@ -194,19 +159,18 @@ nav {
   left: 0;
   width: 100%;
   height: var(--header-height);
-  background: rgba(10, 10, 10, 0.8);
-  backdrop-filter: blur(20px) saturate(180%);
+  background: rgba(240, 240, 238, 0.9);
+  backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--border);
   z-index: 1000;
   transform: translateY(-100%);
-  animation: slideDown 0.8s var(--ease-out) 0.5s forwards;
+  animation: slideDown 0.6s var(--ease-out) 0.3s forwards;
   transition: all var(--duration-normal);
 }
 
 nav.scrolled {
-  box-shadow: 0 10px 40px -10px rgba(0,0,0,0.5);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
   height: 70px;
-  background: rgba(10, 10, 10, 0.95);
 }
 
 @keyframes slideDown {
@@ -228,31 +192,27 @@ nav.scrolled {
   font-weight: 900;
   font-style: italic;
   letter-spacing: -0.03em;
-  text-decoration: none;
   color: var(--text);
   position: relative;
   display: inline-block;
-  transition: transform 0.3s var(--ease-spring);
+  transition: transform 0.2s;
   border: none;
   background: none;
   cursor: pointer;
+  font-family: inherit;
 }
 
 .logo:hover {
   transform: scale(1.05);
-  animation: glitch 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both infinite;
-  color: var(--accent);
+  color: var(--text);
 }
 
-.logo-accent { color: var(--accent); }
-
-@keyframes glitch {
-  0% { transform: translate(0); }
-  20% { transform: translate(-2px, 2px); }
-  40% { transform: translate(-2px, -2px); }
-  60% { transform: translate(2px, 2px); }
-  80% { transform: translate(2px, -2px); }
-  100% { transform: translate(0); }
+.logo-accent { 
+  color: var(--accent-orange); 
+  background: var(--accent);
+  padding: 0 4px;
+  border-radius: 2px;
+  margin-left: 2px;
 }
 
 /* Desktop Navigation */
@@ -260,15 +220,18 @@ nav.scrolled {
   display: flex;
   gap: 8px;
   opacity: 0;
-  animation: fadeIn 0.6s var(--ease-out) 0.8s forwards;
+  animation: fadeIn 0.6s var(--ease-out) 0.5s forwards;
 }
 
-.nav-links a {
+@keyframes fadeIn {
+  to { opacity: 1; }
+}
+
+.nav-links button {
   font-size: 13px;
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  text-decoration: none;
   color: var(--text-secondary);
   padding: 12px 24px;
   border-radius: 100px;
@@ -278,9 +241,10 @@ nav.scrolled {
   border: none;
   background: none;
   cursor: pointer;
+  font-family: inherit;
 }
 
-.nav-links a::before {
+.nav-links button::before {
   content: '';
   position: absolute;
   bottom: 0;
@@ -294,19 +258,19 @@ nav.scrolled {
   z-index: -1;
 }
 
-.nav-links a:hover {
+.nav-links button:hover {
   color: var(--bg);
   transform: translateY(-2px);
 }
 
-.nav-links a:hover::before {
+.nav-links button:hover::before {
   width: 100%;
 }
 
-.nav-links a.active {
+.nav-links button.active {
   color: var(--bg);
   background: var(--text);
-  box-shadow: 0 4px 20px rgba(255,255,255,0.2);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
 /* Mobile Burger */
@@ -319,50 +283,46 @@ nav.scrolled {
   justify-content: center;
   align-items: center;
   gap: 6px;
-  border-radius: 16px;
-  background: var(--bg-elevated);
+  border-radius: var(--radius);
+  background: var(--surface);
   border: 1px solid var(--border);
-  transition: all var(--duration-normal) var(--ease-spring);
+  transition: all var(--duration-normal);
   z-index: 1001;
 }
 
 .burger:hover {
-  transform: scale(1.1);
-  border-color: var(--accent);
+  transform: scale(1.05);
+  border-color: var(--accent-orange);
 }
 
 .burger span {
   width: 20px;
   height: 2px;
   background: var(--text);
-  border-radius: 2px;
-  transition: all var(--duration-normal) var(--ease-spring);
-  transform-origin: center;
+  border-radius: 1px;
+  transition: all var(--duration-normal);
 }
 
 .burger[aria-expanded="true"] span:nth-child(1) { 
   transform: translateY(8px) rotate(45deg); 
-  background: var(--accent);
 }
 .burger[aria-expanded="true"] span:nth-child(2) { 
   opacity: 0; 
-  transform: scaleX(0);
 }
 .burger[aria-expanded="true"] span:nth-child(3) { 
   transform: translateY(-8px) rotate(-45deg);
-  background: var(--accent);
 }
 
 /* Mobile Drawer */
 .drawer-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.8);
-  backdrop-filter: blur(10px);
+  background: rgba(0,0,0,0.3);
+  backdrop-filter: blur(5px);
   z-index: 1999;
   opacity: 0;
   visibility: hidden;
-  transition: all var(--duration-slow) var(--ease-out);
+  transition: all var(--duration-slow);
 }
 
 .drawer-overlay.open {
@@ -376,23 +336,22 @@ nav.scrolled {
   right: -100%;
   width: min(86%, 400px);
   height: 100dvh;
-  background: var(--bg-elevated);
+  background: var(--surface);
   z-index: 2000;
   padding: 100px 32px 32px;
   display: flex;
   flex-direction: column;
   gap: 16px;
-  transition: right 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: -20px 0 60px rgba(0,0,0,0.5);
+  transition: right 0.5s var(--ease-out);
+  box-shadow: -10px 0 30px rgba(0,0,0,0.1);
 }
 
 .mobile-drawer.open { right: 0; }
 
-.mobile-drawer a {
+.mobile-drawer button {
   font-size: 2rem;
   font-weight: 900;
   font-style: italic;
-  text-decoration: none;
   color: var(--text);
   text-transform: uppercase;
   letter-spacing: -0.02em;
@@ -400,25 +359,26 @@ nav.scrolled {
   border-bottom: 1px solid var(--border);
   transform: translateX(50px);
   opacity: 0;
-  transition: all var(--duration-normal) var(--ease-out);
+  transition: all var(--duration-normal);
   border: none;
   background: none;
   text-align: left;
   cursor: pointer;
+  font-family: inherit;
 }
 
-.mobile-drawer.open a {
+.mobile-drawer.open button {
   transform: translateX(0);
   opacity: 1;
 }
 
-.mobile-drawer.open a:nth-child(1) { transition-delay: 0.1s; }
-.mobile-drawer.open a:nth-child(2) { transition-delay: 0.2s; }
-.mobile-drawer.open a:nth-child(3) { transition-delay: 0.3s; }
+.mobile-drawer.open button:nth-child(1) { transition-delay: 0.1s; }
+.mobile-drawer.open button:nth-child(2) { transition-delay: 0.15s; }
+.mobile-drawer.open button:nth-child(3) { transition-delay: 0.2s; }
 
-.mobile-drawer a:hover {
-  color: var(--accent);
-  padding-left: 20px;
+.mobile-drawer button:hover {
+  color: var(--accent-orange);
+  padding-left: 10px;
 }
 
 /* ============================================
@@ -434,7 +394,7 @@ nav.scrolled {
 section {
   display: none;
   opacity: 0;
-  transform: translateY(40px);
+  transform: translateY(20px);
   transition: opacity var(--duration-slow) var(--ease-out), 
               transform var(--duration-slow) var(--ease-out);
 }
@@ -452,32 +412,25 @@ section.fade-in {
    INTRO SECTION
    ============================================ */
 .intro-block {
-  padding: 60px 0 100px;
+  padding: 60px 0 80px;
   text-align: center;
   max-width: 900px;
   margin: 0 auto;
-  perspective: 1000px;
 }
 
 .intro-block .tag {
   display: inline-block;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.2em;
-  color: var(--accent);
+  color: var(--text-secondary);
   margin-bottom: 24px;
-  padding: 12px 24px;
-  border: 2px solid var(--accent);
+  padding: 8px 16px;
+  border: 1px solid var(--border);
   border-radius: 100px;
-  position: relative;
-  overflow: hidden;
-  animation: borderGlow 3s ease-in-out infinite;
-}
-
-@keyframes borderGlow {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(34,197,94,0.4); }
-  50% { box-shadow: 0 0 20px 5px rgba(34,197,94,0.2); }
+  background: var(--surface);
+  box-shadow: 2px 2px 0 rgba(0,0,0,0.05);
 }
 
 .intro-block h1 {
@@ -487,34 +440,27 @@ section.fade-in {
   letter-spacing: -0.05em;
   line-height: 0.9;
   margin-bottom: 24px;
-  background: linear-gradient(135deg, var(--text) 0%, #666 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: titleReveal 1s var(--ease-out) 0.3s backwards;
-  transform-style: preserve-3d;
+  color: var(--text);
+  position: relative;
+  display: inline-block;
 }
 
-@keyframes titleReveal {
-  from {
-    opacity: 0;
-    transform: translateY(100px) rotateX(-45deg);
-    filter: blur(20px);
-  }
+.intro-block h1::after {
+  content: 'BOX1V1';
+  position: absolute;
+  left: 3px;
+  top: 3px;
+  color: var(--accent);
+  opacity: 0.3;
+  z-index: -1;
 }
 
 .intro-block p {
-  font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+  font-size: clamp(1.25rem, 2.5vw, 1.5rem);
   color: var(--text-secondary);
   max-width: 500px;
   margin: 0 auto 40px;
-  animation: fadeInUp 0.8s var(--ease-out) 0.5s backwards;
-}
-
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
+  font-weight: 500;
 }
 
 .btn-group {
@@ -522,21 +468,20 @@ section.fade-in {
   gap: 16px;
   justify-content: center;
   flex-wrap: wrap;
-  animation: fadeInUp 0.8s var(--ease-out) 0.7s backwards;
 }
 
 /* ============================================
-   BUTTONS
+   BUTTONS (Hard shadows)
    ============================================ */
 .btn {
-  padding: 20px 36px;
+  padding: 16px 32px;
   border-radius: 100px;
   font-weight: 700;
   text-transform: uppercase;
   font-size: 13px;
   letter-spacing: 0.05em;
   cursor: pointer;
-  transition: all var(--duration-normal) var(--ease-spring);
+  transition: all 0.1s;
   border: none;
   text-decoration: none;
   display: inline-flex;
@@ -544,198 +489,129 @@ section.fade-in {
   justify-content: center;
   gap: 10px;
   position: relative;
-  overflow: hidden;
-  isolation: isolate;
   font-family: inherit;
+  top: 0;
+  left: 0;
 }
 
+/* Hard offset shadows - concrete block effect */
 .btn:active {
-  transform: scale(0.96);
-}
-
-.btn::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), rgba(255,255,255,0.3) 0%, transparent 60%);
-  opacity: 0;
-  transition: opacity var(--duration-normal);
-  z-index: -1;
-}
-
-.btn:hover::before {
-  opacity: 1;
+  top: 4px;
+  left: 4px;
+  box-shadow: 0 0 0 rgba(0,0,0,0) !important;
 }
 
 .btn-primary {
   background: var(--text);
   color: var(--bg);
-  box-shadow: 0 10px 30px -10px rgba(255,255,255,0.2);
+  box-shadow: 4px 4px 0 rgba(0,0,0,0.2);
 }
 
 .btn-primary:hover {
-  transform: translateY(-4px) scale(1.02);
-  box-shadow: 0 20px 40px -10px rgba(255,255,255,0.3), 0 0 0 2px rgba(34,197,94,0.3);
+  box-shadow: 6px 6px 0 rgba(0,0,0,0.15);
+  transform: translate(-2px, -2px);
 }
 
 .btn-outline {
-  background: transparent;
+  background: var(--surface);
   border: 2px solid var(--text);
   color: var(--text);
-  position: relative;
-}
-
-.btn-outline::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: var(--text);
-  transform: scaleX(0);
-  transform-origin: right;
-  transition: transform var(--duration-normal) var(--ease-out);
-  z-index: -1;
-  border-radius: 100px;
+  box-shadow: 4px 4px 0 rgba(0,0,0,0.1);
 }
 
 .btn-outline:hover {
-  color: var(--bg);
-  transform: translateY(-4px);
-  box-shadow: 0 10px 30px rgba(255,255,255,0.1);
-}
-
-.btn-outline:hover::after {
-  transform: scaleX(1);
-  transform-origin: left;
-}
-
-/* Status Context */
-.status-context {
-  margin-top: 60px;
-  padding: 32px 48px;
-  background: var(--bg-elevated);
-  border-radius: var(--radius);
-  border: 1px solid var(--border);
-  display: inline-flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
-  box-shadow: 
-    0 4px 20px rgba(0,0,0,0.2),
-    0 0 0 1px rgba(34,197,94,0.1);
-  position: relative;
-  overflow: hidden;
-  animation: float 6s ease-in-out infinite;
-  transition: all var(--duration-normal) var(--ease-out);
-}
-
-.status-context:hover {
-  transform: translateY(-5px);
-  box-shadow: 
-    0 20px 40px rgba(0,0,0,0.3),
-    0 0 0 2px rgba(34,197,94,0.3);
-}
-
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
-}
-
-.status-label {
-  font-size: 12px;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.15em;
-  color: var(--accent);
-}
-
-.status-text {
-  font-size: clamp(1.25rem, 3vw, 1.75rem);
-  font-weight: 800;
-  font-variant-numeric: tabular-nums;
-}
-
-.beta-badge {
-  display: inline-block;
-  background: var(--accent);
-  color: var(--bg);
-  font-size: 10px;
-  font-weight: 900;
-  padding: 4px 12px;
-  border-radius: 100px;
-  margin-left: 8px;
-  animation: pulse 2s infinite;
-  font-variant-numeric: tabular-nums;
-}
-
-@keyframes pulse {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.8; transform: scale(1.05); }
+  box-shadow: 6px 6px 0 rgba(0,0,0,0.08);
+  transform: translate(-2px, -2px);
 }
 
 /* ============================================
-   BENTO GRID
+   STATUS (No box, just text with pulse)
+   ============================================ */
+.hero-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 48px;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+}
+
+.status-pulse {
+  width: 8px;
+  height: 8px;
+  background: var(--accent-orange);
+  border-radius: 50%;
+  position: relative;
+  display: inline-block;
+  box-shadow: 0 0 0 rgba(255, 77, 0, 0.4);
+  animation: pulse-ring 2s infinite;
+}
+
+@keyframes pulse-ring {
+  0% { box-shadow: 0 0 0 0 rgba(255, 77, 0, 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(255, 77, 0, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(255, 77, 0, 0); }
+}
+
+.status-beta {
+  background: var(--accent);
+  color: var(--text);
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  margin-left: 4px;
+  font-family: var(--font-system);
+}
+
+/* ============================================
+   BENTO GRID (Hard shadows, sharp corners)
    ============================================ */
 .bento-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 24px;
   margin-top: 60px;
-  perspective: 2000px;
 }
 
-/* Stagger Animation for Grid Items */
 .bento-grid > * {
   opacity: 0;
   transform: translateY(30px);
   animation: staggerIn 0.6s var(--ease-out) forwards;
 }
 
-.bento-grid > *:nth-child(1) { animation-delay: 0.1s; }
-.bento-grid > *:nth-child(2) { animation-delay: 0.15s; }
-.bento-grid > *:nth-child(3) { animation-delay: 0.2s; }
-.bento-grid > *:nth-child(4) { animation-delay: 0.25s; }
-.bento-grid > *:nth-child(5) { animation-delay: 0.3s; }
-.bento-grid > *:nth-child(6) { animation-delay: 0.35s; }
-
 @keyframes staggerIn {
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .card {
-  background: var(--bg-elevated);
+  background: var(--surface);
   border-radius: var(--radius);
   border: 1px solid var(--border);
-  padding: 40px;
+  padding: 32px;
   position: relative;
-  overflow: hidden;
   cursor: pointer;
-  transition: all var(--duration-slow) cubic-bezier(0.16, 1, 0.3, 1);
-  transform-style: preserve-3d;
-  transform: translateZ(0);
-}
-
-.card::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, transparent 0%, rgba(34,197,94,0.05) 100%);
-  opacity: 0;
-  transition: opacity var(--duration-normal);
+  transition: all 0.2s;
+  box-shadow: 4px 4px 0 rgba(0,0,0,0.08);
+  top: 0;
+  left: 0;
 }
 
 .card:hover {
-  transform: translateY(-8px) translateZ(20px) rotateX(2deg);
-  box-shadow: 
-    0 30px 60px -20px rgba(0,0,0,0.5),
-    0 0 0 1px rgba(34,197,94,0.3);
-  border-color: rgba(34,197,94,0.4);
+  top: -2px;
+  left: -2px;
+  box-shadow: 8px 8px 0 rgba(0,0,0,0.12);
+  border-color: rgba(0,0,0,0.15);
 }
 
-.card:hover::before {
-  opacity: 1;
+.card:active {
+  top: 4px;
+  left: 4px;
+  box-shadow: 0 0 0 rgba(0,0,0,0);
 }
 
 .card h2, .card h3 {
@@ -743,55 +619,46 @@ section.fade-in {
   font-style: italic;
   text-transform: uppercase;
   letter-spacing: -0.02em;
-  transition: transform var(--duration-normal) var(--ease-out);
-}
-
-.card:hover h2, .card:hover h3 {
-  transform: translateX(10px);
-}
-
-.card:active {
-  transform: translateY(-4px) scale(0.98);
 }
 
 /* ============================================
-   PLAYER CARDS
+   PLAYER CARDS (Concrete tiles)
    ============================================ */
 .player-card {
-  min-height: 480px;
-  background: #000;
+  min-height: 400px;
+  background: var(--surface);
   color: var(--text);
-  border: none;
   padding: 0;
   position: relative;
-  transform-style: preserve-3d;
+  overflow: hidden;
+  border-radius: var(--radius);
+  box-shadow: 6px 6px 0 rgba(0,0,0,0.1);
 }
 
 .player-card:hover {
-  transform: perspective(1000px) rotateY(5deg) rotateX(5deg) translateZ(20px);
+  transform: translateY(-4px);
+  box-shadow: 10px 10px 0 rgba(0,0,0,0.08);
 }
 
 .player-img {
   position: absolute;
   inset: 0;
   background-size: cover;
-  background-position: center top;
-  filter: grayscale(0.3);
-  opacity: 0.9;
-  transition: all var(--duration-slow) var(--ease-out);
+  background-position: center;
+  filter: grayscale(0.2) contrast(1.1);
+  transition: all 0.3s;
 }
 
 .player-card:hover .player-img {
-  filter: grayscale(0);
-  transform: scale(1.05);
-  opacity: 1;
+  filter: grayscale(0) contrast(1);
+  transform: scale(1.03);
 }
 
 .player-card::after {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.3) 50%, transparent 100%);
+  background: linear-gradient(to top, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.3) 50%, transparent 100%);
   z-index: 1;
 }
 
@@ -800,97 +667,78 @@ section.fade-in {
   bottom: 0;
   left: 0;
   right: 0;
-  padding: 40px 32px;
+  padding: 32px;
   z-index: 2;
-  transform: translateY(20px);
-  transition: transform var(--duration-normal) var(--ease-out);
-}
-
-.player-card:hover .player-info {
-  transform: translateY(0);
 }
 
 .player-role {
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 800;
   text-transform: uppercase;
-  color: var(--accent);
-  letter-spacing: 0.15em;
+  color: var(--accent-orange);
+  letter-spacing: 0.1em;
   display: block;
-  margin-bottom: 8px;
-  opacity: 0;
-  transform: translateY(20px);
-  transition: all var(--duration-normal) 0.1s;
-}
-
-.player-card:hover .player-role {
-  opacity: 1;
-  transform: translateY(0);
+  margin-bottom: 4px;
+  font-family: var(--font-mono);
 }
 
 .player-name {
-  font-size: clamp(2rem, 4vw, 2.5rem);
+  font-size: clamp(1.5rem, 4vw, 2rem);
   margin: 0;
   font-weight: 900;
   font-style: italic;
   letter-spacing: -0.02em;
+  color: var(--text);
+  line-height: 1;
 }
 
 .ovr-badge {
   position: absolute;
-  top: 24px;
-  right: 24px;
-  background: var(--accent);
-  color: #000;
-  padding: 8px 16px;
-  border-radius: 12px;
+  top: 16px;
+  right: 16px;
+  background: var(--text);
+  color: var(--bg);
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
   font-weight: 900;
   font-size: 14px;
   z-index: 3;
-  box-shadow: 0 10px 30px rgba(34,197,94,0.4);
-  font-variant-numeric: tabular-nums;
-  transform: scale(0) rotate(-10deg);
-  animation: badgePop 0.5s var(--ease-spring) 0.5s forwards;
-}
-
-@keyframes badgePop {
-  to { transform: scale(1) rotate(0); }
-}
-
-.player-card:hover .ovr-badge {
-  transform: scale(1.1) rotate(5deg);
+  font-family: var(--font-mono);
+  box-shadow: 2px 2px 0 rgba(0,0,0,0.1);
+  border: 1px solid rgba(0,0,0,0.1);
 }
 
 .player-status {
   position: absolute;
-  top: 20px;
-  left: 20px;
-  background: rgba(0,0,0,0.8);
-  color: var(--accent);
-  padding: 6px 16px;
-  border-radius: 100px;
-  font-size: 11px;
+  top: 16px;
+  left: 16px;
+  background: var(--surface);
+  color: var(--text);
+  padding: 4px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 10px;
   font-weight: 800;
-  letter-spacing: 1px;
+  letter-spacing: 0.05em;
   z-index: 3;
-  backdrop-filter: blur(10px);
   text-transform: uppercase;
+  border: 1px solid var(--border);
+  box-shadow: 2px 2px 0 rgba(0,0,0,0.05);
 }
 
 .player-badges {
   display: flex;
-  gap: 8px;
+  gap: 6px;
   margin-top: 12px;
   flex-wrap: wrap;
 }
 
 .badge {
-  background: rgba(255,255,255,0.1);
+  background: var(--accent);
   color: var(--text);
-  padding: 4px 12px;
-  border-radius: 100px;
-  font-size: 10px;
-  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 2px;
+  font-size: 9px;
+  font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
@@ -899,11 +747,11 @@ section.fade-in {
    TABLE (RATING)
    ============================================ */
 .table-wrapper {
-  background: var(--bg-elevated);
+  background: var(--surface);
   border-radius: var(--radius);
   border: 1px solid var(--border);
   overflow: hidden;
-  box-shadow: 0 10px 40px -20px rgba(0,0,0,0.3);
+  box-shadow: 4px 4px 0 rgba(0,0,0,0.05);
 }
 
 table {
@@ -917,47 +765,30 @@ th {
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: var(--text-secondary);
-  padding: 24px;
+  padding: 20px 24px;
   text-align: left;
-  border-bottom: 1px solid var(--border);
-  font-variant-numeric: tabular-nums;
+  border-bottom: 2px solid var(--border);
+  font-family: var(--font-mono);
 }
 
 td {
-  padding: 20px 24px;
+  padding: 16px 24px;
   border-bottom: 1px solid var(--border);
-  transition: all var(--duration-normal);
+  transition: all var(--duration-fast);
 }
 
 tbody tr {
   cursor: pointer;
-  transition: all var(--duration-normal);
-  position: relative;
-}
-
-tbody tr::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 50%;
-  height: 0;
-  width: 3px;
-  background: var(--accent);
-  transition: all var(--duration-normal) var(--ease-out);
-  transform: translateY(-50%);
+  transition: all var(--duration-fast);
 }
 
 tbody tr:hover {
-  background: rgba(34,197,94,0.05);
-  transform: translateX(10px);
-}
-
-tbody tr:hover::before {
-  height: 60%;
+  background: rgba(0,0,0,0.02);
+  transform: translateX(4px);
 }
 
 tbody tr:active {
-  transform: translateX(5px) scale(0.99);
+  transform: translateX(2px) scale(0.99);
 }
 
 .player-cell {
@@ -967,44 +798,38 @@ tbody tr:active {
 }
 
 .player-avatar-sm {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius);
   object-fit: cover;
-  border: 2px solid transparent;
-  transition: all var(--duration-normal);
-  background: var(--bg-skeleton);
-}
-
-tbody tr:hover .player-avatar-sm {
-  border-color: var(--accent);
-  transform: scale(1.1);
-  box-shadow: 0 0 20px rgba(34,197,94,0.3);
+  border: 1px solid var(--border);
+  background: var(--bg);
 }
 
 .player-info-sm {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 2px;
 }
 
 .player-name-sm {
-  font-weight: 600;
+  font-weight: 700;
   font-size: 15px;
   letter-spacing: -0.01em;
 }
 
 .player-role-sm {
-  font-size: 12px;
+  font-size: 11px;
   color: var(--text-secondary);
   text-transform: uppercase;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.05em;
+  font-family: var(--font-mono);
 }
 
 .rank-cell {
   font-weight: 800;
   color: var(--text-secondary);
-  font-variant-numeric: tabular-nums;
+  font-family: var(--font-mono);
   font-size: 14px;
 }
 
@@ -1014,34 +839,21 @@ tbody tr:hover .player-avatar-sm {
 
 .ovr-value {
   display: inline-flex;
-  background: var(--accent);
-  color: #000;
-  padding: 8px 16px;
-  border-radius: 12px;
+  background: var(--text);
+  color: var(--bg);
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
   font-weight: 900;
-  font-size: 14px;
-  font-variant-numeric: tabular-nums;
+  font-size: 13px;
+  font-family: var(--font-mono);
+  border: 1px solid rgba(0,0,0,0.1);
 }
 
-/* Empty State */
 .empty-state {
   grid-column: 1 / -1;
   text-align: center;
   padding: 80px 20px;
   color: var(--text-secondary);
-}
-
-.empty-state-icon {
-  font-size: 48px;
-  margin-bottom: 16px;
-  opacity: 0.5;
-}
-
-.empty-state-title {
-  font-size: 20px;
-  font-weight: 700;
-  margin-bottom: 8px;
-  color: var(--text);
 }
 
 /* ============================================
@@ -1057,29 +869,24 @@ tbody tr:hover .player-avatar-sm {
 }
 
 .search-input {
-  padding: 16px 28px;
+  padding: 14px 24px;
   border-radius: 100px;
-  border: 2px solid var(--border);
-  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  background: var(--surface);
   width: 100%;
   max-width: 400px;
   font-size: 15px;
   font-weight: 500;
-  transition: all var(--duration-normal) var(--ease-out);
-  position: relative;
+  transition: all var(--duration-fast);
   color: var(--text);
   font-family: inherit;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
 }
 
 .search-input:focus {
   outline: none;
-  border-color: var(--accent);
-  box-shadow: 0 0 0 4px rgba(34,197,94,0.1), 0 10px 30px rgba(0,0,0,0.2);
-  transform: translateY(-2px);
-}
-
-.search-input::placeholder {
-  color: var(--text-secondary);
+  border-color: rgba(0,0,0,0.2);
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.05), 0 4px 12px rgba(0,0,0,0.05);
 }
 
 .filter-bar {
@@ -1089,55 +896,41 @@ tbody tr:hover .player-avatar-sm {
 }
 
 .filter-btn {
-  padding: 12px 24px;
+  padding: 10px 20px;
   border-radius: 100px;
-  border: 2px solid var(--border);
-  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  background: var(--surface);
   font-size: 12px;
   font-weight: 700;
   text-transform: uppercase;
   cursor: pointer;
-  transition: all var(--duration-normal) var(--ease-spring);
-  position: relative;
-  overflow: hidden;
+  transition: all var(--duration-fast);
   color: var(--text-secondary);
   font-family: inherit;
-}
-
-.filter-btn::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: var(--text);
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform var(--duration-normal) var(--ease-out);
-  z-index: -1;
+  box-shadow: 2px 2px 0 rgba(0,0,0,0.05);
 }
 
 .filter-btn:hover, .filter-btn.active {
-  color: var(--bg);
+  color: var(--text);
   border-color: var(--text);
-  transform: translateY(-2px);
-  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-}
-
-.filter-btn:hover::before, .filter-btn.active::before {
-  transform: scaleX(1);
+  background: var(--bg);
+  box-shadow: 3px 3px 0 rgba(0,0,0,0.1);
+  transform: translate(-1px, -1px);
 }
 
 .filter-btn:active {
-  transform: translateY(0) scale(0.95);
+  transform: translate(1px, 1px);
+  box-shadow: 0 0 0 rgba(0,0,0,0);
 }
 
 /* ============================================
-   MODALS
+   MODALS (Concrete blocks)
    ============================================ */
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.8);
-  backdrop-filter: blur(20px) saturate(180%);
+  background: rgba(240, 240, 238, 0.9);
+  backdrop-filter: blur(10px);
   z-index: 3000;
   display: flex;
   justify-content: center;
@@ -1145,7 +938,7 @@ tbody tr:hover .player-avatar-sm {
   padding: 20px;
   opacity: 0;
   visibility: hidden;
-  transition: all var(--duration-slow) var(--ease-out);
+  transition: all var(--duration-slow);
 }
 
 .modal-overlay.active {
@@ -1153,7 +946,6 @@ tbody tr:hover .player-avatar-sm {
   visibility: visible;
 }
 
-/* Mobile Sheet Style */
 @media (max-width: 768px) {
   .modal-overlay {
     align-items: flex-end;
@@ -1163,87 +955,81 @@ tbody tr:hover .player-avatar-sm {
   .modal-content {
     width: 100%;
     max-width: 100%;
-    border-radius: var(--radius) var(--radius) 0 0;
+    border-radius: 8px 8px 0 0;
     max-height: 90vh;
-    transform: translateY(100%) !important;
-    transition: transform var(--duration-slow) var(--ease-out);
+    transform: translateY(100%);
   }
   
   .modal-overlay.active .modal-content {
-    transform: translateY(0) !important;
+    transform: translateY(0);
   }
 }
 
 .modal-content {
-  background: var(--bg-elevated);
+  background: var(--surface);
   width: 100%;
   max-width: 520px;
-  border-radius: 32px;
-  padding: 48px;
+  border-radius: var(--radius);
+  padding: 40px;
   position: relative;
   max-height: 90vh;
   overflow-y: auto;
-  box-shadow: 0 40px 80px -20px rgba(0,0,0,0.5);
+  box-shadow: 8px 8px 0 rgba(0,0,0,0.1), 0 20px 40px rgba(0,0,0,0.1);
   border: 1px solid var(--border);
-  
-  /* Desktop Animation */
-  transform: perspective(1000px) rotateX(-30deg) translateY(100px) scale(0.8);
+  transform: translateY(20px);
   opacity: 0;
-  transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.4s var(--ease-out);
 }
 
 .modal-overlay.active .modal-content {
-  transform: perspective(1000px) rotateX(0) translateY(0) scale(1);
+  transform: translateY(0);
   opacity: 1;
 }
 
 .modal-header {
   position: sticky;
-  top: -48px;
-  background: var(--bg-elevated);
+  top: -40px;
+  background: var(--surface);
   padding: 20px 0;
-  margin: -48px -48px 0 -48px;
-  padding: 20px 48px;
+  margin: -40px -40px 0 -40px;
+  padding: 20px 40px;
   display: flex;
   justify-content: flex-end;
   gap: 12px;
   z-index: 10;
   border-bottom: 1px solid transparent;
-  transition: border-color var(--duration-normal);
 }
 
 .modal-header.scrolled {
   border-color: var(--border);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
 }
 
 .modal-close, .modal-action {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius);
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  border: none;
-  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--border);
+  background: var(--bg);
   color: var(--text);
-  transition: all var(--duration-normal) var(--ease-spring);
-  position: relative;
-  overflow: hidden;
+  transition: all var(--duration-fast);
+  box-shadow: 2px 2px 0 rgba(0,0,0,0.05);
 }
 
 .modal-close:hover, .modal-action:hover {
   background: var(--text);
   color: var(--bg);
-  transform: rotate(90deg) scale(1.1);
-}
-
-.modal-action:hover {
-  transform: scale(1.1);
+  transform: translate(-2px, -2px);
+  box-shadow: 4px 4px 0 rgba(0,0,0,0.1);
 }
 
 .modal-close:active, .modal-action:active {
-  transform: rotate(90deg) scale(0.95);
+  transform: translate(0, 0);
+  box-shadow: 0 0 0 rgba(0,0,0,0);
 }
 
 .modal-image-container {
@@ -1251,26 +1037,15 @@ tbody tr:hover .player-avatar-sm {
   aspect-ratio: 1;
   border-radius: var(--radius);
   overflow: hidden;
-  margin: 60px 0 32px;
-  position: relative;
-  transform: translateZ(0);
-  transition: transform var(--duration-normal);
-  background: var(--bg-skeleton);
-}
-
-.modal-image-container:hover {
-  transform: scale(1.02);
+  margin: 40px 0 24px;
+  background: var(--bg);
+  border: 1px solid var(--border);
 }
 
 .modal-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform var(--duration-slow) var(--ease-out);
-}
-
-.modal-image-container:hover .modal-image {
-  transform: scale(1.05);
 }
 
 .modal-title-row {
@@ -1281,78 +1056,78 @@ tbody tr:hover .player-avatar-sm {
   gap: 20px;
 }
 
-.modal-info {
-  flex: 1;
-}
-
 .modal-role {
   display: inline-block;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 800;
   text-transform: uppercase;
-  color: var(--accent);
-  background: rgba(34,197,94,0.1);
-  padding: 8px 16px;
-  border-radius: 100px;
-  margin-bottom: 12px;
+  color: var(--accent-orange);
+  background: rgba(255, 77, 0, 0.1);
+  padding: 4px 12px;
+  border-radius: var(--radius-sm);
+  margin-bottom: 8px;
+  font-family: var(--font-mono);
   letter-spacing: 0.05em;
 }
 
 .modal-name {
-  font-size: clamp(1.75rem, 5vw, 2.5rem);
+  font-size: clamp(1.5rem, 5vw, 2rem);
   font-weight: 900;
   font-style: italic;
-  line-height: 1.1;
+  line-height: 1;
   letter-spacing: -0.02em;
   margin: 0;
 }
 
 .modal-badges {
   display: flex;
-  gap: 8px;
-  margin-top: 16px;
+  gap: 6px;
+  margin-top: 12px;
   flex-wrap: wrap;
 }
 
 .modal-badge {
-  background: var(--text);
-  color: var(--bg);
-  padding: 6px 14px;
-  border-radius: 100px;
-  font-size: 11px;
+  background: var(--accent);
+  color: var(--text);
+  padding: 2px 8px;
+  border-radius: 2px;
+  font-size: 10px;
   font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.05em;
 }
 
 .modal-ovr {
-  font-size: clamp(2.5rem, 6vw, 3.5rem);
+  font-size: clamp(2rem, 6vw, 3rem);
   font-weight: 900;
-  font-style: italic;
-  color: var(--accent);
-  font-variant-numeric: tabular-nums;
+  color: var(--text);
+  font-family: var(--font-mono);
   line-height: 1;
+  padding: 8px 16px;
+  background: var(--bg);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  box-shadow: 2px 2px 0 rgba(0,0,0,0.05);
 }
 
-/* Stat Bars */
 .stats-grid {
   margin-bottom: 32px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 16px;
 }
 
 .stat-item {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
 }
 
 .stat-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 13px;
+  font-size: 12px;
 }
 
 .stat-label {
@@ -1360,50 +1135,29 @@ tbody tr:hover .player-avatar-sm {
   text-transform: uppercase;
   letter-spacing: 0.05em;
   font-weight: 700;
-}
-
-.stat-label-full {
-  opacity: 0.6;
-  font-weight: 500;
-  margin-left: 4px;
-  text-transform: none;
-  letter-spacing: 0;
+  font-family: var(--font-mono);
 }
 
 .stat-value {
   color: var(--text);
   font-weight: 800;
-  font-variant-numeric: tabular-nums;
+  font-family: var(--font-mono);
 }
 
 .stat-bar-bg {
   height: 8px;
-  background: rgba(255,255,255,0.05);
+  background: var(--bg);
   border-radius: 100px;
   overflow: hidden;
-  position: relative;
+  border: 1px solid var(--border);
 }
 
 .stat-bar-fill {
   height: 100%;
-  background: linear-gradient(90deg, var(--accent), #16a34a);
+  background: var(--text);
   border-radius: 100px;
   width: 0%;
-  transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: 0 0 20px rgba(34,197,94,0.3);
-  position: relative;
-  overflow: hidden;
-}
-
-.stat-bar-fill::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-  animation: shimmer 2s infinite;
+  transition: width 1s var(--ease-out);
 }
 
 .modal-actions {
@@ -1433,27 +1187,27 @@ tbody tr:hover .player-avatar-sm {
 .toast {
   background: var(--text);
   color: var(--bg);
-  padding: 16px 32px;
+  padding: 14px 28px;
   border-radius: 100px;
   font-weight: 700;
-  font-size: 14px;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-  animation: toastSlide 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  font-size: 13px;
+  box-shadow: 4px 4px 0 rgba(0,0,0,0.1);
+  animation: toastSlide 0.4s var(--ease-out) forwards;
   display: flex;
   align-items: center;
   gap: 10px;
+  font-family: var(--font-mono);
   border: 1px solid rgba(0,0,0,0.1);
-  font-variant-numeric: tabular-nums;
-}
-
-.toast-icon {
-  font-size: 18px;
 }
 
 @keyframes toastSlide {
   from {
     opacity: 0;
-    transform: translateY(20px) scale(0.9);
+    transform: translate(-50%, 20px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
   }
 }
 
@@ -1465,9 +1219,7 @@ tbody tr:hover .player-avatar-sm {
 }
 
 @media (max-width: 768px) {
-  :root {
-    --header-height: 70px;
-  }
+  :root { --header-height: 70px; }
   
   .nav-links { display: none; }
   .burger { display: flex; }
@@ -1478,15 +1230,11 @@ tbody tr:hover .player-avatar-sm {
   
   .bento-grid { 
     grid-template-columns: 1fr; 
-    gap: 20px; 
+    gap: 16px; 
   }
   
   .player-card { 
-    min-height: 400px; 
-  }
-  
-  .player-card:hover { 
-    transform: translateY(-5px); 
+    min-height: 350px; 
   }
   
   .intro-block {
@@ -1498,32 +1246,17 @@ tbody tr:hover .player-avatar-sm {
     align-items: stretch;
   }
   
-  .search-input {
-    max-width: 100%;
-  }
+  .search-input { max-width: 100%; }
   
   .modal-content {
-    padding: 32px;
-    margin: 0;
-    width: 100%;
-    max-height: 95vh;
+    padding: 24px;
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
   }
   
   .modal-header {
-    top: -32px;
-    margin: -32px -32px 0 -32px;
-    padding: 16px 32px;
-  }
-  
-  .filter-bar {
-    width: 100%;
-    overflow-x: auto;
-    padding-bottom: 10px;
-    -webkit-overflow-scrolling: touch;
-  }
-  
-  .filter-btn {
-    white-space: nowrap;
+    top: -24px;
+    margin: -24px -24px 0 -24px;
+    padding: 16px 24px;
   }
 }
 
@@ -1536,22 +1269,16 @@ tbody tr:hover .player-avatar-sm {
   }
 }
 
-/* Focus Visible for Accessibility */
+/* Focus Visible */
 :focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 4px;
+  outline: 2px solid var(--accent-orange);
+  outline-offset: 2px;
 }
 
-/* Scroll Lock Compensation */
+/* Scroll Lock */
 body.scroll-locked {
   overflow: hidden;
   padding-right: var(--scrollbar-width, 0px);
-}
-
-/* Loading State */
-.loading-shimmer {
-  pointer-events: none;
-  opacity: 0.7;
 }
 </style>
 </head>
@@ -1559,7 +1286,7 @@ body.scroll-locked {
 
 <!-- Preloader -->
 <div id="preloader" role="status" aria-label="Загрузка приложения">
-  <div class="preloader-logo">BOX<span style="color: var(--accent);">1</span>V1</div>
+  <div class="preloader-logo">BOX<span style="color: var(--accent-orange); background: var(--accent); padding: 0 4px; border-radius: 2px;">1</span>V1</div>
 </div>
 
 <!-- Toast Container -->
@@ -1568,14 +1295,14 @@ body.scroll-locked {
 <!-- Navigation -->
 <nav id="navbar" role="navigation" aria-label="Главная навигация">
   <div class="nav-inner">
-    <button class="logo" data-action="navigate" data-target="home" aria-label="На главную">
+    <button class="logo" data-action="navigate" data-target="home" aria-label="На главную BOX1V1">
       BOX<span class="logo-accent">1</span>V1
     </button>
     
-    <div class="nav-links">
-      <button data-action="navigate" data-target="home" class="active" aria-label="Главная страница">Главная</button>
-      <button data-action="navigate" data-target="roster" aria-label="Список участников">Участники</button>
-      <button data-action="navigate" data-target="stats" aria-label="Рейтинг игроков">Рейтинг</button>
+    <div class="nav-links" role="tablist">
+      <button data-action="navigate" data-target="home" class="active" role="tab" aria-selected="true" aria-label="Главная страница">Главная</button>
+      <button data-action="navigate" data-target="roster" role="tab" aria-selected="false" aria-label="Список участников">Участники</button>
+      <button data-action="navigate" data-target="stats" role="tab" aria-selected="false" aria-label="Рейтинг игроков">Рейтинг</button>
     </div>
     
     <button class="burger" id="burger" data-action="toggle-menu" aria-label="Открыть меню" aria-expanded="false" aria-controls="mobile-drawer">
@@ -1613,45 +1340,44 @@ body.scroll-locked {
         <button class="btn btn-outline magnetic" data-action="open-modal" data-modal="apply">Подать заявку</button>
       </div>
       
-      <div class="status-context">
-        <span class="status-label">Статус проекта</span>
-        <div class="status-text">
-          🔥 Набор участников открыт
-          <span class="beta-badge">Beta</span>
-        </div>
-        <p style="font-size: 0.9rem; color: var(--text-secondary); margin-top: 8px;">Первый сезон стартует после комплектации групп</p>
+      <!-- Новый статус без коробки -->
+      <div class="hero-status" aria-label="Статус проекта: набор открыт">
+        <span class="status-pulse" aria-hidden="true"></span>
+        <span>Набор участников открыт</span>
+        <span class="status-beta">Beta</span>
+        <span style="opacity: 0.5; margin-left: 8px;">/ Сезон 2026</span>
       </div>
     </div>
 
     <div class="bento-grid">
-      <article class="card tilt-card" style="grid-column: span 2;" data-action="open-modal" data-modal="rules" tabindex="0" role="button" aria-label="Открыть регламент">
-        <span style="font-size:12px; font-weight:800; color:var(--accent); text-transform:uppercase; letter-spacing:0.15em;">Документация</span>
-        <h2 style="font-size: clamp(2.5rem, 5vw, 4rem); margin-top: 10px;">РЕГЛАМЕНТ</h2>
-        <p style="margin-top: 10px; color: var(--text-secondary);">Свод правил проведения матчей.</p>
-        <div style="margin-top:auto; padding-top:30px; font-weight:800; font-size:12px; text-transform:uppercase; color:var(--text-secondary); display: flex; align-items: center; gap: 8px;">
-          Изучить правила <span style="transition: transform 0.3s; display: inline-block;">→</span>
+      <article class="card" style="grid-column: span 2;" data-action="open-modal" data-modal="rules" tabindex="0" role="button" aria-label="Открыть регламент">
+        <span style="font-size:11px; font-weight:800; color:var(--accent-orange); text-transform:uppercase; letter-spacing:0.1em; font-family: var(--font-mono);">Документация</span>
+        <h2 style="font-size: clamp(2rem, 5vw, 3.5rem); margin-top: 8px; letter-spacing: -0.03em;">РЕГЛАМЕНТ</h2>
+        <p style="margin-top: 8px; color: var(--text-secondary); font-size: 14px;">Свод правил проведения матчей.</p>
+        <div style="margin-top:auto; padding-top:24px; font-weight:800; font-size:11px; text-transform:uppercase; color:var(--text-secondary); font-family: var(--font-mono);">
+          Изучить правила →
         </div>
       </article>
       
-      <article class="card tilt-card" data-action="external-link" data-href="https://t.me/streetbox1v1" tabindex="0" role="link" aria-label="Открыть Telegram">
-        <h3 style="font-size: 1.5rem; font-weight: 900; font-style: italic;">TELEGRAM</h3>
-        <p style="margin-top: 10px; color: var(--text-secondary);">Свежие новости и актуальная информация.</p>
+      <article class="card" data-action="external-link" data-href="https://t.me/streetbox1v1" tabindex="0" role="link" aria-label="Открыть Telegram канал">
+        <h3 style="font-size: 1.25rem; font-weight: 900; font-style: italic; letter-spacing: -0.02em;">TELEGRAM</h3>
+        <p style="margin-top: 8px; color: var(--text-secondary); font-size: 14px;">Свежие новости и актуальная информация.</p>
       </article>
       
-      <article class="card tilt-card" data-action="external-link" data-href="https://instagram.com/box.1v1" tabindex="0" role="link" aria-label="Открыть Instagram">
-        <h3 style="font-size: 1.5rem; font-weight: 900; font-style: italic;">INSTAGRAM</h3>
-        <p style="margin-top: 10px; color: var(--text-secondary);">Главные новости в медиа формате.</p>
+      <article class="card" data-action="external-link" data-href="https://instagram.com/box.1v1" tabindex="0" role="link" aria-label="Открыть Instagram">
+        <h3 style="font-size: 1.25rem; font-weight: 900; font-style: italic; letter-spacing: -0.02em;">INSTAGRAM</h3>
+        <p style="margin-top: 8px; color: var(--text-secondary); font-size: 14px;">Главные новости в медиа формате.</p>
       </article>
     </div>
   </section>
 
   <!-- Roster Section -->
   <section id="roster" aria-label="Участники">
-    <div style="margin-bottom: 60px;">
-      <h1 class="text-sports" style="font-size: clamp(3rem, 10vw, 8rem); line-height:0.9;">
-        УЧАСТНИКИ<span class="beta-badge" style="font-size: 0.12em; vertical-align: super; margin-left: 10px;">Предв.</span>
+    <div style="margin-bottom: 40px;">
+      <h1 class="text-sports" style="font-size: clamp(2.5rem, 10vw, 6rem);">
+        УЧАСТНИКИ<span class="status-beta" style="font-size: 0.15em; vertical-align: super; margin-left: 8px; background: var(--text); color: var(--bg); padding: 2px 6px;">2026</span>
       </h1>
-      <p style="font-size: 1.25rem; margin-top:16px; color: var(--text-secondary);">Действующие участники BOX1V1</p>
+      <p style="font-size: 1.1rem; margin-top:12px; color: var(--text-secondary);">Действующие участники BOX1V1</p>
     </div>
     
     <div class="controls-row">
@@ -1671,7 +1397,6 @@ body.scroll-locked {
     </div>
     
     <div class="bento-grid" id="roster-grid" role="list" aria-label="Сетка игроков">
-      <!-- Skeleton Loading -->
       <div class="skeleton-card" role="listitem"><div class="skeleton" style="height:100%"></div></div>
       <div class="skeleton-card" role="listitem"><div class="skeleton" style="height:100%"></div></div>
       <div class="skeleton-card" role="listitem"><div class="skeleton" style="height:100%"></div></div>
@@ -1681,11 +1406,11 @@ body.scroll-locked {
 
   <!-- Stats Section -->
   <section id="stats" aria-label="Рейтинг">
-    <h1 class="text-sports" style="font-size: clamp(3rem, 10vw, 8rem); line-height:0.9; margin-bottom:40px;">
-      РЕЙТИНГ<span class="beta-badge" style="font-size: 0.12em; vertical-align: super; margin-left: 10px;">Предв.</span>
+    <h1 class="text-sports" style="font-size: clamp(2.5rem, 10vw, 6rem); margin-bottom: 32px;">
+      РЕЙТИНГ<span style="font-size: 0.15em; vertical-align: super; margin-left: 8px; color: var(--text-secondary);">OVR</span>
     </h1>
     <div class="table-wrapper">
-      <table role="table" aria-label="Таблица рейтинга">
+      <table role="table" aria-label="Таблица рейтинга игроков">
         <thead>
           <tr role="row">
             <th scope="col" role="columnheader">#</th>
@@ -1694,7 +1419,6 @@ body.scroll-locked {
           </tr>
         </thead>
         <tbody id="stats-body" role="rowgroup">
-          <!-- Skeleton rows -->
           <tr><td colspan="3"><div class="skeleton" style="height:60px; margin:10px 0;"></div></td></tr>
           <tr><td colspan="3"><div class="skeleton" style="height:60px; margin:10px 0;"></div></td></tr>
           <tr><td colspan="3"><div class="skeleton" style="height:60px; margin:10px 0;"></div></td></tr>
@@ -1708,15 +1432,15 @@ body.scroll-locked {
 <div class="modal-overlay" id="player-modal" role="dialog" aria-modal="true" aria-label="Карточка игрока" aria-hidden="true">
   <div class="modal-content" role="document">
     <div class="modal-header">
-      <button class="modal-action" data-action="download-card" aria-label="Скачать карточку игрока" title="Скачать">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <button class="modal-action" data-action="download-card" aria-label="Скачать карточку игрока" title="Скачать карточку">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
           <polyline points="7 10 12 15 17 10"></polyline>
           <line x1="12" y1="15" x2="12" y2="3"></line>
         </svg>
       </button>
       <button class="modal-close" data-action="close-modal" aria-label="Закрыть модальное окно">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <line x1="18" y1="6" x2="6" y2="18"></line>
           <line x1="6" y1="6" x2="18" y2="18"></line>
         </svg>
@@ -1724,7 +1448,7 @@ body.scroll-locked {
     </div>
     
     <div class="modal-image-container">
-      <img class="modal-image" id="modal-img" src="" alt="Фото игрока" loading="lazy">
+      <img class="modal-image" id="modal-img" src="" alt="" loading="lazy">
     </div>
     
     <div class="modal-title-row">
@@ -1749,15 +1473,15 @@ body.scroll-locked {
 <div class="modal-overlay" id="apply-modal" role="dialog" aria-modal="true" aria-label="Заявка на участие" aria-hidden="true">
   <div class="modal-content" role="document">
     <div class="modal-header">
-      <button class="modal-close" data-action="close-modal" aria-label="Закрыть">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <button class="modal-close" data-action="close-modal" aria-label="Закрыть окно заявки">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <line x1="18" y1="6" x2="6" y2="18"></line>
           <line x1="6" y1="6" x2="18" y2="18"></line>
         </svg>
       </button>
     </div>
-    <h2 style="font-size: clamp(1.75rem, 5vw, 2.5rem); font-weight: 900; font-style: italic; margin: 60px 0 16px 0; letter-spacing: -0.02em;">ВСТУПИТЬ В BOX1V1</h2>
-    <p style="margin-bottom: 32px; color: var(--text-secondary); line-height: 1.6;">Чтобы оформить заявку, оставь комментарий под любым постом с хештегом <strong style="color: var(--text);">#BOXУЧАСТВОВАТЬ</strong>.</p>
+    <h2 style="font-size: clamp(1.5rem, 5vw, 2rem); font-weight: 900; font-style: italic; margin: 40px 0 16px 0; letter-spacing: -0.02em; text-transform: uppercase;">ВСТУПИТЬ В BOX1V1</h2>
+    <p style="margin-bottom: 32px; color: var(--text-secondary); line-height: 1.6; font-size: 15px;">Чтобы оформить заявку, оставь комментарий под любым постом с хештегом <strong style="color: var(--text); font-weight: 700;">#BOXУЧАСТВОВАТЬ</strong>.</p>
     <button class="btn btn-primary" style="width: 100%;" data-action="external-link" data-href="https://t.me/streetbox1v1">Открыть Telegram</button>
   </div>
 </div>
@@ -1766,26 +1490,26 @@ body.scroll-locked {
 <div class="modal-overlay" id="rules-modal" role="dialog" aria-modal="true" aria-label="Регламент соревнований" aria-hidden="true">
   <div class="modal-content" role="document" style="max-width: 600px;">
     <div class="modal-header">
-      <button class="modal-close" data-action="close-modal" aria-label="Закрыть">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <button class="modal-close" data-action="close-modal" aria-label="Закрыть регламент">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <line x1="18" y1="6" x2="6" y2="18"></line>
           <line x1="6" y1="6" x2="18" y2="18"></line>
         </svg>
       </button>
     </div>
-    <h2 style="font-size: clamp(1.75rem, 5vw, 2.5rem); font-weight: 900; font-style: italic; margin: 60px 0 32px 0; letter-spacing: -0.02em;">РЕГЛАМЕНТ</h2>
+    <h2 style="font-size: clamp(1.5rem, 5vw, 2rem); font-weight: 900; font-style: italic; margin: 40px 0 32px 0; letter-spacing: -0.02em; text-transform: uppercase;">РЕГЛАМЕНТ</h2>
     <div style="display: flex; flex-direction: column; gap: 24px;">
-      <article class="rule-item" style="padding-bottom: 24px; border-bottom: 1px solid var(--border); transition: all var(--duration-normal);" onmouseover="this.style.paddingLeft='20px'; this.style.borderLeft='3px solid var(--accent)';" onmouseout="this.style.paddingLeft='0'; this.style.borderLeft='none';">
-        <h3 style="font-size: 12px; font-weight: 800; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; letter-spacing: 0.1em;">01. Формат</h3>
-        <p style="color: var(--text-secondary); line-height: 1.6; margin: 0;">Матчи 1 на 1 с участием независимого вратаря.</p>
+      <article style="padding-bottom: 24px; border-bottom: 1px solid var(--border);">
+        <h3 style="font-size: 11px; font-weight: 800; text-transform: uppercase; color: var(--accent-orange); margin-bottom: 8px; letter-spacing: 0.1em; font-family: var(--font-mono);">01. Формат</h3>
+        <p style="color: var(--text-secondary); line-height: 1.6; margin: 0; font-size: 15px;">Матчи 1 на 1 с участием независимого вратаря.</p>
       </article>
-      <article class="rule-item" style="padding-bottom: 24px; border-bottom: 1px solid var(--border); transition: all var(--duration-normal);" onmouseover="this.style.paddingLeft='20px'; this.style.borderLeft='3px solid var(--accent)';" onmouseout="this.style.paddingLeft='0'; this.style.borderLeft='none';">
-        <h3 style="font-size: 12px; font-weight: 800; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; letter-spacing: 0.1em;">02. Тайминг</h3>
-        <p style="color: var(--text-secondary); line-height: 1.6; margin: 0;">Лимит на атаку — 20 секунд.</p>
+      <article style="padding-bottom: 24px; border-bottom: 1px solid var(--border);">
+        <h3 style="font-size: 11px; font-weight: 800; text-transform: uppercase; color: var(--accent-orange); margin-bottom: 8px; letter-spacing: 0.1em; font-family: var(--font-mono);">02. Тайминг</h3>
+        <p style="color: var(--text-secondary); line-height: 1.6; margin: 0; font-size: 15px;">Лимит на атаку — 20 секунд.</p>
       </article>
-      <article class="rule-item" style="transition: all var(--duration-normal);" onmouseover="this.style.paddingLeft='20px'; this.style.borderLeft='3px solid var(--accent)';" onmouseout="this.style.paddingLeft='0'; this.style.borderLeft='none';">
-        <h3 style="font-size: 12px; font-weight: 800; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; letter-spacing: 0.1em;">03. Результат</h3>
-        <p style="color: var(--text-secondary); line-height: 1.6; margin: 0;">Продолжительность игры до двух голов, без ничьи.</p>
+      <article>
+        <h3 style="font-size: 11px; font-weight: 800; text-transform: uppercase; color: var(--accent-orange); margin-bottom: 8px; letter-spacing: 0.1em; font-family: var(--font-mono);">03. Результат</h3>
+        <p style="color: var(--text-secondary); line-height: 1.6; margin: 0; font-size: 15px;">Продолжительность игры до двух голов, без ничьи.</p>
       </article>
     </div>
   </div>
@@ -1794,8 +1518,7 @@ body.scroll-locked {
 <script>
 /**
  * BOX1V1 Application
- * Architecture: Config -> Store -> Render -> UI -> App
- * Pattern: Module pattern with clear separation of concerns
+ * Architecture: Config → Store → Render → UI → App
  */
 
 // ============================================
@@ -1828,7 +1551,7 @@ const CONFIG = {
 };
 
 // ============================================
-// MOCK DATA (Replace with CSV fetch in production)
+// MOCK DATA (Validated structure)
 // ============================================
 const playersData = [
   {
@@ -1840,7 +1563,7 @@ const playersData = [
     stats: { drib: 96, speed: 92, shot: 89, phys: 88 },
     photo: 'https://images.unsplash.com/photo-1517466787929-bc90951d0974?w=800&auto=format&fit=crop&q=80',
     status: 'Капитан',
-    badges: ['MVP Сезона', 'Топ Снайпер']
+    badges: ['MVP', 'Снайпер']
   },
   {
     id: 'player-2',
@@ -1851,7 +1574,7 @@ const playersData = [
     stats: { drib: 88, speed: 95, shot: 90, phys: 85 },
     photo: 'https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=800&auto=format&fit=crop&q=80',
     status: '',
-    badges: ['Новичок']
+    badges: ['Дебют']
   },
   {
     id: 'player-3',
@@ -1859,10 +1582,10 @@ const playersData = [
     ovr: 89,
     role: 'Вратарь',
     roleType: 'goalkeeper',
-    stats: { ref: 94, div: 88, han: 92, pos: 90 }, // GK stats mapped to same fields
+    stats: { ref: 94, div: 88, han: 92, pos: 90 },
     photo: 'https://images.unsplash.com/photo-1560272564-c830400ea0be?w=800&auto=format&fit=crop&q=80',
     status: 'Легенда',
-    badges: ['Чистые sheet']
+    badges: ['Вратарь года']
   },
   {
     id: 'player-4',
@@ -1885,58 +1608,65 @@ const playersData = [
     photo: '',
     status: 'Травма',
     badges: []
-  },
-  {
-    id: 'player-6',
-    name: 'Сергей "Каток" Новиков',
-    ovr: 92,
-    role: 'Вратарь',
-    roleType: 'goalkeeper',
-    stats: { ref: 96, div: 90, han: 89, pos: 88 },
-    photo: 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=800&auto=format&fit=crop&q=80',
-    status: '',
-    badges: ['Лучший вратарь']
   }
 ];
 
 // ============================================
-// STORE (Data Management)
+// STORE (Data Management with Validation)
 // ============================================
 const Store = {
   players: [],
-  filter: 'all', // all, player, goalkeeper
+  filter: 'all',
   searchQuery: '',
   currentPlayer: null,
   isLoading: true,
 
+  validatePlayer(p) {
+    // Basic validation to prevent undefined errors
+    return {
+      id: p.id || `player-${Math.random().toString(36).substr(2, 9)}`,
+      name: p.name || 'Без имени',
+      ovr: Number(p.ovr) || 0,
+      role: p.role || 'Игрок',
+      roleType: p.roleType || 'player',
+      stats: p.stats || {},
+      photo: p.photo || '',
+      status: p.status || '',
+      badges: Array.isArray(p.badges) ? p.badges : [],
+      displayStats: this.getDisplayStats(p.role, p.stats)
+    };
+  },
+
+  getDisplayStats(role, stats) {
+    if (role === 'Вратарь') {
+      return [
+        { key: 'REF', value: Number(stats?.ref) || 0, label: 'Реакция' },
+        { key: 'DIV', value: Number(stats?.div) || 0, label: 'Прыжок' },
+        { key: 'HAN', value: Number(stats?.han) || 0, label: 'Руки' },
+        { key: 'POS', value: Number(stats?.pos) || 0, label: 'Позиция' }
+      ];
+    }
+    return [
+      { key: 'DRI', value: Number(stats?.drib) || 0, label: 'Дриблинг' },
+      { key: 'SPD', value: Number(stats?.speed) || 0, label: 'Скорость' },
+      { key: 'SHT', value: Number(stats?.shot) || 0, label: 'Удар' },
+      { key: 'PHY', value: Number(stats?.phys) || 0, label: 'Физика' }
+    ];
+  },
+
   async init() {
     try {
-      // Simulate network delay for demo
-      await new Promise(resolve => setTimeout(resolve, 800));
+      // Simulate network
+      await new Promise(resolve => setTimeout(resolve, 600));
       
-      // In production: fetch(CONFIG.csvUrl) and parse CSV
-      this.players = playersData.map(p => ({
-        ...p,
-        // Normalize stats for display
-        displayStats: p.role === 'Вратарь' ? [
-          { key: 'REF', value: p.stats.ref || 0, label: 'Реакция' },
-          { key: 'DIV', value: p.stats.div || 0, label: 'Прыжок' },
-          { key: 'HAN', value: p.stats.han || 0, label: 'Руки' },
-          { key: 'POS', value: p.stats.pos || 0, label: 'Позиция' }
-        ] : [
-          { key: 'DRI', value: p.stats.drib || 0, label: 'Дриблинг' },
-          { key: 'SPD', value: p.stats.speed || 0, label: 'Скорость' },
-          { key: 'SHT', value: p.stats.shot || 0, label: 'Удар' },
-          { key: 'PHY', value: p.stats.phys || 0, label: 'Физика' }
-        ]
-      }));
-      
+      // Validate and map data
+      this.players = playersData.map(p => this.validatePlayer(p));
       this.isLoading = false;
       return true;
     } catch (error) {
       console.error('Store initialization error:', error);
       this.isLoading = false;
-      throw error;
+      throw new Error('Failed to initialize data store');
     }
   },
 
@@ -1969,8 +1699,8 @@ const Store = {
 // RENDER (View Generation)
 // ============================================
 const Render = {
-  // Skeleton screens
   showSkeletons(container, type = 'card') {
+    if (!container) return;
     if (type === 'card') {
       container.innerHTML = Array(4).fill(0).map((_, i) => `
         <div class="skeleton-card" role="listitem" style="animation-delay: ${i * 0.1}s">
@@ -1984,13 +1714,25 @@ const Render = {
     }
   },
 
-  // Roster Grid
+  showError(container, message) {
+    if (!container) return;
+    container.innerHTML = `
+      <div class="empty-state" role="alert" aria-live="polite">
+        <div class="empty-state-icon" style="font-size: 32px;">⚠️</div>
+        <div class="empty-state-title" style="color: var(--text); font-weight: 700; margin-bottom: 8px;">Ошибка загрузки</div>
+        <p>${message}</p>
+      </div>
+    `;
+  },
+
   roster(players, container) {
+    if (!container) return;
+    
     if (players.length === 0) {
       container.innerHTML = `
         <div class="empty-state" role="status">
-          <div class="empty-state-icon">🔍</div>
-          <div class="empty-state-title">Ничего не найдено</div>
+          <div class="empty-state-icon" style="font-size: 32px;">🔍</div>
+          <div class="empty-state-title" style="color: var(--text); font-weight: 700; margin-bottom: 8px;">Ничего не найдено</div>
           <p>Попробуй изменить параметры поиска</p>
         </div>
       `;
@@ -1999,14 +1741,15 @@ const Render = {
 
     container.innerHTML = players.map((p, index) => `
       <article 
-        class="card player-card tilt-card" 
+        class="card player-card" 
         role="listitem" 
         tabindex="0"
         data-player-id="${p.id}"
-        style="animation-delay: ${index * CONFIG.animationStagger}ms"
+        style="animation-delay: ${index * CONFIG.animationStagger}ms; animation: staggerIn 0.5s ease-out ${index * 0.05}s backwards;"
+        aria-label="Карточка игрока ${p.name}, рейтинг ${p.ovr}"
       >
         ${p.status ? `<div class="player-status">${p.status}</div>` : ''}
-        <div class="player-img" style="background-image: url('${p.photo || ''}')" loading="lazy"></div>
+        <div class="player-img" style="background-image: url('${p.photo || ''}')" aria-label="Фото ${p.name}"></div>
         <div class="player-info">
           <span class="player-role">${p.role}</span>
           <h3 class="player-name">${p.name}</h3>
@@ -2021,10 +1764,11 @@ const Render = {
     `).join('');
   },
 
-  // Stats Table
   stats(players, container) {
+    if (!container) return;
+    
     container.innerHTML = players.map((p, index) => `
-      <tr data-player-id="${p.id}" tabindex="0" role="button" aria-label="Открыть карточку ${p.name}">
+      <tr data-player-id="${p.id}" tabindex="0" role="button" aria-label="Открыть карточку ${p.name}, рейтинг ${p.ovr}">
         <td class="rank-cell font-tabular">${(index + 1).toString().padStart(2, '0')}</td>
         <td>
           <div class="player-cell">
@@ -2035,7 +1779,7 @@ const Render = {
               loading="lazy"
               onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
             >
-            <div style="width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--accent),#16a34a);display:none;align-items:center;justify-content:center;color:var(--bg);font-weight:900;font-size:18px;">
+            <div style="width:44px;height:44px;border-radius:4px;background:var(--bg);display:none;align-items:center;justify-content:center;color:var(--text);font-weight:900;font-size:16px;border:1px solid var(--border);">
               ${p.name.charAt(0)}
             </div>
             <div class="player-info-sm">
@@ -2051,47 +1795,57 @@ const Render = {
     `).join('');
   },
 
-  // Player Modal
   playerModal(player) {
     Store.currentPlayer = player;
     
-    document.getElementById('modal-name').textContent = player.name;
-    document.getElementById('modal-role').textContent = player.role;
-    document.getElementById('modal-ovr').textContent = player.ovr;
-    
+    const nameEl = document.getElementById('modal-name');
+    const roleEl = document.getElementById('modal-role');
+    const ovrEl = document.getElementById('modal-ovr');
     const img = document.getElementById('modal-img');
-    img.src = player.photo || '';
-    img.onerror = () => { img.style.display = 'none'; };
-    img.onload = () => { img.style.display = 'block'; };
-    
     const badgesContainer = document.getElementById('modal-badges');
-    badgesContainer.innerHTML = player.badges.length 
-      ? player.badges.map(b => `<span class="modal-badge">${b}</span>`).join('')
-      : '';
-    
     const statsContainer = document.getElementById('modal-stats');
-    statsContainer.innerHTML = player.displayStats.map((stat, i) => `
-      <div class="stat-item">
-        <div class="stat-header">
-          <span class="stat-label">
-            ${stat.key} <span class="stat-label-full">(${stat.label})</span>
-          </span>
-          <span class="stat-value font-tabular">${stat.value}</span>
+    
+    if (nameEl) nameEl.textContent = player.name;
+    if (roleEl) roleEl.textContent = player.role;
+    if (ovrEl) ovrEl.textContent = player.ovr;
+    
+    if (img) {
+      img.src = player.photo || '';
+      img.alt = player.photo ? `Фото игрока ${player.name}` : '';
+      img.onerror = () => { img.style.display = 'none'; };
+      img.onload = () => { img.style.display = 'block'; };
+    }
+    
+    if (badgesContainer) {
+      badgesContainer.innerHTML = player.badges.length 
+        ? player.badges.map(b => `<span class="modal-badge">${b}</span>`).join('')
+        : '';
+    }
+    
+    if (statsContainer) {
+      statsContainer.innerHTML = player.displayStats.map((stat, i) => `
+        <div class="stat-item">
+          <div class="stat-header">
+            <span class="stat-label">${stat.key} <span style="opacity:0.6; font-weight:500;">(${stat.label})</span></span>
+            <span class="stat-value font-tabular">${stat.value}</span>
+          </div>
+          <div class="stat-bar-bg">
+            <div class="stat-bar-fill" data-width="${Math.min(stat.value, 100)}" style="width: 0%" data-index="${i}"></div>
+          </div>
         </div>
-        <div class="stat-bar-bg">
-          <div class="stat-bar-fill" data-width="${Math.min(stat.value, 100)}" style="width: 0%" data-index="${i}"></div>
-        </div>
-      </div>
-    `).join('');
+      `).join('');
+    }
 
-    // Animate bars after render
-    setTimeout(() => {
-      document.querySelectorAll('.stat-bar-fill').forEach((bar, i) => {
-        setTimeout(() => {
-          bar.style.width = bar.dataset.width + '%';
-        }, i * 100);
-      });
-    }, 100);
+    // Animate bars with requestAnimationFrame for performance
+    requestAnimationFrame(() => {
+      setTimeout(() => {
+        document.querySelectorAll('.stat-bar-fill').forEach((bar, i) => {
+          setTimeout(() => {
+            bar.style.width = bar.dataset.width + '%';
+          }, i * 100);
+        });
+      }, 100);
+    });
   }
 };
 
@@ -2119,7 +1873,7 @@ const UI = {
   },
 
   setupEventListeners() {
-    // Event Delegation on Document
+    // Event Delegation
     document.addEventListener('click', (e) => {
       const actionEl = e.target.closest('[data-action]');
       if (!actionEl) return;
@@ -2141,7 +1895,7 @@ const UI = {
           this.closeMenu();
           break;
         case 'open-modal':
-          this.openModal(modal);
+          if (modal) this.openModal(modal);
           break;
         case 'close-modal':
           this.closeModal();
@@ -2160,7 +1914,6 @@ const UI = {
           break;
       }
 
-      // Player card click
       if (playerId) {
         const player = Store.getPlayerById(playerId);
         if (player) {
@@ -2207,13 +1960,12 @@ const UI = {
       }
     });
 
-    // Navbar scroll effect
+    // Navbar scroll
     window.addEventListener('scroll', () => {
       const nav = document.getElementById('navbar');
-      nav.classList.toggle('scrolled', window.scrollY > 50);
+      if (nav) nav.classList.toggle('scrolled', window.scrollY > 50);
     }, { passive: true });
 
-    // Magnetic buttons effect
     this.setupMagneticButtons();
   },
 
@@ -2226,10 +1978,7 @@ const UI = {
         const rect = btn.getBoundingClientRect();
         const x = e.clientX - rect.left - rect.width / 2;
         const y = e.clientY - rect.top - rect.height / 2;
-        
-        btn.style.transform = `translate(${x * 0.2}px, ${y * 0.2}px)`;
-        btn.style.setProperty('--x', `${(e.clientX - rect.left) / rect.width * 100}%`);
-        btn.style.setProperty('--y', `${(e.clientY - rect.top) / rect.height * 100}%`);
+        btn.style.transform = `translate(${x * 0.15}px, ${y * 0.15}px)`;
       });
       
       btn.addEventListener('mouseleave', () => {
@@ -2257,26 +2006,26 @@ const UI = {
       modal.addEventListener('scroll', () => {
         const header = modal.querySelector('.modal-header');
         if (header) {
-          header.classList.toggle('scrolled', modal.scrollTop > 20);
+          header.classList.toggle('scrolled', modal.scrollTop > 10);
         }
       });
     });
   },
 
   switchTab(tabId) {
-    // Update nav
-    document.querySelectorAll('.nav-links button').forEach(btn => {
-      btn.classList.toggle('active', btn.dataset.target === tabId);
+    // Update nav buttons
+    document.querySelectorAll('.nav-links [data-action="navigate"]').forEach(btn => {
+      const isActive = btn.dataset.target === tabId;
+      btn.classList.toggle('active', isActive);
+      btn.setAttribute('aria-selected', isActive.toString());
     });
 
     // Update sections
-    document.querySelectorAll('section').forEach(section => {
+    document.querySelectorAll('main > section').forEach(section => {
       const isActive = section.id === tabId;
       section.classList.toggle('active', isActive);
       
       if (isActive) {
-        // Trigger reflow for animation
-        void section.offsetWidth;
         section.classList.add('fade-in');
         window.scrollTo({ top: 0, behavior: 'smooth' });
       } else {
@@ -2284,23 +2033,30 @@ const UI = {
       }
     });
 
-    // Close mobile menu if open
     this.closeMenu();
+    this.updateURL(tabId);
+  },
+
+  updateURL(tabId) {
+    // Update URL without reload for better UX
+    const url = new URL(window.location);
+    url.hash = tabId;
+    window.history.pushState({tab: tabId}, '', url);
   },
 
   toggleMenu() {
     const drawer = document.querySelector(CONFIG.selectors.mobileDrawer);
     const overlay = document.querySelector(CONFIG.selectors.drawerOverlay);
     const burger = document.querySelector(CONFIG.selectors.burger);
-    const isOpen = drawer.classList.contains('open');
+    const isOpen = drawer?.classList.contains('open');
 
     if (isOpen) {
       this.closeMenu();
     } else {
-      drawer.classList.add('open');
-      overlay.classList.add('open');
-      burger.classList.add('open');
-      burger.setAttribute('aria-expanded', 'true');
+      drawer?.classList.add('open');
+      overlay?.classList.add('open');
+      burger?.classList.add('open');
+      burger?.setAttribute('aria-expanded', 'true');
       this.lockScroll();
     }
   },
@@ -2310,10 +2066,10 @@ const UI = {
     const overlay = document.querySelector(CONFIG.selectors.drawerOverlay);
     const burger = document.querySelector(CONFIG.selectors.burger);
 
-    drawer.classList.remove('open');
-    overlay.classList.remove('open');
-    burger.classList.remove('open');
-    burger.setAttribute('aria-expanded', 'false');
+    drawer?.classList.remove('open');
+    overlay?.classList.remove('open');
+    burger?.classList.remove('open');
+    burger?.setAttribute('aria-expanded', 'false');
     this.unlockScroll();
   },
 
@@ -2334,10 +2090,10 @@ const UI = {
     modal.classList.add('active');
     modal.setAttribute('aria-hidden', 'false');
     
-    // Focus management
+    // Focus trap
     setTimeout(() => {
       const closeBtn = modal.querySelector('[data-action="close-modal"]');
-      if (closeBtn) closeBtn.focus();
+      closeBtn?.focus();
     }, 100);
 
     this.lockScroll();
@@ -2375,31 +2131,17 @@ const UI = {
       this.showToast('⏳ Создаём карточку...');
 
       const modalContent = document.querySelector('#player-modal .modal-content');
+      if (!modalContent) throw new Error('Modal content not found');
       
-      // Use requestAnimationFrame to not block UI
       await new Promise(resolve => requestAnimationFrame(resolve));
       
       const canvas = await html2canvas(modalContent, {
         scale: 2,
         useCORS: true,
-        allowTaint: true,
-        backgroundColor: '#141414',
-        logging: false,
-        onclone: (clonedDoc) => {
-          // Ensure images are loaded in clone
-          const img = clonedDoc.querySelector('#modal-img');
-          if (img && img.src) {
-            img.crossOrigin = 'anonymous';
-          }
-        }
+        allowTaint: false,
+        backgroundColor: '#ffffff',
+        logging: false
       });
-
-      // Check if canvas is empty (CORS error)
-      const ctx = canvas.getContext('2d');
-      const pixelData = ctx.getImageData(0, 0, 1, 1).data;
-      if (pixelData.every(v => v === 0)) {
-        throw new Error('CORS error');
-      }
 
       const name = Store.currentPlayer?.name?.replace(/[^a-zA-Zа-яА-Я0-9]/g, '_') || 'player';
       const link = document.createElement('a');
@@ -2455,16 +2197,19 @@ const UI = {
 
   showToast(message, duration = 3000) {
     const container = document.querySelector(CONFIG.selectors.toastContainer);
+    if (!container) return;
+    
     const toast = document.createElement('div');
     toast.className = 'toast';
-    toast.innerHTML = `<span class="toast-icon">${message.split(' ')[0]}</span> ${message.split(' ').slice(1).join(' ')}`;
+    toast.innerHTML = `<span>${message}</span>`;
     
     container.appendChild(toast);
     
+    // Use CSS transition for removal
     setTimeout(() => {
       toast.style.opacity = '0';
-      toast.style.transform = 'translateY(20px) scale(0.9)';
-      setTimeout(() => toast.remove(), 500);
+      toast.style.transform = 'translate(-50%, 20px)';
+      setTimeout(() => toast.remove(), 300);
     }, duration);
   }
 };
@@ -2475,34 +2220,64 @@ const UI = {
 const App = {
   async init() {
     try {
-      // Show skeletons immediately
+      // Show skeletons
       Render.showSkeletons(document.querySelector(CONFIG.selectors.rosterGrid), 'card');
       Render.showSkeletons(document.querySelector(CONFIG.selectors.statsBody), 'table');
 
-      // Initialize UI
       UI.init();
 
-      // Load data
+      // Handle URL hash for deep linking
+      const hash = window.location.hash.slice(1);
+      if (hash && ['home', 'roster', 'stats'].includes(hash)) {
+        UI.switchTab(hash);
+      }
+
       await Store.init();
 
-      // Render content
+      // Check if data loaded successfully
+      if (Store.players.length === 0) {
+        throw new Error('No players data available');
+      }
+
       Render.roster(Store.getFilteredPlayers(), document.querySelector(CONFIG.selectors.rosterGrid));
       Render.stats(Store.getSortedPlayers(), document.querySelector(CONFIG.selectors.statsBody));
 
-      // Hide preloader
-      setTimeout(() => {
-        document.querySelector(CONFIG.selectors.preloader).classList.add('loaded');
-      }, 500);
+      // Hide preloader with CSS transition
+      const preloader = document.querySelector(CONFIG.selectors.preloader);
+      if (preloader) {
+        // Wait for fonts and initial render
+        await document.fonts.ready;
+        preloader.classList.add('loaded');
+        // Remove from DOM after transition
+        setTimeout(() => preloader.remove(), 800);
+      }
 
     } catch (error) {
       console.error('App initialization error:', error);
       UI.showToast('❌ Ошибка загрузки данных');
-      document.querySelector(CONFIG.selectors.preloader).classList.add('loaded');
+      
+      // Show error state in grids
+      const rosterGrid = document.querySelector(CONFIG.selectors.rosterGrid);
+      const statsBody = document.querySelector(CONFIG.selectors.statsBody);
+      
+      Render.showError(rosterGrid, 'Не удалось загрузить список игроков');
+      if (statsBody) statsBody.innerHTML = '<tr><td colspan="3" style="text-align:center;padding:40px;color:var(--text-secondary);">Ошибка загрузки данных</td></tr>';
+      
+      const preloader = document.querySelector(CONFIG.selectors.preloader);
+      if (preloader) preloader.classList.add('loaded');
     }
   }
 };
 
-// Start application when DOM is ready
+// Handle browser back/forward buttons
+window.addEventListener('popstate', (e) => {
+  const tab = e.state?.tab || window.location.hash.slice(1) || 'home';
+  if (['home', 'roster', 'stats'].includes(tab)) {
+    UI.switchTab(tab);
+  }
+});
+
+// Start application
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', () => App.init());
 } else {
