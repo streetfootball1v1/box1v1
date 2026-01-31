@@ -8,110 +8,131 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
 <style>
 :root {
-  --bg: #050505;
-  --surface: rgba(20, 20, 20, 0.6);
-  --surface-solid: #121212;
-  --text: #ffffff;
-  --text-secondary: #a0a0a0;
-  --accent: #00ff88;
-  --accent-glow: rgba(0, 255, 136, 0.4);
-  --neon-pink: #ff0080;
-  --neon-blue: #00f0ff;
-  --neon-purple: #bd00ff;
-  --border: rgba(255, 255, 255, 0.1);
-  --glass: rgba(255, 255, 255, 0.03);
-  --font-display: 'Anton', sans-serif;
-  --font-body: 'Inter', sans-serif;
-  --nav-h: 80px;
-  --radius: 16px;
+  --bg: #fafafa;
+  --bg-elevated: #ffffff;
+  --text: #0a0a0a;
+  --text-secondary: #525252;
+  --accent: #22c55e;
+  --accent-glow: rgba(34, 197, 94, 0.4);
+  --border: rgba(0,0,0,0.06);
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-  --ease-elastic: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-@media (max-width: 420px) { :root { --nav-h: 70px; } }
-
-*, *::before, *::after { 
-  margin: 0; 
-  padding: 0; 
-  box-sizing: border-box; 
-  -webkit-tap-highlight-color: transparent; 
-}
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
 html { 
   scroll-behavior: smooth; 
-  background: var(--bg); 
-  -webkit-font-smoothing: antialiased; 
+  background: var(--bg);
+  font-family: 'Inter', sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
 
-body { 
-  font-family: var(--font-body); 
-  background: var(--bg); 
-  color: var(--text); 
-  line-height: 1.6; 
-  overflow-x: hidden; 
-  min-height: 100vh;
-  background-image: 
-    radial-gradient(circle at 20% 50%, rgba(0, 255, 136, 0.15) 0%, transparent 50%),
-    radial-gradient(circle at 80% 80%, rgba(255, 0, 128, 0.1) 0%, transparent 50%),
-    radial-gradient(circle at 40% 20%, rgba(0, 240, 255, 0.1) 0%, transparent 40%);
-  background-attachment: fixed;
+/* ANIMATED BACKGROUND MESH */
+body {
+  background: var(--bg);
+  color: var(--text);
+  overflow-x: hidden;
+  position: relative;
 }
 
-/* GLITCH LOGO EFFECT */
+body::before {
+  content: '';
+  position: fixed;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: 
+    radial-gradient(circle at 20% 50%, rgba(34,197,94,0.08) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(34,197,94,0.05) 0%, transparent 50%),
+    radial-gradient(circle at 40% 20%, rgba(0,0,0,0.02) 0%, transparent 40%);
+  animation: meshMove 20s ease-in-out infinite;
+  pointer-events: none;
+  z-index: -1;
+}
+
+@keyframes meshMove {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(2%, 2%) scale(1.1); }
+  66% { transform: translate(-2%, 1%) scale(0.95); }
+}
+
+/* PRELOADER */
+#preloader {
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: opacity 0.8s var(--ease-out), visibility 0.8s;
+}
+
+#preloader.loaded {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.preloader-content {
+  text-align: center;
+  animation: preloaderPulse 2s ease-in-out infinite;
+}
+
+.preloader-logo {
+  font-size: clamp(3rem, 10vw, 5rem);
+  font-weight: 900;
+  font-style: italic;
+  letter-spacing: -0.05em;
+  background: linear-gradient(135deg, var(--text) 0%, var(--accent) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: logoReveal 1.2s var(--ease-out) forwards;
+  clip-path: inset(0 100% 0 0);
+}
+
+@keyframes logoReveal {
+  to { clip-path: inset(0 0 0 0); }
+}
+
+@keyframes preloaderPulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.05); opacity: 0.8; }
+}
+
+/* GLITCH LOGO ON HOVER */
 .logo {
-  font-family: var(--font-display);
-  font-size: 2rem;
-  letter-spacing: 2px;
+  font-size: 1.75rem;
+  font-weight: 900;
+  font-style: italic;
+  letter-spacing: -0.03em;
+  cursor: pointer;
   text-decoration: none;
   color: var(--text);
   position: relative;
-  text-transform: uppercase;
-  font-weight: 400;
   display: inline-block;
-  padding: 8px 0;
+  transition: transform 0.3s var(--ease-spring);
 }
 
-.logo-accent {
+.logo:hover {
+  transform: scale(1.05);
+}
+
+.logo-accent { color: var(--accent); }
+
+.logo:hover {
+  animation: glitch 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both infinite;
   color: var(--accent);
-  text-shadow: 0 0 20px var(--accent-glow);
-  animation: neonPulse 2s ease-in-out infinite;
 }
 
-@keyframes neonPulse {
-  0%, 100% { text-shadow: 0 0 20px var(--accent-glow), 0 0 40px var(--accent-glow); }
-  50% { text-shadow: 0 0 10px var(--accent-glow), 0 0 20px var(--accent-glow); }
-}
-
-.logo::before,
-.logo::after {
-  content: 'BOX1V1';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  opacity: 0;
-}
-
-.logo:hover::before {
-  animation: glitch1 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both infinite;
-  color: var(--neon-pink);
-  z-index: -1;
-  opacity: 0.8;
-}
-
-.logo:hover::after {
-  animation: glitch2 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) reverse both infinite;
-  color: var(--neon-blue);
-  z-index: -2;
-  opacity: 0.8;
-}
-
-@keyframes glitch1 {
+@keyframes glitch {
   0% { transform: translate(0); }
   20% { transform: translate(-2px, 2px); }
   40% { transform: translate(-2px, -2px); }
@@ -120,89 +141,92 @@ body {
   100% { transform: translate(0); }
 }
 
-@keyframes glitch2 {
-  0% { transform: translate(0); }
-  20% { transform: translate(2px, -2px); }
-  40% { transform: translate(2px, 2px); }
-  60% { transform: translate(-2px, -2px); }
-  80% { transform: translate(-2px, 2px); }
-  100% { transform: translate(0); }
-}
-
-/* NAVIGATION - GLASSMORPHISM */
+/* NAVIGATION GLASS */
 nav {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
-  height: calc(var(--nav-h) + env(safe-area-inset-top));
-  padding-top: env(safe-area-inset-top);
-  background: rgba(5, 5, 5, 0.7);
+  height: 80px;
+  background: rgba(250, 250, 250, 0.8);
   backdrop-filter: blur(20px) saturate(180%);
   border-bottom: 1px solid var(--border);
   z-index: 1000;
-  transition: all 0.3s var(--ease-out);
+  transform: translateY(-100%);
+  animation: slideDown 0.8s var(--ease-out) 0.5s forwards;
+  transition: all 0.3s;
 }
 
 nav.scrolled {
-  background: rgba(5, 5, 5, 0.9);
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 10px 40px -10px rgba(0,0,0,0.1);
+  height: 70px;
+}
+
+@keyframes slideDown {
+  to { transform: translateY(0); }
 }
 
 .nav-inner {
   max-width: 1400px;
   margin: 0 auto;
-  height: var(--nav-h);
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 max(20px, env(safe-area-inset-left)) 0 max(20px, env(safe-area-inset-right));
+  padding: 0 24px;
 }
 
 .nav-links {
   display: flex;
-  gap: 12px;
+  gap: 8px;
+  opacity: 0;
+  animation: fadeIn 0.6s var(--ease-out) 0.8s forwards;
 }
 
 .nav-links a {
-  font-family: var(--font-display);
-  font-size: 14px;
-  letter-spacing: 1px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
   text-decoration: none;
   color: var(--text-secondary);
   padding: 12px 24px;
   border-radius: 100px;
-  border: 1px solid transparent;
-  transition: all 0.3s var(--ease-out);
   position: relative;
   overflow: hidden;
+  transition: all 0.4s var(--ease-out);
 }
 
 .nav-links a::before {
   content: '';
   position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, var(--accent), var(--neon-blue));
-  opacity: 0;
-  transition: opacity 0.3s;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 100%;
+  background: var(--text);
+  border-radius: 100px;
+  transition: all 0.4s var(--ease-out);
+  transform: translateX(-50%);
   z-index: -1;
 }
 
-.nav-links a:hover,
-.nav-links a.active {
-  color: var(--bg);
-  border-color: var(--accent);
+.nav-links a:hover {
+  color: white;
   transform: translateY(-2px);
-  box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
 }
 
-.nav-links a:hover::before,
-.nav-links a.active::before {
-  opacity: 1;
+.nav-links a:hover::before {
+  width: 100%;
 }
 
-/* BURGER */
+.nav-links a.active {
+  color: white;
+  background: var(--text);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+
+/* BURGER ANIMATION */
 .burger {
   display: none;
   cursor: pointer;
@@ -212,35 +236,49 @@ nav.scrolled {
   justify-content: center;
   align-items: center;
   gap: 6px;
-  background: var(--glass);
+  border-radius: 16px;
+  background: var(--bg);
   border: 1px solid var(--border);
-  border-radius: 12px;
-  transition: all 0.3s;
+  transition: all 0.3s var(--ease-spring);
+}
+
+.burger:hover {
+  transform: scale(1.1);
+  border-color: var(--accent);
 }
 
 .burger span {
-  width: 24px;
+  width: 20px;
   height: 2px;
-  background: var(--accent);
+  background: var(--text);
   border-radius: 2px;
-  transition: all 0.3s var(--ease-elastic);
-  box-shadow: 0 0 10px var(--accent-glow);
+  transition: all 0.4s var(--ease-spring);
+  transform-origin: center;
 }
 
-.burger.open span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
-.burger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
-.burger.open span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+.burger.open span:nth-child(1) { 
+  transform: translateY(8px) rotate(45deg); 
+  background: var(--accent);
+}
+.burger.open span:nth-child(2) { 
+  opacity: 0; 
+  transform: scaleX(0);
+}
+.burger.open span:nth-child(3) { 
+  transform: translateY(-8px) rotate(-45deg);
+  background: var(--accent);
+}
 
 /* DRAWER */
 .drawer-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.8);
+  background: rgba(0,0,0,0.4);
   backdrop-filter: blur(10px);
   z-index: 1999;
   opacity: 0;
   visibility: hidden;
-  transition: all 0.4s var(--ease-out);
+  transition: all 0.5s var(--ease-out);
 }
 
 .drawer-overlay.open {
@@ -252,51 +290,54 @@ nav.scrolled {
   position: fixed;
   top: 0;
   right: -100%;
-  width: min(86%, 380px);
+  width: min(86%, 400px);
   height: 100dvh;
-  background: var(--surface-solid);
+  background: var(--bg-elevated);
   z-index: 2000;
-  padding: calc(env(safe-area-inset-top) + 20px) 24px calc(env(safe-area-inset-bottom) + 24px);
+  padding: 100px 32px 32px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  transition: right 0.5s var(--ease-elastic);
-  border-left: 1px solid var(--border);
-  box-shadow: -20px 0 60px rgba(0, 255, 136, 0.1);
+  gap: 16px;
+  transition: right 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: -20px 0 60px rgba(0,0,0,0.2);
 }
 
 .mobile-drawer.open { right: 0; }
+
 .mobile-drawer a {
-  font-family: var(--font-display);
   font-size: 2rem;
+  font-weight: 900;
+  font-style: italic;
   text-decoration: none;
   color: var(--text);
   text-transform: uppercase;
-  letter-spacing: 2px;
-  padding: 20px 0;
+  letter-spacing: -0.02em;
+  padding: 16px 0;
   border-bottom: 1px solid var(--border);
-  transition: all 0.3s;
+  transform: translateX(50px);
   opacity: 0;
-  transform: translateX(20px);
+  transition: all 0.4s var(--ease-out);
 }
 
 .mobile-drawer.open a {
-  opacity: 1;
   transform: translateX(0);
-  transition-delay: calc(var(--i, 0) * 0.1s);
+  opacity: 1;
 }
+
+.mobile-drawer.open a:nth-child(1) { transition-delay: 0.1s; }
+.mobile-drawer.open a:nth-child(2) { transition-delay: 0.2s; }
+.mobile-drawer.open a:nth-child(3) { transition-delay: 0.3s; }
 
 .mobile-drawer a:hover {
   color: var(--accent);
-  padding-left: 10px;
-  text-shadow: 0 0 20px var(--accent-glow);
+  padding-left: 20px;
 }
 
 /* MAIN */
 .main-content {
-  max-width: 1400px;
+  max-width: 1300px;
   margin: 0 auto;
-  padding: calc(var(--nav-h) + 40px) max(20px, env(safe-area-inset-left)) calc(100px + env(safe-area-inset-bottom)) max(20px, env(safe-area-inset-right));
+  padding: 120px 24px 100px;
   min-height: 100vh;
 }
 
@@ -304,40 +345,200 @@ section {
   display: none;
   opacity: 0;
   transform: translateY(40px);
-  animation: fadeInUp 0.8s var(--ease-out) forwards;
+  transition: all 0.8s var(--ease-out);
 }
 
 section.active {
   display: block;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* INTRO ANIMATIONS */
+.intro-block {
+  padding: 60px 0 100px;
+  text-align: center;
+  max-width: 900px;
+  margin: 0 auto;
+  perspective: 1000px;
+}
+
+.intro-block span {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--accent);
+  margin-bottom: 24px;
+  padding: 12px 24px;
+  border: 2px solid var(--accent);
+  border-radius: 100px;
+  position: relative;
+  overflow: hidden;
+  animation: borderGlow 3s ease-in-out infinite;
+}
+
+@keyframes borderGlow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(34,197,94,0.4); }
+  50% { box-shadow: 0 0 20px 5px rgba(34,197,94,0.2); }
+}
+
+.intro-block h1 {
+  font-size: clamp(4rem, 15vw, 10rem);
+  font-weight: 900;
+  font-style: italic;
+  letter-spacing: -0.05em;
+  line-height: 0.9;
+  margin-bottom: 24px;
+  background: linear-gradient(135deg, var(--text) 0%, #333 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: titleReveal 1s var(--ease-out) 0.3s backwards;
+  transform-style: preserve-3d;
+}
+
+@keyframes titleReveal {
+  from {
+    opacity: 0;
+    transform: translateY(100px) rotateX(-45deg);
+    filter: blur(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) rotateX(0);
+    filter: blur(0);
+  }
+}
+
+.intro-block p {
+  font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+  color: var(--text-secondary);
+  max-width: 500px;
+  margin: 0 auto 40px;
+  animation: fadeInUp 0.8s var(--ease-out) 0.5s backwards;
 }
 
 @keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
   to {
     opacity: 1;
     transform: translateY(0);
   }
 }
 
-/* INTRO - BRUTAL TYPOGRAPHY */
-.intro-block {
-  padding: 80px 0 120px;
-  text-align: center;
+.btn-group {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+  animation: fadeInUp 0.8s var(--ease-out) 0.7s backwards;
+}
+
+/* MAGNETIC BUTTONS */
+.btn {
+  padding: 20px 36px;
+  border-radius: 100px;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 13px;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: all 0.4s var(--ease-spring);
+  border: none;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), rgba(255,255,255,0.3) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity 0.3s;
+  z-index: -1;
+}
+
+.btn:hover::before {
+  opacity: 1;
+}
+
+.btn-primary {
+  background: var(--text);
+  color: #fff;
+  box-shadow: 0 10px 30px -10px rgba(0,0,0,0.3);
+}
+
+.btn-primary:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 20px 40px -10px rgba(0,0,0,0.4), 0 0 0 2px rgba(34,197,94,0.3);
+}
+
+.btn-outline {
+  background: transparent;
+  border: 2px solid var(--text);
+  color: var(--text);
   position: relative;
 }
 
-.intro-block span {
-  display: inline-block;
-  font-family: var(--font-display);
-  font-size: 14px;
-  letter-spacing: 4px;
-  text-transform: uppercase;
-  color: var(--accent);
-  margin-bottom: 32px;
-  padding: 8px 20px;
-  border: 1px solid var(--accent);
+.btn-outline::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--text);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.4s var(--ease-out);
+  z-index: -1;
   border-radius: 100px;
-  box-shadow: 0 0 20px rgba(0, 255, 136, 0.2);
+}
+
+.btn-outline:hover {
+  color: white;
+  transform: translateY(-4px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.btn-outline:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+/* STATUS CONTEXT */
+.status-context {
+  margin-top: 60px;
+  padding: 32px 48px;
+  background: var(--bg-elevated);
+  border-radius: 24px;
+  border: 1px solid var(--border);
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 
+    0 4px 20px rgba(0,0,0,0.05),
+    0 0 0 1px rgba(34,197,94,0.1);
+  position: relative;
+  overflow: hidden;
   animation: float 6s ease-in-out infinite;
+  transition: all 0.4s var(--ease-out);
+}
+
+.status-context:hover {
+  transform: translateY(-5px);
+  box-shadow: 
+    0 20px 40px rgba(0,0,0,0.1),
+    0 0 0 2px rgba(34,197,94,0.3);
 }
 
 @keyframes float {
@@ -345,204 +546,73 @@ section.active {
   50% { transform: translateY(-10px); }
 }
 
-.intro-block h1 {
-  font-family: var(--font-display);
-  font-size: clamp(4rem, 15vw, 12rem);
-  line-height: 0.9;
-  margin-bottom: 32px;
-  background: linear-gradient(135deg, #fff 0%, var(--accent) 50%, var(--neon-blue) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  text-transform: uppercase;
-  letter-spacing: 4px;
-  position: relative;
-  display: inline-block;
-}
-
-.intro-block h1::after {
-  content: 'BOX1V1';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: -1;
-  background: none;
-  -webkit-text-fill-color: transparent;
-  text-shadow: 
-    2px 2px 0 var(--neon-pink),
-    -2px -2px 0 var(--neon-blue);
-  opacity: 0.3;
-  animation: glitchText 3s infinite;
-}
-
-@keyframes glitchText {
-  0%, 90%, 100% { opacity: 0; transform: translate(0); }
-  92% { opacity: 0.3; transform: translate(-2px, 2px); }
-  94% { opacity: 0.3; transform: translate(2px, -2px); }
-  96% { opacity: 0; transform: translate(0); }
-}
-
-.intro-block p {
-  font-size: clamp(1.25rem, 3vw, 1.75rem);
-  color: var(--text-secondary);
-  max-width: 600px;
-  margin: 0 auto 48px;
-  font-weight: 600;
-}
-
-/* BUTTONS - NEON */
-.btn {
-  padding: 20px 40px;
-  border-radius: 100px;
-  font-family: var(--font-display);
-  font-size: 14px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: all 0.3s var(--ease-out);
-  border: none;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  position: relative;
-  overflow: hidden;
-  min-height: 60px;
-  font-weight: 400;
-}
-
-.btn-primary {
-  background: var(--accent);
-  color: var(--bg);
-  box-shadow: 
-    0 0 20px var(--accent-glow),
-    0 0 40px var(--accent-glow),
-    inset 0 1px 0 rgba(255,255,255,0.3);
-}
-
-.btn-primary:hover {
-  transform: translateY(-3px) scale(1.02);
-  box-shadow: 
-    0 0 30px var(--accent-glow),
-    0 0 60px var(--accent-glow),
-    0 10px 40px rgba(0,0,0,0.4);
-}
-
-.btn-outline {
-  background: transparent;
-  color: var(--text);
-  border: 2px solid var(--text);
-  box-shadow: 0 0 20px rgba(255,255,255,0.1);
-}
-
-.btn-outline:hover {
-  background: var(--text);
-  color: var(--bg);
-  border-color: var(--text);
-  box-shadow: 0 0 30px rgba(255,255,255,0.3);
-  transform: translateY(-3px);
-}
-
-/* STATUS - ALERT BOX */
-.status-context {
-  margin-top: 80px;
-  padding: 32px 48px;
-  background: var(--surface);
-  border: 1px solid var(--accent);
-  border-radius: 24px;
-  display: inline-flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 16px;
-  box-shadow: 
-    0 0 40px rgba(0, 255, 136, 0.2),
-    inset 0 1px 0 rgba(255,255,255,0.1);
-  position: relative;
-  overflow: hidden;
-}
-
-.status-context::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, var(--accent) 0%, transparent 50%, var(--neon-blue) 100%);
-  opacity: 0.1;
-  pointer-events: none;
-}
-
 .status-label {
-  font-family: var(--font-display);
   font-size: 12px;
-  letter-spacing: 3px;
-  color: var(--accent);
+  font-weight: 800;
   text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--accent);
 }
 
 .status-text {
-  font-family: var(--font-display);
-  font-size: clamp(1.5rem, 4vw, 2.5rem);
-  color: var(--text);
-  letter-spacing: 2px;
+  font-size: clamp(1.25rem, 3vw, 1.75rem);
+  font-weight: 800;
 }
 
 .beta-badge {
   display: inline-block;
-  background: var(--neon-pink);
+  background: var(--accent);
   color: white;
   font-size: 10px;
   font-weight: 900;
   padding: 4px 12px;
   border-radius: 100px;
-  margin-left: 12px;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  box-shadow: 0 0 20px rgba(255, 0, 128, 0.5);
-  animation: pulseBadge 2s infinite;
+  margin-left: 8px;
+  animation: pulse 2s infinite;
 }
 
-@keyframes pulseBadge {
-  0%, 100% { box-shadow: 0 0 20px rgba(255, 0, 128, 0.5); }
-  50% { box-shadow: 0 0 30px rgba(255, 0, 128, 0.8); }
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(1.05); }
 }
 
-/* BENTO GRID - GLASS CARDS */
+/* BENTO GRID WITH 3D */
 .bento-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 24px;
   margin-top: 60px;
+  perspective: 2000px;
 }
 
 .card {
-  background: var(--surface);
+  background: var(--bg-elevated);
+  border-radius: 24px;
   border: 1px solid var(--border);
-  border-radius: var(--radius);
   padding: 40px;
   position: relative;
   overflow: hidden;
   cursor: pointer;
-  transition: all 0.4s var(--ease-out);
-  backdrop-filter: blur(10px);
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  transform-style: preserve-3d;
+  transform: translateZ(0);
 }
 
 .card::before {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 100%);
+  background: linear-gradient(135deg, transparent 0%, rgba(34,197,94,0.03) 100%);
   opacity: 0;
   transition: opacity 0.3s;
 }
 
 .card:hover {
-  transform: translateY(-8px) scale(1.02);
-  border-color: var(--accent);
+  transform: translateY(-8px) translateZ(20px) rotateX(5deg);
   box-shadow: 
-    0 20px 60px rgba(0,0,0,0.5),
-    0 0 40px rgba(0, 255, 136, 0.2);
+    0 30px 60px -20px rgba(0,0,0,0.15),
+    0 0 0 1px rgba(34,197,94,0.2);
+  border-color: rgba(34,197,94,0.3);
 }
 
 .card:hover::before {
@@ -550,50 +620,31 @@ section.active {
 }
 
 .card h2, .card h3 {
-  font-family: var(--font-display);
+  font-weight: 900;
+  font-style: italic;
   text-transform: uppercase;
-  letter-spacing: 2px;
-  margin-bottom: 16px;
+  letter-spacing: -0.02em;
+  transition: transform 0.3s var(--ease-out);
 }
 
-.card h2 {
-  font-size: clamp(2.5rem, 5vw, 4rem);
-  background: linear-gradient(135deg, #fff, var(--neon-blue));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+.card:hover h2, .card:hover h3 {
+  transform: translateX(10px);
 }
 
-.card p {
-  color: var(--text-secondary);
-  font-size: 1rem;
-  line-height: 1.6;
-}
-
-/* PLAYER CARDS - BRUTAL STYLE */
+/* PLAYER CARDS - 3D TILT */
 .player-card {
-  min-height: 520px;
-  background: linear-gradient(180deg, rgba(20,20,20,0.8) 0%, rgba(0,0,0,0.9) 100%);
-  border: 1px solid var(--border);
+  min-height: 480px;
+  background: #000;
+  color: #fff;
+  border: none;
   padding: 0;
-  display: flex;
-  flex-direction: column;
   position: relative;
-  overflow: hidden;
+  transform-style: preserve-3d;
+  transition: transform 0.1s;
 }
 
-.player-card::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border: 2px solid transparent;
-  border-radius: var(--radius);
-  transition: all 0.3s;
-  pointer-events: none;
-}
-
-.player-card:hover::after {
-  border-color: var(--accent);
-  box-shadow: inset 0 0 40px rgba(0, 255, 136, 0.2);
+.player-card:hover {
+  transform: perspective(1000px) rotateY(5deg) rotateX(5deg) translateZ(20px);
 }
 
 .player-img {
@@ -601,28 +652,23 @@ section.active {
   inset: 0;
   background-size: cover;
   background-position: center top;
-  opacity: 1;
-  filter: contrast(1.1) saturate(1.2);
+  filter: grayscale(0.3);
+  opacity: 0.9;
   transition: all 0.5s var(--ease-out);
-  z-index: 0;
-}
-
-/* УБРАНО ЗАТЕМНЕНИЕ - вместо него градиент снизу */
-.player-card::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to top, 
-    rgba(0,0,0,0.95) 0%, 
-    rgba(0,0,0,0.6) 40%, 
-    transparent 70%);
-  z-index: 1;
-  pointer-events: none;
 }
 
 .player-card:hover .player-img {
-  transform: scale(1.1);
-  filter: contrast(1.2) saturate(1.4);
+  filter: grayscale(0);
+  transform: scale(1.05);
+  opacity: 1;
+}
+
+.player-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, #000 0%, rgba(0,0,0,0.3) 50%, transparent 100%);
+  z-index: 1;
 }
 
 .player-info {
@@ -630,10 +676,10 @@ section.active {
   bottom: 0;
   left: 0;
   right: 0;
-  padding: 32px;
+  padding: 40px 32px;
   z-index: 2;
   transform: translateY(20px);
-  transition: transform 0.3s var(--ease-out);
+  transition: transform 0.4s var(--ease-out);
 }
 
 .player-card:hover .player-info {
@@ -641,87 +687,77 @@ section.active {
 }
 
 .player-info span {
-  font-family: var(--font-display);
   font-size: 12px;
-  letter-spacing: 3px;
-  color: var(--accent);
+  font-weight: 800;
   text-transform: uppercase;
+  color: var(--accent);
+  letter-spacing: 0.15em;
   display: block;
   margin-bottom: 8px;
-  text-shadow: 0 0 10px var(--accent-glow);
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.3s 0.1s;
+}
+
+.player-card:hover .player-info span {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .player-info h3 {
-  font-family: var(--font-display);
   font-size: clamp(2rem, 4vw, 2.5rem);
-  color: white;
   margin: 0;
-  letter-spacing: 1px;
-  text-shadow: 0 2px 10px rgba(0,0,0,0.8);
-}
-
-.player-badges {
-  font-size: 11px;
-  color: var(--neon-pink);
-  margin-top: 12px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 1px;
+  transform: translateY(0);
 }
 
 .ovr-badge {
   position: absolute;
-  top: 20px;
-  right: 20px;
+  top: 24px;
+  right: 24px;
   background: var(--accent);
-  color: var(--bg);
-  font-family: var(--font-display);
-  font-size: 20px;
-  padding: 12px 20px;
+  color: #000;
+  padding: 8px 16px;
   border-radius: 12px;
-  font-weight: 400;
-  letter-spacing: 1px;
-  box-shadow: 0 0 30px rgba(0, 255, 136, 0.5);
+  font-weight: 900;
+  font-size: 14px;
   z-index: 3;
-  transform: rotate(3deg);
-  transition: transform 0.3s var(--ease-elastic);
+  box-shadow: 0 10px 30px rgba(34,197,94,0.4);
+  transform: scale(0) rotate(-10deg);
+  animation: badgePop 0.5s var(--ease-spring) 0.5s forwards;
+  transition: transform 0.3s var(--ease-spring);
+}
+
+@keyframes badgePop {
+  to { transform: scale(1) rotate(0); }
 }
 
 .player-card:hover .ovr-badge {
-  transform: rotate(0) scale(1.1);
+  transform: scale(1.1) rotate(5deg);
 }
 
-/* TABLE - DARK MODE */
+/* TABLE */
 .table-wrapper {
-  background: var(--surface);
+  background: var(--bg-elevated);
+  border-radius: 24px;
   border: 1px solid var(--border);
-  border-radius: var(--radius);
   overflow: hidden;
-  backdrop-filter: blur(10px);
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  min-width: 400px;
+  box-shadow: 0 10px 40px -20px rgba(0,0,0,0.1);
 }
 
 th {
-  font-family: var(--font-display);
-  font-size: 12px;
-  letter-spacing: 2px;
+  font-size: 11px;
+  font-weight: 800;
   text-transform: uppercase;
-  color: var(--accent);
+  letter-spacing: 0.1em;
+  color: var(--text-secondary);
   padding: 24px;
   text-align: left;
   border-bottom: 1px solid var(--border);
-  background: rgba(0, 255, 136, 0.05);
 }
 
 td {
   padding: 20px 24px;
   border-bottom: 1px solid var(--border);
-  color: var(--text-secondary);
   transition: all 0.3s;
 }
 
@@ -731,43 +767,48 @@ tbody tr {
   position: relative;
 }
 
-tbody tr:hover {
-  background: rgba(0, 255, 136, 0.05);
-  color: var(--text);
+tbody tr::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  height: 0;
+  width: 3px;
+  background: var(--accent);
+  transition: all 0.3s var(--ease-out);
+  transform: translateY(-50%);
 }
 
-tbody tr:hover td {
-  color: var(--text);
+tbody tr:hover {
+  background: rgba(34,197,94,0.03);
+  transform: translateX(10px);
+}
+
+tbody tr:hover::before {
+  height: 60%;
 }
 
 .player-avatar-sm {
-  width: 56px;
-  height: 56px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
   object-fit: cover;
-  border: 2px solid var(--border);
+  border: 2px solid transparent;
   transition: all 0.3s;
 }
 
 tbody tr:hover .player-avatar-sm {
   border-color: var(--accent);
-  box-shadow: 0 0 20px var(--accent-glow);
+  transform: scale(1.1);
+  box-shadow: 0 0 20px rgba(34,197,94,0.3);
 }
 
-.player-name-sm {
-  font-family: var(--font-display);
-  font-size: 16px;
-  color: var(--text);
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-/* MODAL - GLASS */
+/* MODAL ANIMATIONS */
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.8);
-  backdrop-filter: blur(20px);
+  background: rgba(255,255,255,0.8);
+  backdrop-filter: blur(20px) saturate(180%);
   z-index: 3000;
   display: flex;
   justify-content: center;
@@ -775,7 +816,7 @@ tbody tr:hover .player-avatar-sm {
   padding: 20px;
   opacity: 0;
   visibility: hidden;
-  transition: all 0.4s var(--ease-out);
+  transition: all 0.5s var(--ease-out);
 }
 
 .modal-overlay.active {
@@ -784,55 +825,49 @@ tbody tr:hover .player-avatar-sm {
 }
 
 .modal-content {
-  background: var(--surface-solid);
-  border: 1px solid var(--border);
+  background: var(--bg-elevated);
   width: 100%;
-  max-width: 560px;
+  max-width: 520px;
   border-radius: 32px;
   padding: 48px;
   position: relative;
-  max-height: 90dvh;
+  max-height: 90vh;
   overflow-y: auto;
-  box-shadow: 
-    0 40px 80px rgba(0,0,0,0.8),
-    0 0 60px rgba(0, 255, 136, 0.1);
-  transform: scale(0.9) translateY(40px);
-  transition: all 0.5s var(--ease-elastic);
+  box-shadow: 0 40px 80px -20px rgba(0,0,0,0.2);
+  transform: perspective(1000px) rotateX(-30deg) translateY(100px) scale(0.8);
+  opacity: 0;
+  transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .modal-overlay.active .modal-content {
-  transform: scale(1) translateY(0);
-}
-
-.modal-header-fixed {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  display: flex;
-  gap: 12px;
-  z-index: 10;
+  transform: perspective(1000px) rotateX(0) translateY(0) scale(1);
+  opacity: 1;
 }
 
 .modal-close, .download-circle {
-  width: 48px;
-  height: 48px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  border: 1px solid var(--border);
-  background: rgba(255,255,255,0.05);
-  color: var(--text);
-  transition: all 0.3s;
+  border: none;
+  background: rgba(0,0,0,0.05);
+  transition: all 0.4s var(--ease-spring);
+  position: relative;
+  overflow: hidden;
 }
 
 .modal-close:hover, .download-circle:hover {
-  background: var(--accent);
-  color: var(--bg);
-  border-color: var(--accent);
-  transform: scale(1.1) rotate(90deg);
-  box-shadow: 0 0 30px var(--accent-glow);
+  background: var(--text);
+  color: white;
+  transform: rotate(90deg) scale(1.1);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.modal-close:active, .download-circle:active {
+  transform: rotate(90deg) scale(0.95);
 }
 
 #m-img-container {
@@ -840,71 +875,88 @@ tbody tr:hover .player-avatar-sm {
   aspect-ratio: 1;
   border-radius: 24px;
   overflow: hidden;
-  margin-bottom: 32px;
-  margin-top: 60px;
+  margin: 60px 0 32px;
   position: relative;
-  border: 2px solid var(--border);
-  background: var(--bg);
+  transform: translateZ(0);
+  transition: transform 0.3s;
+}
+
+#m-img-container:hover {
+  transform: scale(1.02);
 }
 
 #m-img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  filter: contrast(1.1) saturate(1.2);
+  transition: transform 0.5s var(--ease-out);
 }
 
-.modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 32px;
+#m-img-container:hover #m-img {
+  transform: scale(1.05);
 }
 
-#m-role {
-  font-family: var(--font-display);
-  font-size: 12px;
-  letter-spacing: 3px;
-  color: var(--accent);
-  text-transform: uppercase;
-  display: inline-block;
-  margin-bottom: 8px;
-  padding: 6px 16px;
-  border: 1px solid var(--accent);
-  border-radius: 100px;
-}
-
-#m-name {
-  font-family: var(--font-display);
-  font-size: clamp(2rem, 5vw, 3rem);
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  line-height: 1;
-}
-
-#m-ovr {
-  font-family: var(--font-display);
-  font-size: 4rem;
-  color: var(--accent);
-  text-shadow: 0 0 30px var(--accent-glow);
-  line-height: 1;
-}
-
-.stat-bar-bg {
-  height: 8px;
-  background: rgba(255,255,255,0.1);
-  border-radius: 100px;
-  overflow: hidden;
-  position: relative;
-}
-
+/* STAT BARS ANIMATION */
 .stat-bar-fill {
   height: 100%;
-  background: linear-gradient(90deg, var(--accent), var(--neon-blue));
+  background: linear-gradient(90deg, var(--accent), #16a34a);
   border-radius: 100px;
   width: 0%;
-  transition: width 1s var(--ease-out);
-  box-shadow: 0 0 20px var(--accent-glow);
+  transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 0 20px rgba(34,197,94,0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-bar-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(200%); }
+}
+
+/* TOAST */
+#toast-container {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10001;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  pointer-events: none;
+}
+
+.toast {
+  background: var(--text);
+  color: white;
+  padding: 16px 32px;
+  border-radius: 100px;
+  font-weight: 600;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+  animation: toastSlide 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+@keyframes toastSlide {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 /* CONTROLS */
@@ -920,103 +972,57 @@ tbody tr:hover .player-avatar-sm {
 .search-input {
   padding: 16px 28px;
   border-radius: 100px;
-  border: 1px solid var(--border);
-  background: rgba(255,255,255,0.05);
+  border: 2px solid var(--border);
+  background: var(--bg-elevated);
   width: 100%;
   max-width: 400px;
-  font-family: var(--font-body);
-  font-size: 16px;
-  color: var(--text);
-  transition: all 0.3s;
+  font-size: 15px;
+  font-weight: 500;
+  transition: all 0.3s var(--ease-out);
+  position: relative;
 }
 
 .search-input:focus {
   outline: none;
   border-color: var(--accent);
-  box-shadow: 0 0 30px rgba(0, 255, 136, 0.2);
-  background: rgba(255,255,255,0.08);
-}
-
-.search-input::placeholder {
-  color: var(--text-secondary);
+  box-shadow: 0 0 0 4px rgba(34,197,94,0.1), 0 10px 30px rgba(0,0,0,0.1);
+  transform: translateY(-2px);
 }
 
 .filter-btn {
   padding: 12px 24px;
   border-radius: 100px;
-  border: 1px solid var(--border);
-  background: rgba(255,255,255,0.05);
-  font-family: var(--font-display);
+  border: 2px solid var(--border);
+  background: var(--bg-elevated);
   font-size: 12px;
-  letter-spacing: 2px;
+  font-weight: 700;
   text-transform: uppercase;
-  color: var(--text-secondary);
   cursor: pointer;
-  transition: all 0.3s;
+  transition: all 0.3s var(--ease-spring);
+  position: relative;
+  overflow: hidden;
+}
+
+.filter-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--text);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s var(--ease-out);
+  z-index: -1;
 }
 
 .filter-btn:hover, .filter-btn.active {
-  background: var(--accent);
-  color: var(--bg);
-  border-color: var(--accent);
-  box-shadow: 0 0 20px var(--accent-glow);
+  color: white;
+  border-color: var(--text);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
 }
 
-/* TOAST */
-#toast-container {
-  position: fixed;
-  bottom: 40px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 10001;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  pointer-events: none;
-}
-
-.toast {
-  background: var(--surface-solid);
-  border: 1px solid var(--accent);
-  color: var(--accent);
-  padding: 16px 32px;
-  border-radius: 100px;
-  font-family: var(--font-display);
-  font-weight: 400;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  box-shadow: 0 0 40px rgba(0, 255, 136, 0.3);
-  animation: slideUp 0.4s var(--ease-out);
-}
-
-@keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px) translateX(-50%);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) translateX(-50%);
-  }
-}
-
-/* SCROLLBAR */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: var(--bg);
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--accent);
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--neon-blue);
+.filter-btn:hover::before, .filter-btn.active::before {
+  transform: scaleX(1);
 }
 
 /* MOBILE */
@@ -1027,36 +1033,17 @@ tbody tr:hover .player-avatar-sm {
 @media (max-width: 768px) {
   .nav-links { display: none; }
   .burger { display: flex; }
-  
-  .bento-grid {
-    grid-template-columns: 1fr;
-    gap: 20px;
-  }
-  
-  .card[style*="grid-column: span 2"] {
-    grid-column: span 1 !important;
-  }
-  
-  .player-card {
-    min-height: 400px;
-  }
-  
-  .modal-content {
-    padding: 32px 24px;
-    margin: 10px;
-    width: calc(100% - 20px);
-  }
-  
-  #m-ovr {
-    font-size: 3rem;
-  }
+  .main-content { padding: 100px 20px; }
+  .bento-grid { grid-template-columns: 1fr; gap: 20px; }
+  .player-card:hover { transform: translateY(-5px); }
+  .modal-content { margin: 10px; width: calc(100% - 20px); max-height: 95vh; }
 }
 
-/* ANIMATION CLASSES */
+/* SCROLL REVEAL */
 .reveal {
   opacity: 0;
   transform: translateY(30px);
-  transition: all 0.6s var(--ease-out);
+  transition: all 0.8s var(--ease-out);
 }
 
 .reveal.active {
@@ -1064,87 +1051,25 @@ tbody tr:hover .player-avatar-sm {
   transform: translateY(0);
 }
 
-/* PRELOADER */
-#preloader {
+/* CURSOR TRAIL EFFECT (optional via JS) */
+.cursor-trail {
   position: fixed;
-  inset: 0;
-  background: var(--bg);
+  width: 20px;
+  height: 20px;
+  background: radial-gradient(circle, rgba(34,197,94,0.3) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
   z-index: 9999;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  transition: opacity 0.6s, visibility 0.6s;
-}
-
-#preloader.loaded {
-  opacity: 0;
-  visibility: hidden;
-}
-
-.preloader-logo {
-  font-family: var(--font-display);
-  font-size: clamp(3rem, 10vw, 6rem);
-  color: var(--accent);
-  letter-spacing: 10px;
-  animation: neonFlicker 1.5s infinite alternate;
-}
-
-@keyframes neonFlicker {
-  0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
-    text-shadow:
-      0 0 40px var(--accent-glow),
-      0 0 80px var(--accent-glow),
-      0 0 120px var(--accent-glow);
-    opacity: 1;
-  }
-  20%, 24%, 55% {
-    text-shadow: none;
-    opacity: 0.8;
-  }
-}
-
-/* Error states dark */
-.error-container {
-  text-align: center;
-  padding: 60px 20px;
-  border: 2px dashed var(--neon-pink);
-  border-radius: var(--radius);
-  background: rgba(255, 0, 128, 0.05);
-}
-
-.error-title {
-  font-family: var(--font-display);
-  font-size: 1.5rem;
-  color: var(--neon-pink);
-  margin-bottom: 12px;
-  text-transform: uppercase;
-}
-
-.error-retry {
-  background: transparent;
-  border: 2px solid var(--accent);
-  color: var(--accent);
-  padding: 12px 32px;
-  border-radius: 100px;
-  font-family: var(--font-display);
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  cursor: pointer;
-  transition: all 0.3s;
-  margin-top: 20px;
-}
-
-.error-retry:hover {
-  background: var(--accent);
-  color: var(--bg);
-  box-shadow: 0 0 30px var(--accent-glow);
+  transition: transform 0.1s;
 }
 </style>
 </head>
 <body>
 
 <div id="preloader">
-  <div class="preloader-logo">BOX<span style="color: var(--neon-pink);">1</span>V1</div>
+  <div class="preloader-content">
+    <div class="preloader-logo">BOX<span style="color: var(--accent);">1</span>V1</div>
+  </div>
 </div>
 
 <div id="toast-container"></div>
@@ -1159,7 +1084,7 @@ tbody tr:hover .player-avatar-sm {
       <a href="#roster" onclick="App.switchTab('roster'); return false;" id="btn-roster">Участники</a>
       <a href="#stats" onclick="App.switchTab('stats'); return false;" id="btn-stats">Рейтинг</a>
     </div>
-    <button class="burger" id="burger" onclick="App.toggleMenu()" aria-label="Menu">
+    <button class="burger" id="burger" onclick="App.toggleMenu()">
       <span></span><span></span><span></span>
     </button>
   </div>
@@ -1167,69 +1092,72 @@ tbody tr:hover .player-avatar-sm {
 
 <div class="drawer-overlay" id="drawer-overlay" onclick="App.toggleMenu()"></div>
 <div class="mobile-drawer" id="mobile-drawer">
-  <div style="margin-bottom: 40px;">
-    <span class="logo">BOX<span class="logo-accent">1</span>V1</span>
+  <div class="mobile-drawer-header">
+    <a href="#home" class="logo" style="font-size: 2rem;">
+      BOX<span class="logo-accent">1</span>V1
+    </a>
   </div>
-  <a href="#home" onclick="App.handleMobileNav('home')" style="--i:1">Главная</a>
-  <a href="#roster" onclick="App.handleMobileNav('roster')" style="--i:2">Участники</a>
-  <a href="#stats" onclick="App.handleMobileNav('stats')" style="--i:3">Рейтинг</a>
+  <a href="#home" onclick="App.handleMobileNav('home'); return false;">Главная</a>
+  <a href="#roster" onclick="App.handleMobileNav('roster'); return false;">Участники</a>
+  <a href="#stats" onclick="App.handleMobileNav('stats'); return false;">Рейтинг</a>
   <div class="btn-group" style="margin-top: auto;">
-    <button class="btn btn-primary" onclick="App.handleMobileNav('applyModal', true)" style="width:100%">Вступить</button>
+    <button class="btn btn-primary" onclick="App.handleMobileNav('applyModal', true)" style="width:100%">Стать частью</button>
   </div>
 </div>
 
 <main class="main-content">
   <section id="home" class="active">
     <div class="intro-block">
-      <span>Street Football • 1v1</span>
-      <h1>BOX1V1</h1>
-      <p>Решает не команда.<br>Решаешь ты.</p>
-      <div class="btn-group">
-        <button class="btn btn-primary" onclick="App.switchTab('roster')">Смотреть игроков</button>
-        <button class="btn btn-outline" onclick="App.openModal('applyModal')">Стать частью</button>
+      <span data-reveal>The Next Gen Football</span>
+      <h1>BOX1V1.</h1>
+      <p data-reveal>Решает не команда.<br>Решаешь ты.</p>
+      <div class="btn-group" data-reveal>
+        <button class="btn btn-primary magnetic" onclick="App.switchTab('roster')">Участники</button>
+        <button class="btn btn-outline magnetic" onclick="App.openModal('applyModal')">Подать заявку</button>
       </div>
       
-      <div class="status-context">
-        <div class="status-label">Статус</div>
+      <div class="status-context" data-reveal style="animation-delay: 0.8s;">
+        <span class="status-label">Статус проекта</span>
         <div class="status-text">
-          Набор открыт
+          🔥 Набор участников открыт
           <span class="beta-badge">Beta</span>
         </div>
+        <p style="font-size: 0.9rem; color: var(--text-secondary); margin-top: 8px;">Первый сезон стартует после комплектации групп</p>
       </div>
     </div>
 
-    <div class="bento-grid">
-      <div class="card" style="grid-column: span 2;" onclick="App.openModal('rulesModal')">
-        <span style="color: var(--neon-blue); font-family: var(--font-display); letter-spacing: 2px;">Документация</span>
-        <h2>РЕГЛАМЕНТ</h2>
-        <p>Правила игры в коробе. Читать обязательно.</p>
-        <div style="margin-top: auto; padding-top: 30px; font-family: var(--font-display); color: var(--accent); letter-spacing: 1px;">
-          Читать правила →
+    <div class="bento-grid" data-reveal>
+      <div class="card tilt-card" style="grid-column: span 2;" onclick="App.openModal('rulesModal')" tabindex="0">
+        <span style="font-size:12px; font-weight:800; color:var(--accent); text-transform:uppercase; letter-spacing:0.15em;">Документация</span>
+        <h2 style="font-size: clamp(2.5rem, 5vw, 4rem); margin-top: 10px;">РЕГЛАМЕНТ</h2>
+        <p style="margin-top: 10px; color: var(--text-secondary);">Свод правил проведения матчей.</p>
+        <div style="margin-top:auto; padding-top:30px; font-weight:800; font-size:12px; text-transform:uppercase; color:var(--text-secondary); display: flex; align-items: center; gap: 8px;">
+          Изучить правила <span style="transition: transform 0.3s; display: inline-block;">→</span>
         </div>
       </div>
       
-      <div class="card" onclick="window.open('https://t.me/streetbox1v1', '_blank')">
-        <h3 style="color: var(--neon-blue);">TELEGRAM</h3>
-        <p>Все анонсы и свежие новости проекта.</p>
+      <div class="card tilt-card" onclick="window.open('https://t.me/streetbox1v1', '_blank')" tabindex="0">
+        <h3 style="font-size: 1.5rem; font-weight: 900; font-style: italic;">TELEGRAM</h3>
+        <p style="margin-top: 10px; color: var(--text-secondary);">Свежие новости и актуальная информация.</p>
       </div>
       
-      <div class="card" onclick="window.open('https://instagram.com/box.1v1', '_blank')">
-        <h3 style="color: var(--neon-pink);">INSTAGRAM</h3>
-        <p>Фото и видео с игр. Контент everyday.</p>
+      <div class="card tilt-card" onclick="window.open('https://instagram.com/box.1v1', '_blank')" tabindex="0">
+        <h3 style="font-size: 1.5rem; font-weight: 900; font-style: italic;">INSTAGRAM</h3>
+        <p style="margin-top: 10px; color: var(--text-secondary);">Главные новости в медиа формате.</p>
       </div>
     </div>
   </section>
 
   <section id="roster">
-    <div style="margin-bottom: 60px;">
-      <h1 style="font-family: var(--font-display); font-size: clamp(3rem, 12vw, 8rem); letter-spacing: 4px;">
-        УЧАСТНИКИ<span class="beta-badge">Предв.</span>
+    <div style="margin-bottom: 60px;" data-reveal>
+      <h1 style="font-size: clamp(3rem, 10vw, 8rem); font-weight: 900; font-style: italic; line-height:0.9; letter-spacing: -0.05em;">
+        УЧАСТНИКИ<span class="beta-badge" style="font-size: 0.12em; vertical-align: super; margin-left: 10px;">Предв.</span>
       </h1>
-      <p style="color: var(--text-secondary); margin-top: 16px; font-size: 1.25rem;">Кто играет в BOX1V1</p>
+      <p style="font-size: 1.25rem; margin-top:16px; color: var(--text-secondary);">Действующие участники BOX1V1</p>
     </div>
     
-    <div class="controls-row">
-      <input type="search" class="search-input" id="playerSearch" placeholder="Поиск по имени...">
+    <div class="controls-row" data-reveal>
+      <input type="search" class="search-input magnetic" id="playerSearch" placeholder="Поиск по имени..." autocomplete="off">
       <div class="filter-bar">
         <button class="filter-btn active" data-role="Все">Все</button>
         <button class="filter-btn" data-role="Игрок">Полевые</button>
@@ -1241,16 +1169,16 @@ tbody tr:hover .player-avatar-sm {
   </section>
 
   <section id="stats">
-    <h1 style="font-family: var(--font-display); font-size: clamp(3rem, 12vw, 8rem); letter-spacing: 4px; margin-bottom: 40px;">
-      РЕЙТИНГ<span class="beta-badge">Предв.</span>
+    <h1 style="font-size: clamp(3rem, 10vw, 8rem); font-weight: 900; font-style: italic; line-height:0.9; margin-bottom:40px; letter-spacing: -0.05em;" data-reveal>
+      РЕЙТИНГ<span class="beta-badge" style="font-size: 0.12em; vertical-align: super; margin-left: 10px;">Предв.</span>
     </h1>
-    <div class="table-wrapper">
+    <div class="table-wrapper" data-reveal>
       <table>
         <thead>
           <tr>
-            <th>#</th>
-            <th>Игрок</th>
-            <th style="text-align:right;">OVR</th>
+            <th scope="col">#</th>
+            <th scope="col">Игрок</th>
+            <th scope="col" style="text-align:right;">OVR</th>
           </tr>
         </thead>
         <tbody id="stats-body"></tbody>
@@ -1260,92 +1188,96 @@ tbody tr:hover .player-avatar-sm {
 </main>
 
 <!-- MODALS -->
-
 <div class="modal-overlay" id="playerModal" onclick="if(event.target === this) App.closeModal('playerModal')">
-  <div class="modal-content" onclick="event.stopPropagation()">
-    <div class="modal-header-fixed">
-      <button class="download-circle" id="download-card" title="Скачать карточку">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+  <div class="modal-content" onclick="event.stopPropagation()" style="transform-style: preserve-3d;">
+    <div style="position: absolute; top: 20px; right: 20px; display: flex; gap: 12px; z-index: 10;">
+      <button id="download-card" style="width: 44px; height: 44px; border-radius: 50%; border: none; background: rgba(0,0,0,0.05); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s;" 
+        onmouseover="this.style.background='var(--text)'; this.style.color='white'; this.style.transform='scale(1.1)'" 
+        onmouseout="this.style.background='rgba(0,0,0,0.05)'; this.style.color=''; this.style.transform=''"
+        aria-label="Скачать карточку">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
           <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
           <polyline points="7 10 12 15 17 10"></polyline>
           <line x1="12" y1="15" x2="12" y2="3"></line>
         </svg>
       </button>
-      <button class="modal-close" onclick="App.closeModal('playerModal')">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <button onclick="App.closeModal('playerModal')" style="width: 44px; height: 44px; border-radius: 50%; border: none; background: rgba(0,0,0,0.05); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s;"
+        onmouseover="this.style.background='var(--text)'; this.style.color='white'; this.style.transform='rotate(90deg) scale(1.1)'" 
+        onmouseout="this.style.background='rgba(0,0,0,0.05)'; this.style.color=''; this.style.transform=''"
+        aria-label="Закрыть">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
           <line x1="18" y1="6" x2="6" y2="18"></line>
           <line x1="6" y1="6" x2="18" y2="18"></line>
         </svg>
       </button>
     </div>
     
-    <div id="m-img-container">
-      <img id="m-img" src="" alt="">
+    <div id="m-img-container" style="margin-top: 60px; margin-bottom: 32px;">
+      <img id="m-img" src="" alt="Фото игрока" style="width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 24px;">
     </div>
     
-    <div class="modal-header">
+    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 32px;">
       <div>
-        <div id="m-role">ROLE</div>
-        <h2 id="m-name" style="margin-top: 8px;">NAME</h2>
-        <div id="m-badges" style="margin-top: 12px;"></div>
+        <span id="m-role" style="display: inline-block; font-size: 12px; font-weight: 800; text-transform: uppercase; color: var(--accent); background: rgba(34,197,94,0.1); padding: 8px 16px; border-radius: 100px; margin-bottom: 12px;">ROLE</span>
+        <h2 id="m-name" style="font-size: clamp(1.75rem, 5vw, 2.5rem); font-weight: 900; font-style: italic; line-height: 1.1;">NAME</h2>
+        <div id="m-badges" style="display: flex; gap: 8px; margin-top: 16px;"></div>
       </div>
-      <div id="m-ovr">99</div>
+      <div id="m-ovr" style="font-size: clamp(2.5rem, 6vw, 3.5rem); font-weight: 900; font-style: italic; color: var(--accent);">99</div>
     </div>
     
-    <div id="m-stats" style="margin-bottom: 24px;"></div>
+    <div id="m-stats" style="margin-bottom: 32px;"></div>
     
     <div style="display: flex; gap: 12px;">
-      <button class="btn btn-primary" style="flex:1;" onclick="App.copyPlayerID()">Копировать ID</button>
-      <button class="btn btn-outline" style="flex:1;" onclick="App.sharePlayer()">Поделиться</button>
+      <button class="btn btn-primary" style="flex: 1;" onclick="App.copyPlayerID()">Копировать ID</button>
+      <button class="btn btn-outline" style="flex: 1;" onclick="App.sharePlayer()">Поделиться</button>
     </div>
   </div>
 </div>
 
 <div class="modal-overlay" id="applyModal" onclick="if(event.target === this) App.closeModal('applyModal')">
   <div class="modal-content" onclick="event.stopPropagation()">
-    <div class="modal-header-fixed">
-      <button class="modal-close" onclick="App.closeModal('applyModal')">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <div style="position: absolute; top: 20px; right: 20px;">
+      <button onclick="App.closeModal('applyModal')" style="width: 44px; height: 44px; border-radius: 50%; border: none; background: rgba(0,0,0,0.05); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s;"
+        onmouseover="this.style.background='var(--text)'; this.style.color='white'; this.style.transform='rotate(90deg)'" 
+        onmouseout="this.style.background='rgba(0,0,0,0.05)'; this.style.color=''; this.style.transform=''">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
           <line x1="18" y1="6" x2="6" y2="18"></line>
           <line x1="6" y1="6" x2="18" y2="18"></line>
         </svg>
       </button>
     </div>
-    
-    <h2 style="font-family: var(--font-display); font-size: 2.5rem; margin-bottom: 20px; margin-top: 40px; letter-spacing: 2px;">ВСТУПИТЬ</h2>
-    <p style="color: var(--text-secondary); line-height: 1.8; margin-bottom: 32px;">
-      Оставь комментарий под постом в Telegram с хештегом <strong style="color: var(--accent);">#BOXУЧАСТВОВАТЬ</strong>. Мы проверим твою заявку и свяжемся.
-    </p>
-    <button class="btn btn-primary" style="width:100%" onclick="window.open('https://t.me/streetbox1v1', '_blank')">Открыть Telegram</button>
+    <h2 style="font-size: clamp(1.75rem, 5vw, 2.5rem); font-weight: 900; font-style: italic; margin: 60px 0 16px 0;">ВСТУПИТЬ В BOX1V1</h2>
+    <p style="margin-bottom: 32px; color: var(--text-secondary); line-height: 1.6;">Чтобы оформить заявку, оставь комментарий под любым постом с хештегом <strong style="color: var(--text);">#BOXУЧАСТВОВАТЬ</strong>.</p>
+    <button class="btn btn-primary" style="width: 100%;" onclick="window.open('https://t.me/streetbox1v1', '_blank')">Открыть Telegram</button>
   </div>
 </div>
 
 <div class="modal-overlay" id="rulesModal" onclick="if(event.target === this) App.closeModal('rulesModal')">
   <div class="modal-content" onclick="event.stopPropagation()">
-    <div class="modal-header-fixed">
-      <button class="modal-close" onclick="App.closeModal('rulesModal')">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <div style="position: absolute; top: 20px; right: 20px;">
+      <button onclick="App.closeModal('rulesModal')" style="width: 44px; height: 44px; border-radius: 50%; border: none; background: rgba(0,0,0,0.05); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s;"
+        onmouseover="this.style.background='var(--text)'; this.style.color='white'; this.style.transform='rotate(90deg)'" 
+        onmouseout="this.style.background='rgba(0,0,0,0.05)'; this.style.color=''; this.style.transform=''">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
           <line x1="18" y1="6" x2="6" y2="18"></line>
           <line x1="6" y1="6" x2="18" y2="18"></line>
         </svg>
       </button>
     </div>
-    
-    <h2 style="font-family: var(--font-display); font-size: 2.5rem; margin-bottom: 40px; margin-top: 40px; letter-spacing: 2px;">РЕГЛАМЕНТ</h2>
-    
-    <div style="display: flex; flex-direction: column; gap: 32px;">
-      <div style="border-left: 3px solid var(--accent); padding-left: 20px;">
-        <h3 style="font-family: var(--font-display); color: var(--accent); margin-bottom: 8px; letter-spacing: 2px;">01. ФОРМАТ</h3>
-        <p style="color: var(--text-secondary); line-height: 1.6;">Матчи 1 на 1 с вратарем. Чистый скилл, никаких отмазок.</p>
-      </div>
-      <div style="border-left: 3px solid var(--neon-blue); padding-left: 20px;">
-        <h3 style="font-family: var(--font-display); color: var(--neon-blue); margin-bottom: 8px; letter-spacing: 2px;">02. ВРЕМЯ</h3>
-        <p style="color: var(--text-secondary); line-height: 1.6;">20 секунд на атаку. Думай быстро, действуй решительно.</p>
-      </div>
-      <div style="border-left: 3px solid var(--neon-pink); padding-left: 20px;">
-        <h3 style="font-family: var(--font-display); color: var(--neon-pink); margin-bottom: 8px; letter-spacing: 2px;">03. ПОБЕДА</h3>
-        <p style="color: var(--text-secondary); line-height: 1.6;">До 2 голов. Ничьих не бывает. Либо ты победил, либо проиграл.</p>
-      </div>
+    <h2 style="font-size: clamp(1.75rem, 5vw, 2.5rem); font-weight: 900; font-style: italic; margin: 60px 0 32px 0;">РЕГЛАМЕНТ</h2>
+    <div style="display: flex; flex-direction: column; gap: 24px;">
+      <article style="padding-bottom: 24px; border-bottom: 1px solid var(--border); transition: all 0.3s;" onmouseover="this.style.paddingLeft='20px'; this.style.borderLeft='3px solid var(--accent)';" onmouseout="this.style.paddingLeft='0'; this.style.borderLeft='none';">
+        <h3 style="font-size: 12px; font-weight: 800; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; letter-spacing: 0.1em;">01. Формат</h3>
+        <p style="color: var(--text-secondary); line-height: 1.6; margin: 0;">Матчи 1 на 1 с участием независимого вратаря.</p>
+      </article>
+      <article style="padding-bottom: 24px; border-bottom: 1px solid var(--border); transition: all 0.3s;" onmouseover="this.style.paddingLeft='20px'; this.style.borderLeft='3px solid var(--accent)';" onmouseout="this.style.paddingLeft='0'; this.style.borderLeft='none';">
+        <h3 style="font-size: 12px; font-weight: 800; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; letter-spacing: 0.1em;">02. Тайминг</h3>
+        <p style="color: var(--text-secondary); line-height: 1.6; margin: 0;">Лимит на атаку — 20 секунд.</p>
+      </article>
+      <article style="transition: all 0.3s;" onmouseover="this.style.paddingLeft='20px'; this.style.borderLeft='3px solid var(--accent)';" onmouseout="this.style.paddingLeft='0'; this.style.borderLeft='none';">
+        <h3 style="font-size: 12px; font-weight: 800; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; letter-spacing: 0.1em;">03. Результат</h3>
+        <p style="color: var(--text-secondary); line-height: 1.6; margin: 0;">Продолжительность игры до двух голов, без ничьи.</p>
+      </article>
     </div>
   </div>
 </div>
@@ -1431,51 +1363,82 @@ const App = (function() {
   };
 
   const init = async () => {
-    const preloader = document.getElementById('preloader');
-    
     try {
-      const controller = new AbortController();
-      setTimeout(() => controller.abort(), 10000);
-      
-      const response = await fetch(CSV_URL, { 
-        signal: controller.signal,
-        headers: { 'Accept': 'text/csv' }
-      });
-      
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
-      
+      const response = await fetch(CSV_URL, { headers: { 'Accept': 'text/csv' } });
+      if (!response.ok) throw new Error('Network error');
       const text = await response.text();
       state.players = parseCSV(text);
-      
-      if (state.players.length === 0) throw new Error('Нет данных');
       
       render();
       setupEventListeners();
       setupDownloadButton();
+      setupScrollReveal();
+      setup3DTilt();
       
-      setTimeout(() => preloader?.classList.add('loaded'), 500);
-      
+      setTimeout(() => document.getElementById('preloader').classList.add('loaded'), 500);
     } catch (error) {
       console.error(error);
-      showErrorUI();
-      preloader?.classList.add('loaded');
+      showToast('Ошибка загрузки данных');
+      document.getElementById('preloader').classList.add('loaded');
     }
   };
 
-  const showErrorUI = () => {
-    const grid = document.getElementById('roster-grid');
-    const tbody = document.getElementById('stats-body');
-    
-    const html = `
-      <div class="error-container">
-        <div class="error-title">Ошибка загрузки</div>
-        <p style="color: var(--text-secondary); margin-bottom: 20px;">Не удалось загрузить данные. Попробуй позже.</p>
-        <button class="error-retry" onclick="location.reload()">Перезагрузить</button>
-      </div>
-    `;
-    
-    if (grid) grid.innerHTML = html;
-    if (tbody) tbody.innerHTML = `<tr><td colspan="3" style="text-align: center; padding: 40px; color: var(--neon-pink);">Ошибка загрузки данных</td></tr>`;
+  // Magnetic buttons effect
+  const setupMagneticButtons = () => {
+    document.querySelectorAll('.magnetic').forEach(btn => {
+      btn.addEventListener('mousemove', (e) => {
+        const rect = btn.getBoundingClientRect();
+        const x = e.clientX - rect.left - rect.width / 2;
+        const y = e.clientY - rect.top - rect.height / 2;
+        
+        btn.style.transform = `translate(${x * 0.2}px, ${y * 0.2}px)`;
+        btn.style.setProperty('--x', `${(e.clientX - rect.left) / rect.width * 100}%`);
+        btn.style.setProperty('--y', `${(e.clientY - rect.top) / rect.height * 100}%`);
+      });
+      
+      btn.addEventListener('mouseleave', () => {
+        btn.style.transform = 'translate(0, 0)';
+      });
+    });
+  };
+
+  // 3D Tilt effect for cards
+  const setup3DTilt = () => {
+    document.querySelectorAll('.tilt-card, .player-card').forEach(card => {
+      card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        
+        const rotateX = (y - centerY) / 20;
+        const rotateY = (centerX - x) / 20;
+        
+        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(10px)`;
+      });
+      
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateZ(0)';
+      });
+    });
+  };
+
+  // Scroll reveal animation
+  const setupScrollReveal = () => {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('active');
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('[data-reveal]').forEach(el => {
+      el.classList.add('reveal');
+      observer.observe(el);
+    });
   };
 
   const renderRoster = () => {
@@ -1491,14 +1454,14 @@ const App = (function() {
     grid.innerHTML = '';
     
     if (filtered.length === 0) {
-      grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 60px; color: var(--text-secondary); font-family: var(--font-display); letter-spacing: 2px;">НИКОГО НЕ НАЙДЕНО</div>`;
+      grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 60px; color: var(--text-secondary);">Ничего не найдено</div>`;
       return;
     }
     
     const fragment = document.createDocumentFragment();
     
     filtered.forEach((p, index) => {
-      const card = createEl('div', 'card player-card', {
+      const card = createEl('div', 'card player-card tilt-card', {
         tabindex: '0',
         style: `animation: fadeIn 0.5s ${index * 0.05}s backwards;`
       });
@@ -1530,7 +1493,7 @@ const App = (function() {
       
       if (p.status) {
         const status = createEl('div', '', {
-          style: 'position:absolute; top:20px; left:20px; background:rgba(0,0,0,0.8); color:var(--accent); padding:6px 16px; border-radius:100px; font-family:var(--font-display); font-size:11px; letter-spacing:2px; border:1px solid var(--accent); z-index:3;'
+          style: 'position:absolute; top:20px; left:20px; background:rgba(0,0,0,0.8); color:var(--accent); padding:6px 16px; border-radius:100px; font-size:11px; font-weight:800; letter-spacing:1px; z-index:3; backdrop-filter:blur(10px);'
         }, p.status);
         card.appendChild(status);
       }
@@ -1547,6 +1510,7 @@ const App = (function() {
     });
     
     grid.appendChild(fragment);
+    setup3DTilt(); // Re-attach tilt to new cards
   };
 
   const renderStats = () => {
@@ -1564,7 +1528,7 @@ const App = (function() {
       tr.addEventListener('click', () => openPlayerModal(p));
       tr.addEventListener('keydown', (e) => { if(e.key==='Enter') openPlayerModal(p); });
       
-      const tdPos = createEl('td', '', { style: 'font-family:var(--font-display); color:var(--text-secondary);' }, (i+1).toString().padStart(2,'0'));
+      const tdPos = createEl('td', '', { style: 'font-weight:800; color:var(--text-secondary); font-variant-numeric:tabular-nums;' }, (i+1).toString().padStart(2,'0'));
       
       const tdPlayer = createEl('td');
       const row = createEl('div', 'player-row');
@@ -1573,7 +1537,7 @@ const App = (function() {
       img.onerror = function() {
         this.style.display='none';
         const fallback = createEl('div', '', {
-          style: 'width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--neon-blue));display:flex;align-items:center;justify-content:center;font-family:var(--font-display);color:var(--bg);font-size:20px;'
+          style: 'width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--accent),#16a34a);display:flex;align-items:center;justify-content:center;color:white;font-weight:900;'
         }, p.name.charAt(0));
         row.insertBefore(fallback, row.firstChild);
       };
@@ -1588,7 +1552,7 @@ const App = (function() {
       tdPlayer.appendChild(row);
       
       const tdOvr = createEl('td', '', { style: 'text-align:right;' });
-      const badge = createEl('span', 'ovr-badge', { style: 'margin:0; position:static; transform:none; display:inline-flex;' }, p.ovr);
+      const badge = createEl('span', 'ovr-badge', { style: 'margin:0; position:static; display:inline-flex;' }, p.ovr);
       tdOvr.appendChild(badge);
       
       tr.appendChild(tdPos);
@@ -1608,20 +1572,16 @@ const App = (function() {
     document.getElementById('m-ovr').textContent = player.ovr;
     
     const img = document.getElementById('m-img');
-    const container = document.getElementById('m-img-container');
-    img.style.display = 'block';
     img.src = player.photo || '';
-    img.onerror = () => {
-      img.style.display = 'none';
-      container.style.background = `linear-gradient(135deg, var(--surface), var(--bg))`;
-      container.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100%;font-family:var(--font-display);font-size:64px;color:var(--accent);">${player.name.charAt(0)}</div>`;
-    };
-    img.onload = () => { container.innerHTML = ''; container.appendChild(img); };
+    img.onerror = () => { img.style.display='none'; };
+    img.onload = () => { img.style.display='block'; };
     
     const badges = document.getElementById('m-badges');
     badges.innerHTML = '';
     player.badges.forEach(b => {
-      badges.appendChild(createEl('span', 'badge', { style: 'background:var(--neon-pink); padding:4px 12px; border-radius:100px; font-size:10px; font-family:var(--font-display); letter-spacing:1px;' }, b));
+      badges.appendChild(createEl('span', '', { 
+        style: 'background:var(--text); color:white; padding:6px 14px; border-radius:100px; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.5px;' 
+      }, b));
     });
     
     const statsDiv = document.getElementById('m-stats');
@@ -1635,38 +1595,66 @@ const App = (function() {
     
     statsDiv.innerHTML = '';
     stats.forEach((s, i) => {
-      const item = createEl('div', 'stat-item');
+      const item = createEl('div', '', { style: 'margin-bottom:20px;' });
       item.innerHTML = `
-        <div class="stat-header">
-          <div class="stat-label-group" data-tooltip="${s.l}">
-            <span class="stat-label" style="font-family:var(--font-display);">${s.k}</span>
-            <i class="info-icon">?</i>
-          </div>
-          <span class="stat-value" style="font-family:var(--font-display); color:var(--accent);">${s.v}</span>
+        <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px; font-weight:700;">
+          <span style="color:var(--text-secondary); text-transform:uppercase; letter-spacing:1px;">${s.k} <span style="opacity:0.6; font-weight:500;">(${s.l})</span></span>
+          <span style="color:var(--text);">${s.v}</span>
         </div>
-        <div class="stat-bar-bg">
+        <div style="height:8px; background:rgba(0,0,0,0.05); border-radius:100px; overflow:hidden;">
           <div class="stat-bar-fill" id="bar-${i}" style="width:0%"></div>
         </div>
       `;
       statsDiv.appendChild(item);
-      setTimeout(() => {
-        document.getElementById(`bar-${i}`).style.width = `${Math.min(s.v, 100)}%`;
-      }, 100 + i*100);
+      setTimeout(() => document.getElementById(`bar-${i}`).style.width = `${Math.min(s.v, 100)}%`, 100+i*100);
     });
     
     document.getElementById('playerModal').classList.add('active');
     document.body.style.overflow = 'hidden';
-    
-    // Focus trap
-    const modal = document.getElementById('playerModal');
-    const focusable = modal.querySelectorAll('button, [href], input');
-    if (focusable.length) focusable[0].focus();
   };
 
   const closeModal = (id) => {
     document.getElementById(id).classList.remove('active');
     document.body.style.overflow = '';
     if (state.lastFocused) state.lastFocused.focus();
+  };
+
+  const setupDownloadButton = () => {
+    const btn = document.getElementById('download-card');
+    if (!btn) return;
+    
+    btn.addEventListener('click', async () => {
+      btn.style.opacity = '0.5';
+      showToast('Создаём карточку...');
+      
+      try {
+        const card = document.getElementById('stats-card') || document.querySelector('.modal-content');
+        const canvas = await html2canvas(card, {
+          scale: 2,
+          useCORS: true,
+          allowTaint: true,
+          backgroundColor: '#ffffff'
+        });
+        
+        try {
+          canvas.toDataURL();
+        } catch(e) {
+          showToast('CORS ошибка');
+          return;
+        }
+        
+        const name = document.getElementById('m-name').textContent.replace(/[^a-zA-Zа-яА-Я0-9]/g, '_');
+        const link = document.createElement('a');
+        link.download = `BOX1V1_${name}.png`;
+        link.href = canvas.toDataURL();
+        link.click();
+        showToast('Сохранено!');
+      } catch (e) {
+        showToast('Ошибка');
+      } finally {
+        btn.style.opacity = '';
+      }
+    });
   };
 
   const setupEventListeners = () => {
@@ -1687,46 +1675,8 @@ const App = (function() {
     window.addEventListener('scroll', () => {
       document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50);
     }, { passive: true });
-  };
-
-  const setupDownloadButton = () => {
-    const btn = document.getElementById('download-card');
-    if (!btn) return;
     
-    btn.addEventListener('click', async () => {
-      btn.style.opacity = '0.5';
-      showToast('Создаём карточку...');
-      
-      try {
-        const card = document.getElementById('stats-card');
-        const canvas = await html2canvas(card, {
-          scale: 2,
-          useCORS: true,
-          allowTaint: true,
-          backgroundColor: '#121212',
-          ignoreElements: el => el.classList.contains('modal-header-fixed')
-        });
-        
-        try {
-          canvas.toDataURL();
-        } catch(e) {
-          showToast('CORS ошибка: нельзя скачать');
-          return;
-        }
-        
-        const name = document.getElementById('m-name').textContent.replace(/[^a-zA-Zа-яА-Я0-9]/g, '_');
-        const link = document.createElement('a');
-        link.download = `BOX1V1_${name}.png`;
-        link.href = canvas.toDataURL();
-        link.click();
-        showToast('Сохранено!');
-        
-      } catch (e) {
-        showToast('Ошибка скачивания');
-      } finally {
-        btn.style.opacity = '';
-      }
-    });
+    setupMagneticButtons();
   };
 
   const render = () => {
@@ -1737,9 +1687,22 @@ const App = (function() {
   return {
     init,
     switchTab: (id) => {
-      document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('section').forEach(s => {
+        s.classList.remove('active');
+        s.style.opacity = '0';
+        s.style.transform = 'translateY(30px)';
+      });
       document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
-      document.getElementById(id).classList.add('active');
+      
+      const target = document.getElementById(id);
+      target.classList.add('active');
+      
+      // Animate in
+      setTimeout(() => {
+        target.style.opacity = '1';
+        target.style.transform = 'translateY(0)';
+      }, 50);
+      
       document.getElementById(`btn-${id}`)?.classList.add('active');
       window.scrollTo({ top: 0, behavior: 'smooth' });
     },
@@ -1750,7 +1713,14 @@ const App = (function() {
     },
     handleMobileNav: (id, isModal) => {
       App.toggleMenu();
-      setTimeout(() => isModal ? document.getElementById(id).classList.add('active') : App.switchTab(id), 300);
+      setTimeout(() => {
+        if (isModal) {
+          document.getElementById(id).classList.add('active');
+          document.body.style.overflow = 'hidden';
+        } else {
+          App.switchTab(id);
+        }
+      }, 300);
     },
     openModal: (id) => {
       document.getElementById(id).classList.add('active');
@@ -1758,26 +1728,17 @@ const App = (function() {
     },
     closeModal,
     copyPlayerID: async () => {
-      const name = document.getElementById('m-name').textContent;
       try {
-        await navigator.clipboard.writeText(name);
+        await navigator.clipboard.writeText(document.getElementById('m-name').textContent);
         showToast('ID скопирован');
-      } catch {
-        showToast('Ошибка копирования');
-      }
+      } catch { showToast('Ошибка'); }
     },
     sharePlayer: async () => {
-      const name = document.getElementById('m-name').textContent;
       const url = window.location.href;
       if (navigator.share) {
-        try {
-          await navigator.share({ title: `BOX1V1 | ${name}`, url });
-        } catch {}
+        try { await navigator.share({ url }); } catch {}
       } else {
-        try {
-          await navigator.clipboard.writeText(url);
-          showToast('Ссылка скопирована');
-        } catch {}
+        try { await navigator.clipboard.writeText(url); showToast('Ссылка скопирована'); } catch {}
       }
     }
   };
